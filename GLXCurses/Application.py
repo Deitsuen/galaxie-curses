@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
-import time
+import GLXCurses
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -23,8 +23,9 @@ class Application(object):
         self.init_colors()
         self.screen.keypad(True)
 
-        self.draw_screen_background()
-        self.screen.refresh()
+        self.menu_bar = ''
+        #self.draw_screen_background()
+        #self.screen.refresh()
 
     def init_colors(self):
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
@@ -43,17 +44,18 @@ class Application(object):
     def get_size(self):
         return self.screen.getmaxyx()
 
+    def set_menubar(self, menu_bar):
+        self.menu_bar = menu_bar
+
     def refresh(self):
         #self.screen.clear()
         actual_x_size, actual_y_size = self.screen.getmaxyx()
-        resize = curses.is_term_resized(actual_y_size, actual_x_size)
-        curses.resizeterm(actual_x_size, actual_y_size)
-        if resize is True:
+        if curses.is_term_resized(actual_y_size, actual_x_size):
+            curses.resize_term(actual_y_size, actual_x_size)
+            if not self.menu_bar == '':
+                self.menu_bar.refresh()
             self.draw_screen_background()
-        self.screen.refresh()
-
-    def set_menubar(self):
-        self.screen.refresh()
+            self.screen.refresh()
 
     def getch(self):
         return self.screen.getch()

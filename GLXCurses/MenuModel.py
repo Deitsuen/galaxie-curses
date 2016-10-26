@@ -10,9 +10,14 @@ __author__ = 'Tuux'
 
 class MenuModel(object):
     def __init__(self, application):
-        self_num_lines, selft_num_cols = application.get_size()
+
+        self.application = application
+        self.draw_menubar()
+
+    def draw_menubar(self):
+        self_num_lines, selft_num_cols = self.application.get_size()
         app_info_label = "test"
-        top_menu_box = application.screen.subwin(0, 0, 0, 0)
+        top_menu_box = self.application.screen.subwin(0, 0, 0, 0)
         _, top_menu_box_num_cols = top_menu_box.getmaxyx()
         if curses.has_colors():
                 top_menu_box.addstr(
@@ -38,3 +43,6 @@ class MenuModel(object):
                 app_info_label[-1:],
                 curses.color_pair(1)
             )
+
+    def refresh(self):
+        self.draw_menubar()

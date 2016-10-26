@@ -11,20 +11,22 @@ __author__ = 'Tuux'
 if __name__ == '__main__':
     Application = GLXCurses.Application()
     MenuModel = GLXCurses.MenuModel(Application)
+    Application.set_menubar(MenuModel)
     Application.refresh()
 
     # Main loop
     while True:
         input_event = Application.getch()
-        # if curses.KEY_RESIZE:
-        #     Application.refresh()
-        #     pass
+        if curses.KEY_RESIZE:
+            Application.refresh()
+            pass
         if input_event == ord('q'):
             break
         elif input_event == ord('q'):
             break
         else:
             pass
+        #Application.refresh()
     Application.close()
     # THE END
     sys.exit(0)
