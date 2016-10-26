@@ -9,25 +9,32 @@ import curses
 __author__ = 'Tuux'
 
 if __name__ == '__main__':
-    Application = GLXCurses.Application()
-    MenuModel = GLXCurses.MenuModel(Application)
-    Application.set_menubar(MenuModel)
-    Application.refresh()
+    # Create the main Application
+    app = GLXCurses.Application()
+
+    # Create a Menu
+    menu = GLXCurses.MenuModel(app)
+
+    # Create a Window
+    win = GLXCurses.Window(app)
+
+    # Add Everything inside the Application
+    app.set_menubar(menu)
+    app.add_window(win)
 
     # Main loop
     while True:
-        input_event = Application.getch()
+        input_event = app.getch()
         if curses.KEY_RESIZE:
-            Application.refresh()
+            app.refresh()
             pass
-        if input_event == ord('q'):
-            break
         elif input_event == ord('q'):
             break
         else:
             pass
-        #Application.refresh()
-    Application.close()
+
+    # App Close
+    app.close()
     # THE END
     sys.exit(0)
 

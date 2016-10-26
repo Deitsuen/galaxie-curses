@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
-import GLXCurses
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -21,12 +20,14 @@ class Application(object):
         curses.mousemask(-1)
 
         self.menu_bar = ''
+        self.main_window = ''
+        self.windows_id_number = ''
+        self.active_window_id = ''
+        self.windows = {}
 
+        # Next it's dead
         self.init_colors()
         self.screen.keypad(True)
-
-        #self.draw_screen_background()
-        #self.screen.refresh()
 
     def init_colors(self):
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
@@ -42,40 +43,31 @@ class Application(object):
         curses.init_pair(9, curses.COLOR_RED, curses.COLOR_BLUE)
         self.screen.refresh()
 
+    def add_window(self, glxc_window):
+        id_max = len(self.windows.keys())
+        if id_max == 0:
+            self.windows[id_max] = glxc_window
+            self.active_window_id = id_max
+        else:
+            self.windows[id_max + 1] = glxc_window
+            self.active_window_id = id_max + 1
+
     def get_size(self):
         return self.screen.getmaxyx()
 
-    def set_menubar(self, menu_bar):
-        self.menu_bar = menu_bar
+    def set_menubar(self, glxc_menu_bar):
+        self.menu_bar = glxc_menu_bar
 
     def refresh(self):
         self.screen.clear()
-        actual_x_size, actual_y_size = self.screen.getmaxyx()
-        if curses.is_term_resized(actual_y_size, actual_x_size):
-            curses.resize_term(actual_y_size, actual_x_size)
-            self.draw_screen_background()
-            if self.menu_bar:
-                self.menu_bar.refresh()
-            self.screen.refresh()
+        if not self.menu_bar == '':
+            self.windows[self.active_window_id].refresh()
+        if not self.menu_bar == '':
+            self.menu_bar.refresh()
+        self.screen.refresh()
 
     def getch(self):
         return self.screen.getch()
-
-    def draw_screen_background(self):
-        num_lines, num_cols = self.screen.getmaxyx()
-        if curses.has_colors():
-            for I in range(0, num_lines - 1):
-                self.screen.addstr(
-                    I,
-                    0,
-                    str(" " * int(num_cols)),
-                    curses.color_pair(3)
-                )
-                self.screen.bkgdset(
-                    ord(' '),
-                    curses.color_pair(3)
-                )
-        self.screen.refresh()
 
     def close(self):
         curses.nocbreak()

@@ -10,35 +10,34 @@ __author__ = 'Tuux'
 
 class MenuModel(object):
     def __init__(self, application):
-
         self.application = application
         self.draw_menubar()
 
     def draw_menubar(self):
-        num_lines, num_cols = self.application.get_size()
+        actual_x_size, actual_y_size = self.application.screen.getmaxyx()
         app_info_label = "test"
         top_menu_box = self.application.screen.subwin(0, 0, 0, 0)
         if curses.has_colors():
                 top_menu_box.addstr(
                     0,
                     0,
-                    str(" " * int(num_cols)),
+                    str(" " * int(actual_y_size)),
                     curses.color_pair(1)
                 )
                 top_menu_box.bkgdset(
                     ord(' '),
                     curses.color_pair(1)
                 )
-        if not num_cols + 1 <= len(app_info_label):
+        if not actual_y_size + 1 <= len(app_info_label):
             top_menu_box.addstr(
                 0,
-                (num_cols - 1) - len(app_info_label[:-1]),
+                (actual_y_size - 1) - len(str(app_info_label[:-1])),
                 app_info_label[:-1],
                 curses.color_pair(1)
             )
             top_menu_box.insstr(
                 0,
-                num_cols - 1,
+                actual_y_size - 1,
                 app_info_label[-1:],
                 curses.color_pair(1)
             )
