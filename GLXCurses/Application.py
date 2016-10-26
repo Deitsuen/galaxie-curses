@@ -40,7 +40,7 @@ class Application(object):
         curses.init_pair(7, curses.COLOR_YELLOW, curses.COLOR_BLUE)
         curses.init_pair(8, curses.COLOR_GREEN, curses.COLOR_BLUE)
         curses.init_pair(9, curses.COLOR_RED, curses.COLOR_BLUE)
-        self.refresh()
+        self.screen.refresh()
 
     def get_size(self):
         return self.screen.getmaxyx()
@@ -49,13 +49,13 @@ class Application(object):
         self.menu_bar = menu_bar
 
     def refresh(self):
-        #self.screen.clear()
+        self.screen.clear()
         actual_x_size, actual_y_size = self.screen.getmaxyx()
         if curses.is_term_resized(actual_y_size, actual_x_size):
             curses.resize_term(actual_y_size, actual_x_size)
-            if not self.menu_bar == '':
-                self.menu_bar.refresh()
             self.draw_screen_background()
+            if self.menu_bar:
+                self.menu_bar.refresh()
             self.screen.refresh()
 
     def getch(self):
