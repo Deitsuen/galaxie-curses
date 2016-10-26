@@ -120,6 +120,10 @@ ENV/
 
 # IntelliJ
 /out/
+.idea
+*.iml
+*.ipr
+*.iws
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/

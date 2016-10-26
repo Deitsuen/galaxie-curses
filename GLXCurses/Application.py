@@ -20,10 +20,11 @@ class Application(object):
         curses.curs_set(0)
         curses.mousemask(-1)
 
+        self.menu_bar = ''
+
         self.init_colors()
         self.screen.keypad(True)
 
-        self.menu_bar = ''
         #self.draw_screen_background()
         #self.screen.refresh()
 
