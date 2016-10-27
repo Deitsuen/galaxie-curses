@@ -21,9 +21,14 @@ if __name__ == '__main__':
     win.title = 'My super Window'
     win.set_decorated(1)
 
+    # Creat a Status Bar
+    statusbar = GLXCurses.Statusbar(app)
+    statusbar.push('Bonjour je suis un message')
+
     # Add Everything inside the Application
     app.add_menubar(menu)
     app.add_window(win)
+    app.add_statusbar(statusbar)
 
     # Main loop
     while True:

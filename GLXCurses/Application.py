@@ -22,7 +22,7 @@ class Application(object):
         # Store GLXC object
         self.menu_bar = ''
         self.main_window = ''
-        self.info_bar = ''
+        self.status_bar = ''
         self.message_bar = ''
         self.tool_bar = ''
 
@@ -75,6 +75,14 @@ class Application(object):
         self.menu_bar = ''
         self.refresh()
 
+    def add_statusbar(self, glx_statusbar):
+        self.status_bar = glx_statusbar
+        self.refresh()
+
+    def remove_statusbar(self, glx_statusbar):
+        self.status_bar = ''
+        self.refresh()
+
     def refresh(self):
         self.screen.clear()
         self.draw_main_window()
@@ -82,6 +90,8 @@ class Application(object):
             self.windows[self.active_window_id].refresh()
         if not self.menu_bar == '':
             self.menu_bar.refresh()
+        if not self.status_bar == '':
+            self.status_bar.refresh()
         self.screen.refresh()
 
     def draw_main_window(self):
@@ -91,10 +101,10 @@ class Application(object):
             menu_bar_num_lines = 1
         else:
             menu_bar_num_lines = 0
-        if not self.info_bar == '':
-            info_bar_num_lines = 1
+        if not self.status_bar == '':
+            status_bar_num_lines = 1
         else:
-            info_bar_num_lines = 0
+            status_bar_num_lines = 0
         if not self.message_bar == '':
             message_bar_num_lines = 1
         else:
@@ -106,8 +116,8 @@ class Application(object):
 
         interface_elements_num_lines = 0
         interface_elements_num_lines += menu_bar_num_lines
-        interface_elements_num_lines += info_bar_num_lines
         interface_elements_num_lines += message_bar_num_lines
+        interface_elements_num_lines += status_bar_num_lines
         interface_elements_num_lines += tool_bar_num_lines
 
         window = self.screen.subwin(screen_num_lines - interface_elements_num_lines, 0, menu_bar_num_lines, 0)
