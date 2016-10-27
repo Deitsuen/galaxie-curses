@@ -11,19 +11,19 @@ __author__ = 'Tuux'
 if __name__ == '__main__':
     # Create the main Application
     app = GLXCurses.Application()
+    app.set_name('Galaxie-Curse Demo')
 
     # Create a Menu
     menu = GLXCurses.MenuModel(app)
 
     # Create a Window
     win = GLXCurses.Window(app)
-    win.title = 'Comment la vie est belle'
+    win.title = 'My super Window'
     win.set_decorated(1)
 
     # Add Everything inside the Application
     app.add_menubar(menu)
     app.add_window(win)
-    app.refresh()
 
     # Main loop
     while True:

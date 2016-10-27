@@ -11,11 +11,12 @@ __author__ = 'Tuux'
 class MenuModel(object):
     def __init__(self, application):
         self.application = application
+        self.app_info_label = self.application.application_name
         self.draw_menubar()
 
     def draw_menubar(self):
         actual_x_size, actual_y_size = self.application.screen.getmaxyx()
-        app_info_label = "test"
+        app_info_label = self.app_info_label
         top_menu_box = self.application.screen.subwin(0, 0, 0, 0)
         if curses.has_colors():
                 top_menu_box.addstr(
@@ -28,19 +29,20 @@ class MenuModel(object):
                     ord(' '),
                     curses.color_pair(1)
                 )
-        if not actual_y_size + 1 <= len(app_info_label):
-            top_menu_box.addstr(
-                0,
-                (actual_y_size - 1) - len(str(app_info_label[:-1])),
-                app_info_label[:-1],
-                curses.color_pair(1)
-            )
-            top_menu_box.insstr(
-                0,
-                actual_y_size - 1,
-                app_info_label[-1:],
-                curses.color_pair(1)
-            )
+        if len(self.app_info_label) > 0:
+            if not actual_y_size + 1 <= len(app_info_label):
+                top_menu_box.addstr(
+                    0,
+                    (actual_y_size - 1) - len(str(app_info_label[:-1])),
+                    app_info_label[:-1],
+                    curses.color_pair(1)
+                )
+                top_menu_box.insstr(
+                    0,
+                    actual_y_size - 1,
+                    app_info_label[-1:],
+                    curses.color_pair(1)
+                )
 
     def refresh(self):
         self.draw_menubar()

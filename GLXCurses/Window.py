@@ -10,11 +10,15 @@ __author__ = 'Tuux'
 class Window(object):
     def __init__(self, application):
         self.title = ''
+        self.main_window = ''
+        self.parent_num_lines = ''
+        self.parent_num_cols = ''
+        self.parent_x = ''
+        self.parent_y = ''
         self.decorated = 0
         self.application = application
-        self.main_window = application.main_window
-        self.parent_num_lines, self.parent_num_cols = self.main_window.getmaxyx()
-        self.parent_y, self.parent_x = self.main_window.getbegyx()
+
+        self.draw_window()
 
     def draw_window(self):
         self.main_window = self.application.main_window

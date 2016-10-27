@@ -27,6 +27,7 @@ class Application(object):
         self.tool_bar = ''
 
         # Store Variables
+        self.application_name = ''
         self.windows_id_number = ''
         self.active_window_id = ''
         self.windows = {}
@@ -34,6 +35,7 @@ class Application(object):
         # Next it's dead
         self.init_colors()
         self.screen.keypad(True)
+
         self.draw_main_window()
 
     def init_colors(self):
@@ -50,6 +52,9 @@ class Application(object):
         curses.init_pair(9, curses.COLOR_RED, curses.COLOR_BLUE)
         self.screen.refresh()
 
+    def set_name(self, name):
+        self.application_name = name
+
     def add_window(self, glxc_window):
         id_max = len(self.windows.keys())
         if id_max == 0:
@@ -58,6 +63,7 @@ class Application(object):
         else:
             self.windows[id_max + 1] = glxc_window
             self.active_window_id = id_max + 1
+        self.refresh()
 
     def get_size(self):
         return self.screen.getmaxyx()
@@ -67,6 +73,7 @@ class Application(object):
 
     def remove_menubar(self, glxc_menu_bar):
         self.menu_bar = ''
+        self.refresh()
 
     def refresh(self):
         self.screen.clear()
@@ -75,11 +82,11 @@ class Application(object):
             self.windows[self.active_window_id].refresh()
         if not self.menu_bar == '':
             self.menu_bar.refresh()
-
         self.screen.refresh()
 
     def draw_main_window(self):
-        screen_num_lines, _ = self.screen.getmaxyx()
+        screen = self.screen
+        screen_num_lines, _ = screen.getmaxyx()
         if not self.menu_bar == '':
             menu_bar_num_lines = 1
         else:
@@ -105,16 +112,7 @@ class Application(object):
 
         window = self.screen.subwin(screen_num_lines - interface_elements_num_lines, 0, menu_bar_num_lines, 0)
         self.main_window = window
-        self.screen.refresh()
-        # window_num_lines, window_num_cols = window.getmaxyx()
-        # window_y, window_x = window.getbegyx()
-        #
-        # if curses.has_colors():
-        #     window.bkgdset(ord(' '), curses.color_pair(3))
-        #     window.bkgd(ord(' '), curses.color_pair(3))
-        #     for I in range(window_y, window_num_lines):
-        #         window.addstr(I, 0, str(' ' * int(window_num_cols - 1)), curses.color_pair(3))
-        #         window.insstr(I, int(window_num_cols - 1), str(' '), curses.color_pair(3))
+        screen.refresh()
 
     def getch(self):
         return self.screen.getch()
