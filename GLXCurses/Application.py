@@ -20,11 +20,11 @@ class Application(object):
         curses.mousemask(-1)
 
         # Store GLXC object
-        self.menu_bar = ''
+        self.menubar = ''
         self.main_window = ''
-        self.status_bar = ''
+        self.statusbar = ''
         self.message_bar = ''
-        self.tool_bar = ''
+        self.toolbar = ''
 
         # Store Variables
         self.application_name = ''
@@ -69,39 +69,59 @@ class Application(object):
         return self.screen.getmaxyx()
 
     def add_menubar(self, glxc_menu_bar):
-        self.menu_bar = glxc_menu_bar
+        self.menubar = glxc_menu_bar
 
     def remove_menubar(self, glxc_menu_bar):
-        self.menu_bar = ''
+        self.menubar = ''
         self.refresh()
 
     def add_statusbar(self, glx_statusbar):
-        self.status_bar = glx_statusbar
+        self.statusbar = glx_statusbar
         self.refresh()
 
     def remove_statusbar(self, glx_statusbar):
-        self.status_bar = ''
+        self.statusbar = ''
+        self.refresh()
+
+    def add_toolbar(self, glx_toolbar):
+        self.toolbar = glx_toolbar
+        self.refresh()
+
+    def remove_toolbar(self, glx_toolbar):
+        self.toolbar = ''
         self.refresh()
 
     def refresh(self):
+        # Clean the screen
         self.screen.clear()
+
+        # Calculate the Main Window size
         self.draw_main_window()
+
+        # Check main widget to display
         if not self.main_window == '':
             self.windows[self.active_window_id].refresh()
-        if not self.menu_bar == '':
-            self.menu_bar.refresh()
-        if not self.status_bar == '':
-            self.status_bar.refresh()
+
+        if not self.menubar == '':
+            self.menubar.refresh()
+
+        if not self.statusbar == '':
+            self.statusbar.refresh()
+
+        if not self.toolbar == '':
+            self.toolbar.refresh()
+
+        # After have redraw everything it's time to refresh the screen
         self.screen.refresh()
 
     def draw_main_window(self):
         screen = self.screen
         screen_num_lines, _ = screen.getmaxyx()
-        if not self.menu_bar == '':
+        if not self.menubar == '':
             menu_bar_num_lines = 1
         else:
             menu_bar_num_lines = 0
-        if not self.status_bar == '':
+        if not self.statusbar == '':
             status_bar_num_lines = 1
         else:
             status_bar_num_lines = 0
@@ -109,7 +129,7 @@ class Application(object):
             message_bar_num_lines = 1
         else:
             message_bar_num_lines = 0
-        if not self.tool_bar == '':
+        if not self.toolbar == '':
             tool_bar_num_lines = 1
         else:
             tool_bar_num_lines = 0

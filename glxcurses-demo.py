@@ -24,10 +24,14 @@ if __name__ == '__main__':
     # Creat a Status Bar
     statusbar = GLXCurses.Statusbar(app)
 
+    # Creat a Status Bar
+    toolbar = GLXCurses.Toolbar(app)
+
     # Add Everything inside the Application
     app.add_menubar(menu)
     app.add_window(win)
     app.add_statusbar(statusbar)
+    app.add_toolbar(toolbar)
 
     # Main loop
     count = 1

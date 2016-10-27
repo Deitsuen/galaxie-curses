@@ -21,7 +21,7 @@ class Statusbar(object):
         screen_height, screen_width = screen.getmaxyx()
 
         # Place the status bar from the end of the screen by look if it have a tool bar before
-        if not self.application.tool_bar == '':
+        if not self.application.toolbar == '':
             line_from_max_screen_height = 2
         else:
             line_from_max_screen_height = 1
