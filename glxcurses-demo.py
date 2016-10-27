@@ -23,7 +23,6 @@ if __name__ == '__main__':
 
     # Creat a Status Bar
     statusbar = GLXCurses.Statusbar(app)
-    statusbar.push('Bonjour je suis un message')
 
     # Add Everything inside the Application
     app.add_menubar(menu)
@@ -31,13 +30,23 @@ if __name__ == '__main__':
     app.add_statusbar(statusbar)
 
     # Main loop
+    count = 1
     while True:
         input_event = app.getch()
         if curses.KEY_RESIZE:
+            screen_height, screen_width = app.screen.getmaxyx()
+            message_text = ''
+            message_text += 'Screen Size:'
+            message_text += ' '
+            message_text += str(screen_width)
+            message_text += 'x'
+            message_text += str(screen_height)
+            statusbar.push(message_text)
             app.refresh()
             pass
         if input_event == ord('q'):
             break
+        count += 1
 
     # App Close
     app.close()

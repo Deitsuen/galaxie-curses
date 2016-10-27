@@ -122,7 +122,6 @@ class Application(object):
 
         window = self.screen.subwin(screen_num_lines - interface_elements_num_lines, 0, menu_bar_num_lines, 0)
         self.main_window = window
-        screen.refresh()
 
     def getch(self):
         return self.screen.getch()
