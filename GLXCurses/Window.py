@@ -9,21 +9,48 @@ __author__ = 'Tuux'
 
 class Window(object):
     def __init__(self, application):
+        self.title = ''
+        self.decorated = 0
         self.application = application
-        self.draw_window()
+        self.main_window = application.main_window
+        self.parent_num_lines, self.parent_num_cols = self.main_window.getmaxyx()
+        self.parent_y, self.parent_x = self.main_window.getbegyx()
 
     def draw_window(self):
-        num_lines, _ = self.application.screen.getmaxyx()
-        summary_box = self.application.screen.subwin(num_lines - 4, 0, 1, 0)
-        summary_box_num_lines, summary_box_num_cols = summary_box.getmaxyx()
+        self.main_window = self.application.main_window
+        self.parent_num_lines, self.parent_num_cols = self.main_window.getmaxyx()
+        self.parent_y, self.parent_x = self.main_window.getbegyx()
+        window = self.main_window.subwin(
+            self.parent_num_lines,
+            self.parent_num_cols,
+            self.parent_y,
+            self.parent_x
+        )
 
-        # Start to draw the summary contener
+        window_num_lines, window_num_cols = window.getmaxyx()
+        window_y, window_x = window.getbegyx()
+
         if curses.has_colors():
-            for I in range(1, summary_box_num_lines):
-                summary_box.addstr(I, 0, str(" " * int(summary_box_num_cols - 1)), curses.color_pair(3))
-            summary_box.bkgdset(ord(' '), curses.color_pair(3))
+            window.bkgdset(ord(' '), curses.color_pair(3))
+            window.bkgd(ord(' '), curses.color_pair(3))
+            for I in range(window_y, window_num_lines):
+                window.addstr(I, 0, str(' ' * int(window_num_cols - 1)), curses.color_pair(3))
+                window.insstr(I, int(window_num_cols - 1), str(' '), curses.color_pair(3))
+
         # Creat a box and add the name of the windows like a king, who trust that !!!
-        summary_box.box()
+        if self.decorated > 0:
+            window.box()
+            if not self.title == '':
+                window.addstr(0, 1, self.title)
+        else:
+            if not self.title == '':
+                window.addstr(0, 0, self.title)
+
+    def set_title(self, title):
+        self.title = title
+
+    def set_decorated(self, boolean):
+        self.decorated = int(boolean)
 
     def refresh(self):
         self.draw_window()

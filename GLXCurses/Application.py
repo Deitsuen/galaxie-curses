@@ -19,8 +19,14 @@ class Application(object):
         curses.curs_set(0)
         curses.mousemask(-1)
 
+        # Store GLXC object
         self.menu_bar = ''
         self.main_window = ''
+        self.info_bar = ''
+        self.message_bar = ''
+        self.tool_bar = ''
+
+        # Store Variables
         self.windows_id_number = ''
         self.active_window_id = ''
         self.windows = {}
@@ -28,6 +34,7 @@ class Application(object):
         # Next it's dead
         self.init_colors()
         self.screen.keypad(True)
+        self.draw_main_window()
 
     def init_colors(self):
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
@@ -55,16 +62,59 @@ class Application(object):
     def get_size(self):
         return self.screen.getmaxyx()
 
-    def set_menubar(self, glxc_menu_bar):
+    def add_menubar(self, glxc_menu_bar):
         self.menu_bar = glxc_menu_bar
+
+    def remove_menubar(self, glxc_menu_bar):
+        self.menu_bar = ''
 
     def refresh(self):
         self.screen.clear()
-        if not self.menu_bar == '':
+        self.draw_main_window()
+        if not self.main_window == '':
             self.windows[self.active_window_id].refresh()
         if not self.menu_bar == '':
             self.menu_bar.refresh()
+
         self.screen.refresh()
+
+    def draw_main_window(self):
+        screen_num_lines, _ = self.screen.getmaxyx()
+        if not self.menu_bar == '':
+            menu_bar_num_lines = 1
+        else:
+            menu_bar_num_lines = 0
+        if not self.info_bar == '':
+            info_bar_num_lines = 1
+        else:
+            info_bar_num_lines = 0
+        if not self.message_bar == '':
+            message_bar_num_lines = 1
+        else:
+            message_bar_num_lines = 0
+        if not self.tool_bar == '':
+            tool_bar_num_lines = 1
+        else:
+            tool_bar_num_lines = 0
+
+        interface_elements_num_lines = 0
+        interface_elements_num_lines += menu_bar_num_lines
+        interface_elements_num_lines += info_bar_num_lines
+        interface_elements_num_lines += message_bar_num_lines
+        interface_elements_num_lines += tool_bar_num_lines
+
+        window = self.screen.subwin(screen_num_lines - interface_elements_num_lines, 0, menu_bar_num_lines, 0)
+        self.main_window = window
+        self.screen.refresh()
+        # window_num_lines, window_num_cols = window.getmaxyx()
+        # window_y, window_x = window.getbegyx()
+        #
+        # if curses.has_colors():
+        #     window.bkgdset(ord(' '), curses.color_pair(3))
+        #     window.bkgd(ord(' '), curses.color_pair(3))
+        #     for I in range(window_y, window_num_lines):
+        #         window.addstr(I, 0, str(' ' * int(window_num_cols - 1)), curses.color_pair(3))
+        #         window.insstr(I, int(window_num_cols - 1), str(' '), curses.color_pair(3))
 
     def getch(self):
         return self.screen.getch()

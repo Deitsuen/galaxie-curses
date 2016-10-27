@@ -17,10 +17,13 @@ if __name__ == '__main__':
 
     # Create a Window
     win = GLXCurses.Window(app)
+    win.title = 'Comment la vie est belle'
+    win.set_decorated(1)
 
     # Add Everything inside the Application
-    app.set_menubar(menu)
+    app.add_menubar(menu)
     app.add_window(win)
+    app.refresh()
 
     # Main loop
     while True:
@@ -28,10 +31,8 @@ if __name__ == '__main__':
         if curses.KEY_RESIZE:
             app.refresh()
             pass
-        elif input_event == ord('q'):
+        if input_event == ord('q'):
             break
-        else:
-            pass
 
     # App Close
     app.close()
