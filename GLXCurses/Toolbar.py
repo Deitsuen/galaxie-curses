@@ -29,21 +29,22 @@ class Toolbar(object):
         screen = self.application.screen
         item_list = self.bottom_button_list
         labels_end_coord = ['', '', '', '', '', '', '', '', '', '', '', '']
-        screen_num_lines, screen_num_columns = screen.getmaxyx()
-        bottom_menu_box = screen.subwin(0, 0, screen_num_lines - 1, 0)
-        _, bottom_menu_box_num_cols = bottom_menu_box.getmaxyx()
-        bottom_menu_box_num_cols -= 1
+        screen_height, screen_width = screen.getmaxyx()
+
+        toolbar = screen.subwin(0, 0, screen_height - 1, 0)
+        toolbar_height, toolbar_width = toolbar.getmaxyx()
+        toolbar_width -= 1
         req_button_number = len(item_list) + 1
 
         pos = 0
-        if bottom_menu_box_num_cols < req_button_number * 7:
+        if toolbar_width < req_button_number * 7:
             for i in range(0, req_button_number):
-                if pos + 7 <= bottom_menu_box_num_cols:
+                if pos + 7 <= toolbar_width:
                     pos += 7
                 labels_end_coord[i] = pos
         else:
-            dv = bottom_menu_box_num_cols / req_button_number + 1
-            md = bottom_menu_box_num_cols % req_button_number + 1
+            dv = toolbar_width / req_button_number + 1
+            md = toolbar_width % req_button_number + 1
             i = 0
             for i in range(0, req_button_number / 2):
                 pos += dv
@@ -59,85 +60,84 @@ class Toolbar(object):
         if req_button_number > self.max_button_number:
             req_button_number = self.max_button_number
 
-        # Size Bug it crash about display size, by reduse the number of button it can be display
+        # Limit crash about display size, by reduce the number of button's it can be display
         max_can_be_display = 1
         for I in range(1, req_button_number + 1):
             cumul = 0
             for U in range(0, max_can_be_display):
                 cumul += len(str(item_list[U]))
-            if bottom_menu_box_num_cols - 1 > cumul + int((3 * max_can_be_display) - 0):
+            if toolbar_width - 1 > cumul + int((3 * max_can_be_display) - 0):
                 max_can_be_display += 1
-
-        bottom_menu_box.addstr(
-            0,
-            0,
-            str(" " * int(bottom_menu_box_num_cols)),
-            curses.color_pair(1)
-        )
-        bottom_menu_box.insstr(
-            0,
-            bottom_menu_box_num_cols - 1,
-            " ",
-            curses.color_pair(1)
-        )
-        bottom_menu_box.addstr(
-            0,
-            0,
-            ""
-        )
-        count = 0
-        for num in range(0, max_can_be_display - 1):
-            if count == 0:
-                bottom_menu_box.addstr(
+                toolbar.addstr(
+                    0,
+                    0,
+                    str(" " * int(toolbar_width)),
+                    curses.color_pair(1)
+                )
+                toolbar.insstr(
+                    0,
+                    toolbar_width - 1,
+                    " ",
+                    curses.color_pair(1)
+                )
+                toolbar.addstr(
                     0,
                     0,
                     ""
                 )
-                bottom_menu_box.addstr(
+        count = 0
+        for num in range(0, max_can_be_display - 1):
+            if count == 0:
+                toolbar.addstr(
+                    0,
+                    0,
+                    ""
+                )
+                toolbar.addstr(
                     0,
                     0,
                     " ",
                     curses.COLOR_WHITE | curses.COLOR_BLACK
                 )
-                bottom_menu_box.addstr(
+                toolbar.addstr(
                     str(count + 1),
                     curses.COLOR_WHITE | curses.COLOR_BLACK
                 )
-                bottom_menu_box.addstr(
+                toolbar.addstr(
                     str(item_list[count]),
                     curses.color_pair(1)
                 )
 
             elif 1 <= count < 9:
-                if screen_num_columns - (labels_end_coord[count - 1] + 0) >= len(item_list[count]) + 3:
-                    bottom_menu_box.addstr(
+                if screen_width - (labels_end_coord[count - 1] + 0) >= len(item_list[count]) + 3:
+                    toolbar.addstr(
                         0,
                         (labels_end_coord[count - 1] + 0),
                         " ",
                         curses.COLOR_WHITE | curses.COLOR_BLACK
                     )
-                    bottom_menu_box.addstr(
+                    toolbar.addstr(
                         str(count + 1),
                         curses.COLOR_WHITE | curses.COLOR_BLACK
                     )
-                    bottom_menu_box.addstr(
+                    toolbar.addstr(
                         str(item_list[count]),
                         curses.color_pair(1)
                     )
             elif count >= 9:
-                if screen_num_columns - (labels_end_coord[count - 1] + 1) >= len(item_list[count]) + 3:
-                    bottom_menu_box.addstr(
+                if screen_width - (labels_end_coord[count - 1] + 1) >= len(item_list[count]) + 3:
+                    toolbar.addstr(
                         0,
                         (labels_end_coord[count - 1] + 1),
                         str(count + 1),
                         curses.COLOR_WHITE | curses.COLOR_BLACK
                     )
-                    bottom_menu_box.addstr(
+                    toolbar.addstr(
                         item_list[count],
                         curses.color_pair(1)
                     )
             count += 1
-            # bottom_menu_box.refresh()
+            # toolbar.refresh()
 
     def refresh(self):
         self.draw_toolbar()
