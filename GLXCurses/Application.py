@@ -52,6 +52,26 @@ class Application(object):
         curses.init_pair(9, curses.COLOR_RED, curses.COLOR_BLUE)
         self.screen.refresh()
 
+    # Common Widget mandatory
+    def get_widget(self):
+        return self.main_window
+
+    def get_origin(self):
+        return self.main_window.getbegyx()
+
+    def get_size(self):
+        return self.main_window.getmaxyx()
+
+    def get_parent(self):
+        return self.main_window
+
+    def get_parent_size(self):
+        return self.screen.getmaxyx()
+
+    def get_parent_origin(self):
+        return self.screen.getbegyx()
+
+    # GLXCApplication function
     def set_name(self, name):
         self.application_name = name
 
@@ -64,9 +84,6 @@ class Application(object):
             self.windows[id_max + 1] = glxc_window
             self.active_window_id = id_max + 1
         self.refresh()
-
-    def get_size(self):
-        return self.screen.getmaxyx()
 
     def add_menubar(self, glxc_menu_bar):
         self.menubar = glxc_menu_bar
