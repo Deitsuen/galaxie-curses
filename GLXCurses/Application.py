@@ -32,6 +32,9 @@ class Application(object):
         self.active_window_id = ''
         self.windows = {}
 
+        self.parent = self.screen
+        self.widget = ''
+
         # Next it's dead
         self.init_colors()
         self.screen.keypad(True)
@@ -53,23 +56,31 @@ class Application(object):
         self.screen.refresh()
 
     # Common Widget mandatory
-    def get_widget(self):
-        return self.main_window
+    def get(self):
+        return self.widget
 
     def get_origin(self):
-        return self.main_window.getbegyx()
+        return self.widget.getbegyx()
 
     def get_size(self):
-        return self.main_window.getmaxyx()
+        return self.widget.getmaxyx()
 
     def get_parent(self):
-        return self.main_window
+        return self.parent
 
     def get_parent_size(self):
-        return self.screen.getmaxyx()
+        return self.parent.getmaxyx()
 
     def get_parent_origin(self):
-        return self.screen.getbegyx()
+        return self.parent.getbegyx()
+
+    def set_parent(self, parent):
+        self.parent = parent
+
+    def remove_parent(self):
+        self.parent = ''
+
+
 
     # GLXCApplication function
     def set_name(self, name):
@@ -116,7 +127,7 @@ class Application(object):
         self.draw_main_window()
 
         # Check main widget to display
-        if not self.main_window == '':
+        if not self.widget == '':
             self.windows[self.active_window_id].refresh()
 
         if not self.menubar == '':
@@ -129,36 +140,41 @@ class Application(object):
             self.toolbar.refresh()
 
         # After have redraw everything it's time to refresh the screen
-        self.screen.refresh()
+        self.parent.refresh()
+
+    def draw(self):
+        self.draw_main_window()
 
     def draw_main_window(self):
-        screen = self.screen
-        screen_num_lines, _ = screen.getmaxyx()
+        parent_height, parent_width = self.parent.getmaxyx()
         if not self.menubar == '':
-            menu_bar_num_lines = 1
+            menu_bar_height = 1
         else:
-            menu_bar_num_lines = 0
+            menu_bar_height = 0
         if not self.statusbar == '':
-            status_bar_num_lines = 1
+            status_bar_height = 1
         else:
-            status_bar_num_lines = 0
+            status_bar_height = 0
         if not self.message_bar == '':
-            message_bar_num_lines = 1
+            message_bar_height = 1
         else:
-            message_bar_num_lines = 0
+            message_bar_height = 0
         if not self.toolbar == '':
-            tool_bar_num_lines = 1
+            tool_bar_height = 1
         else:
-            tool_bar_num_lines = 0
+            tool_bar_height = 0
 
-        interface_elements_num_lines = 0
-        interface_elements_num_lines += menu_bar_num_lines
-        interface_elements_num_lines += message_bar_num_lines
-        interface_elements_num_lines += status_bar_num_lines
-        interface_elements_num_lines += tool_bar_num_lines
+        interface_elements_height = 0
+        interface_elements_height += menu_bar_height
+        interface_elements_height += message_bar_height
+        interface_elements_height += status_bar_height
+        interface_elements_height += tool_bar_height
 
-        window = self.screen.subwin(screen_num_lines - interface_elements_num_lines, 0, menu_bar_num_lines, 0)
-        self.main_window = window
+        height = parent_height - interface_elements_height
+        width = 0
+        begin_y = menu_bar_height
+        begin_x = 0
+        self.widget = self.parent.subwin(height, width, begin_y, begin_x)
 
     def getch(self):
         return self.screen.getch()

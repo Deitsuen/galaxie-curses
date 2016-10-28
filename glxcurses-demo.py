@@ -17,9 +17,39 @@ if __name__ == '__main__':
     menu = GLXCurses.MenuModel(app)
 
     # Create a Window
-    win = GLXCurses.Window(app)
-    win.title = 'My super Window'
-    win.set_decorated(1)
+    win1 = GLXCurses.Window(app)
+    win1.title = 'My super Window'
+    win1.set_decorated(0)
+
+    # Create a Window
+    win2 = GLXCurses.Window(win1)
+    win2.title = 'My super Window 2'
+    win2.decorated = 1
+    win2.spacing = 1
+
+    # Create a Window
+    win3 = GLXCurses.Window(win2)
+    win3.title = 'My super Window 3'
+    win3.decorated = 1
+    win3.spacing = 1
+
+    # Create a Window
+    win4 = GLXCurses.Window(win3)
+    win4.title = 'My super Window 4'
+    win4.decorated = 1
+    win4.spacing = 1
+
+    # Create a Window
+    win5 = GLXCurses.Window(win4)
+    win5.title = 'My super Window 5'
+    win5.decorated = 1
+    win5.spacing = 1
+    win5.refresh()
+
+    win1.add(win2)
+    win2.add(win3)
+    win3.add(win4)
+    win4.add(win5)
 
     # Creat a Status Bar
     statusbar = GLXCurses.Statusbar(app)
@@ -29,7 +59,7 @@ if __name__ == '__main__':
 
     # Add Everything inside the Application
     app.add_menubar(menu)
-    app.add_window(win)
+    app.add_window(win1)
     app.add_statusbar(statusbar)
     app.add_toolbar(toolbar)
 
@@ -41,10 +71,27 @@ if __name__ == '__main__':
             screen_height, screen_width = app.screen.getmaxyx()
             message_text = ''
             message_text += 'Screen Size:'
+            message_text += str(app.get_parent_size())
             message_text += ' '
-            message_text += str(screen_width)
-            message_text += 'x'
-            message_text += str(screen_height)
+            message_text += 'Win:1'
+            message_text += ' '
+            message_text += str(win1.get_size())
+            message_text += ' '
+            message_text += 'Win2:'
+            message_text += ' '
+            message_text += str(win2.get_size())
+            message_text += ' '
+            message_text += 'Win3:'
+            message_text += ' '
+            message_text += str(win3.get_size())
+            message_text += ' '
+            message_text += 'Win4:'
+            message_text += ' '
+            message_text += str(win4.get_size())
+            message_text += ' '
+            message_text += 'Win5:'
+            message_text += ' '
+            message_text += str(win5.get_size())
             statusbar.push(message_text)
             app.refresh()
             pass
