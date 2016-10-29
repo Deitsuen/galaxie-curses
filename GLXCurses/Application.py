@@ -34,6 +34,8 @@ class Application(object):
 
         self.parent = self.screen
         self.widget = ''
+        self.spacing = 0
+        self.parent_spacing = 0
 
         # Next it's dead
         self.init_colors()
@@ -65,6 +67,9 @@ class Application(object):
     def get_size(self):
         return self.widget.getmaxyx()
 
+    def get_spacing(self):
+        return self.spacing
+
     def get_parent(self):
         return self.parent
 
@@ -76,6 +81,9 @@ class Application(object):
 
     def set_parent(self, parent):
         self.parent = parent
+
+    def get_parent_spacing(self):
+        return self.parent.spacing
 
     def remove_parent(self):
         self.parent = ''

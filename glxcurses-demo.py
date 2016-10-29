@@ -18,32 +18,32 @@ if __name__ == '__main__':
 
     # Create a Window
     win1 = GLXCurses.Window(app)
-    win1.title = 'My super Window'
+    win1.title = 'My super Window 1'
     win1.set_decorated(0)
 
     # Create a Window
     win2 = GLXCurses.Window(win1)
     win2.title = 'My super Window 2'
     win2.decorated = 1
-    win2.spacing = 1
+    win2.spacing = 2
 
     # Create a Window
     win3 = GLXCurses.Window(win2)
     win3.title = 'My super Window 3'
     win3.decorated = 1
-    win3.spacing = 1
+    win3.spacing = 2
 
     # Create a Window
     win4 = GLXCurses.Window(win3)
     win4.title = 'My super Window 4'
     win4.decorated = 1
-    win4.spacing = 1
+    win4.spacing = 2
 
     # Create a Window
     win5 = GLXCurses.Window(win4)
     win5.title = 'My super Window 5'
     win5.decorated = 1
-    win5.spacing = 1
+    win5.spacing = 2
     win5.refresh()
 
     win1.add(win2)

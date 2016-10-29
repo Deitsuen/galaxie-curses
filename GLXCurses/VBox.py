@@ -14,12 +14,11 @@ def resize_text(text, max_width, separator='~'):
         return text
 
 
-class Window(object):
+class VBox(object):
     def __init__(self, parent):
         self.title = ''
         self.decorated = 0
         self.spacing = 0
-        self.parent_spacing = 0
 
         self.widget = ''
         self.widget_to_display = {}
@@ -38,9 +37,6 @@ class Window(object):
     def get_size(self):
         return self.widget.getmaxyx()
 
-    def get_spacing(self):
-        return self.spacing
-
     def get_parent(self):
         return self.parent
 
@@ -53,18 +49,13 @@ class Window(object):
     def set_parent(self, parent):
         self.parent = parent
 
-    def get_parent_spacing(self):
-        return self.parent.spacing
-
     def remove_parent(self):
         self.parent = ''
 
-    # GLXC Window Functions
+    # GLXC VBox Functions
     def draw(self):
         parent_height, parent_width = self.parent.get_size()
         parent_y, parent_x = self.parent.get_origin()
-        self.parent_spacing = self.parent.get_spacing()
-
         self.widget = self.parent.widget.subwin(
             parent_height - (self.spacing * 2),
             parent_width - (self.spacing * 2),
@@ -74,28 +65,10 @@ class Window(object):
 
         widget_height, widget_width = self.widget.getmaxyx()
         widget_y, widget_x = self.widget.getbegyx()
-        min_size_width = (self.spacing * 2) + self.spacing
-        min_size_height = (self.spacing * 2)
-        if (widget_height >= min_size_height) and (widget_width >= min_size_width):
-            if curses.has_colors():
-                self.widget.bkgdset(ord(' '), curses.color_pair(3))
-                self.widget.bkgd(ord(' '), curses.color_pair(3))
-                for I in range(widget_y, widget_height):
-                    self.widget.addstr(I, 0, str(' ' * int(widget_width - 1)), curses.color_pair(3))
-                    self.widget.insstr(I, int(widget_width - 1), str(' '), curses.color_pair(3))
 
-                # Check widgets to display
-                if bool(self.widget_to_display):
-                    self.widget_to_display[self.widget_to_display_id].draw()
-
-            # Creat a box and add the name of the windows like a king, who trust that !!!
-            if self.decorated > 0:
-                self.widget.box()
-                if not self.title == '':
-                    self.widget.addstr(0, 1, resize_text(self.title, widget_width - 2, '~'))
-            else:
-                if not self.title == '':
-                    self.widget.addstr(0, 0, resize_text(self.title, widget_width - 1, '~'))
+        # Check widgets to display
+        if bool(self.widget_to_display):
+            self.widget_to_display[self.widget_to_display_id].draw()
 
 
     def set_title(self, title):
