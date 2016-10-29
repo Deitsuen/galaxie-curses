@@ -55,6 +55,11 @@ class Application(object):
         curses.init_pair(7, curses.COLOR_YELLOW, curses.COLOR_BLUE)
         curses.init_pair(8, curses.COLOR_GREEN, curses.COLOR_BLUE)
         curses.init_pair(9, curses.COLOR_RED, curses.COLOR_BLUE)
+        # Debug color
+        # Dialog File Selection
+        curses.init_pair(10, curses.COLOR_GREEN, curses.COLOR_GREEN)
+        curses.init_pair(11, curses.COLOR_YELLOW, curses.COLOR_YELLOW)
+        curses.init_pair(12, curses.COLOR_RED, curses.COLOR_RED)
         self.screen.refresh()
 
     # Common Widget mandatory

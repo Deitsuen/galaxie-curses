@@ -19,10 +19,14 @@ class VBox(object):
         self.title = ''
         self.decorated = 0
         self.spacing = 0
+        self.subwins_spacing = 0
+        self.parent_spacing = 0
 
         self.widget = ''
         self.widget_to_display = {}
+        self.widget_subwins = {}
         self.widget_to_display_id = ''
+        self.number_of_widget_to_display = 0
         self.parent = parent
 
         self.draw()
@@ -37,6 +41,9 @@ class VBox(object):
     def get_size(self):
         return self.widget.getmaxyx()
 
+    def get_spacing(self):
+        return self.spacing
+
     def get_parent(self):
         return self.parent
 
@@ -48,6 +55,9 @@ class VBox(object):
 
     def set_parent(self, parent):
         self.parent = parent
+
+    def get_parent_spacing(self):
+        return self.parent.spacing
 
     def remove_parent(self):
         self.parent = ''
@@ -67,8 +77,30 @@ class VBox(object):
         widget_y, widget_x = self.widget.getbegyx()
 
         # Check widgets to display
-        if bool(self.widget_to_display):
-            self.widget_to_display[self.widget_to_display_id].draw()
+        if len(self.widget_to_display.keys()):
+            devised_box_size = widget_height / self.number_of_widget_to_display
+
+            for count in range(0, self.number_of_widget_to_display, 1):
+                if count == 0:
+                    self.widget_subwins[count] = self.widget.subwin(
+                        devised_box_size - self.subwins_spacing,
+                        widget_width - self.subwins_spacing * 2,
+                        widget_y + self.subwins_spacing,
+                        widget_x + self.subwins_spacing
+                    )
+                else:
+                    self.widget_subwins[count] = self.widget.subwin(
+                        devised_box_size - (self.subwins_spacing/2),
+                        widget_width - self.subwins_spacing * 2,
+                        widget_y + (devised_box_size * count) + (self.subwins_spacing/2),
+                        widget_x + self.subwins_spacing
+                    )
+                if (widget_height >= self.number_of_widget_to_display +1) and (widget_width >= self.number_of_widget_to_display +1):
+                    self.widget_subwins[count].bkgdset(ord(' '), curses.color_pair(10 + count))
+                    self.widget_subwins[count].bkgd(ord(' '), curses.color_pair(10 + count))
+                    #self.widget_to_display[0].set_parent(self.widget_subwins[count])
+                #self.widget_to_display[count].draw()
+
 
 
     def set_title(self, title):
@@ -81,10 +113,9 @@ class VBox(object):
         id_max = len(self.widget_to_display.keys())
         if bool(self.widget_to_display):
             self.widget_to_display[id_max] = widget
-            self.widget_to_display_id = id_max
         else:
             self.widget_to_display[id_max + 1] = widget
-            self.widget_to_display_id = id_max + 1
+        self.number_of_widget_to_display += 1
 
     def refresh(self):
         self.draw()

@@ -33,23 +33,36 @@ if __name__ == '__main__':
     win3.decorated = 1
     win3.spacing = 2
 
-    # Create a Window
-    win4 = GLXCurses.Window(win3)
-    win4.title = 'My super Window 4'
-    win4.decorated = 1
-    win4.spacing = 2
+    vbox = GLXCurses.VBox(win3)
 
     # Create a Window
-    win5 = GLXCurses.Window(win4)
+    win4 = GLXCurses.Window(vbox)
+    win4.title = 'My super Window 4'
+    win4.decorated = 1
+    win4.spacing = 1
+
+    # Create a Window
+    win5 = GLXCurses.Window(vbox)
     win5.title = 'My super Window 5'
     win5.decorated = 1
-    win5.spacing = 2
+    win5.spacing = 1
     win5.refresh()
+
+    # Create a Window
+    win6 = GLXCurses.Window(vbox)
+    win6.title = 'My super Window 6'
+    win6.decorated = 1
+    win6.spacing = 1
+    win6.refresh()
 
     win1.add(win2)
     win2.add(win3)
-    win3.add(win4)
-    win4.add(win5)
+    win3.add(vbox)
+
+    vbox.subwins_spacing = 1
+    vbox.add(win4)
+    vbox.add(win5)
+    vbox.add(win6)
 
     # Creat a Status Bar
     statusbar = GLXCurses.Statusbar(app)
@@ -61,7 +74,7 @@ if __name__ == '__main__':
     app.add_menubar(menu)
     app.add_window(win1)
     app.add_statusbar(statusbar)
-    app.add_toolbar(toolbar)
+    #app.add_toolbar(toolbar)
 
     # Main loop
     count = 1
