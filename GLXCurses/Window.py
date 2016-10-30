@@ -64,12 +64,8 @@ class Window(Widget):
                 if not self.title == '':
                     self.widget.addstr(0, 0, resize_text(self.title, widget_width - 1, '~'))
 
-
     def set_title(self, title):
         self.title = title
-
-    def set_decorated(self, boolean):
-        self.widget_decorated = int(boolean)
 
     def add(self, widget):
         id_max = len(self.widget_to_display.keys())

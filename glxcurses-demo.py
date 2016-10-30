@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # Create a Window
     win3 = GLXCurses.Window(win2)
     win3.title = 'My super Window 3'
-    win3.set_decorated(1)
+    win3.set_decorated(0)
     win3.set_spacing(1)
 
     vbox = GLXCurses.VBox(win3)
