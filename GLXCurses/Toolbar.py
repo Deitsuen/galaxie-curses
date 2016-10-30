@@ -1,14 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
+from Widget import Widget
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
 
 
-class Toolbar(object):
-    def __init__(self, application):
+class Toolbar(Widget):
+    def __init__(self, parent):
+        Widget.__init__(self)
+        self.set_parent(parent)
+
         self.max_button_number = 10
         self.bottom_button_list = [
             'Help',
@@ -22,29 +26,30 @@ class Toolbar(object):
             'Menu',
             'Quit'
         ]
-        self.application = application
-        self.draw_toolbar()
+        self.application = parent
 
-    def draw_toolbar(self):
-        screen = self.application.screen
+        # Mandatory Method
+        self.draw()
+
+    def draw(self):
         item_list = self.bottom_button_list
         labels_end_coord = ['', '', '', '', '', '', '', '', '', '', '', '']
-        screen_height, screen_width = screen.getmaxyx()
+        screen_height, screen_width = self.screen.getmaxyx()
 
-        toolbar = screen.subwin(0, 0, screen_height - 1, 0)
-        toolbar_height, toolbar_width = toolbar.getmaxyx()
-        toolbar_width -= 1
+        self.widget = self.screen.subwin(0, 0, screen_height - 1, 0)
+        widget_height, widget_width = self.widget.getmaxyx()
+        widget_width -= 1
         req_button_number = len(item_list) + 1
 
         pos = 0
-        if toolbar_width < req_button_number * 7:
+        if widget_width < req_button_number * 7:
             for i in range(0, req_button_number):
-                if pos + 7 <= toolbar_width:
+                if pos + 7 <= widget_width:
                     pos += 7
                 labels_end_coord[i] = pos
         else:
-            dv = toolbar_width / req_button_number + 1
-            md = toolbar_width % req_button_number + 1
+            dv = widget_width / req_button_number + 1
+            md = widget_width % req_button_number + 1
             i = 0
             for i in range(0, req_button_number / 2):
                 pos += dv
@@ -66,21 +71,21 @@ class Toolbar(object):
             cumul = 0
             for U in range(0, max_can_be_display):
                 cumul += len(str(item_list[U]))
-            if toolbar_width - 1 > cumul + int((3 * max_can_be_display) - 0):
+            if widget_width - 1 > cumul + int((3 * max_can_be_display) - 0):
                 max_can_be_display += 1
-                toolbar.addstr(
+                self.widget.addstr(
                     0,
                     0,
-                    str(" " * int(toolbar_width)),
+                    str(" " * int(widget_width)),
                     curses.color_pair(1)
                 )
-                toolbar.insstr(
+                self.widget.insstr(
                     0,
-                    toolbar_width - 1,
+                    widget_width - 1,
                     " ",
                     curses.color_pair(1)
                 )
-                toolbar.addstr(
+                self.widget.addstr(
                     0,
                     0,
                     ""
@@ -88,56 +93,52 @@ class Toolbar(object):
         count = 0
         for num in range(0, max_can_be_display - 1):
             if count == 0:
-                toolbar.addstr(
+                self.widget.addstr(
                     0,
                     0,
                     ""
                 )
-                toolbar.addstr(
+                self.widget.addstr(
                     0,
                     0,
                     " ",
                     curses.COLOR_WHITE | curses.COLOR_BLACK
                 )
-                toolbar.addstr(
+                self.widget.addstr(
                     str(count + 1),
                     curses.COLOR_WHITE | curses.COLOR_BLACK
                 )
-                toolbar.addstr(
+                self.widget.addstr(
                     str(item_list[count]),
                     curses.color_pair(1)
                 )
 
             elif 1 <= count < 9:
                 if screen_width - (labels_end_coord[count - 1] + 0) >= len(item_list[count]) + 3:
-                    toolbar.addstr(
+                    self.widget.addstr(
                         0,
                         (labels_end_coord[count - 1] + 0),
                         " ",
                         curses.COLOR_WHITE | curses.COLOR_BLACK
                     )
-                    toolbar.addstr(
+                    self.widget.addstr(
                         str(count + 1),
                         curses.COLOR_WHITE | curses.COLOR_BLACK
                     )
-                    toolbar.addstr(
+                    self.widget.addstr(
                         str(item_list[count]),
                         curses.color_pair(1)
                     )
             elif count >= 9:
                 if screen_width - (labels_end_coord[count - 1] + 1) >= len(item_list[count]) + 3:
-                    toolbar.addstr(
+                    self.widget.addstr(
                         0,
                         (labels_end_coord[count - 1] + 1),
                         str(count + 1),
                         curses.COLOR_WHITE | curses.COLOR_BLACK
                     )
-                    toolbar.addstr(
+                    self.widget.addstr(
                         item_list[count],
                         curses.color_pair(1)
                     )
             count += 1
-            # toolbar.refresh()
-
-    def refresh(self):
-        self.draw_toolbar()

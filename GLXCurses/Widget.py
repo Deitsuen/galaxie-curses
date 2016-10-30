@@ -9,10 +9,15 @@ __author__ = 'Tuux'
 
 class Widget(object):
     def __init__(self):
+
+        # Widget Setting
         self.widget = ''
         self.widget_spacing = 0
         self.widget_decorated = 0
 
+        self.screen = ''
+
+        # Widget Parent Information's
         self.parent = ''
         self.parent_spacing = 0
 
@@ -61,9 +66,16 @@ class Widget(object):
 
     def set_parent(self, parent):
         self.parent = parent
+        self.parent_spacing = self.parent.parent_spacing
+        self.screen = self.parent.screen
 
     def get_parent_spacing(self):
+        self.parent_spacing = self.parent.parent_spacing
         return self.parent_spacing
 
-    def remove_parent(self):
+    def un_parent(self):
         self.parent = ''
+        self.parent_spacing = 0
+
+    def get_screen(self):
+        self.screen = self.parent.screen

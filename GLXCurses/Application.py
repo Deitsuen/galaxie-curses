@@ -101,7 +101,8 @@ class Application(object):
     def remove_parent(self):
         self.parent = ''
 
-
+    def get_screen(self):
+        return self.screen
 
     # GLXCApplication function
     def set_name(self, name):

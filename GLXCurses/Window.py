@@ -18,12 +18,15 @@ def resize_text(text, max_width, separator='~'):
 class Window(Widget):
     def __init__(self, parent):
         Widget.__init__(self)
+        self.set_parent(parent)
+
+        # Internal Widget Setting
         self.title = ''
 
         self.widget_to_display = {}
         self.widget_to_display_id = ''
-        self.parent = parent
 
+        # Mandatory Method
         self.draw()
 
     # GLXC Window Functions

@@ -73,7 +73,7 @@ if __name__ == '__main__':
     app.add_menubar(menu)
     app.add_window(win1)
     app.add_statusbar(statusbar)
-    #app.add_toolbar(toolbar)
+    app.add_toolbar(toolbar)
 
     # Main loop
     count = 1

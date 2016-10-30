@@ -12,6 +12,7 @@ __author__ = 'Tuux'
 class VBox(Widget):
     def __init__(self, parent):
         Widget.__init__(self)
+        self.set_parent(parent)
         self.title = ''
 
         self.subwins_spacing = 0
@@ -21,8 +22,8 @@ class VBox(Widget):
         self.h_widget_list = {}
         self.widget_to_display_id = ''
         self.number_of_widget_to_display = 0
-        self.parent = parent
 
+        # Mandatory Method
         self.draw()
 
     # GLXC VBox Functions
