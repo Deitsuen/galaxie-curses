@@ -1,48 +1,50 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
-import time
+from Widget import Widget
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
 
 
-class MenuModel(object):
-    def __init__(self, application):
-        self.application = application
-        self.app_info_label = self.application.application_name
-        self.draw_menubar()
+class MenuModel(Widget):
+    def __init__(self, parent):
+        Widget.__init__(self)
+        self.set_parent(parent)
 
-    def draw_menubar(self):
-        actual_x_size, actual_y_size = self.application.screen.getmaxyx()
+        # Internal Widget Setting
+        self.app_info_label = ''
+
+        # Mandatory Method
+        self.draw()
+
+    def draw(self):
+        actual_x_size, actual_y_size = self.screen.getmaxyx()
         app_info_label = self.app_info_label
-        top_menu_box = self.application.screen.subwin(0, 0, 0, 0)
+        self.widget = self.screen.subwin(0, 0, 0, 0)
         if curses.has_colors():
-                top_menu_box.addstr(
+            self.widget.addstr(
                     0,
                     0,
                     str(" " * int(actual_y_size)),
                     curses.color_pair(1)
                 )
-                top_menu_box.bkgdset(
+            self.widget.bkgdset(
                     ord(' '),
                     curses.color_pair(1)
                 )
         if len(self.app_info_label) > 0:
             if not actual_y_size + 1 <= len(app_info_label):
-                top_menu_box.addstr(
+                self.widget.addstr(
                     0,
                     (actual_y_size - 1) - len(str(app_info_label[:-1])),
                     app_info_label[:-1],
                     curses.color_pair(1)
                 )
-                top_menu_box.insstr(
+                self.widget.insstr(
                     0,
                     actual_y_size - 1,
                     app_info_label[-1:],
                     curses.color_pair(1)
                 )
-
-    def refresh(self):
-        self.draw_menubar()
