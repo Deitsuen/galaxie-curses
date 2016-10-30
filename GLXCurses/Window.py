@@ -16,18 +16,14 @@ def resize_text(text, max_width, separator='~'):
 
 
 class Window(Widget):
-    def __init__(self, parent):
+    def __init__(self):
         Widget.__init__(self)
-        self.set_parent(parent)
         self.type = 'Window'
         # Internal Widget Setting
         self.title = ''
 
         self.widget_to_display = {}
         self.widget_to_display_id = ''
-
-        # Mandatory Method
-        self.draw()
 
     # GLXC Window Functions
     def draw(self):
@@ -89,6 +85,7 @@ class Window(Widget):
         self.title = title
 
     def add(self, widget):
+        widget.set_parent(self)
         id_max = len(self.widget_to_display.keys())
         if bool(self.widget_to_display):
             self.widget_to_display[id_max] = widget

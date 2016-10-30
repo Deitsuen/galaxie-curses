@@ -7,6 +7,7 @@
 __author__ = 'Tuux'
 
 
+from GLXCurses.Style import Style
 class Widget(object):
     def __init__(self):
 
@@ -15,7 +16,7 @@ class Widget(object):
         self.widget_spacing = 0
         self.widget_decorated = 0
         self.screen = ''
-        self.style = ''
+        self.style = Style()
         self.type = 'Widget'
 
         # Widget Parent Information's

@@ -48,8 +48,6 @@ class Application(object):
         self.parent_spacing = 0
         self.type = 'Application'
 
-        # Mandatory Method
-        self.draw()
 
     # Common Widget mandatory
     def get(self):
@@ -105,6 +103,7 @@ class Application(object):
         return self.style
 
     def add_window(self, glxc_window):
+        glxc_window.set_parent(self)
         id_max = len(self.windows.keys())
         if id_max == 0:
             self.windows[id_max] = glxc_window
@@ -112,30 +111,28 @@ class Application(object):
         else:
             self.windows[id_max + 1] = glxc_window
             self.active_window_id = id_max + 1
-        self.refresh()
 
     def add_menubar(self, glxc_menu_bar):
+        glxc_menu_bar.set_parent(self)
         self.menubar = glxc_menu_bar
 
     def remove_menubar(self, glxc_menu_bar):
         self.menubar = ''
-        self.refresh()
 
     def add_statusbar(self, glx_statusbar):
+        glx_statusbar.set_parent(self)
         self.statusbar = glx_statusbar
-        self.refresh()
 
     def remove_statusbar(self, glx_statusbar):
         self.statusbar = ''
-        self.refresh()
+
 
     def add_toolbar(self, glx_toolbar):
+        glx_toolbar.set_parent(self)
         self.toolbar = glx_toolbar
-        self.refresh()
 
     def remove_toolbar(self, glx_toolbar):
         self.toolbar = ''
-        self.refresh()
 
     def refresh(self):
         # Clean the screen

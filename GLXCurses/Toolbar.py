@@ -9,10 +9,8 @@ __author__ = 'Tuux'
 
 
 class Toolbar(Widget):
-    def __init__(self, parent):
+    def __init__(self):
         Widget.__init__(self)
-        self.set_parent(parent)
-
         self.max_button_number = 10
         self.button_list = [
             'Help',
@@ -26,10 +24,6 @@ class Toolbar(Widget):
             'Menu',
             'Quit'
         ]
-        self.application = parent
-
-        # Mandatory Method
-        self.draw()
 
     def draw(self):
         item_list = self.button_list

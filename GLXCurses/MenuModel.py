@@ -9,15 +9,12 @@ __author__ = 'Tuux'
 
 from Style import Style
 class MenuModel(Widget):
-    def __init__(self, parent):
+    def __init__(self):
         Widget.__init__(self)
-        self.set_parent(parent)
         self.type = 'MenuModel'
 
         # Internal Widget Setting
         self.app_info_label = ''
-        # Mandatory Method
-        self.draw()
 
     def draw(self):
         actual_x_size, actual_y_size = self.screen.getmaxyx()

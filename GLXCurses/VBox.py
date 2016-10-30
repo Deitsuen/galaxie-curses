@@ -11,9 +11,8 @@ __author__ = 'Tuux'
 
 
 class VBox(Widget):
-    def __init__(self, parent):
+    def __init__(self):
         Widget.__init__(self)
-        self.set_parent(parent)
         self.type = 'VBox'
         self.title = ''
 
@@ -25,8 +24,6 @@ class VBox(Widget):
         self.widget_to_display_id = ''
         self.number_of_widget_to_display = 0
 
-        # Mandatory Method
-        self.draw()
 
     # GLXC VBox Functions
     def draw(self):
@@ -68,8 +65,8 @@ class VBox(Widget):
                     self.widget_subwins[ID].bkgd(ord(' '), curses.color_pair(self.get_style_by_type('Debug') + ID))
 
                     # Check widgets to display
-                    self.h_widget_list[ID] = Box(self)
-                    self.h_widget_list[ID].add(self.h_widget_list[ID].draw())
+                    #self.h_widget_list[ID] = Box(self)
+                    #self.h_widget_list[ID].add(self.h_widget_list[ID].draw())
                     #self.h_widget_list[ID].refresh()
                     # self.widget_to_display[ID].set_parent(self.h_widget_list[ID])
                     # self.h_widget_list[ID].widget = self.widget_subwins[ID]
@@ -85,6 +82,7 @@ class VBox(Widget):
         self.title = title
 
     def add(self, widget):
+        widget.set_parent(self)
         id_max = len(self.widget_to_display.keys())
         if bool(self.widget_to_display):
             self.widget_to_display[id_max] = widget
