@@ -8,17 +8,9 @@ from Widget import Widget
 __author__ = 'Tuux'
 
 
-def resize_text(text, max_width, separator='~'):
-    if max_width < len(text):
-        return text[:(max_width / 2) - 1] + separator + text[-max_width / 2:]
-    else:
-        return text
-
-
-class Window(Widget):
+class Box(Widget):
     def __init__(self, parent):
         Widget.__init__(self)
-        self.title = ''
 
         self.widget_to_display = {}
         self.widget_to_display_id = ''
@@ -48,28 +40,12 @@ class Window(Widget):
                 self.widget.bkgdset(ord(' '), curses.color_pair(3))
                 self.widget.bkgd(ord(' '), curses.color_pair(3))
                 for I in range(widget_y, widget_height):
-                    self.widget.addstr(I, 0, str(' ' * int(widget_width - 1)), curses.color_pair(3))
-                    self.widget.insstr(I, int(widget_width - 1), str(' '), curses.color_pair(3))
+                    self.widget.addstr(I, 0, str(' ' * int(widget_width - 1)), curses.color_pair(10))
+                    self.widget.insstr(I, int(widget_width - 1), str(' '), curses.color_pair(10))
 
                 # Check widgets to display
                 if bool(self.widget_to_display):
                     self.widget_to_display[self.widget_to_display_id].draw()
-
-            # Creat a box and add the name of the windows like a king, who trust that !!!
-            if self.widget_decorated > 0:
-                self.widget.box()
-                if not self.title == '':
-                    self.widget.addstr(0, 1, resize_text(self.title, widget_width - 2, '~'))
-            else:
-                if not self.title == '':
-                    self.widget.addstr(0, 0, resize_text(self.title, widget_width - 1, '~'))
-
-
-    def set_title(self, title):
-        self.title = title
-
-    def set_decorated(self, boolean):
-        self.widget_decorated = int(boolean)
 
     def add(self, widget):
         id_max = len(self.widget_to_display.keys())

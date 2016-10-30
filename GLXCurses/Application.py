@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
+import sys
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -10,7 +11,14 @@ __author__ = 'Tuux'
 class Application(object):
     def __init__(self):
         self.screen = curses.initscr()
-        curses.start_color()
+        if not curses.has_colors():
+            sys.stdout.write("Your terminal does not support color\n")
+            sys.stdout.flush()
+            self.close()
+            sys.exit(1)
+        else:
+            curses.start_color()
+            self.init_colors()
         self.screen.clear()
 
         curses.noecho()
@@ -38,7 +46,7 @@ class Application(object):
         self.parent_spacing = 0
 
         # Next it's dead
-        self.init_colors()
+
         self.screen.keypad(True)
 
         self.draw_main_window()
