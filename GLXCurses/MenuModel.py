@@ -12,10 +12,10 @@ class MenuModel(Widget):
     def __init__(self, parent):
         Widget.__init__(self)
         self.set_parent(parent)
+        self.type = 'MenuModel'
 
         # Internal Widget Setting
         self.app_info_label = ''
-        self.type = 'MenuModel'
         # Mandatory Method
         self.draw()
 

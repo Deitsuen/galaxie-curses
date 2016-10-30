@@ -12,37 +12,38 @@ class Statusbar(Widget):
     def __init__(self, parent):
         Widget.__init__(self)
         self.set_parent(parent)
-        self.statusbar_stack = []
-        self.width = ''
-        self.height = ''
         self.type = 'Statusbar'
 
+        # Widget Setting
+        self.statusbar_stack = []
+
+        # Mandatory Method
         self.draw()
 
     def draw(self):
-        screen = self.screen
-        screen_height, screen_width = screen.getmaxyx()
+
+        screen_height, screen_width = self.screen.getmaxyx()
 
         # Place the status bar from the end of the screen by look if it have a tool bar before
         if not self.parent.toolbar == '':
             line_from_max_screen_height = 2
         else:
             line_from_max_screen_height = 1
-        self.widget = screen.subwin(
+        self.widget = self.screen.subwin(
             0,
             0,
             screen_height - line_from_max_screen_height,
             0
         )
         # Get the Status Bar size
-        self.height, self.width = self.widget.getmaxyx()
+        height, width = self.widget.getmaxyx()
 
         # Clean the entire line
         if curses.has_colors():
             self.widget.addstr(
                     0,
                     0,
-                    str(' ' * (self.width - 1)),
+                    str(' ' * (width - 1)),
                     curses.color_pair(self.get_style_by_type(self.type))
                 )
             self.widget.insstr(
@@ -53,8 +54,8 @@ class Statusbar(Widget):
         # If it have something inside the Statusbar stack they display it but care about the display size
         if len(self.statusbar_stack):
             message_to_display = self.statusbar_stack[-1]
-            if not len(message_to_display) <= self.width - 1:
-                start, end = message_to_display[:self.width - 1], message_to_display[self.width - 1:]
+            if not len(message_to_display) <= width - 1:
+                start, end = message_to_display[:width - 1], message_to_display[width - 1:]
                 self.widget.addstr(
                     0,
                     0,
@@ -62,8 +63,8 @@ class Statusbar(Widget):
                 )
                 self.widget.insstr(
                     0,
-                    self.width - 1,
-                    str(message_to_display[:self.width][-1:])
+                    width - 1,
+                    str(message_to_display[:width][-1:])
                 )
             else:
                 self.widget.addstr(

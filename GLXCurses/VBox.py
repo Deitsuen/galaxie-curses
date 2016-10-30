@@ -14,6 +14,7 @@ class VBox(Widget):
     def __init__(self, parent):
         Widget.__init__(self)
         self.set_parent(parent)
+        self.type = 'VBox'
         self.title = ''
 
         self.subwins_spacing = 0
