@@ -38,11 +38,12 @@ class Box(Widget):
         min_size_height = (self.widget_spacing * 2)
         if (widget_height >= min_size_height) and (widget_width >= min_size_width):
             if curses.has_colors():
-                self.widget.bkgdset(ord(' '), curses.color_pair(3))
-                self.widget.bkgd(ord(' '), curses.color_pair(3))
-                for I in range(widget_y, widget_height):
-                    self.widget.addstr(I, 0, str(' ' * int(widget_width - 1)), curses.color_pair(10))
-                    self.widget.insstr(I, int(widget_width - 1), str(' '), curses.color_pair(10))
+                l = 1
+                # self.widget.bkgdset(ord(' '), curses.color_pair(3))
+                # self.widget.bkgd(ord(' '), curses.color_pair(3))
+                # for I in range(widget_y, widget_height):
+                #     self.widget.addstr(I, 0, str(' ' * int(widget_width - 1)), curses.color_pair(10))
+                #     self.widget.insstr(I, int(widget_width - 1), str(' '), curses.color_pair(10))
 
                 # Check widgets to display
                 if bool(self.widget_to_display):

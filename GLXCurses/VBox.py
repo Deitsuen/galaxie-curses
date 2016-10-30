@@ -63,11 +63,13 @@ class VBox(Widget):
                             widget_x + self.subwins_spacing
                         )
 
-                    self.widget_subwins[ID].bkgdset(ord(' '), curses.color_pair(10 + ID))
-                    self.widget_subwins[ID].bkgd(ord(' '), curses.color_pair(10 + ID))
+                    self.widget_subwins[ID].bkgdset(ord(' '), curses.color_pair(self.get_style_by_type('Debug') + ID))
+                    self.widget_subwins[ID].bkgd(ord(' '), curses.color_pair(self.get_style_by_type('Debug') + ID))
 
                     # Check widgets to display
-                    # self.h_widget_list[ID] = Box(self)
+                    self.h_widget_list[ID] = Box(self)
+                    self.h_widget_list[ID].add(self.h_widget_list[ID].draw())
+                    #self.h_widget_list[ID].refresh()
                     # self.widget_to_display[ID].set_parent(self.h_widget_list[ID])
                     # self.h_widget_list[ID].widget = self.widget_subwins[ID]
                     # self.widget_to_display[ID].add_parent(self.h_widget_list[ID])

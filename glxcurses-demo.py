@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     # Create a Menu
     menu = GLXCurses.MenuModel(app)
-    menu.app_info_label = 'Galaxie Curse Demo'
+    menu.app_info_label = app.get_name()
 
     # Create a Window
     win1 = GLXCurses.Window(app)

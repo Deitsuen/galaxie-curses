@@ -14,8 +14,9 @@ class Widget(object):
         self.widget = ''
         self.widget_spacing = 0
         self.widget_decorated = 0
-
         self.screen = ''
+        self.style = ''
+        self.type = 'Widget'
 
         # Widget Parent Information's
         self.parent = ''
@@ -68,6 +69,7 @@ class Widget(object):
         self.parent = parent
         self.parent_spacing = self.parent.parent_spacing
         self.screen = self.parent.screen
+        self.style = self.parent.style
 
     def get_parent_spacing(self):
         self.parent_spacing = self.parent.parent_spacing
@@ -78,4 +80,13 @@ class Widget(object):
         self.parent_spacing = 0
 
     def get_screen(self):
-        self.screen = self.parent.screen
+        return self.screen
+
+    def set_style(self, style_name):
+        self.style = style_name
+
+    def get_style(self):
+        return self.style
+
+    def get_style_by_type(self, type):
+        return self.style.get_style_by_type(type)

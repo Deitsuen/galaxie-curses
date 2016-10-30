@@ -77,13 +77,13 @@ class Toolbar(Widget):
                     0,
                     0,
                     str(" " * int(widget_width)),
-                    curses.color_pair(1)
+                    curses.color_pair(self.get_style_by_type('ToolbarText'))
                 )
                 self.widget.insstr(
                     0,
                     widget_width - 1,
                     " ",
-                    curses.color_pair(1)
+                    curses.color_pair(self.get_style_by_type('ToolbarText'))
                 )
                 self.widget.addstr(
                     0,
@@ -94,51 +94,39 @@ class Toolbar(Widget):
         for num in range(0, max_can_be_display - 1):
             if count == 0:
                 self.widget.addstr(
-                    0,
-                    0,
-                    ""
-                )
-                self.widget.addstr(
-                    0,
-                    0,
-                    " ",
-                    curses.COLOR_WHITE | curses.COLOR_BLACK
-                )
-                self.widget.addstr(
-                    str(count + 1),
-                    curses.COLOR_WHITE | curses.COLOR_BLACK
+                    str('{0: >2}'.format(count + 1)),
+                    curses.color_pair(self.get_style_by_type('ToolbarPrefix'))
                 )
                 self.widget.addstr(
                     str(item_list[count]),
-                    curses.color_pair(1)
+                    curses.color_pair(self.get_style_by_type('ToolbarText'))
                 )
-
-            elif 1 <= count < 9:
+            elif 0 <= count < max_can_be_display - 1:
                 if screen_width - (labels_end_coord[count - 1] + 0) >= len(item_list[count]) + 3:
                     self.widget.addstr(
                         0,
                         (labels_end_coord[count - 1] + 0),
-                        " ",
-                        curses.COLOR_WHITE | curses.COLOR_BLACK
+                        "",
+                        curses.color_pair(self.get_style_by_type('ToolbarPrefix'))
                     )
                     self.widget.addstr(
-                        str(count + 1),
-                        curses.COLOR_WHITE | curses.COLOR_BLACK
+                        str('{0: >2}'.format(count + 1)),
+                        curses.color_pair(self.get_style_by_type('ToolbarPrefix'))
                     )
                     self.widget.addstr(
                         str(item_list[count]),
-                        curses.color_pair(1)
+                        curses.color_pair(self.get_style_by_type('ToolbarText'))
                     )
-            elif count >= 9:
+            elif count >= max_can_be_display - 1:
                 if screen_width - (labels_end_coord[count - 1] + 1) >= len(item_list[count]) + 3:
                     self.widget.addstr(
                         0,
                         (labels_end_coord[count - 1] + 1),
-                        str(count + 1),
-                        curses.COLOR_WHITE | curses.COLOR_BLACK
+                        str('{0: >2}'.format(count + 1)),
+                        curses.color_pair(self.get_style_by_type('ToolbarPrefix'))
                     )
                     self.widget.addstr(
                         item_list[count],
-                        curses.color_pair(1)
+                        curses.color_pair(self.get_style_by_type('ToolbarText'))
                     )
             count += 1

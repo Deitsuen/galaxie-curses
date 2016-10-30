@@ -19,7 +19,7 @@ class Window(Widget):
     def __init__(self, parent):
         Widget.__init__(self)
         self.set_parent(parent)
-
+        self.type = 'Window'
         # Internal Widget Setting
         self.title = ''
 
@@ -48,11 +48,21 @@ class Window(Widget):
         min_size_height = (self.widget_spacing * 2)
         if (widget_height >= min_size_height) and (widget_width >= min_size_width):
             if curses.has_colors():
-                self.widget.bkgdset(ord(' '), curses.color_pair(3))
-                self.widget.bkgd(ord(' '), curses.color_pair(3))
+                self.widget.bkgdset(ord(' '), curses.color_pair(self.get_style_by_type(self.type)))
+                self.widget.bkgd(ord(' '), curses.color_pair(self.get_style_by_type(self.type)))
                 for I in range(widget_y, widget_height):
-                    self.widget.addstr(I, 0, str(' ' * int(widget_width - 1)), curses.color_pair(3))
-                    self.widget.insstr(I, int(widget_width - 1), str(' '), curses.color_pair(3))
+                    self.widget.addstr(
+                        I,
+                        0,
+                        str(' ' * int(widget_width - 1)),
+                        curses.color_pair(self.get_style_by_type(self.type))
+                    )
+                    self.widget.insstr(
+                        I,
+                        int(widget_width - 1),
+                        str(' '),
+                        curses.color_pair(self.get_style_by_type(self.type))
+                    )
 
                 # Check widgets to display
                 if bool(self.widget_to_display):
@@ -62,10 +72,18 @@ class Window(Widget):
             if self.widget_decorated > 0:
                 self.widget.box()
                 if not self.title == '':
-                    self.widget.addstr(0, 1, resize_text(self.title, widget_width - 2, '~'))
+                    self.widget.addstr(
+                        0,
+                        1,
+                        resize_text(self.title, widget_width - 2, '~')
+                    )
             else:
                 if not self.title == '':
-                    self.widget.addstr(0, 0, resize_text(self.title, widget_width - 1, '~'))
+                    self.widget.addstr(
+                        0,
+                        0,
+                        resize_text(self.title, widget_width - 1, '~')
+                    )
 
     def set_title(self, title):
         self.title = title

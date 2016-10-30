@@ -7,7 +7,7 @@ from Widget import Widget
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
 
-
+from Style import Style
 class MenuModel(Widget):
     def __init__(self, parent):
         Widget.__init__(self)
@@ -15,7 +15,7 @@ class MenuModel(Widget):
 
         # Internal Widget Setting
         self.app_info_label = ''
-
+        self.type = 'MenuModel'
         # Mandatory Method
         self.draw()
 
@@ -28,11 +28,11 @@ class MenuModel(Widget):
                     0,
                     0,
                     str(" " * int(actual_y_size)),
-                    curses.color_pair(1)
+                    curses.color_pair(self.get_style_by_type(self.type))
                 )
             self.widget.bkgdset(
                     ord(' '),
-                    curses.color_pair(1)
+                    curses.color_pair(self.get_style_by_type(self.type))
                 )
         if len(self.app_info_label) > 0:
             if not actual_y_size + 1 <= len(app_info_label):
@@ -40,11 +40,11 @@ class MenuModel(Widget):
                     0,
                     (actual_y_size - 1) - len(str(app_info_label[:-1])),
                     app_info_label[:-1],
-                    curses.color_pair(1)
+                    curses.color_pair(self.get_style_by_type(self.type))
                 )
                 self.widget.insstr(
                     0,
                     actual_y_size - 1,
                     app_info_label[-1:],
-                    curses.color_pair(1)
+                    curses.color_pair(self.get_style_by_type(self.type))
                 )

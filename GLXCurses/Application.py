@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import curses
 import sys
+from Style import Style
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -18,7 +19,7 @@ class Application(object):
             sys.exit(1)
         else:
             curses.start_color()
-            self.init_colors()
+            self.style = Style()
         self.screen.clear()
 
         curses.noecho()
@@ -35,40 +36,20 @@ class Application(object):
         self.toolbar = ''
 
         # Store Variables
-        self.application_name = ''
+        self.name = ''
         self.windows_id_number = ''
         self.active_window_id = ''
         self.windows = {}
 
+        # Fake Widget
         self.parent = self.screen
         self.widget = ''
         self.spacing = 0
         self.parent_spacing = 0
+        self.type = 'Application'
 
-        # Next it's dead
-
-        self.screen.keypad(True)
-
-        self.draw_main_window()
-
-    def init_colors(self):
-        curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_CYAN)
-        curses.init_pair(2, curses.COLOR_WHITE, curses.COLOR_BLACK)
-        curses.init_pair(3, curses.COLOR_WHITE, curses.COLOR_BLUE)
-        curses.init_pair(4, curses.COLOR_BLACK, curses.COLOR_WHITE)
-        # Dialog Windows Buttons
-        curses.init_pair(5, curses.COLOR_BLUE, curses.COLOR_WHITE)
-        curses.init_pair(6, curses.COLOR_BLUE, curses.COLOR_CYAN)
-        # Dialog File Selection
-        curses.init_pair(7, curses.COLOR_YELLOW, curses.COLOR_BLUE)
-        curses.init_pair(8, curses.COLOR_GREEN, curses.COLOR_BLUE)
-        curses.init_pair(9, curses.COLOR_RED, curses.COLOR_BLUE)
-        # Debug color
-        # Dialog File Selection
-        curses.init_pair(10, curses.COLOR_GREEN, curses.COLOR_GREEN)
-        curses.init_pair(11, curses.COLOR_YELLOW, curses.COLOR_YELLOW)
-        curses.init_pair(12, curses.COLOR_RED, curses.COLOR_RED)
-        self.screen.refresh()
+        # Mandatory Method
+        self.draw()
 
     # Common Widget mandatory
     def get(self):
@@ -106,7 +87,22 @@ class Application(object):
 
     # GLXCApplication function
     def set_name(self, name):
-        self.application_name = name
+        self.name = name
+
+    def get_name(self):
+        return self.name
+
+    def set_type(self, type_name):
+        self.type = type_name
+
+    def get_type(self):
+        return self.name
+
+    def set_style(self, style):
+        self.style = style
+
+    def get_style(self):
+        return self.style
 
     def add_window(self, glxc_window):
         id_max = len(self.windows.keys())
@@ -146,7 +142,7 @@ class Application(object):
         self.screen.clear()
 
         # Calculate the Main Window size
-        self.draw_main_window()
+        self.draw()
 
         # Check main widget to display
         if not self.widget == '':
@@ -165,9 +161,6 @@ class Application(object):
         self.parent.refresh()
 
     def draw(self):
-        self.draw_main_window()
-
-    def draw_main_window(self):
         parent_height, parent_width = self.parent.getmaxyx()
         if not self.menubar == '':
             menu_bar_height = 1
