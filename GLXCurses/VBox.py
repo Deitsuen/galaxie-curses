@@ -40,45 +40,43 @@ class VBox(Widget):
         widget_y, widget_x = self.widget.getbegyx()
 
         # Check widgets to display
-        if len(self.widget_to_display.keys()):
-            devised_box_size = widget_height / self.number_of_widget_to_display
+        if (widget_height >= self.number_of_widget_to_display + 1) and (
+            widget_width >= self.number_of_widget_to_display + 1):
+            if len(self.widget_to_display.keys()):
+                devised_box_size = widget_height / self.number_of_widget_to_display
 
-            for count in range(0, self.number_of_widget_to_display, 1):
-                if count == 0:
-                    self.widget_subwins[count] = self.widget.subwin(
-                        devised_box_size - self.subwins_spacing,
-                        widget_width - self.subwins_spacing * 2,
-                        widget_y + self.subwins_spacing,
-                        widget_x + self.subwins_spacing
-                    )
-                else:
-                    self.widget_subwins[count] = self.widget.subwin(
-                        devised_box_size - (self.subwins_spacing/2),
-                        widget_width - self.subwins_spacing * 2,
-                        widget_y + (devised_box_size * count) + (self.subwins_spacing/2),
-                        widget_x + self.subwins_spacing
-                    )
-                if (widget_height >= self.number_of_widget_to_display +1) and (widget_width >= self.number_of_widget_to_display +1):
+                for count in range(0, self.number_of_widget_to_display, 1):
+                    if count == 0:
+                        self.widget_subwins[count] = self.widget.subwin(
+                            devised_box_size - self.subwins_spacing,
+                            widget_width - self.subwins_spacing * 2,
+                            widget_y + self.subwins_spacing,
+                            widget_x + self.subwins_spacing
+                        )
+                    else:
+                        self.widget_subwins[count] = self.widget.subwin(
+                            devised_box_size - (self.subwins_spacing/2),
+                            widget_width - self.subwins_spacing * 2,
+                            widget_y + (devised_box_size * count) + (self.subwins_spacing/2),
+                            widget_x + self.subwins_spacing
+                        )
+
                     self.widget_subwins[count].bkgdset(ord(' '), curses.color_pair(10 + count))
                     self.widget_subwins[count].bkgd(ord(' '), curses.color_pair(10 + count))
 
-                # Check widgets to display
-                #self.h_widget_list[count] = Box(self)
-                #self.widget_to_display[count].add_parent(self.h_widget_list[count])
-                #self.h_widget_list[count].set_parent(self.widget_subwins[count])
-                        #self.h_widget_list[count].add(self.h_widget_list[count])
-                        #self.h_widget_list[count].draw()
-                    #self.widget_to_display[0].add
-                    #self.widget_to_display[0].set_parent(self.widget_subwins[count])
-                #self.widget_to_display[count].draw()
-
+                    # Check widgets to display
+                    #self.h_widget_list[count] = Box(self)
+                    #self.widget_to_display[count].add_parent(self.h_widget_list[count])
+                    #self.h_widget_list[count].set_parent(self.widget_subwins[count])
+                            #self.h_widget_list[count].add(self.h_widget_list[count])
+                            #self.h_widget_list[count].draw()
+                        #self.widget_to_display[0].add
+                        #self.widget_to_display[0].set_parent(self.widget_subwins[count])
+                    #self.widget_to_display[count].draw()
 
 
     def set_title(self, title):
         self.title = title
-
-    def set_decorated(self, boolean):
-        self.decorated = int(boolean)
 
     def add(self, widget):
         id_max = len(self.widget_to_display.keys())

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import curses
+
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -38,9 +38,16 @@ class Widget(object):
     def get_decorated(self, decorated):
         return self.widget_decorated
 
-    # Each Galaxie Curses Compoment must have a draw method
+    # Each Galaxie Curses Component's must have a draw method
     def refresh(self):
         self.draw()
+
+    def show(self):
+        self.draw()
+
+    def show_all(self):
+        self.draw()
+        self.parent.draw()
 
     # Parent Management
     def get_parent(self):
