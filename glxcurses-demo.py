@@ -69,6 +69,18 @@ if __name__ == '__main__':
 
     # Creat a Status Bar
     toolbar = GLXCurses.Toolbar(app)
+    toolbar.button_list = [
+        'Help',
+        'Options',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        'Menu',
+        'Quit'
+    ]
 
     # Add Everything inside the Application
     app.add_menubar(menu)

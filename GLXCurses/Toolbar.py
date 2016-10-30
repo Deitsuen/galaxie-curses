@@ -14,7 +14,7 @@ class Toolbar(Widget):
         self.set_parent(parent)
 
         self.max_button_number = 10
-        self.bottom_button_list = [
+        self.button_list = [
             'Help',
             'Options',
             'View',
@@ -32,7 +32,7 @@ class Toolbar(Widget):
         self.draw()
 
     def draw(self):
-        item_list = self.bottom_button_list
+        item_list = self.button_list
         labels_end_coord = ['', '', '', '', '', '', '', '', '', '', '', '']
         screen_height, screen_width = self.screen.getmaxyx()
 
