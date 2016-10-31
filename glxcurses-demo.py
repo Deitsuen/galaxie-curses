@@ -21,24 +21,15 @@ if __name__ == '__main__':
     win1 = GLXCurses.Window()
     win1.title = 'My super Window 1'
 
-    # Create a Window
-    win2 = GLXCurses.Window()
-    win2.title = 'My super Window 2'
-    win2.set_decorated(1)
-    win2.set_spacing(1)
-
-    # Create a Window
-    win3 = GLXCurses.Window()
-    win3.title = 'My super Window 3'
-    win3.set_decorated(0)
-    win3.set_spacing(1)
-
+    # Creat a new Vertical Box contener
     vbox = GLXCurses.VBox()
 
     # Create a Window
     label1 =  GLXCurses.Label()
-    label1.set_text('La vie est belle')
-    label1.set_justify('RIGHT')
+    label1.set_text('La vie')
+    #label1.set_justify('RIGHT')
+    #label1.set_position_type('CENTER')
+    #label1.set_orientation('VERTICAL')
 
     # Create a Window
     win5 = GLXCurses.Window()
@@ -52,9 +43,7 @@ if __name__ == '__main__':
     win6.set_decorated(1)
     win6.set_spacing(1)
 
-    win1.add(win2)
-    win2.add(win3)
-    win3.add(vbox)
+    win1.add(vbox)
 
     vbox.subwins_spacing = 1
     vbox.add(label1)
@@ -96,14 +85,6 @@ if __name__ == '__main__':
             message_text += 'Win:1'
             message_text += ' '
             message_text += str(win1.get_size())
-            message_text += ' '
-            message_text += 'Win2:'
-            message_text += ' '
-            message_text += str(win2.get_size())
-            message_text += ' '
-            message_text += 'Win3:'
-            message_text += ' '
-            message_text += str(win3.get_size())
             message_text += ' '
             message_text += 'Win5:'
             message_text += ' '
