@@ -14,46 +14,44 @@ if __name__ == '__main__':
     app.set_name('Galaxie-Curse Demo')
 
     # Create a Menu
-    menu = GLXCurses.MenuModel(app)
+    menu = GLXCurses.MenuModel()
     menu.app_info_label = app.get_name()
 
     # Create a Window
-    win1 = GLXCurses.Window(app)
+    win1 = GLXCurses.Window()
     win1.title = 'My super Window 1'
 
     # Create a Window
-    win2 = GLXCurses.Window(win1)
+    win2 = GLXCurses.Window()
     win2.title = 'My super Window 2'
     win2.set_decorated(1)
     win2.set_spacing(1)
 
     # Create a Window
-    win3 = GLXCurses.Window(win2)
+    win3 = GLXCurses.Window()
     win3.title = 'My super Window 3'
     win3.set_decorated(0)
     win3.set_spacing(1)
 
-    vbox = GLXCurses.VBox(win3)
+    vbox = GLXCurses.VBox()
 
     # Create a Window
-    win4 = GLXCurses.Window(vbox)
+    win4 = GLXCurses.Window()
     win4.title = 'My super Window 4'
     win4.set_decorated(1)
     win4.set_spacing(1)
 
     # Create a Window
-    win5 = GLXCurses.Window(vbox)
+    win5 = GLXCurses.Window()
     win5.title = 'My super Window 5'
     win5.set_decorated(1)
     win5.set_spacing(1)
-    win5.refresh()
 
     # Create a Window
-    win6 = GLXCurses.Window(vbox)
+    win6 = GLXCurses.Window()
     win6.title = 'My super Window 6'
     win6.set_decorated(1)
     win6.set_spacing(1)
-    win6.refresh()
 
     win1.add(win2)
     win2.add(win3)
@@ -65,10 +63,7 @@ if __name__ == '__main__':
     vbox.add(win6)
 
     # Creat a Status Bar
-    statusbar = GLXCurses.Statusbar(app)
-
-    # Creat a Status Bar
-    toolbar = GLXCurses.Toolbar(app)
+    toolbar = GLXCurses.Toolbar()
     toolbar.button_list = [
         'Help',
         'Options',
@@ -81,7 +76,7 @@ if __name__ == '__main__':
         'Menu',
         'Quit'
     ]
-
+    statusbar = GLXCurses.Statusbar()
     # Add Everything inside the Application
     app.add_menubar(menu)
     app.add_window(win1)
@@ -90,6 +85,7 @@ if __name__ == '__main__':
 
     # Main loop
     count = 1
+    app.refresh()
     while True:
         input_event = app.getch()
         if curses.KEY_RESIZE:

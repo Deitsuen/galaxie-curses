@@ -11,14 +11,11 @@ __author__ = 'Tuux'
 class Box(Widget):
     def __init__(self, parent):
         Widget.__init__(self)
-        self.set_parent(parent)
         self.style = 'Box'
 
         self.widget_to_display = {}
         self.widget_to_display_id = ''
 
-        # Mandatory Method
-        self.draw()
 
     # GLXC Window Functions
     def draw(self):
@@ -51,6 +48,7 @@ class Box(Widget):
                     self.widget_to_display[self.widget_to_display_id].draw()
 
     def add(self, widget):
+        widget.set_parent(self)
         id_max = len(self.widget_to_display.keys())
         if bool(self.widget_to_display):
             self.widget_to_display[id_max] = widget
