@@ -9,10 +9,10 @@ from Widget import Widget
 __author__ = 'Tuux'
 
 
-class VBox(Widget):
+class HBox(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.type = 'VBox'
+        self.type = 'HBox'
 
         self.subwins_spacing = 0
 
@@ -23,7 +23,7 @@ class VBox(Widget):
         self.number_of_widget_to_display = 0
 
 
-    # GLXC VBox Functions
+    # GLXC HBox Functions
     def draw(self):
         parent_height, parent_width = self.parent.get_size()
         parent_y, parent_x = self.parent.get_origin()
@@ -34,6 +34,7 @@ class VBox(Widget):
             parent_y + self.widget_spacing,
             parent_x + self.widget_spacing
         )
+
         self.draw_in_area(drawing_area)
 
     def draw_in_area(self, drawing_area):
@@ -49,23 +50,23 @@ class VBox(Widget):
 
         if is_high_enough and is_large_enough:
             if self.widget_to_display:
-                devised_box_size = int(widget_height / len(self.widget_to_display))
+                devised_box_size = int(widget_width / len(self.widget_to_display))
                 index = 0
                 for widget in self.widget_to_display:
 
                     if index == 0:
                         drawing_area = self.widget.subwin(
-                                devised_box_size - self.subwins_spacing,
-                                widget_width - self.subwins_spacing * 2,
-                                widget_y + self.subwins_spacing,
-                                widget_x + self.subwins_spacing
+                            widget_height - self.subwins_spacing * 2,
+                            devised_box_size - self.subwins_spacing,
+                            widget_y + self.subwins_spacing,
+                            widget_x + self.subwins_spacing
                         )
                     else:
                         drawing_area = self.widget.subwin(
-                                devised_box_size - (self.subwins_spacing / 2),
-                                widget_width - self.subwins_spacing * 2,
-                                widget_y + (devised_box_size * index) + (self.subwins_spacing / 2),
-                                widget_x + self.subwins_spacing
+                            widget_height - self.subwins_spacing * 2,
+                            devised_box_size - (self.subwins_spacing / 2),
+                            widget_y + self.subwins_spacing,
+                            widget_x + (devised_box_size * index) + (self.subwins_spacing / 2)
                         )
 
                     widget.draw_in_area(drawing_area)

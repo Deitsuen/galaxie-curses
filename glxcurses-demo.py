@@ -21,15 +21,6 @@ if __name__ == '__main__':
     win1 = GLXCurses.Window()
     win1.title = 'My super Window 1'
 
-    # Creat a new Vertical Box contener
-    vbox = GLXCurses.VBox()
-
-    # Create a Window
-    label1 =  GLXCurses.Label()
-    label1.set_text('La vie est belle tout pleins')
-    label1.set_justify('LEFT')
-    #label1.set_position_type('CENTER')
-    label1.set_orientation('VERTICAL')
 
     # Create a Window
     win5 = GLXCurses.Window()
@@ -43,13 +34,51 @@ if __name__ == '__main__':
     win6.set_decorated(1)
     win6.set_spacing(1)
 
-    win1.add(vbox)
+    # Create a Label
+    label1 =  GLXCurses.Label()
+    label1.set_text('Super thing 1')
+    label1.set_justify('RIGHT')
+    #label1.set_position_type('CENTER')
+    #label1.set_orientation('VERTICAL')
 
-    vbox.subwins_spacing = 1
-    vbox.add(label1)
-    vbox.set_spacing(0)
-    #vbox.add(win5)
-    #vbox.add(win6)
+    label2 =  GLXCurses.Label()
+    label2.set_text('La vie est belle tout pleins')
+    label2.set_justify('RIGHT')
+    #label2.set_position_type('CENTER')
+    label2.set_orientation('VERTICAL')
+
+    label3 =  GLXCurses.Label()
+    label3.set_text('La vie est belle tout pleins')
+    label3.set_justify('LEFT')
+    #label3.set_position_type('CENTER')
+    #label3.set_orientation('VERTICAL')
+
+
+
+    # Creat two Vertical Box contener
+    vbox1 = GLXCurses.VBox()
+    vbox2 = GLXCurses.VBox()
+
+    # Creat a new Horizontal Box contener
+    hbox = GLXCurses.HBox()
+    hbox.add(vbox1)
+    #hbox.add(vbox2)
+
+    hbox.subwins_spacing = 1
+    vbox1.subwins_spacing = 1
+    vbox2.subwins_spacing = 1
+    vbox1.add(label1)
+    vbox1.add(label2)
+    vbox1.add(label3)
+
+    vbox2.add(win5)
+    vbox2.add(win6)
+    #hbox.set_spacing(0)
+    hbox.add(win5)
+    hbox.add(win6)
+
+    win1.add(hbox)
+
 
     # Creat a Status Bar
     toolbar = GLXCurses.Toolbar()

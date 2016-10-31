@@ -5,4 +5,5 @@ from GLXCurses.Toolbar import Toolbar
 from GLXCurses.Widget import Widget
 from GLXCurses.Window import Window
 from GLXCurses.VBox import VBox
+from GLXCurses.HBox import HBox
 from GLXCurses.Label import Label
