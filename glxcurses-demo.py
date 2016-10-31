@@ -26,10 +26,10 @@ if __name__ == '__main__':
 
     # Create a Window
     label1 =  GLXCurses.Label()
-    label1.set_text('La vie')
-    #label1.set_justify('RIGHT')
+    label1.set_text('La vie est belle tout pleins')
+    label1.set_justify('LEFT')
     #label1.set_position_type('CENTER')
-    #label1.set_orientation('VERTICAL')
+    label1.set_orientation('VERTICAL')
 
     # Create a Window
     win5 = GLXCurses.Window()
@@ -47,8 +47,9 @@ if __name__ == '__main__':
 
     vbox.subwins_spacing = 1
     vbox.add(label1)
-    vbox.add(win5)
-    vbox.add(win6)
+    vbox.set_spacing(0)
+    #vbox.add(win5)
+    #vbox.add(win6)
 
     # Creat a Status Bar
     toolbar = GLXCurses.Toolbar()
@@ -81,14 +82,6 @@ if __name__ == '__main__':
             message_text = ''
             message_text += 'Screen Size:'
             message_text += str(app.get_parent_size())
-            message_text += ' '
-            message_text += 'Win:1'
-            message_text += ' '
-            message_text += str(win1.get_size())
-            message_text += ' '
-            message_text += 'Win5:'
-            message_text += ' '
-            message_text += str(win5.get_size())
             statusbar.push(message_text)
             app.refresh()
             pass

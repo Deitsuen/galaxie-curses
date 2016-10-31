@@ -10,7 +10,14 @@ __author__ = 'Tuux'
 
 def resize_text(text, max_width, separator='~'):
     if max_width < len(text):
-        return text[:(max_width / 2) - 1] + separator + text[-max_width / 2:]
+        text_to_return = text[:(max_width / 2) - 1] + separator + text[-max_width / 2:]
+        if len(text_to_return) == 1:
+            text_to_return = text[:1]
+        elif len(text_to_return) == 2:
+            text_to_return = str(text[:1] + text[-1:])
+        elif len(text_to_return) == 3:
+            text_to_return = str(text[:1] + separator + text[-1:])
+        return text_to_return
     else:
         return text
 
@@ -56,12 +63,12 @@ class Label(Widget):
         widget_y, widget_x = drawing_area.getbegyx()
         min_size_width = (self.widget_spacing * 2) + self.widget_spacing
         min_size_height = (self.widget_spacing * 2)
-        if (widget_height >= min_size_height) and (widget_width >= min_size_width):
+        if (widget_height >= min_size_height) and (widget_width >= min_size_width ):
             if curses.has_colors():
                 drawing_area.bkgdset(ord(' '), curses.color_pair(self.get_style_by_type(self.type)))
                 drawing_area.bkgd(ord(' '), curses.color_pair(self.get_style_by_type(self.type)))
                 for I in range(widget_y, widget_height):
-                    drawing_area.addstr(
+                    drawing_area.insstr(
                         I,
                         0,
                         str(' ' * int(widget_width - 1)),
@@ -77,8 +84,8 @@ class Label(Widget):
 
             if not self.text == '':
                 # Check if the text can be display
-                text_have_necessary_width = (self.preferred_width + self.get_spacing() <= widget_width)
-                text_have_necessary_height = (self.preferred_height + self.get_spacing() <= widget_height)
+                text_have_necessary_width = (self.preferred_width + self.get_spacing() >= 1)
+                text_have_necessary_height = (self.preferred_height + self.get_spacing() >= 1)
                 if text_have_necessary_width and text_have_necessary_height:
                     y_text = 0
                     x_text = 0
@@ -104,10 +111,11 @@ class Label(Widget):
                         elif self.position_type == 'BOTTOM':
                             y_text = widget_height - self.preferred_height
                         # Draw the Horizontal Label with Justification and PositionType
-                        drawing_area.addstr(
+                        message_to_display = resize_text(self.text, widget_width - 1, '~')
+                        drawing_area.insstr(
                             y_text,
                             x_text,
-                            resize_text(self.text, widget_width - 1, '~'),
+                            message_to_display,
                             curses.color_pair(self.get_style_by_type(self.type))
                         )
                     elif self.orientation == 'VERTICAL':
@@ -122,21 +130,28 @@ class Label(Widget):
 
                         # PositionType: CENTER, TOP, BOTTOM
                         if self.position_type == 'CENTER':
-                            y_text = (widget_height / 2) - (self.preferred_height / 2)
+                            #y_text = (widget_height / 2) - (self.preferred_height / 2)
+                            if (widget_height / 2) > (self.preferred_height / 2):
+                                y_text = (widget_height / 2) - (self.preferred_height / 2)
+                            else:
+                                y_text = 0
                         elif self.position_type == 'TOP':
                             y_text = 0
                         elif self.position_type == 'BOTTOM':
                             y_text = widget_height - self.preferred_height
                         # Draw the Vertical Label with Justification and PositionType
-                        count = 0
-                        for CHAR in resize_text(self.text, widget_height - 1, '~'):
-                            drawing_area.insstr(
-                                y_text + count,
-                                x_text,
-                                CHAR,
-                                curses.color_pair(self.get_style_by_type(self.type))
-                            )
-                            count += 1
+
+                        message_to_display = resize_text(self.text, widget_height - 1, '~')
+                        if len(message_to_display) > 2:
+                            count = 0
+                            for CHAR in message_to_display:
+                                drawing_area.insstr(
+                                    y_text + count,
+                                    x_text,
+                                    CHAR,
+                                    curses.color_pair(self.get_style_by_type(self.type))
+                                )
+                                count += 1
 
     # Internal widget functions
     def set_text(self, text):
