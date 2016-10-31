@@ -36,10 +36,9 @@ if __name__ == '__main__':
     vbox = GLXCurses.VBox()
 
     # Create a Window
-    win4 = GLXCurses.Window()
-    win4.title = 'My super Window 4'
-    win4.set_decorated(1)
-    win4.set_spacing(1)
+    label1 =  GLXCurses.Label()
+    label1.set_text('La vie est belle')
+    label1.set_justify('RIGHT')
 
     # Create a Window
     win5 = GLXCurses.Window()
@@ -58,7 +57,7 @@ if __name__ == '__main__':
     win3.add(vbox)
 
     vbox.subwins_spacing = 1
-    vbox.add(win4)
+    vbox.add(label1)
     vbox.add(win5)
     vbox.add(win6)
 
@@ -105,10 +104,6 @@ if __name__ == '__main__':
             message_text += 'Win3:'
             message_text += ' '
             message_text += str(win3.get_size())
-            message_text += ' '
-            message_text += 'Win4:'
-            message_text += ' '
-            message_text += str(win4.get_size())
             message_text += ' '
             message_text += 'Win5:'
             message_text += ' '

@@ -28,13 +28,18 @@ class Style(object):
         # Windows
         curses.init_pair(6, curses.COLOR_WHITE, curses.COLOR_BLUE)
 
-        # Box - type == 'Box' or type == 'VBox' or type == 'HBox'
+        # Box - type == 'VBox' or type == 'HBox'
         curses.init_pair(7, curses.COLOR_WHITE, curses.COLOR_BLUE)
 
+        # Label
+        curses.init_pair(8, curses.COLOR_WHITE, curses.COLOR_BLUE)
+
+
+
         # Dialog File Selection
-        curses.init_pair(7, curses.COLOR_YELLOW, curses.COLOR_BLUE)
-        curses.init_pair(8, curses.COLOR_GREEN, curses.COLOR_BLUE)
-        curses.init_pair(9, curses.COLOR_RED, curses.COLOR_BLUE)
+        # curses.init_pair(7, curses.COLOR_YELLOW, curses.COLOR_BLUE)
+        # curses.init_pair(8, curses.COLOR_GREEN, curses.COLOR_BLUE)
+        # curses.init_pair(9, curses.COLOR_RED, curses.COLOR_BLUE)
         # Debug color
         # Dialog File Selection
         curses.init_pair(10, curses.COLOR_GREEN, curses.COLOR_GREEN)
@@ -54,8 +59,10 @@ class Style(object):
             return 5
         elif type == 'Window':
             return 6
-        elif type == 'Box' or type == 'VBox' or type == 'HBox':
+        elif type == 'VBox' or type == 'HBox':
             return 7
+        elif type == 'Label':
+            return 8
         elif type == 'Debug':
             return 10
 
