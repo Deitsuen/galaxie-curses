@@ -11,7 +11,6 @@ __author__ = 'Tuux'
 class Statusbar(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.type = 'Statusbar'
 
         # Widget Setting
         self.statusbar_stack = []
@@ -40,11 +39,11 @@ class Statusbar(Widget):
                     0,
                     0,
                     str(' ' * (width - 1)),
-                    curses.color_pair(self.get_style_by_type(self.type))
+                    curses.color_pair(self.style.colors.index('Statusbar'))
                 )
             self.widget.insstr(
                     str(' '),
-                    curses.color_pair(self.get_style_by_type(self.type))
+                    curses.color_pair(self.style.colors.index('Statusbar'))
                 )
 
         # If it have something inside the Statusbar stack they display it but care about the display size

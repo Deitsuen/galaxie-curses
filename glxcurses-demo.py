@@ -19,18 +19,18 @@ if __name__ == '__main__':
 
     # Create a Window
     win1 = GLXCurses.Window()
-    win1.title = 'My super Window 1'
+    win1.set_title('My super Window 1')
 
 
     # Create a Window
     win5 = GLXCurses.Window()
-    win5.title = 'My super Window 5'
+    win5.set_title('My super Window 5')
     win5.set_decorated(1)
     win5.set_spacing(1)
 
     # Create a Window
     win6 = GLXCurses.Window()
-    win6.title = 'My super Window 6'
+    win6.set_title('My super Window 6')
     win6.set_decorated(1)
     win6.set_spacing(1)
 
@@ -53,7 +53,7 @@ if __name__ == '__main__':
     #label3.set_position_type('CENTER')
     #label3.set_orientation('VERTICAL')
 
-
+    progressbar = GLXCurses.ProgressBar()
 
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
@@ -62,11 +62,11 @@ if __name__ == '__main__':
     # Creat a new Horizontal Box contener
     hbox = GLXCurses.HBox()
     hbox.add(vbox1)
-    #hbox.add(vbox2)
+    hbox.add(vbox2)
 
-    hbox.subwins_spacing = 1
-    vbox1.subwins_spacing = 1
-    vbox2.subwins_spacing = 1
+    hbox.subwins_spacing = 0
+    vbox1.subwins_spacing = 0
+    vbox2.subwins_spacing = 0
     vbox1.add(label1)
     vbox1.add(label2)
     vbox1.add(label3)

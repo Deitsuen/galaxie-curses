@@ -74,13 +74,13 @@ class Toolbar(Widget):
                     0,
                     0,
                     str(" " * int(widget_width)),
-                    curses.color_pair(self.get_style_by_type('ToolbarText'))
+                    curses.color_pair(self.style.colors.index('ToolbarText'))
                 )
                 self.widget.insstr(
                     0,
                     widget_width - 1,
                     " ",
-                    curses.color_pair(self.get_style_by_type('ToolbarText'))
+                    curses.color_pair(self.style.colors.index('ToolbarText'))
                 )
                 self.widget.addstr(
                     0,
@@ -92,11 +92,11 @@ class Toolbar(Widget):
             if count == 0:
                 self.widget.addstr(
                     str('{0: >2}'.format(count + 1)),
-                    curses.color_pair(self.get_style_by_type('ToolbarPrefix'))
+                    curses.color_pair(self.style.colors.index('ToolbarPrefix'))
                 )
                 self.widget.addstr(
                     str(item_list[count]),
-                    curses.color_pair(self.get_style_by_type('ToolbarText'))
+                    curses.color_pair(self.style.colors.index('ToolbarText'))
                 )
             elif 0 <= count < max_can_be_display - 1:
                 if screen_width - (labels_end_coord[count - 1] + 0) >= len(item_list[count]) + 3:
@@ -104,15 +104,15 @@ class Toolbar(Widget):
                         0,
                         (labels_end_coord[count - 1] + 0),
                         "",
-                        curses.color_pair(self.get_style_by_type('ToolbarPrefix'))
+                        curses.color_pair(self.style.colors.index('ToolbarPrefix'))
                     )
                     self.widget.addstr(
                         str('{0: >2}'.format(count + 1)),
-                        curses.color_pair(self.get_style_by_type('ToolbarPrefix'))
+                        curses.color_pair(self.style.colors.index('ToolbarPrefix'))
                     )
                     self.widget.addstr(
                         str(item_list[count]),
-                        curses.color_pair(self.get_style_by_type('ToolbarText'))
+                        curses.color_pair(self.style.colors.index('ToolbarText'))
                     )
             elif count >= max_can_be_display - 1:
                 if screen_width - (labels_end_coord[count - 1] + 1) >= len(item_list[count]) + 3:
@@ -120,10 +120,10 @@ class Toolbar(Widget):
                         0,
                         (labels_end_coord[count - 1] + 1),
                         str('{0: >2}'.format(count + 1)),
-                        curses.color_pair(self.get_style_by_type('ToolbarPrefix'))
+                        curses.color_pair(self.style.colors.index('ToolbarPrefix'))
                     )
                     self.widget.addstr(
                         item_list[count],
-                        curses.color_pair(self.get_style_by_type('ToolbarText'))
+                        curses.color_pair(self.style.colors.index('ToolbarText'))
                     )
             count += 1

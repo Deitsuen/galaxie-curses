@@ -18,20 +18,18 @@ def resize_text(text, max_width, separator='~'):
 class Window(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.type = 'Window'
+
         # Internal Widget Setting
         self.title = ''
 
         self.widget_to_display = {}
         self.widget_to_display_id = ''
 
-
-    def set_drawing_boundaries(self, orig_x, orig_y, height, width):
-        self.orig_x = orig_x
-        self.orig_y = orig_y
-        self.height = height
-        self.width = width
-
+    # def set_drawing_boundaries(self, orig_x, orig_y, height, width):
+    #     self.orig_x = orig_x
+    #     self.orig_y = orig_y
+    #     self.height = height
+    #     self.width = width
 
     def draw(self):
         parent_height, parent_width = self.parent.get_size()
@@ -58,20 +56,20 @@ class Window(Widget):
         min_size_height = (self.widget_spacing * 2)
         if (widget_height >= min_size_height) and (widget_width >= min_size_width):
             if curses.has_colors():
-                drawing_area.bkgdset(ord(' '), curses.color_pair(self.get_style_by_type(self.type)))
-                drawing_area.bkgd(ord(' '), curses.color_pair(self.get_style_by_type(self.type)))
+                drawing_area.bkgdset(ord(' '), curses.color_pair(self.style.colors.index('Window')))
+                drawing_area.bkgd(ord(' '), curses.color_pair(self.style.colors.index('Window')))
                 for I in range(widget_y, widget_height):
                     drawing_area.addstr(
                         I,
                         0,
                         str(' ' * int(widget_width - 1)),
-                        curses.color_pair(self.get_style_by_type(self.type))
+                        curses.color_pair(self.style.colors.index('Window'))
                     )
                     drawing_area.insstr(
                         I,
                         int(widget_width - 1),
                         str(' '),
-                        curses.color_pair(self.get_style_by_type(self.type))
+                        curses.color_pair(self.style.colors.index('Window'))
                     )
 
                 # Check widgets to display

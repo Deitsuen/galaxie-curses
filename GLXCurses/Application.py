@@ -11,7 +11,27 @@ __author__ = 'Tuux'
 
 class Application(object):
     def __init__(self):
-        self.screen = curses.initscr()
+        try:
+            # Initialize curses
+            self.screen = curses.initscr()
+
+            # Turn off echoing of keys, and enter cbreak mode,
+            # where no buffering is performed on keyboard input
+            curses.noecho()
+            curses.cbreak()
+
+            # In keypad mode, escape sequences for special keys
+            # (like the cursor keys) will be interpreted and
+            # a special value like curses.KEY_LEFT will be returned
+            self.screen.keypad(1)
+
+        except ValueError:
+            print "Curses library not installed defaulting to standard console output"
+            sys.stdout.write("Error initializing screen.\n")
+            sys.stdout.flush()
+            self.close()
+            sys.exit(1)
+
         if not curses.has_colors():
             sys.stdout.write("Your terminal does not support color\n")
             sys.stdout.flush()
@@ -22,9 +42,6 @@ class Application(object):
             self.style = Style()
         self.screen.clear()
 
-        curses.noecho()
-        curses.cbreak()
-        self.screen.keypad(True)
         curses.curs_set(0)
         curses.mousemask(-1)
 

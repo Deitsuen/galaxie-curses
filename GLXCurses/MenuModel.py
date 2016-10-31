@@ -11,7 +11,6 @@ from Style import Style
 class MenuModel(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.type = 'MenuModel'
 
         # Internal Widget Setting
         self.app_info_label = ''
@@ -25,11 +24,11 @@ class MenuModel(Widget):
                     0,
                     0,
                     str(" " * int(actual_y_size)),
-                    curses.color_pair(self.get_style_by_type(self.type))
+                    curses.color_pair(self.style.colors.index('MenuModel'))
                 )
             self.widget.bkgdset(
                     ord(' '),
-                    curses.color_pair(self.get_style_by_type(self.type))
+                    curses.color_pair(self.style.colors.index('MenuModel'))
                 )
         if len(self.app_info_label) > 0:
             if not actual_y_size + 1 <= len(app_info_label):
@@ -37,11 +36,11 @@ class MenuModel(Widget):
                     0,
                     (actual_y_size - 1) - len(str(app_info_label[:-1])),
                     app_info_label[:-1],
-                    curses.color_pair(self.get_style_by_type(self.type))
+                    curses.color_pair(self.style.colors.index('MenuModel'))
                 )
                 self.widget.insstr(
                     0,
                     actual_y_size - 1,
                     app_info_label[-1:],
-                    curses.color_pair(self.get_style_by_type(self.type))
+                    curses.color_pair(self.style.colors.index('MenuModel'))
                 )

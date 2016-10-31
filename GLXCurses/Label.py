@@ -25,7 +25,6 @@ def resize_text(text, max_width, separator='~'):
 class Label(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.type = 'Label'
 
         # Internal Widget Setting
         self.text = ''
@@ -65,20 +64,20 @@ class Label(Widget):
         min_size_height = (self.widget_spacing * 2)
         if (widget_height >= min_size_height) and (widget_width >= min_size_width ):
             if curses.has_colors():
-                drawing_area.bkgdset(ord(' '), curses.color_pair(self.get_style_by_type(self.type)))
-                drawing_area.bkgd(ord(' '), curses.color_pair(self.get_style_by_type(self.type)))
+                drawing_area.bkgdset(ord(' '), curses.color_pair(self.style.colors.index('Label')))
+                drawing_area.bkgd(ord(' '), curses.color_pair(self.style.colors.index('Label')))
                 for I in range(widget_y, widget_height):
                     drawing_area.insstr(
                         I,
                         0,
                         str(' ' * int(widget_width - 1)),
-                        curses.color_pair(self.get_style_by_type(self.type))
+                        curses.color_pair(self.style.colors.index('Label'))
                     )
                     drawing_area.insstr(
                         I,
                         int(widget_width - 1),
                         str(' '),
-                        curses.color_pair(self.get_style_by_type(self.type))
+                        curses.color_pair(self.style.colors.index('Label'))
                     )
             # Compute text position
 
@@ -116,7 +115,7 @@ class Label(Widget):
                             y_text,
                             x_text,
                             message_to_display,
-                            curses.color_pair(self.get_style_by_type(self.type))
+                            curses.color_pair(self.style.colors.index('Label'))
                         )
                     elif self.orientation == 'VERTICAL':
 
@@ -149,7 +148,7 @@ class Label(Widget):
                                     y_text + count,
                                     x_text,
                                     CHAR,
-                                    curses.color_pair(self.get_style_by_type(self.type))
+                                    curses.color_pair(self.style.colors.index('Label'))
                                 )
                                 count += 1
 
