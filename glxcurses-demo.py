@@ -55,7 +55,6 @@ if __name__ == '__main__':
 
     win1.add(win2)
     win2.add(win3)
-
     win3.add(vbox)
 
     vbox.subwins_spacing = 1
@@ -77,11 +76,11 @@ if __name__ == '__main__':
         'Menu',
         'Quit'
     ]
-
+    statusbar = GLXCurses.Statusbar()
     # Add Everything inside the Application
     app.add_menubar(menu)
     app.add_window(win1)
-    app.add_statusbar(GLXCurses.Statusbar())
+    app.add_statusbar(statusbar)
     app.add_toolbar(toolbar)
 
     # Main loop

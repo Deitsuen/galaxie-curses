@@ -91,3 +91,6 @@ class Widget(object):
 
     def get_style_by_type(self, type):
         return self.style.get_style_by_type(type)
+
+    def set_widget(self, widget):
+        self.widget = widget
