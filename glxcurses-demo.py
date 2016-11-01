@@ -55,9 +55,10 @@ if __name__ == '__main__':
 
     progressbar = GLXCurses.ProgressBar()
     progressbar.set_text('Progress 1')
-    progressbar.set_spacing(0)
-    progressbar.set_show_text(1)
-    progressbar.set_position_type('CENTER')
+    progressbar.set_spacing(2)
+    progressbar.set_value(70)
+    #progressbar.set_show_text(1)
+    progressbar.set_position_type('BOTTOM')
     #progressbar.set_position_type('CENTER')
 
     # Creat two Vertical Box contener

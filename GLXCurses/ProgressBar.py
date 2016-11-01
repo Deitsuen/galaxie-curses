@@ -26,17 +26,10 @@ class ProgressBar(Widget):
     def __init__(self):
         Widget.__init__(self)
 
+        # The Percent value
+        self.value = 0
+        
         # Internal Widget Setting
-        self.text = ''
-        self.show_text = 0
-        self.percent = 50
-        self.text_interface = '││'
-        self.text_vertical_interface = ''
-        self.text_value = '{0: >3}{1:}'.format(self.percent, '%')
-        self.preferred_height = 1
-        self.preferred_width = len(self.text) + len(self.text_interface) + len(self.text_value)
-
-        self.char = ' '
         # Justification: LEFT, RIGHT, CENTER
         self.justification = 'CENTER'
 
@@ -45,6 +38,41 @@ class ProgressBar(Widget):
 
         # PositionType: CENTER, TOP, BOTTOM
         self.position_type = 'CENTER'
+
+        # Label
+        self.text = ''
+        self.show_text = 0
+        # Interface
+        self.progressbar_horizondal_border = '[]'
+        self.progressbar_vertical_border = '--'
+        if self.orientation == 'HORIZONTAL':
+            self.progressbar_border = self.progressbar_horizondal_border
+        elif self.orientation == 'VERTICAL':
+            self.progressbar_border = self.progressbar_vertical_border
+
+        self.text_vertical_interface = ''
+        self.text_value = '{0: >3}{1:}'.format(self.value, '%')
+
+        if self.orientation == 'HORIZONTAL':
+            # WIDTH
+            self.preferred_width = 0
+            self.preferred_width += len(self.text)
+            self.preferred_width += len(self.progressbar_border)
+            self.preferred_width += len(self.text_value)
+            self.preferred_width += self.get_spacing() * 2
+            # HEIGHT
+            self.preferred_height = 1
+        elif self.orientation == 'VERTICAL':
+            # WIDTH
+            self.preferred_width = 1
+            # HEIGHT
+            self.preferred_height = 0
+            self.preferred_height += len(self.text)
+            self.preferred_height += len(self.progressbar_border)
+            self.preferred_height += len(self.text_value)
+            self.preferred_height += self.get_spacing() * 2
+
+        self.char = ' '
 
         # Default color
         self.fg_color = curses.COLOR_YELLOW
@@ -111,10 +139,10 @@ class ProgressBar(Widget):
                             x_text = 0 + self.get_spacing()
                             # If the text is not showed
                             if self.show_text:
-                                x_progress = len(self.text) + (len(self.text_interface) / 2) - self.get_spacing()
+                                x_progress = len(self.text) + (len(self.progressbar_border) / 2) - self.get_spacing()
                             else:
-                                x_progress = (len(self.text_interface) / 2) + self.get_spacing()
-                            x_value = widget_width - len(self.text_value)
+                                x_progress = (len(self.progressbar_border) / 2) + self.get_spacing()
+                            x_value = widget_width - len(self.text_value) - self.get_spacing()
                         elif self.justification == 'LEFT':
                             x_text = 0 + self.get_spacing()
                         elif self.justification == 'RIGHT':
@@ -127,38 +155,38 @@ class ProgressBar(Widget):
                                 y_progress = (widget_height / 2) - self.preferred_height
                                 y_value = (widget_height / 2) - self.preferred_height
                             else:
-                                y_text = 0
-                                y_progress = 0
-                                y_value = 0
+                                y_text = 0 + self.get_spacing()
+                                y_progress = 0 + self.get_spacing()
+                                y_value = 0 + self.get_spacing()
                         elif self.position_type == 'TOP':
-                            y_text = 0
-                            y_progress = 0
-                            y_value = 0
+                            y_text = 0 + self.get_spacing()
+                            y_progress = 0 + self.get_spacing()
+                            y_value = 0 + self.get_spacing()
                         elif self.position_type == 'BOTTOM':
-                            y_text = widget_height - self.preferred_height
-                            y_progress = widget_height - self.preferred_height
-                            y_value = widget_height - self.preferred_height
+                            y_text = widget_height - self.preferred_height - self.get_spacing()
+                            y_progress = widget_height - self.preferred_height - self.get_spacing()
+                            y_value = widget_height - self.preferred_height - self.get_spacing()
 
                         # DRAWING
                         # Draw the Horizontal Label with Justification and PositionType
                         if self.show_text:
                             message_to_display = resize_text(self.text, widget_width - 1, '~')
-                            drawing_area.insstr(
+                            drawing_area.addstr(
                                 y_text,
                                 x_text,
                                 message_to_display,
                                 curses.color_pair(self.style.colors.index('ProgressBar'))
                             )
-                        drawing_area.insch(
+                        drawing_area.addstr(
                             y_text,
                             x_progress - 1,
-                            curses.ACS_VLINE,
+                            self.progressbar_border[:len(self.progressbar_border)/2],
                             curses.color_pair(self.style.colors.index('ProgressBar'))
                         )
 
                         # Draw the progressbar value
-                        if self.percent == 100:
-                            drawing_area.insstr(
+                        if self.value == 100:
+                            drawing_area.addstr(
                                 y_progress,
                                 x_progress,
                                 str(self.char * int(widget_width - self.preferred_width)),
@@ -166,28 +194,28 @@ class ProgressBar(Widget):
                             )
                         else:
                             # Draw the progressbar background
-                            drawing_area.insstr(
+                            drawing_area.addstr(
                                 y_progress,
                                 x_progress,
                                 str(self.char * int((widget_width - self.preferred_width))),
                                 curses.color_pair(self.style.colors.index('ProgressBarBG')) | curses.A_BOLD
                             )
                             # Draw the value
-                            drawing_area.insstr(
+                            drawing_area.addstr(
                                 y_progress,
                                 x_progress,
-                                str(self.char * int((widget_width - self.preferred_width) * self.percent / 100)),
+                                str(self.char * int((widget_width - self.preferred_width) * self.value / 100)),
                                 curses.color_pair(self.style.colors.index('ProgressBarFG')) | curses.A_BOLD
                             )
                         # Interface management
-                        drawing_area.insch(
+                        drawing_area.addstr(
                             y_value,
                             x_value - 1,
-                            curses.ACS_VLINE,
+                            self.progressbar_border[-len(self.progressbar_border)/2:],
                             curses.color_pair(self.style.colors.index('ProgressBar'))
                         )
                         # Value
-                        drawing_area.insstr(
+                        drawing_area.addstr(
                             y_value,
                             x_value,
                             self.text_value,
@@ -236,8 +264,9 @@ class ProgressBar(Widget):
             # WIDTH
             self.preferred_width = 0
             self.preferred_width += len(self.text)
-            self.preferred_width += len(self.text_interface)
+            self.preferred_width += len(self.progressbar_border)
             self.preferred_width += len(self.text_value)
+            self.preferred_width += self.get_spacing() * 2
             # HEIGHT
             self.preferred_height = 1
         elif self.orientation == 'VERTICAL':
@@ -246,8 +275,22 @@ class ProgressBar(Widget):
             # HEIGHT
             self.preferred_height = 0
             self.preferred_height += len(self.text)
-            self.preferred_height += len(self.text_interface)
+            self.preferred_height += len(self.progressbar_border)
             self.preferred_height += len(self.text_value)
+            self.preferred_height += self.get_spacing() * 2
+
+    def set_value(self, percent=0):
+        if self.value >= 0:
+            self.value = percent
+        else:
+            self.value = 0
+
+    def get_value(self):
+        if self.value >= 0:
+            return self.value
+        else:
+            self.value = 0
+            return self.value
 
     def get_text(self):
         return self.text
@@ -259,8 +302,9 @@ class ProgressBar(Widget):
                 # WIDTH
                 self.preferred_width = 0
                 self.preferred_width += len(self.text)
-                self.preferred_width += len(self.text_interface)
+                self.preferred_width += len(self.progressbar_border)
                 self.preferred_width += len(self.text_value)
+                self.preferred_width += self.get_spacing() * 2
                 # HEIGHT
                 self.preferred_height = 1
             elif self.orientation == 'VERTICAL':
@@ -269,14 +313,16 @@ class ProgressBar(Widget):
                 # HEIGHT
                 self.preferred_height = 0
                 self.preferred_height += len(self.text)
-                self.preferred_height += len(self.text_interface)
+                self.preferred_height += len(self.progressbar_border)
                 self.preferred_height += len(self.text_value)
+                self.preferred_height += self.get_spacing() * 2
         else:
             if self.orientation == 'HORIZONTAL':
                 # WIDTH
                 self.preferred_width = 0
-                self.preferred_width += len(self.text_interface)
+                self.preferred_width += len(self.progressbar_border)
                 self.preferred_width += len(self.text_value)
+                self.preferred_width += self.get_spacing() * 2
                 # HEIGHT
                 self.preferred_height = 1
             elif self.orientation == 'VERTICAL':
@@ -284,8 +330,9 @@ class ProgressBar(Widget):
                 self.preferred_width = 1
                 # HEIGHT
                 self.preferred_height = 0
-                self.preferred_height += len(self.text_interface)
+                self.preferred_height += len(self.progressbar_border)
                 self.preferred_height += len(self.text_value)
+                self.preferred_height += self.get_spacing() * 2
 
     def get_show_text(self):
         return self.show_text
