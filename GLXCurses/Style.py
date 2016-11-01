@@ -19,7 +19,7 @@ class Style(object):
         self.colors.append(0)
 
         # Clean Up color, should be BLACK, BLACK
-        curses.init_pair(count, curses.COLOR_BLACK, curses.COLOR_BLACK)
+        curses.init_pair(count, -1, -1)
         self.colors.append('Screen')
 
         # Menu color
@@ -34,12 +34,12 @@ class Style(object):
 
         count += 1
         self.colors.append('ToolbarPrefix')
-        curses.init_pair(count, curses.COLOR_WHITE, curses.COLOR_BLACK)
+        curses.init_pair(count, curses.COLOR_WHITE, -1)
 
         # Status Bar
         count += 1
         self.colors.append('Statusbar')
-        curses.init_pair(count, curses.COLOR_WHITE, curses.COLOR_BLACK)
+        curses.init_pair(count, curses.COLOR_WHITE, -1)
 
         # Windows
         count += 1
@@ -72,7 +72,7 @@ class Style(object):
 
         count += 1
         self.colors.append('ProgressBarFG')
-        curses.init_pair(count, curses.COLOR_BLACK, curses.COLOR_YELLOW)
+        curses.init_pair(count, curses.COLOR_WHITE, curses.COLOR_BLUE)
 
         # Dialog File Selection
         # curses.init_pair(7, curses.COLOR_YELLOW, curses.COLOR_BLUE)

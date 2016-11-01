@@ -41,6 +41,7 @@ class Application(object):
             sys.exit(1)
         else:
             curses.start_color()
+            curses.use_default_colors()
             self.style = Style()
         self.screen.clear()
 

@@ -54,10 +54,11 @@ if __name__ == '__main__':
     #label3.set_orientation('VERTICAL')
 
     progressbar = GLXCurses.ProgressBar()
-    progressbar.set_text('Progress 1')
-    progressbar.set_spacing(2)
-    progressbar.set_value(70)
-    #progressbar.set_show_text(1)
+    progressbar.set_spacing(1)
+    progressbar.set_value(50)
+    value = '{0:}{1:}'.format(progressbar.get_value(), '%')
+    progressbar.set_text(value)
+    progressbar.set_show_text(1)
     progressbar.set_position_type('BOTTOM')
     #progressbar.set_position_type('CENTER')
 
