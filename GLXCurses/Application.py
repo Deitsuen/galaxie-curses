@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import curses
 import sys
+import os
 from Style import Style
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -13,6 +14,7 @@ class Application(object):
     def __init__(self):
         try:
             # Initialize curses
+            os.environ["NCURSES_NO_UTF8_ACS"] = "1"
             self.screen = curses.initscr()
 
             # Turn off echoing of keys, and enter cbreak mode,

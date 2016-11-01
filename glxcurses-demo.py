@@ -54,6 +54,7 @@ if __name__ == '__main__':
     #label3.set_orientation('VERTICAL')
 
     progressbar = GLXCurses.ProgressBar()
+    #progressbar.set_position_type('CENTER')
 
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
@@ -67,9 +68,10 @@ if __name__ == '__main__':
     hbox.subwins_spacing = 0
     vbox1.subwins_spacing = 0
     vbox2.subwins_spacing = 0
-    vbox1.add(label1)
-    vbox1.add(label2)
-    vbox1.add(label3)
+    # vbox1.add(label1)
+    # vbox1.add(label2)
+    # vbox1.add(label3)
+    vbox1.add(progressbar)
 
     vbox2.add(win5)
     vbox2.add(win6)

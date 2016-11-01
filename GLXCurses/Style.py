@@ -63,8 +63,16 @@ class Style(object):
 
         # ProgressBar
         count += 1
-        self.colors.append('ProgressBarBG')
+        self.colors.append('ProgressBar')
         curses.init_pair(count, curses.COLOR_WHITE, curses.COLOR_BLUE)
+
+        count += 1
+        self.colors.append('ProgressBarBG')
+        curses.init_pair(count, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+
+        count += 1
+        self.colors.append('ProgressBarFG')
+        curses.init_pair(count, curses.COLOR_BLACK, curses.COLOR_YELLOW)
 
         # Dialog File Selection
         # curses.init_pair(7, curses.COLOR_YELLOW, curses.COLOR_BLUE)
@@ -72,9 +80,22 @@ class Style(object):
         # curses.init_pair(9, curses.COLOR_RED, curses.COLOR_BLUE)
         # Debug color
         # Dialog File Selection
-        curses.init_pair(10, curses.COLOR_GREEN, curses.COLOR_GREEN)
-        curses.init_pair(11, curses.COLOR_YELLOW, curses.COLOR_YELLOW)
-        curses.init_pair(12, curses.COLOR_RED, curses.COLOR_RED)
+
+        count += 1
+        self.colors.append('FullGreen')
+        curses.init_pair(count, curses.COLOR_GREEN, curses.COLOR_GREEN)
+
+        count += 1
+        self.colors.append('FullYellow')
+        curses.init_pair(count, curses.COLOR_YELLOW, curses.COLOR_YELLOW)
+
+        count += 1
+        self.colors.append('FullRed')
+        curses.init_pair(count, curses.COLOR_RED, curses.COLOR_RED)
+
+        # curses.init_pair(10, curses.COLOR_GREEN, curses.COLOR_GREEN)
+        # curses.init_pair(11, curses.COLOR_YELLOW, curses.COLOR_YELLOW)
+        # curses.init_pair(12, curses.COLOR_RED, curses.COLOR_RED)
 
 
 
