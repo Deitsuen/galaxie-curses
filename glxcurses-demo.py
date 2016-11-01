@@ -54,6 +54,10 @@ if __name__ == '__main__':
     #label3.set_orientation('VERTICAL')
 
     progressbar = GLXCurses.ProgressBar()
+    progressbar.set_text('Progress 1')
+    progressbar.set_spacing(0)
+    progressbar.set_show_text(1)
+    progressbar.set_position_type('CENTER')
     #progressbar.set_position_type('CENTER')
 
     # Creat two Vertical Box contener
