@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     # Create a Window
     win1 = GLXCurses.Window()
-    win1.set_title('My super Window 1')
+    #win1.set_title('My super Window 1')
 
     # Create a Window
     win5 = GLXCurses.Window()
@@ -54,15 +54,15 @@ if __name__ == '__main__':
     # label3.set_orientation('VERTICAL')
 
     progressbar = GLXCurses.ProgressBar()
-    progressbar.set_spacing(1)
+    progressbar.set_spacing(0)
     progressbar.set_value(55)
     value = '{0:}{1:}'.format(progressbar.get_value(), '%')
     progressbar.set_text(value)
     progressbar.set_show_text(1)
-    progressbar.set_position_type('CENTER')
+    progressbar.set_position_type('BOTTOM')
     progressbar.set_justify('CENTER')
-    #progressbar.set_orientation('VERTICAL')
-    #progressbar.set_inverted(1)
+    progressbar.set_orientation('VERTICAL')
+    progressbar.set_inverted(1)
 
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     # Creat a new Horizontal Box contener
     hbox = GLXCurses.HBox()
     hbox.add(vbox1)
-    hbox.add(vbox2)
+    #hbox.add(vbox2)
 
     hbox.subwins_spacing = 0
     vbox1.subwins_spacing = 0
@@ -81,11 +81,11 @@ if __name__ == '__main__':
     # vbox1.add(label3)
     vbox1.add(progressbar)
 
-    vbox2.add(win5)
-    vbox2.add(win6)
+    vbox1.add(win5)
+    vbox1.add(win6)
     # hbox.set_spacing(0)
-    hbox.add(win5)
-    hbox.add(win6)
+    #hbox.add(win5)
+    #hbox.add(win6)
 
     win1.add(hbox)
 
@@ -105,10 +105,10 @@ if __name__ == '__main__':
     ]
     statusbar = GLXCurses.Statusbar()
     # Add Everything inside the Application
-    app.add_menubar(menu)
+    #app.add_menubar(menu)
     app.add_window(win1)
-    app.add_statusbar(statusbar)
-    app.add_toolbar(toolbar)
+    #app.add_statusbar(statusbar)
+    #app.add_toolbar(toolbar)
 
     # Main loop
     count = 1

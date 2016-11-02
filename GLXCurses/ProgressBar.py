@@ -235,30 +235,45 @@ class ProgressBar(Widget):
                     elif self.get_justify() == 'LEFT':
                         x_progress = self.get_spacing()
                     elif self.get_justify() == 'RIGHT':
-                        x_progress = widget_width - self.get_spacing() - 1
+                        x_progress = widget_width - self.get_spacing() - (len(self.progressbar_border)/2)
 
                     # PositionType: CENTER, TOP, BOTTOM
                     if self.get_show_text():
                         tmp_string = ''
                         if self.get_position_type() == 'CENTER':
-                            tmp_string += progress_text[:(len(progress_text) / 2) - len(self.text) / 2]
-                            tmp_string += self.text
-                            tmp_string += progress_text[-(len(progress_text) - len(tmp_string)):]
+                            if progress_height - (len(self.progressbar_border)/2) > len(self.text):
+                                tmp_string += progress_text[:(len(progress_text) / 2) - len(self.text) / 2]
+                                tmp_string += self.text
+                                tmp_string += progress_text[-(len(progress_text) - len(tmp_string)):]
+                            elif progress_height - (len(self.progressbar_border)/2) >= self.preferred_height:
+                                tmp_string += self.text
+                            else:
+                                tmp_string += progress_text[:progress_height]
                             progress_text = tmp_string
 
                         elif self.get_position_type() == 'TOP':
-                            tmp_string += self.text
-                            tmp_string += progress_text[-(len(progress_text) - len(self.text)):]
+                            if progress_height - (len(self.progressbar_border) / 2) >= len(self.text):
+                                tmp_string += self.text
+                                tmp_string += progress_text[-(len(progress_text) - len(self.text)):]
+                            elif progress_height - (len(self.progressbar_border)/2) >= self.preferred_height:
+                                tmp_string += self.text
+                            else:
+                                tmp_string += progress_text[:progress_height]
                             progress_text = tmp_string
 
                         elif self.get_position_type() == 'BOTTOM':
-                            tmp_string += progress_text[:(len(progress_text) - len(self.text))]
-                            tmp_string += self.text
+                            if progress_height - (len(self.progressbar_border) / 2) >= len(self.text):
+                                tmp_string += progress_text[:(len(progress_text) - len(self.text))]
+                                tmp_string += self.text
+                            elif progress_height - (len(self.progressbar_border)/2) >= self.preferred_height:
+                                tmp_string += self.text
+                            else:
+                                tmp_string += progress_text[:progress_height]
                             progress_text = tmp_string
 
                     # Draw Vertical ProgressBar
                     # Draw first interface Character
-                    drawing_area.insch(
+                    drawing_area.addch(
                         y_progress,
                         x_progress,
                         curses.ACS_HLINE
@@ -269,7 +284,7 @@ class ProgressBar(Widget):
                         progress_text = progress_text[::-1]
                         count = 0
                         for CHAR in progress_text:
-                            drawing_area.addstr(
+                            drawing_area.addch(
                                 widget_height - self.get_spacing() - 2 - count,
                                 x_progress,
                                 CHAR
@@ -279,7 +294,7 @@ class ProgressBar(Widget):
                         drawing_area.attron(curses.A_REVERSE)
                         count = 0
                         for CHAR in progress_text[:int((widget_height - self.preferred_height) * self.value / 100)]:
-                            drawing_area.addstr(
+                            drawing_area.addch(
                                 widget_height - self.get_spacing() - 2 - count,
                                 x_progress,
                                 CHAR
@@ -313,7 +328,7 @@ class ProgressBar(Widget):
                             count += 1
                         drawing_area.attroff(curses.A_REVERSE)
                         # Draw last interface Character
-                        drawing_area.insch(
+                        drawing_area.addch(
                             widget_height - self.get_spacing() - 1,
                             x_progress,
                             curses.ACS_HLINE

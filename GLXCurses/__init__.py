@@ -8,4 +8,4 @@ from GLXCurses.VBox import VBox
 from GLXCurses.HBox import HBox
 from GLXCurses.Label import Label
 from GLXCurses.ProgressBar import ProgressBar
-
+from GLXCurses.Button import Button
