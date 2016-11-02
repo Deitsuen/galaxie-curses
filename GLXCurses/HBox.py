@@ -53,7 +53,7 @@ class HBox(Widget):
                 devised_box_size = int(widget_width / len(self.widget_to_display))
                 index = 0
                 for widget in self.widget_to_display:
-
+                    # Check if that the frist element
                     if index == 0:
                         drawing_area = self.widget.subwin(
                             widget_height - self.subwins_spacing * 2,
@@ -61,13 +61,23 @@ class HBox(Widget):
                             widget_y + self.subwins_spacing,
                             widget_x + self.subwins_spacing
                         )
-                    else:
+                    # Normal
+                    elif 1 <= index <= len(self.widget_to_display) - 2:
                         drawing_area = self.widget.subwin(
                             widget_height - self.subwins_spacing * 2,
                             devised_box_size - (self.subwins_spacing / 2),
                             widget_y + self.subwins_spacing,
                             widget_x + (devised_box_size * index) + (self.subwins_spacing / 2)
                         )
+                    # Check if that the last element
+                    else:
+                        drawing_area = self.widget.subwin(
+                            widget_height - self.subwins_spacing * 2,
+                            0,
+                            widget_y + self.subwins_spacing,
+                            widget_x + (devised_box_size * index) + (self.subwins_spacing / 2)
+                        )
+
 
                     widget.draw_in_area(drawing_area)
 

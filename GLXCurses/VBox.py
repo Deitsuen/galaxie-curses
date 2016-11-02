@@ -52,7 +52,7 @@ class VBox(Widget):
                 devised_box_size = int(widget_height / len(self.widget_to_display))
                 index = 0
                 for widget in self.widget_to_display:
-
+                    # Check if that the frist element
                     if index == 0:
                         drawing_area = self.widget.subwin(
                                 devised_box_size - self.subwins_spacing,
@@ -60,17 +60,27 @@ class VBox(Widget):
                                 widget_y + self.subwins_spacing,
                                 widget_x + self.subwins_spacing
                         )
-                    else:
+                    # Normal
+                    elif 1 <= index <= len(self.widget_to_display)-2:
                         drawing_area = self.widget.subwin(
                                 devised_box_size - (self.subwins_spacing / 2),
                                 widget_width - self.subwins_spacing * 2,
                                 widget_y + (devised_box_size * index) + (self.subwins_spacing / 2),
                                 widget_x + self.subwins_spacing
                         )
-
-                    widget.draw_in_area(drawing_area)
+                    # Check if that the last element
+                    else:
+                        drawing_area = self.widget.subwin(
+                                0,
+                                widget_width - self.subwins_spacing * 2,
+                                widget_y + (devised_box_size * index) + (self.subwins_spacing / 2),
+                                widget_x + self.subwins_spacing
+                        )
 
                     index += 1
+
+                    # Finally
+                    widget.draw_in_area(drawing_area)
 
     def add(self, widget):
         widget.set_parent(self)
