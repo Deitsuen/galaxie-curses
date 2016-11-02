@@ -12,7 +12,7 @@ __author__ = 'Tuux'
 class HBox(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.type = 'HBox'
+        self.name = 'HBox'
 
         self.subwins_spacing = 0
 
@@ -77,7 +77,6 @@ class HBox(Widget):
                             widget_y + self.subwins_spacing,
                             widget_x + (devised_box_size * index) + (self.subwins_spacing / 2)
                         )
-
 
                     widget.draw_in_area(drawing_area)
 

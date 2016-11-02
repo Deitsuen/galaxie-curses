@@ -25,6 +25,7 @@ def resize_text(text, max_width, separator='~'):
 class ProgressBar(Widget):
     def __init__(self):
         Widget.__init__(self)
+        self.name = 'ProgressBar'
 
         # The Percent value
         self.value = 0

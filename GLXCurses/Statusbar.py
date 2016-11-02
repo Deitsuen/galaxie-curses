@@ -11,6 +11,7 @@ __author__ = 'Tuux'
 class Statusbar(Widget):
     def __init__(self):
         Widget.__init__(self)
+        self.name = 'Statusbar'
 
         # Widget Setting
         self.statusbar_stack = []

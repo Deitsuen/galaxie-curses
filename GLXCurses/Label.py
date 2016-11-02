@@ -25,6 +25,7 @@ def resize_text(text, max_width, separator='~'):
 class Label(Widget):
     def __init__(self):
         Widget.__init__(self)
+        self.name = 'Label'
 
         # Internal Widget Setting
         self.text = ''
@@ -129,7 +130,7 @@ class Label(Widget):
 
                         # PositionType: CENTER, TOP, BOTTOM
                         if self.position_type == 'CENTER':
-                            #y_text = (widget_height / 2) - (self.preferred_height / 2)
+                            # y_text = (widget_height / 2) - (self.preferred_height / 2)
                             if (widget_height / 2) > (self.preferred_height / 2):
                                 y_text = (widget_height / 2) - (self.preferred_height / 2)
                             else:

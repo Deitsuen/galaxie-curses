@@ -12,7 +12,7 @@ __author__ = 'Tuux'
 class VBox(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.type = 'VBox'
+        self.name = 'VBox'
 
         self.subwins_spacing = 0
 

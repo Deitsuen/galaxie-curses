@@ -12,6 +12,8 @@ __author__ = 'Tuux'
 
 class Application(object):
     def __init__(self):
+        self.name = 'Application'
+
         try:
             # Initialize curses
             os.environ["NCURSES_NO_UTF8_ACS"] = "1"

@@ -13,6 +13,9 @@ class Widget(object):
         self.type = 'Widget'
 
         # Widget Setting
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
+        self.name = 'Widget'
+
         self.widget = ''
         self.widget_spacing = 0
         self.widget_decorated = 0
@@ -94,3 +97,9 @@ class Widget(object):
 
     def set_widget(self, widget):
         self.widget = widget
+
+    def set_name(self, name):
+        self.name = name
+
+    def get_name(self):
+        return self.name

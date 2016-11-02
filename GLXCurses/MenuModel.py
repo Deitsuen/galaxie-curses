@@ -11,6 +11,7 @@ from Style import Style
 class MenuModel(Widget):
     def __init__(self):
         Widget.__init__(self)
+        self.name = 'MenuModel'
 
         # Internal Widget Setting
         self.app_info_label = ''
