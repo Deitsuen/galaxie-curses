@@ -272,7 +272,6 @@ class ProgressBar(Widget):
             self.value = percent
         else:
             self.value = 0
-        self.text = '{0: >3}{1:}'.format(self.value, '%')
 
     def get_value(self):
         if self.value >= 0:
