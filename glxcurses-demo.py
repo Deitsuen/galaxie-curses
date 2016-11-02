@@ -3,6 +3,7 @@
 import GLXCurses
 import sys
 import curses
+
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -21,7 +22,6 @@ if __name__ == '__main__':
     win1 = GLXCurses.Window()
     win1.set_title('My super Window 1')
 
-
     # Create a Window
     win5 = GLXCurses.Window()
     win5.set_title('My super Window 5')
@@ -35,34 +35,33 @@ if __name__ == '__main__':
     win6.set_spacing(1)
 
     # Create a Label
-    label1 =  GLXCurses.Label()
+    label1 = GLXCurses.Label()
     label1.set_text('Super thing 1')
     label1.set_justify('RIGHT')
-    #label1.set_position_type('CENTER')
-    #label1.set_orientation('VERTICAL')
+    # label1.set_position_type('CENTER')
+    # label1.set_orientation('VERTICAL')
 
-    label2 =  GLXCurses.Label()
+    label2 = GLXCurses.Label()
     label2.set_text('La vie est belle tout pleins')
     label2.set_justify('RIGHT')
-    #label2.set_position_type('CENTER')
+    # label2.set_position_type('CENTER')
     label2.set_orientation('VERTICAL')
 
-    label3 =  GLXCurses.Label()
+    label3 = GLXCurses.Label()
     label3.set_text('La vie est belle tout pleins')
     label3.set_justify('LEFT')
-    #label3.set_position_type('CENTER')
-    #label3.set_orientation('VERTICAL')
+    # label3.set_position_type('CENTER')
+    # label3.set_orientation('VERTICAL')
 
     progressbar = GLXCurses.ProgressBar()
     progressbar.set_spacing(1)
     progressbar.set_value(100)
     value = '{0:}{1:}'.format(progressbar.get_value(), '%')
     progressbar.set_text(value)
-    progressbar.set_show_text(1)
+    progressbar.set_show_text(0)
     progressbar.set_position_type('CENTER')
     progressbar.set_justify('CENTER')
     progressbar.set_orientation('VERTICAL')
-
 
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
@@ -83,12 +82,11 @@ if __name__ == '__main__':
 
     vbox2.add(win5)
     vbox2.add(win6)
-    #hbox.set_spacing(0)
+    # hbox.set_spacing(0)
     hbox.add(win5)
     hbox.add(win6)
 
     win1.add(hbox)
-
 
     # Creat a Status Bar
     toolbar = GLXCurses.Toolbar()
@@ -132,4 +130,3 @@ if __name__ == '__main__':
     app.close()
     # THE END
     sys.exit(0)
-
