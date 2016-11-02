@@ -55,13 +55,14 @@ if __name__ == '__main__':
 
     progressbar = GLXCurses.ProgressBar()
     progressbar.set_spacing(1)
-    progressbar.set_value(100)
+    progressbar.set_value(55)
     value = '{0:}{1:}'.format(progressbar.get_value(), '%')
     progressbar.set_text(value)
-    progressbar.set_show_text(0)
+    progressbar.set_show_text(1)
     progressbar.set_position_type('CENTER')
     progressbar.set_justify('CENTER')
-    progressbar.set_orientation('VERTICAL')
+    #progressbar.set_orientation('VERTICAL')
+    #progressbar.set_inverted(1)
 
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
