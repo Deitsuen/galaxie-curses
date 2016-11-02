@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from GLXCurses.Style import Style
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -7,7 +8,6 @@
 __author__ = 'Tuux'
 
 
-from GLXCurses.Style import Style
 class Widget(object):
     def __init__(self):
         self.type = 'Widget'
@@ -15,6 +15,19 @@ class Widget(object):
         # Widget Setting
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Widget'
+
+        # Color's and Style
+        self.override_background_color = 0
+
+        # State
+        self.state = dict()
+        self.state['NORMAL'] = 1
+        self.state['ACTIVE'] = 0
+        self.state['PRELIGHT'] = 0
+        self.state['SELECTED'] = 0
+        self.state['INSENSITIVE'] = 0
+        self.state['INCONSISTENT'] = 0
+        self.state['FOCUSED'] = 0
 
         self.widget = ''
         self.widget_spacing = 0
@@ -98,8 +111,13 @@ class Widget(object):
     def set_widget(self, widget):
         self.widget = widget
 
+    # Name management use for GLXCStyle color's
     def set_name(self, name):
         self.name = name
 
     def get_name(self):
         return self.name
+
+    # Method for override color's
+    # def override_background_color(self, background_color=0):
+    #     self.override_background_color = background_color

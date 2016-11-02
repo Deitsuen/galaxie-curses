@@ -22,6 +22,11 @@ class Style(object):
         curses.init_pair(count, -1, -1)
         self.colors.append('Screen')
 
+        # Each Widget have Transparent Background (Default Terminal) and white foreground
+        count += 1
+        self.colors.append('Widget')
+        curses.init_pair(count, curses.COLOR_WHITE, -1)
+
         # Menu color
         count += 1
         self.colors.append('MenuModel')
