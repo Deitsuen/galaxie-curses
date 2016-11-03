@@ -36,6 +36,7 @@ class Application(object):
             self.close()
             sys.exit(1)
 
+
         if not curses.has_colors():
             sys.stdout.write("Your terminal does not support color\n")
             sys.stdout.flush()
