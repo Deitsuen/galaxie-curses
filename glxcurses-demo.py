@@ -183,7 +183,7 @@ if __name__ == '__main__':
     progressbar12.set_text(value)
     progressbar12.set_show_text(1)
     progressbar12.set_position_type('CENTER')
-    progressbar12.set_justify('CENTER')
+    progressbar12.set_justify('left')
     progressbar12.set_orientation('HORIZONTAL')
     progressbar12.set_inverted(1)
 
