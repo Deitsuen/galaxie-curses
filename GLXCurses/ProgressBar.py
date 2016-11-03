@@ -118,28 +118,33 @@ class ProgressBar(Widget):
                     progress_text = str(self.char * progress_width)
 
                     # Justification:
-                    x_progress = len(self.progressbar_border) / 2 + spacing
+                    justify = self.get_justify().upper()
+                    text = self.get_text()
 
+                    x_progress = len(self.progressbar_border) / 2 + spacing
                     tmp_string = ''
+
                     if self.get_show_text():
-                        if self.get_justify().upper() == 'CENTER':
-                            tmp_string += progress_text[:(len(progress_text)/2) - len(self.text)/2]
-                            tmp_string += self.text
+                        if justify == 'CENTER':
+                            tmp_string += progress_text[:(len(progress_text)/2) - len(text)/2]
+                            tmp_string += text
                             tmp_string += progress_text[-(len(progress_text) - len(tmp_string)):]
                             progress_text = tmp_string
 
-                        elif self.get_justify().upper() == 'LEFT':
-                            tmp_string += self.text
-                            tmp_string += progress_text[-(len(progress_text) - len(self.text)):]
+                        elif justify == 'LEFT':
+                            tmp_string += text
+                            tmp_string += progress_text[-(len(progress_text) - len(text)):]
                             progress_text = tmp_string
 
-                        elif self.get_justify().upper() == 'RIGHT':
-                            tmp_string += progress_text[:(len(progress_text) - len(self.text))]
-                            tmp_string += self.text
+                        elif justify == 'RIGHT':
+                            tmp_string += progress_text[:(len(progress_text) - len(text))]
+                            tmp_string += text
                             progress_text = tmp_string
 
                     # PositionType: CENTER, TOP, BOTTOM
-                    if self.get_position_type().upper() == 'CENTER':
+                    position_type = self.get_position_type().upper()
+
+                    if position_type == 'CENTER':
                         if (widget_height / 2) > self.preferred_height:
                             y_text = (widget_height / 2) - self.preferred_height
                             y_progress = (widget_height / 2) - self.preferred_height
@@ -147,11 +152,11 @@ class ProgressBar(Widget):
                             y_text = 0 + spacing
                             y_progress = 0 + spacing
 
-                    elif self.get_position_type().upper() == 'TOP':
+                    elif position_type == 'TOP':
                         y_text = 0 + spacing
                         y_progress = 0 + spacing
 
-                    elif self.get_position_type().upper() == 'BOTTOM':
+                    elif position_type == 'BOTTOM':
                         y_text = widget_height - self.preferred_height - spacing
                         y_progress = widget_height - self.preferred_height - spacing
 
