@@ -14,25 +14,23 @@ class VBox(Widget):
         Widget.__init__(self)
         self.name = 'VBox'
 
-        self.subwins_spacing = 0
-
         self.widget_to_display = []
         self.widget_subwins = {}
         self.h_widget_list = {}
         self.widget_to_display_id = ''
         self.number_of_widget_to_display = 0
 
-
     # GLXC VBox Functions
     def draw(self):
-        parent_height, parent_width = self.parent.get_size()
-        parent_y, parent_x = self.parent.get_origin()
+        parent_height, parent_width = self.get_parent_size()
+        parent_y, parent_x = self.get_parent_origin()
+        spacing = self.get_spacing()
 
         drawing_area = self.parent.widget.subwin(
-            parent_height - (self.widget_spacing * 2),
-            parent_width - (self.widget_spacing * 2),
-            parent_y + self.widget_spacing,
-            parent_x + self.widget_spacing
+            parent_height - (spacing * 2),
+            parent_width - (spacing * 2),
+            parent_y + spacing,
+            parent_x + spacing
         )
         self.draw_in_area(drawing_area)
 
@@ -40,8 +38,8 @@ class VBox(Widget):
 
         self.widget = drawing_area
 
-        widget_height, widget_width = drawing_area.getmaxyx()
-        widget_y, widget_x = drawing_area.getbegyx()
+        widget_height, widget_width = self.get_size()
+        widget_y, widget_x = self.get_origin()
 
         # Check widgets to display
         is_large_enough = (widget_width >= self.number_of_widget_to_display + 1)
@@ -52,35 +50,38 @@ class VBox(Widget):
                 devised_box_size = int(widget_height / len(self.widget_to_display))
                 index = 0
                 for widget in self.widget_to_display:
+                    # Get the Children Spacing
+                    spacing = widget.get_spacing()
+
                     # Check if that the frist element
                     if index == 0:
-                        drawing_area = self.widget.subwin(
-                                devised_box_size - self.subwins_spacing,
-                                widget_width - self.subwins_spacing * 2,
-                                widget_y + self.subwins_spacing,
-                                widget_x + self.subwins_spacing
+                        subwin = self.widget.subwin(
+                                devised_box_size - spacing,
+                                widget_width - spacing * 2,
+                                widget_y + spacing,
+                                widget_x + spacing
                         )
                     # Normal
                     elif 1 <= index <= len(self.widget_to_display)-2:
-                        drawing_area = self.widget.subwin(
-                                devised_box_size - (self.subwins_spacing / 2),
-                                widget_width - self.subwins_spacing * 2,
-                                widget_y + (devised_box_size * index) + (self.subwins_spacing / 2),
-                                widget_x + self.subwins_spacing
+                        subwin = self.widget.subwin(
+                                devised_box_size - (spacing / 2),
+                                widget_width - spacing * 2,
+                                widget_y + (devised_box_size * index) + (spacing / 2),
+                                widget_x + spacing
                         )
                     # Check if that the last element
                     else:
-                        drawing_area = self.widget.subwin(
+                        subwin = self.widget.subwin(
                                 0,
-                                widget_width - self.subwins_spacing * 2,
-                                widget_y + (devised_box_size * index) + (self.subwins_spacing / 2),
-                                widget_x + self.subwins_spacing
+                                widget_width - spacing * 2,
+                                widget_y + (devised_box_size * index) + (spacing / 2),
+                                widget_x + spacing
                         )
 
                     index += 1
 
                     # Finally
-                    widget.draw_in_area(drawing_area)
+                    widget.draw_in_area(subwin)
 
     def add(self, widget):
         widget.set_parent(self)
