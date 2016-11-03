@@ -30,7 +30,7 @@ class Application(object):
             self.screen.keypad(1)
 
         except ValueError:
-            print "Curses library not installed defaulting to standard console output"
+            sys.stdout.write("Curses library not installed defaulting to standard console output\n")
             sys.stdout.write("Error initializing screen.\n")
             sys.stdout.flush()
             self.close()

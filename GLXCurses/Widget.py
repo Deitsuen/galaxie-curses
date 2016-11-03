@@ -99,15 +99,6 @@ class Widget(object):
     def get_screen(self):
         return self.screen
 
-    def set_style(self, style_name):
-        self.style = style_name
-
-    def get_style(self):
-        return self.style
-
-    def get_style_by_type(self, type):
-        return self.style.get_style_by_type(type)
-
     def set_widget(self, widget):
         self.widget = widget
 
@@ -117,6 +108,15 @@ class Widget(object):
 
     def get_name(self):
         return self.name
+
+    def set_style(self, style_name):
+        self.style = style_name
+
+    def get_style(self):
+        return self.style
+
+    def get_style_by_type(self, type):
+        return self.style.get_style_by_type(type)
 
     # Method for override color's
     # def override_background_color(self, background_color=0):

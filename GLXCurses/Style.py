@@ -10,12 +10,13 @@ __author__ = 'Tuux'
 
 class Style(object):
     def __init__(self):
-        self.style = self.default()
+        self.colors = []
+        self.style = self.get_default_style()
 
+        self.default()
 
     def default(self):
         count = 1
-        self.colors = []
         self.colors.append(0)
 
         # Clean Up color, should be BLACK, BLACK
@@ -102,6 +103,99 @@ class Style(object):
         # curses.init_pair(11, curses.COLOR_YELLOW, curses.COLOR_YELLOW)
         # curses.init_pair(12, curses.COLOR_RED, curses.COLOR_RED)
 
+    def get_default_style(self):
+        style = dict()
 
+        # GLXCurses States Type:
+        # STATE_NORMAL      - The state during normal operation.
+        # STATE_ACTIVE      - The widget is currently active, such as a button pushed
+        # STATE_PRELIGHT    - The mouse pointer is over the widget.
+        # STATE_SELECTED    - The widget is selected
+        # STATE_INSENSITIVE - The widget is disabled
 
+        # GLXCurses Attributes Type:
+        # fg     - a list of 5 foreground colors - one for each state
+        # bg     - a list of 5 background colors
+        # light  - a list of 5 colors - created during set_style() method
+        # dark   - a list of 5 colors - created during set_style() method
+        # mid    - a list of 5 colors - created during set_style() method
+        # text   - a list of 5 colors
+        # base   - a list of 5 colors
+        # black  - the black color
+        # white  - the white color
 
+        # An curses.color to be used for the foreground colors in each widget state.
+        style['fg'] = dict()
+        style['fg']['STATE_NORMAL'] = curses.COLOR_WHITE
+        style['fg']['STATE_ACTIVE'] = curses.COLOR_WHITE
+        style['fg']['STATE_PRELIGHT'] = curses.COLOR_WHITE
+        style['fg']['STATE_SELECTED'] = curses.COLOR_WHITE
+        style['fg']['STATE_INSENSITIVE'] = curses.COLOR_WHITE
+
+        # An curses.color to be used for the background colors in each widget state.
+        style['bg'] = dict()
+        style['bg']['STATE_NORMAL'] = curses.COLOR_BLUE
+        style['bg']['STATE_ACTIVE'] = curses.COLOR_BLUE
+        style['bg']['STATE_PRELIGHT'] = curses.COLOR_BLUE
+        style['bg']['STATE_SELECTED'] = curses.COLOR_BLUE
+        style['bg']['STATE_INSENSITIVE'] = curses.COLOR_BLUE
+
+        # An curses.color to be used for the light colors in each widget state.
+        # The light colors are slightly lighter than the bg colors and used for creating shadows.
+        style['light'] = dict()
+        style['light']['STATE_NORMAL'] = curses.COLOR_BLUE
+        style['light']['STATE_ACTIVE'] = curses.COLOR_BLUE
+        style['light']['STATE_PRELIGHT'] = curses.COLOR_BLUE
+        style['light']['STATE_SELECTED'] = curses.COLOR_BLUE
+        style['light']['STATE_INSENSITIVE'] = curses.COLOR_BLUE
+
+        # An curses.color to be used for the dark colors in each widget state.
+        # The dark colors are slightly darker than the bg colors and used for creating shadows.
+        style['dark'] = dict()
+        style['dark']['STATE_NORMAL'] = curses.COLOR_BLACK
+        style['dark']['STATE_ACTIVE'] = curses.COLOR_BLACK
+        style['dark']['STATE_PRELIGHT'] = curses.COLOR_BLACK
+        style['dark']['STATE_SELECTED'] = curses.COLOR_BLACK
+        style['dark']['STATE_INSENSITIVE'] = curses.COLOR_BLACK
+
+        # An curses.color to be used for the mid colors (between light and dark) in each widget state
+        style['mid'] = dict()
+        style['mid']['STATE_NORMAL'] = curses.COLOR_BLUE
+        style['mid']['STATE_ACTIVE'] = curses.COLOR_BLUE
+        style['mid']['STATE_PRELIGHT'] = curses.COLOR_BLUE
+        style['mid']['STATE_SELECTED'] = curses.COLOR_BLUE
+        style['mid']['STATE_INSENSITIVE'] = curses.COLOR_BLUE
+
+        # An curses.color to be used for the text colors in each widget state.
+        style['text'] = dict()
+        style['text']['STATE_NORMAL'] = curses.COLOR_WHITE
+        style['text']['STATE_ACTIVE'] = curses.COLOR_WHITE
+        style['text']['STATE_PRELIGHT'] = curses.COLOR_WHITE
+        style['text']['STATE_SELECTED'] = curses.COLOR_WHITE
+        style['text']['STATE_INSENSITIVE'] = curses.COLOR_WHITE
+
+        # An curses.color to be used for the base colors in each widget state.
+        style['base'] = dict()
+        style['base']['STATE_NORMAL'] = curses.COLOR_BLUE
+        style['base']['STATE_ACTIVE'] = curses.COLOR_BLUE
+        style['base']['STATE_PRELIGHT'] = curses.COLOR_BLUE
+        style['base']['STATE_SELECTED'] = curses.COLOR_BLUE
+        style['base']['STATE_INSENSITIVE'] = curses.COLOR_BLUE
+
+        # Used for the black color.
+        style['black'] = dict()
+        style['black']['STATE_NORMAL'] = curses.COLOR_BLACK
+        style['black']['STATE_ACTIVE'] = curses.COLOR_BLACK
+        style['black']['STATE_PRELIGHT'] = curses.COLOR_BLACK
+        style['black']['STATE_SELECTED'] = curses.COLOR_BLACK
+        style['black']['STATE_INSENSITIVE'] = curses.COLOR_BLACK
+
+        # Used for the white color.
+        style['white'] = dict()
+        style['white']['STATE_NORMAL'] = curses.COLOR_WHITE
+        style['white']['STATE_ACTIVE'] = curses.COLOR_WHITE
+        style['white']['STATE_PRELIGHT'] = curses.COLOR_WHITE
+        style['white']['STATE_SELECTED'] = curses.COLOR_WHITE
+        style['white']['STATE_INSENSITIVE'] = curses.COLOR_WHITE
+
+        return style
