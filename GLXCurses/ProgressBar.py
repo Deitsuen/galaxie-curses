@@ -189,6 +189,7 @@ class ProgressBar(Widget):
 
                     # Draw Let to Right Horizontal Progress Bar
                     if self.get_inverted():
+                        progress_text = progress_text[::-1]
                         count = 0
                         for CHAR in progress_text:
                             self.widget.addstr(
