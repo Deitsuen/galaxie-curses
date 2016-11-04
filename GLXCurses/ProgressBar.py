@@ -30,7 +30,7 @@ class ProgressBar(Widget):
         if self.style.attribute:
             self.color_text = self.style.attribute['text']['STATE_NORMAL']
             self.color_bg = self.style.attribute['bg']['STATE_NORMAL']
-            self.color_light = self.style.attribute['mid']['STATE_NORMAL']
+            self.color_light = self.style.attribute['base']['STATE_NORMAL']
 
             self.color_normal = self.style.get_curses_pairs(fg=self.color_text, bg=self.color_bg)
             self.color_progressbar = self.style.get_curses_pairs(fg=self.color_light, bg=self.color_bg)

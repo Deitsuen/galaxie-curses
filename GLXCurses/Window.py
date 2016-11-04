@@ -23,13 +23,12 @@ class Window(Widget):
         self.name = 'Window'
 
         if self.style.attribute:
-            self.fg = self.style.attribute['base']['STATE_NORMAL']
-            self.bg = self.style.attribute['bg']['STATE_NORMAL']
-            self.pair1 = self.style.get_curses_pairs(fg=self.fg, bg=self.bg)
-            self.pair2 = self.style.get_curses_pairs(fg=self.bg, bg=self.fg)
+            self.text_fg = self.style.attribute['text']['STATE_NORMAL']
+            self.widget_bg = self.style.attribute['bg']['STATE_NORMAL']
+            self.color_normal = self.style.get_curses_pairs(fg=self.text_fg, bg=self.widget_bg)
+
         else:
-            self.pair1 = 0
-            self.pair2 = 0
+            self.color_normal = 0
 
         # Internal Widget Setting
         self.title = ''
@@ -70,20 +69,20 @@ class Window(Widget):
             if curses.has_colors():
                 drawing_area.bkgdset(
                     ord(' '),
-                    curses.color_pair(self.pair1))
-                drawing_area.bkgd(ord(' '), curses.color_pair(self.pair1))
+                    curses.color_pair(self.color_normal))
+                drawing_area.bkgd(ord(' '), curses.color_pair(self.color_normal))
                 for I in range(widget_y, widget_height):
                     drawing_area.addstr(
                         I,
                         0,
                         str(' ' * int(widget_width - 1)),
-                        curses.color_pair(self.pair1)
+                        curses.color_pair(self.color_normal)
                     )
                     drawing_area.insstr(
                         I,
                         int(widget_width - 1),
                         str(' '),
-                        curses.color_pair(self.pair1)
+                        curses.color_pair(self.color_normal)
                     )
 
                 # Check widgets to display

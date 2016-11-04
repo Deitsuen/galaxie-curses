@@ -15,13 +15,21 @@ class Toolbar(Widget):
 
         # Widget setting
         if self.style.attribute:
-            self.color_text = self.style.attribute['light']['STATE_NORMAL']
-            self.color_bg = self.style.attribute['dark']['STATE_NORMAL']
-            self.color_normal = self.style.get_curses_pairs(fg=self.color_text, bg=self.color_bg)
-            self.color_prefix = self.style.get_curses_pairs(fg=self.color_text, bg=self.color_bg)
-            self.color_prefix = self.style.get_curses_pairs(fg=self.color_text, bg=self.color_bg)
+            self.text_fg = self.style.attribute['dark']['STATE_NORMAL']
+            self.text_bg = self.style.attribute['light']['STATE_NORMAL']
+            self.text_prefix_fg = self.style.attribute['text']['STATE_NORMAL']
+            self.text_prefix_bg = self.style.attribute['dark']['STATE_NORMAL']
+            self.widget_fg = self.style.attribute['dark']['STATE_NORMAL']
+            self.widget_bg = self.style.attribute['dark']['STATE_NORMAL']
+
+            self.color_text_normal = self.style.get_curses_pairs(fg=self.text_fg, bg=self.text_bg)
+            self.color_text_prefix = self.style.get_curses_pairs(fg=self.text_prefix_fg, bg=self.text_prefix_bg)
+            self.color_normal = self.style.get_curses_pairs(fg=self.widget_fg, bg=self.widget_bg)
         else:
+            self.color_text_normal = 0
+            self.color_text_prefix = 0
             self.color_normal = 0
+
 
         self.max_button_number = 10
         self.button_list = [
@@ -83,29 +91,30 @@ class Toolbar(Widget):
                     0,
                     0,
                     str(" " * int(widget_width)),
-                    curses.color_pair(self.style.colors.index('ToolbarText'))
+                    curses.color_pair(self.color_text_normal)
                 )
                 self.widget.insstr(
                     0,
                     widget_width - 1,
                     " ",
-                    curses.color_pair(self.style.colors.index('ToolbarText'))
+                    curses.color_pair(self.color_text_normal)
                 )
                 self.widget.addstr(
                     0,
                     0,
-                    ""
+                    "",
+                    curses.color_pair(self.color_text_normal)
                 )
         count = 0
         for num in range(0, max_can_be_display - 1):
             if count == 0:
                 self.widget.addstr(
                     str('{0: >2}'.format(count + 1)),
-                    curses.color_pair(self.style.colors.index('ToolbarPrefix'))
+                    curses.color_pair(self.color_text_prefix)
                 )
                 self.widget.addstr(
                     str(item_list[count]),
-                    curses.color_pair(self.style.colors.index('ToolbarText'))
+                    curses.color_pair(self.color_text_normal)
                 )
             elif 0 <= count < max_can_be_display - 1:
                 if screen_width - (labels_end_coord[count - 1] + 0) >= len(item_list[count]) + 3:
@@ -113,15 +122,15 @@ class Toolbar(Widget):
                         0,
                         (labels_end_coord[count - 1] + 0),
                         "",
-                        curses.color_pair(self.style.colors.index('ToolbarPrefix'))
+                        curses.color_pair(self.color_text_normal)
                     )
                     self.widget.addstr(
                         str('{0: >2}'.format(count + 1)),
-                        curses.color_pair(self.style.colors.index('ToolbarPrefix'))
+                        curses.color_pair(self.color_text_prefix)
                     )
                     self.widget.addstr(
                         str(item_list[count]),
-                        curses.color_pair(self.style.colors.index('ToolbarText'))
+                        curses.color_pair(self.color_text_normal)
                     )
             elif count >= max_can_be_display - 1:
                 if screen_width - (labels_end_coord[count - 1] + 1) >= len(item_list[count]) + 3:
@@ -129,10 +138,10 @@ class Toolbar(Widget):
                         0,
                         (labels_end_coord[count - 1] + 1),
                         str('{0: >2}'.format(count + 1)),
-                        curses.color_pair(self.style.colors.index('ToolbarPrefix'))
+                        curses.color_pair(self.color_text_prefix)
                     )
                     self.widget.addstr(
                         item_list[count],
-                        curses.color_pair(self.style.colors.index('ToolbarText'))
+                        curses.color_pair(self.color_text_normal)
                     )
             count += 1

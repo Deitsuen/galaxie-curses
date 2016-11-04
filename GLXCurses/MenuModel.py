@@ -18,7 +18,7 @@ class MenuModel(Widget):
 
         if self.style.attribute:
             self.color_text = self.style.attribute['dark']['STATE_NORMAL']
-            self.color_bg = self.style.attribute['bg']['STATE_PRELIGHT']
+            self.color_bg = self.style.attribute['light']['STATE_NORMAL']
             self.color_normal = self.style.get_curses_pairs(fg=self.color_text, bg=self.color_bg)
 
         else:

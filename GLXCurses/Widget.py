@@ -32,6 +32,7 @@ class Widget(object):
         self.widget_spacing = 0
         self.widget_decorated = 0
         self.screen = ''
+        # Each Widget come with it own Style by default and recive parent Style during a add()
         self.style = Style()
 
         # Widget Parent Information's
@@ -123,5 +124,20 @@ class Widget(object):
         return self.style
 
     # Method for override color's
-    # def override_background_color(self, background_color=0):
-    #     self.override_background_color = background_color
+    def override_background_color(self, color='RED'):
+        if self.style.attribute:
+            self.style.attribute['bg']['STATE_NORMAL'] = str(color).upper()
+            return
+        else:
+            self.style = Style()
+            self.style.attribute['bg']['STATE_NORMAL'] = str(color).upper()
+            return
+        # color = str(color).upper
+        # self.style.attribute['bg']['STATE_NORMAL'] = color
+
+        # state = str(state).upper
+        # if str(state).startswith('STATE_'):
+        #     self.style.attribute['bg'][state] = color
+        # else:
+        #     state = 'STATE_' + str(state)
+        #     self.style.attribute['bg'][state] = color

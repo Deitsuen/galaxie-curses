@@ -233,7 +233,8 @@ if __name__ == '__main__':
     #hbox.add(win6)
 
     win1.add(hbox)
-
+    win6.style.attribute['bg']['STATE_NORMAL'] = 'RED'
+    #win1.override_background_color('RED')
     # Creat a Status Bar
     toolbar = GLXCurses.Toolbar()
     toolbar.button_list = [
@@ -253,7 +254,7 @@ if __name__ == '__main__':
     app.add_menubar(menu)
     app.add_window(win1)
     app.add_statusbar(statusbar)
-    #app.add_toolbar(toolbar)
+    app.add_toolbar(toolbar)
 
     # Main loop
     count = 1

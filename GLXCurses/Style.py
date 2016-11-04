@@ -26,7 +26,7 @@ class Style(object):
         # STATE_INSENSITIVE - The widget is disabled
 
         # GLXCurses Attributes Type:
-        # fg     - a list of 5 foreground colors - one for each state
+        # text_fg     - a list of 5 foreground colors - one for each state
         # bg     - a list of 5 background colors
         # light  - a list of 5 colors - created during set_style() method
         # dark   - a list of 5 colors - created during set_style() method
@@ -37,12 +37,12 @@ class Style(object):
         # white  - the white color
 
         # An color to be used for the foreground colors in each widget state.
-        style['fg'] = dict()
-        style['fg']['STATE_NORMAL'] = 'WHITE'
-        style['fg']['STATE_ACTIVE'] = 'WHITE'
-        style['fg']['STATE_PRELIGHT'] = 'WHITE'
-        style['fg']['STATE_SELECTED'] = 'WHITE'
-        style['fg']['STATE_INSENSITIVE'] = 'WHITE'
+        style['text_fg'] = dict()
+        style['text_fg']['STATE_NORMAL'] = 'WHITE'
+        style['text_fg']['STATE_ACTIVE'] = 'WHITE'
+        style['text_fg']['STATE_PRELIGHT'] = 'WHITE'
+        style['text_fg']['STATE_SELECTED'] = 'WHITE'
+        style['text_fg']['STATE_INSENSITIVE'] = 'WHITE'
 
         # An color to be used for the background colors in each widget state.
         style['bg'] = dict()
@@ -55,7 +55,7 @@ class Style(object):
         # An color to be used for the light colors in each widget state.
         # The light colors are slightly lighter than the bg colors and used for creating shadows.
         style['light'] = dict()
-        style['light']['STATE_NORMAL'] = 'WHITE'
+        style['light']['STATE_NORMAL'] = 'CYAN'
         style['light']['STATE_ACTIVE'] = 'WHITE'
         style['light']['STATE_PRELIGHT'] = 'WHITE'
         style['light']['STATE_SELECTED'] = 'WHITE'
