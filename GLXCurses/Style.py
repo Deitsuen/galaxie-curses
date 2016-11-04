@@ -48,8 +48,8 @@ class Style(object):
         style['bg'] = dict()
         style['bg']['STATE_NORMAL'] = 'BLUE'
         style['bg']['STATE_ACTIVE'] = 'BLUE'
-        style['bg']['STATE_PRELIGHT'] = 'BLUE'
-        style['bg']['STATE_SELECTED'] = 'BLUE'
+        style['bg']['STATE_PRELIGHT'] = 'CYAN'
+        style['bg']['STATE_SELECTED'] = 'CYAN'
         style['bg']['STATE_INSENSITIVE'] = 'BLUE'
 
         # An color to be used for the light colors in each widget state.

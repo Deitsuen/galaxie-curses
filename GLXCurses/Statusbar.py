@@ -16,6 +16,14 @@ class Statusbar(Widget):
         # Widget Setting
         self.statusbar_stack = []
 
+        if self.style.attribute:
+            self.color_text = self.style.attribute['light']['STATE_NORMAL']
+            self.color_bg = self.style.attribute['dark']['STATE_NORMAL']
+            self.color_normal = self.style.get_curses_pairs(fg=self.color_text, bg=self.color_bg)
+
+        else:
+            self.color_normal = 0
+
     def draw(self):
 
         screen_height, screen_width = self.screen.getmaxyx()
@@ -40,11 +48,11 @@ class Statusbar(Widget):
                     0,
                     0,
                     str(' ' * (width - 1)),
-                    curses.color_pair(self.style.colors.index('Statusbar'))
+                    curses.color_pair(self.color_normal)
                 )
             self.widget.insstr(
                     str(' '),
-                    curses.color_pair(self.style.colors.index('Statusbar'))
+                    curses.color_pair(self.color_normal)
                 )
 
         # If it have something inside the Statusbar stack they display it but care about the display size

@@ -23,7 +23,7 @@ class Window(Widget):
         self.name = 'Window'
 
         if self.style.attribute:
-            self.fg = self.style.attribute['fg']['STATE_NORMAL']
+            self.fg = self.style.attribute['base']['STATE_NORMAL']
             self.bg = self.style.attribute['bg']['STATE_NORMAL']
             self.pair1 = self.style.get_curses_pairs(fg=self.fg, bg=self.bg)
             self.pair2 = self.style.get_curses_pairs(fg=self.bg, bg=self.fg)
@@ -44,9 +44,6 @@ class Window(Widget):
     #     self.width = width
 
     def draw(self):
-
-
-
 
         parent_height, parent_width = self.parent.get_size()
         parent_y, parent_x = self.parent.get_origin()
@@ -116,7 +113,6 @@ class Window(Widget):
 
     def add(self, widget):
         widget.set_parent(self)
-        widget.set_style(self.style)
         id_max = len(self.widget_to_display.keys())
         if bool(self.widget_to_display):
             self.widget_to_display[id_max] = widget

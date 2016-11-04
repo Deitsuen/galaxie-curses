@@ -16,6 +16,14 @@ class MenuModel(Widget):
         # Internal Widget Setting
         self.app_info_label = ''
 
+        if self.style.attribute:
+            self.color_text = self.style.attribute['dark']['STATE_NORMAL']
+            self.color_bg = self.style.attribute['bg']['STATE_PRELIGHT']
+            self.color_normal = self.style.get_curses_pairs(fg=self.color_text, bg=self.color_bg)
+
+        else:
+            self.color_normal = 0
+
     def draw(self):
         actual_x_size, actual_y_size = self.screen.getmaxyx()
         app_info_label = self.app_info_label
@@ -25,11 +33,11 @@ class MenuModel(Widget):
                     0,
                     0,
                     str(" " * int(actual_y_size)),
-                    curses.color_pair(self.style.colors.index('MenuModel'))
+                    curses.color_pair(self.color_normal)
                 )
             self.widget.bkgdset(
                     ord(' '),
-                    curses.color_pair(self.style.colors.index('MenuModel'))
+                    curses.color_pair(self.color_normal)
                 )
         if len(self.app_info_label) > 0:
             if not actual_y_size + 1 <= len(app_info_label):
@@ -37,11 +45,11 @@ class MenuModel(Widget):
                     0,
                     (actual_y_size - 1) - len(str(app_info_label[:-1])),
                     app_info_label[:-1],
-                    curses.color_pair(self.style.colors.index('MenuModel'))
+                    curses.color_pair(self.color_normal)
                 )
                 self.widget.insstr(
                     0,
                     actual_y_size - 1,
                     app_info_label[-1:],
-                    curses.color_pair(self.style.colors.index('MenuModel'))
+                    curses.color_pair(self.color_normal)
                 )

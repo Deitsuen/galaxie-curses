@@ -14,6 +14,15 @@ class Toolbar(Widget):
         self.name = 'Toolbar'
 
         # Widget setting
+        if self.style.attribute:
+            self.color_text = self.style.attribute['light']['STATE_NORMAL']
+            self.color_bg = self.style.attribute['dark']['STATE_NORMAL']
+            self.color_normal = self.style.get_curses_pairs(fg=self.color_text, bg=self.color_bg)
+            self.color_prefix = self.style.get_curses_pairs(fg=self.color_text, bg=self.color_bg)
+            self.color_prefix = self.style.get_curses_pairs(fg=self.color_text, bg=self.color_bg)
+        else:
+            self.color_normal = 0
+
         self.max_button_number = 10
         self.button_list = [
             'Help',

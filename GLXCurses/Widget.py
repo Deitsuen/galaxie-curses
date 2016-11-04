@@ -86,7 +86,6 @@ class Widget(object):
         self.parent = parent
         self.parent_spacing = self.parent.parent_spacing
         self.screen = self.parent.screen
-        self.style = self.style
         if parent.style:
             self.parent_style = parent.style
         else:
