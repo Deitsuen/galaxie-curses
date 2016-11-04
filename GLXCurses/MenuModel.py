@@ -7,7 +7,7 @@ from Widget import Widget
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
 
-from Style import Style
+
 class MenuModel(Widget):
     def __init__(self):
         Widget.__init__(self)

@@ -14,6 +14,7 @@ class HBox(Widget):
         Widget.__init__(self)
         self.name = 'HBox'
 
+
         self.subwins_spacing = 0
 
         self.widget_to_display = []
@@ -81,6 +82,7 @@ class HBox(Widget):
                             widget_x + (devised_box_size * index) + (spacing / 2)
                         )
 
+                    # Drawing
                     widget.draw_in_area(subwin)
 
                     index += 1

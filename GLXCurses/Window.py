@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import curses
 from Widget import Widget
+
+from Style import Style
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -19,6 +21,16 @@ class Window(Widget):
     def __init__(self):
         Widget.__init__(self)
         self.name = 'Window'
+
+        if self.style.attribute:
+            self.fg = self.style.attribute['fg']['STATE_NORMAL']
+            self.bg = self.style.attribute['bg']['STATE_NORMAL']
+            self.pair1 = self.style.get_curses_pairs(fg=self.fg, bg=self.bg)
+            self.pair2 = self.style.get_curses_pairs(fg=self.bg, bg=self.fg)
+        else:
+            self.pair1 = 0
+            self.pair2 = 0
+
         # Internal Widget Setting
         self.title = ''
 
@@ -32,6 +44,10 @@ class Window(Widget):
     #     self.width = width
 
     def draw(self):
+
+
+
+
         parent_height, parent_width = self.parent.get_size()
         parent_y, parent_x = self.parent.get_origin()
         self.parent_spacing = self.parent.get_spacing()
@@ -49,32 +65,34 @@ class Window(Widget):
     def draw_in_area(self, drawing_area):
 
         self.widget = drawing_area
-
         widget_height, widget_width = drawing_area.getmaxyx()
         widget_y, widget_x = drawing_area.getbegyx()
         min_size_width = (self.widget_spacing * 2) + self.widget_spacing
         min_size_height = (self.widget_spacing * 2)
         if (widget_height >= min_size_height) and (widget_width >= min_size_width):
             if curses.has_colors():
-                drawing_area.bkgdset(ord(' '), curses.color_pair(self.style.colors.index('Window')))
-                drawing_area.bkgd(ord(' '), curses.color_pair(self.style.colors.index('Window')))
+                drawing_area.bkgdset(
+                    ord(' '),
+                    curses.color_pair(self.pair1))
+                drawing_area.bkgd(ord(' '), curses.color_pair(self.pair1))
                 for I in range(widget_y, widget_height):
                     drawing_area.addstr(
                         I,
                         0,
                         str(' ' * int(widget_width - 1)),
-                        curses.color_pair(self.style.colors.index('Window'))
+                        curses.color_pair(self.pair1)
                     )
                     drawing_area.insstr(
                         I,
                         int(widget_width - 1),
                         str(' '),
-                        curses.color_pair(self.style.colors.index('Window'))
+                        curses.color_pair(self.pair1)
                     )
 
                 # Check widgets to display
                 if bool(self.widget_to_display):
                     self.widget_to_display[self.widget_to_display_id].draw()
+                    self.widget_to_display[self.widget_to_display_id].set_style(self.style)
 
             # Creat a box and add the name of the windows like a king, who trust that !!!
             if self.widget_decorated > 0:
@@ -98,6 +116,7 @@ class Window(Widget):
 
     def add(self, widget):
         widget.set_parent(self)
+        widget.set_style(self.style)
         id_max = len(self.widget_to_display.keys())
         if bool(self.widget_to_display):
             self.widget_to_display[id_max] = widget

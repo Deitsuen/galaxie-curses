@@ -36,7 +36,6 @@ class Application(object):
             self.close()
             sys.exit(1)
 
-
         if not curses.has_colors():
             sys.stdout.write("Your terminal does not support color\n")
             sys.stdout.flush()
@@ -113,12 +112,6 @@ class Application(object):
     def get_name(self):
         return self.name
 
-    def set_type(self, type_name):
-        self.type = type_name
-
-    def get_type(self):
-        return self.name
-
     def set_style(self, style):
         self.style = style
 
@@ -148,7 +141,6 @@ class Application(object):
 
     def remove_statusbar(self, glx_statusbar):
         self.statusbar = ''
-
 
     def add_toolbar(self, glx_toolbar):
         glx_toolbar.set_parent(self)

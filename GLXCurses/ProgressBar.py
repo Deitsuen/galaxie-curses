@@ -27,6 +27,20 @@ class ProgressBar(Widget):
         Widget.__init__(self)
         self.name = 'ProgressBar'
 
+        if self.style.attribute:
+            self.fg = self.style.attribute['fg']['STATE_NORMAL']
+            self.bg = self.style.attribute['bg']['STATE_NORMAL']
+            self.light = self.style.attribute['light']['STATE_NORMAL']
+            self.color_normal = self.style.get_curses_pairs(fg=self.fg, bg=self.bg)
+            self.color_light = self.style.get_curses_pairs(fg=self.light, bg=self.bg)
+            self.color_light_inverted = self.style.get_curses_pairs(fg=self.bg, bg=self.light)
+            self.color_red = self.style.get_curses_pairs(fg='RED', bg='RED')
+            self.color_yellow = self.style.get_curses_pairs(fg='YELLOW', bg='YELLOW')
+        else:
+            self.color_normal = 0
+            self.color_light = 0
+            self.color_light_inverted = 0
+
         # The Percent value
         self.value = 0
         
@@ -166,7 +180,8 @@ class ProgressBar(Widget):
                     self.widget.addstr(
                         y_text,
                         x_progress - 1,
-                        self.progressbar_border[:len(self.progressbar_border)/2]
+                        self.progressbar_border[:len(self.progressbar_border)/2],
+                        curses.color_pair(self.color_normal)
                     )
 
                     # Draw the progressbar1 background
@@ -178,44 +193,49 @@ class ProgressBar(Widget):
                             self.widget.addstr(
                                 y_progress,
                                 widget_width - spacing - 2 - count,
-                                CHAR
+                                CHAR,
+                                curses.color_pair(self.color_light)
                             )
                             count += 1
-                        self.widget.attron(curses.A_REVERSE)
+                        #self.widget.attron(curses.A_REVERSE)
                         count = 0
                         for CHAR in progress_text[:int((widget_width - self.preferred_width) * self.value / 100)]:
                             self.widget.addstr(
                                 y_progress,
                                 widget_width - spacing - 2 - count,
-                                CHAR
+                                CHAR,
+                                curses.color_pair(self.color_light_inverted)
                             )
                             count += 1
-                        self.widget.attroff(curses.A_REVERSE)
+                        #self.widget.attroff(curses.A_REVERSE)
                     else:
                         count = 0
                         for CHAR in progress_text:
                             self.widget.addstr(
                                 y_progress,
                                 x_progress + count,
-                                CHAR
+                                CHAR,
+                                curses.color_pair(self.color_light)
                             )
                             count += 1
-                        self.widget.attron(curses.A_REVERSE)
+                        #self.widget.attron(curses.A_REVERSE)
                         count = 0
                         for CHAR in progress_text[:int((widget_width - self.preferred_width) * self.get_value() / 100)]:
                             self.widget.addstr(
                                 y_progress,
                                 x_progress + count,
-                                CHAR
+                                CHAR,
+                                curses.color_pair(self.color_light_inverted)
                             )
                             count += 1
-                        self.widget.attroff(curses.A_REVERSE)
+                        #self.widget.attroff(curses.A_REVERSE)
 
                     # Interface management
                     self.widget.insstr(
                         y_progress,
                         widget_width - spacing - 1,
-                        self.progressbar_border[-len(self.progressbar_border)/2:]
+                        self.progressbar_border[-len(self.progressbar_border)/2:],
+                        curses.color_pair(self.color_normal)
                     )
 
                 elif self.get_orientation().upper() == 'VERTICAL':

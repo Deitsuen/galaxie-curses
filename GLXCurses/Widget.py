@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from GLXCurses.Style import Style
-
+from Style import Style
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -38,6 +37,7 @@ class Widget(object):
         # Widget Parent Information's
         self.parent = ''
         self.parent_spacing = 0
+        self.parent_style = Style()
 
     # Common Widget mandatory
     def get(self):
@@ -86,11 +86,19 @@ class Widget(object):
         self.parent = parent
         self.parent_spacing = self.parent.parent_spacing
         self.screen = self.parent.screen
-        self.style = self.parent.style
+        self.style = self.style
+        if parent.style:
+            self.parent_style = parent.style
+        else:
+            self.parent_style = self.style
 
     def get_parent_spacing(self):
         self.parent_spacing = self.parent.parent_spacing
         return self.parent_spacing
+
+    def get_parent_style(self):
+        self.parent_style = self.parent.parent_style
+        return self.parent.parent_style
 
     def un_parent(self):
         self.parent = ''
@@ -109,8 +117,8 @@ class Widget(object):
     def get_name(self):
         return self.name
 
-    def set_style(self, style_name):
-        self.style = style_name
+    def set_style(self, style):
+        self.style = style
 
     def get_style(self):
         return self.style
