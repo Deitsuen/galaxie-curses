@@ -30,7 +30,7 @@ if __name__ == '__main__':
 
     # Create a Window
     win6 = GLXCurses.Window()
-    win6.set_title('My super Window 6')
+    win6.set_title('Label Widget')
     win6.set_decorated(1)
     win6.set_spacing(1)
 
@@ -40,19 +40,31 @@ if __name__ == '__main__':
     label1.set_justify('RIGHT')
     # label1.set_position_type('CENTER')
     # label1.set_orientation('VERTICAL')
+    label1.attribute['text']['STATE_NORMAL'] = 'RED'
+    label1.attribute['text']['STATE_NORMAL'] = 'YELLOW'
+    label1.attribute['text']['STATE_NORMAL'] = 'CYAN'
+    #label1.attribute['bg']['STATE_NORMAL'] = 'RED'
+    #label1.override_background_color('RED')
 
     label2 = GLXCurses.Label()
-    label2.set_text('La vie est belle tout pleins')
+
     label2.set_justify('RIGHT')
     # label2.set_position_type('CENTER')
     label2.set_orientation('VERTICAL')
 
     label3 = GLXCurses.Label()
-    label3.set_text('La vie est belle tout pleins')
     label3.set_justify('LEFT')
     # label3.set_position_type('CENTER')
     # label3.set_orientation('VERTICAL')
 
+    label1.set_text('RED')
+    label1.attribute['text']['STATE_NORMAL'] = 'RED'
+
+    label2.set_text('YELLOW')
+    label2.attribute['text']['STATE_NORMAL'] = 'YELLOW'
+
+    label3.set_text('CYAN')
+    label3.attribute['text']['STATE_NORMAL'] = 'CYAN'
 
     progressbar1 = GLXCurses.ProgressBar()
     progressbar1.set_spacing(0)
@@ -194,9 +206,13 @@ if __name__ == '__main__':
     vbox1.add(progressbar1)
     vbox1.add(win_for_progressbar)
     vbox1.add(win6)
-    # vbox1.add(label1)
-    # vbox1.add(label2)
-    # vbox1.add(label3)
+
+    hbox_label = GLXCurses.HBox()
+    hbox_label.subwins_spacing = 0
+    hbox_label.add(label1)
+    hbox_label.add(label2)
+    hbox_label.add(label3)
+    win6.add(hbox_label)
 
     # Creat a new Horizontal Box contener
     hbox = GLXCurses.HBox()
@@ -233,8 +249,8 @@ if __name__ == '__main__':
     #hbox.add(win6)
 
     win1.add(hbox)
-    win6.style.attribute['bg']['STATE_NORMAL'] = 'RED'
-    #win1.override_background_color('RED')
+    #win6.style.attribute['bg']['STATE_NORMAL'] = 'RED'
+
     # Creat a Status Bar
     toolbar = GLXCurses.Toolbar()
     toolbar.button_list = [

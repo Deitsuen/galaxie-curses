@@ -222,7 +222,7 @@ class ProgressBar(Widget):
                             count += 1
                         #self.widget.attron(curses.A_REVERSE)
                         count = 0
-                        for CHAR in progress_text[:int((widget_width - self.preferred_width) * self.get_value() / 100)]:
+                        for CHAR in progress_text[:int((widget_width - self.preferred_width) * self.value / 100)]:
                             self.widget.addstr(
                                 y_progress,
                                 x_progress + count,
@@ -323,7 +323,7 @@ class ProgressBar(Widget):
 
                         #self.widget.attron(curses.A_REVERSE)
                         count = 0
-                        for CHAR in progress_text[:int((widget_height - self.preferred_height) * self.get_value() / 100)]:
+                        for CHAR in progress_text[:int((widget_height - self.preferred_height) * self.value / 100)]:
                             self.widget.addch(
                                 widget_height - spacing - 2 - count,
                                 x_progress,
@@ -387,11 +387,7 @@ class ProgressBar(Widget):
         #self.draw()
 
     def get_value(self):
-        if self.value >= 0:
-            return self.value
-        else:
-            self.value = 0
-            return self.value
+        return self.value
 
     def set_show_text(self, show_text_int):
         self.show_text = show_text_int
