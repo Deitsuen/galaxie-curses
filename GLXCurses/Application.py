@@ -68,6 +68,7 @@ class Application(object):
         self.widget = ''
         self.spacing = 0
         self.parent_spacing = 0
+        self.parent_style = self.style
         self.type = 'Application'
 
 
@@ -98,6 +99,10 @@ class Application(object):
 
     def get_parent_spacing(self):
         return self.parent.spacing
+
+    def get_parent_style(self):
+        self.parent_style = self.parent.parent_style
+        return self.parent.parent_style
 
     def remove_parent(self):
         self.parent = ''

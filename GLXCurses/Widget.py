@@ -37,7 +37,7 @@ class Widget(object):
         # Widget Parent Information's
         self.parent = ''
         self.parent_spacing = 0
-        self.parent_style = Style()
+        self.parent_style = self.style
 
     # Common Widget mandatory
     def get(self):
@@ -121,9 +121,6 @@ class Widget(object):
 
     def get_style(self):
         return self.style
-
-    def get_style_by_type(self, type):
-        return self.style.get_style_by_type(type)
 
     # Method for override color's
     # def override_background_color(self, background_color=0):
