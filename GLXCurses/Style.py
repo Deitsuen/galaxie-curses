@@ -55,11 +55,11 @@ class Style(object):
         # An color to be used for the light colors in each widget state.
         # The light colors are slightly lighter than the bg colors and used for creating shadows.
         style['light'] = dict()
-        style['light']['STATE_NORMAL'] = 'YELLOW'
-        style['light']['STATE_ACTIVE'] = 'YELLOW'
-        style['light']['STATE_PRELIGHT'] = 'YELLOW'
-        style['light']['STATE_SELECTED'] = 'YELLOW'
-        style['light']['STATE_INSENSITIVE'] = 'YELLOW'
+        style['light']['STATE_NORMAL'] = 'WHITE'
+        style['light']['STATE_ACTIVE'] = 'WHITE'
+        style['light']['STATE_PRELIGHT'] = 'WHITE'
+        style['light']['STATE_SELECTED'] = 'WHITE'
+        style['light']['STATE_INSENSITIVE'] = 'WHITE'
 
         # An color to be used for the dark colors in each widget state.
         # The dark colors are slightly darker than the bg colors and used for creating shadows.
@@ -72,11 +72,11 @@ class Style(object):
 
         # An color to be used for the mid colors (between light and dark) in each widget state
         style['mid'] = dict()
-        style['mid']['STATE_NORMAL'] = 'BLUE'
-        style['mid']['STATE_ACTIVE'] = 'BLUE'
-        style['mid']['STATE_PRELIGHT'] = 'BLUE'
-        style['mid']['STATE_SELECTED'] = 'BLUE'
-        style['mid']['STATE_INSENSITIVE'] = 'BLUE'
+        style['mid']['STATE_NORMAL'] = 'YELLOW'
+        style['mid']['STATE_ACTIVE'] = 'WHITE'
+        style['mid']['STATE_PRELIGHT'] = 'WHITE'
+        style['mid']['STATE_SELECTED'] = 'WHITE'
+        style['mid']['STATE_INSENSITIVE'] = 'WHITE'
 
         # An color to be used for the text colors in each widget state.
         style['text'] = dict()
@@ -88,11 +88,11 @@ class Style(object):
 
         # An color to be used for the base colors in each widget state.
         style['base'] = dict()
-        style['base']['STATE_NORMAL'] = 'BLUE'
-        style['base']['STATE_ACTIVE'] = 'BLUE'
-        style['base']['STATE_PRELIGHT'] = 'BLUE'
-        style['base']['STATE_SELECTED'] = 'BLUE'
-        style['base']['STATE_INSENSITIVE'] = 'BLUE'
+        style['base']['STATE_NORMAL'] = 'WHITE'
+        style['base']['STATE_ACTIVE'] = 'WHITE'
+        style['base']['STATE_PRELIGHT'] = 'WHITE'
+        style['base']['STATE_SELECTED'] = 'WHITE'
+        style['base']['STATE_INSENSITIVE'] = 'WHITE'
 
         # Used for the black color.
         style['black'] = dict()
