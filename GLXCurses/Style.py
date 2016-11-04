@@ -134,10 +134,10 @@ class Style(object):
                 counter += 1
 
     def get_curses_pairs(self, fg='WHITE', bg='BLACK'):
-        try:
-            pairs = self.curses_colors_pairs.index(str(fg) + '/' + str(bg))
+        if fg in self.curses_colors and bg in self.curses_colors:
+            pairs = self.curses_colors_pairs.index(str(fg).upper() + '/' + str(bg).upper())
             return pairs
-        except IndexError:
+        else:
             return 0
 
     def get_style(self):
