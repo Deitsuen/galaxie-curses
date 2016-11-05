@@ -79,25 +79,7 @@ class Label(Widget):
         widget_y, widget_x = drawing_area.getbegyx()
         min_size_width = (self.widget_spacing * 2) + self.widget_spacing
         min_size_height = (self.widget_spacing * 2)
-        if (widget_height >= min_size_height) and (widget_width >= min_size_width ):
-            if curses.has_colors():
-                drawing_area.bkgdset(ord(' '), curses.color_pair(self.color_normal))
-                drawing_area.bkgd(ord(' '), curses.color_pair(self.color_normal))
-                for I in range(widget_y, widget_height):
-                    drawing_area.insstr(
-                        I,
-                        0,
-                        str(' ' * int(widget_width - 1)),
-                        curses.color_pair(self.color_normal)
-                    )
-                    drawing_area.insstr(
-                        I,
-                        int(widget_width - 1),
-                        str(' '),
-                        curses.color_pair(self.color_normal)
-                    )
-            # Compute text position
-
+        if (widget_height >= min_size_height) and (widget_width >= min_size_width):
             if not self.text == '':
                 # Check if the text can be display
                 text_have_necessary_width = (self.preferred_width + self.get_spacing() >= 1)
@@ -209,9 +191,5 @@ class Label(Widget):
     def get_position_type(self):
         return self.position_type
 
-    def override_color(self, color):
-        self.attribute['text']['STATE_NORMAL'] = str(color).upper()
 
-    def override_background_color(self, color):
-        self.attribute['bg']['STATE_NORMAL'] = str(color).upper()
 

@@ -31,8 +31,12 @@ class Widget(object):
         self.widget = ''
         self.widget_spacing = 0
         self.widget_decorated = 0
+
         self.screen = ''
-        # Each Widget come with it own Style by default and recive parent Style during a add()
+
+        # Each Widget come with it own Style by default
+        # It can receive parent Style() or a new Style() during a set_parent() / un_parent() call
+        # GLXCApplication is a special case where it have no parent, it role is to impose it own style to each Widget
         self.style = Style()
 
         # Widget Parent Information's
@@ -132,3 +136,9 @@ class Widget(object):
 
     def get_style(self):
         return self.style
+
+    def override_color(self, color):
+        self.style.attribute['text']['STATE_NORMAL'] = str(color).upper()
+
+    def override_background_color(self, color):
+        self.style.attribute['bg']['STATE_NORMAL'] = str(color).upper()
