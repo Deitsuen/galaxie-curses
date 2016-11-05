@@ -388,7 +388,7 @@ class ProgressBar(Widget):
             self.value = percent
         else:
             self.value = 0
-        #self.draw()
+
 
     def get_value(self):
         return self.value

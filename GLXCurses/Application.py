@@ -51,22 +51,22 @@ class Application(object):
         curses.mousemask(-1)
 
         # Store GLXC object
-        self.menubar = ''
-        self.main_window = ''
-        self.statusbar = ''
-        self.message_bar = ''
-        self.toolbar = ''
+        self.menubar = None
+        self.main_window = None
+        self.statusbar = None
+        self.message_bar = None
+        self.toolbar = None
 
         # Store Variables
-        self.name = ''
-        self.windows_id_number = ''
-        self.active_window_id = ''
+        self.name = None
+        self.windows_id_number = None
+        self.active_window_id = None
         self.windows = {}
         self.attribute = self.style.get_default_style()
 
         # Fake Widget
-        self.parent = self.screen
-        self.widget = ''
+        #self.parent = self.screen
+        self.widget = None
         self.spacing = 0
         self.parent_spacing = 0
         self.parent_style = self.style
@@ -87,26 +87,25 @@ class Application(object):
         return self.spacing
 
     def get_parent(self):
-        return self.parent
+        return self.widget
 
     def get_parent_size(self):
-        return self.parent.getmaxyx()
+        return self.get_parent().getmaxyx()
 
     def get_parent_origin(self):
-        return self.parent.getbegyx()
+        return self.get_parent().getbegyx()
 
     def set_parent(self, parent):
-        self.parent = parent
-        # self.style Should not be touch
+        pass
 
     def get_parent_spacing(self):
-        return self.parent.spacing
+        return self.get_parent().spacing
 
     def get_parent_style(self):
         return self.style
 
     def remove_parent(self):
-        self.parent = ''
+        pass
 
     def get_screen(self):
         return self.screen
@@ -182,10 +181,10 @@ class Application(object):
             self.toolbar.refresh()
 
         # After have redraw everything it's time to refresh the screen
-        self.parent.refresh()
+        self.get_parent().refresh()
 
     def draw(self):
-        parent_height, parent_width = self.parent.getmaxyx()
+        parent_height, parent_width = self.screen.getmaxyx()
         if not self.menubar == '':
             menu_bar_height = 1
         else:
@@ -213,7 +212,7 @@ class Application(object):
         width = 0
         begin_y = menu_bar_height
         begin_x = 0
-        self.widget = self.parent.subwin(height, width, begin_y, begin_x)
+        self.widget = self.screen.subwin(height, width, begin_y, begin_x)
 
     def getch(self):
         return self.screen.getch()

@@ -83,21 +83,26 @@ class Widget(object):
         return self.parent
 
     def get_parent_size(self):
-        return self.parent.widget.getmaxyx()
+        return self.get_parent().widget.getmaxyx()
 
     def get_parent_origin(self):
         return self.parent.widget.getbegyx()
 
-    def set_parent(self, parent):
+    def _set_parent(self, parent):
         self.parent = parent
-        self.parent_spacing = self.parent.parent_spacing
-        self.screen = self.parent.screen
+
+    def set_parent(self, parent):
+
+        self._set_parent(parent)
+
+        self.parent_spacing = self.get_parent().parent_spacing
+        self.screen = self.get_parent().screen
 
         # Widget start with own Style, and will use the Style of it parent when it add to a contener
         # GLXCApplication Widget is a special case where it parent is it self.
-        if parent.style:
+        if self.get_parent().style:
             self.parent_style = parent.style
-            self.style = parent.style
+            self.set_style(parent.style)
             #self.attribute = parent.attribute
         else:
             self.parent_style = ''
@@ -107,6 +112,7 @@ class Widget(object):
         return self.parent_spacing
 
     def get_parent_style(self):
+
         if self.parent:
             self.parent_style = self.parent.get_style()
             return self.parent_style
