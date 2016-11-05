@@ -16,7 +16,7 @@ class Widget(object):
         self.name = 'Widget'
 
         # Color's and Style
-        self.override_background_color = 0
+        #self.override_background_color = 0
 
         # State
         self.state = dict()

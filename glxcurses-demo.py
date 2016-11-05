@@ -45,8 +45,8 @@ if __name__ == '__main__':
     label1.attribute['text']['STATE_NORMAL'] = 'YELLOW'
     label1.attribute['text']['STATE_NORMAL'] = 'CYAN'
 
-    #label1.override_background_color('GREEN')
-    label1.attribute['bg']['STATE_NORMAL'] = 'GREEN'
+    label1.override_background_color('GREEN')
+    #label1.attribute['bg']['STATE_NORMAL'] = 'GREEN'
 
     label2 = GLXCurses.Label()
 
