@@ -45,8 +45,8 @@ if __name__ == '__main__':
     label1.attribute['text']['STATE_NORMAL'] = 'YELLOW'
     label1.attribute['text']['STATE_NORMAL'] = 'CYAN'
 
-    label1.override_background_color('GREEN')
-    #label1.attribute['bg']['STATE_NORMAL'] = 'GREEN'
+    #label1.override_background_color('GREEN')
+    label1.attribute['bg']['STATE_NORMAL'] = 'GREEN'
 
     label2 = GLXCurses.Label()
 
@@ -287,29 +287,52 @@ if __name__ == '__main__':
             statusbar.push(message_text)
 
             # Status Bar Demo
-            value = '{0:}{1:}'.format(randint(0, 100), '%')
+            progressbar1.set_value(randint(0, 100))
+            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
             progressbar1.set_text(value)
-            value = '{0:}{1:}'.format(randint(0, 100), '%')
+
+            progressbar2.set_value(randint(0, 100))
+            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
             progressbar2.set_text(value)
-            value = '{0:}{1:}'.format(randint(0, 100), '%')
+
+            progressbar3.set_value(randint(0, 100))
+            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
             progressbar3.set_text(value)
-            value = '{0:}{1:}'.format(randint(0, 100), '%')
+
+            progressbar4.set_value(randint(0, 100))
+            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
             progressbar4.set_text(value)
-            value = '{0:}{1:}'.format(randint(0, 100), '%')
+
+            progressbar5.set_value(randint(0, 100))
+            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
             progressbar5.set_text(value)
-            value = '{0:}{1:}'.format(randint(0, 100), '%')
+
+            progressbar6.set_value(randint(0, 100))
+            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
             progressbar6.set_text(value)
-            value = '{0:}{1:}'.format(randint(0, 100), '%')
+
+            progressbar7.set_value(randint(0, 100))
+            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
             progressbar7.set_text(value)
-            value = '{0:}{1:}'.format(randint(0, 100), '%')
+
+            progressbar8.set_value(randint(0, 100))
+            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
             progressbar8.set_text(value)
-            value = '{0:}{1:}'.format(randint(0, 100), '%')
+
+            progressbar9.set_value(randint(0, 100))
+            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
             progressbar9.set_text(value)
-            value = '{0:}{1:}'.format(randint(0, 100), '%')
+
+            progressbar10.set_value(randint(0, 100))
+            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
             progressbar10.set_text(value)
-            value = '{0:}{1:}'.format(randint(0, 100), '%')
+
+            progressbar11.set_value(randint(0, 100))
+            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
             progressbar11.set_text(value)
-            value = '{0:}{1:}'.format(randint(0, 100), '%')
+
+            progressbar12.set_value(randint(0, 100))
+            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
             progressbar12.set_text(value)
 
             app.refresh()
