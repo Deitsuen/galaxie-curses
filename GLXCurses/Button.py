@@ -27,6 +27,10 @@ class Button(Widget):
         Widget.__init__(self)
         self.name = 'Button'
 
+        # Make a Style heritage attribute
+        if self.style.attribute:
+            self.attribute = self.style.attribute
+
         # Internal Widget Setting
         self.text = ''
         self.preferred_height = 1

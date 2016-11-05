@@ -27,12 +27,13 @@ if __name__ == '__main__':
     win_for_progressbar.set_title('Progress Bar Widget')
     win_for_progressbar.set_decorated(1)
     win_for_progressbar.set_spacing(1)
-
+    win_for_progressbar.attribute['bg']['STATE_NORMAL'] = 'RED'
     # Create a Window
     win6 = GLXCurses.Window()
     win6.set_title('Label Widget')
     win6.set_decorated(1)
     win6.set_spacing(1)
+
 
     # Create a Label
     label1 = GLXCurses.Label()

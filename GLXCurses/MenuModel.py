@@ -16,28 +16,32 @@ class MenuModel(Widget):
         # Internal Widget Setting
         self.app_info_label = ''
 
+        # Make a Style heritage attribute
         if self.style.attribute:
-            self.color_text = self.style.attribute['dark']['STATE_NORMAL']
-            self.color_bg = self.style.attribute['light']['STATE_NORMAL']
-            self.color_normal = self.style.get_curses_pairs(fg=self.color_text, bg=self.color_bg)
-
-        else:
-            self.color_normal = 0
+            self.attribute = self.style.attribute
 
     def draw(self):
         actual_x_size, actual_y_size = self.screen.getmaxyx()
         app_info_label = self.app_info_label
         self.widget = self.screen.subwin(0, 0, 0, 0)
+        if self.attribute:
+            color_text = self.attribute['dark']['STATE_NORMAL']
+            color_bg = self.attribute['light']['STATE_NORMAL']
+            color_normal = self.style.get_curses_pairs(fg=color_text, bg=color_bg)
+
+        else:
+            color_normal = 0
+
         if curses.has_colors():
             self.widget.addstr(
                     0,
                     0,
                     str(" " * int(actual_y_size)),
-                    curses.color_pair(self.color_normal)
+                    curses.color_pair(color_normal)
                 )
             self.widget.bkgdset(
                     ord(' '),
-                    curses.color_pair(self.color_normal)
+                    curses.color_pair(color_normal)
                 )
         if len(self.app_info_label) > 0:
             if not actual_y_size + 1 <= len(app_info_label):
@@ -45,11 +49,11 @@ class MenuModel(Widget):
                     0,
                     (actual_y_size - 1) - len(str(app_info_label[:-1])),
                     app_info_label[:-1],
-                    curses.color_pair(self.color_normal)
+                    curses.color_pair(color_normal)
                 )
                 self.widget.insstr(
                     0,
                     actual_y_size - 1,
                     app_info_label[-1:],
-                    curses.color_pair(self.color_normal)
+                    curses.color_pair(color_normal)
                 )

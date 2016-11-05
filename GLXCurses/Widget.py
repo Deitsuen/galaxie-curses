@@ -31,6 +31,7 @@ class Widget(object):
         self.widget = ''
         self.widget_spacing = 0
         self.widget_decorated = 0
+        self.attribute = ''
 
         self.screen = ''
 
@@ -97,6 +98,7 @@ class Widget(object):
         if parent.style:
             self.parent_style = parent.style
             self.style = parent.style
+            #self.attribute = parent.attribute
         else:
             self.parent_style = ''
 

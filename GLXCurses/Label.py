@@ -27,21 +27,14 @@ class Label(Widget):
         Widget.__init__(self)
         self.name = 'Label'
 
-        if self.style.attribute:
-            self.attribute = self.style.attribute
-            self.text_fg = self.attribute['text']['STATE_NORMAL']
-            self.widget_bg = self.attribute['bg']['STATE_NORMAL']
-            self.color_normal = self.style.get_curses_pairs(fg=self.text_fg, bg=self.widget_bg)
-
-        else:
-            self.color_normal = 0
-            self.widget_bg = 0
-            self.text_fg = 0
-
         # Internal Widget Setting
         self.text = ''
         self.preferred_height = 1
         self.preferred_width = len(self.text)
+
+        # Make a Style heritage attribute
+        if self.style.attribute:
+            self.attribute = self.style.attribute
 
         # Justification: LEFT, RIGHT, CENTER
         self.justification = 'CENTER'
@@ -68,15 +61,15 @@ class Label(Widget):
 
     def draw_in_area(self, drawing_area):
         self.widget = drawing_area
-        if self.style.attribute:
-            self.text_fg = self.attribute['text']['STATE_NORMAL']
-            self.widget_bg = self.attribute['bg']['STATE_NORMAL']
-            self.color_normal = self.style.get_curses_pairs(fg=self.text_fg, bg=self.widget_bg)
+        if self.attribute:
+            text_fg = self.attribute['text']['STATE_NORMAL']
+            widget_bg = self.attribute['bg']['STATE_NORMAL']
+            color_normal = self.style.get_curses_pairs(fg=text_fg, bg=widget_bg)
 
         else:
-            self.color_normal = 0
+            color_normal = 0
+
         widget_height, widget_width = drawing_area.getmaxyx()
-        widget_y, widget_x = drawing_area.getbegyx()
         min_size_width = (self.widget_spacing * 2) + self.widget_spacing
         min_size_height = (self.widget_spacing * 2)
         if (widget_height >= min_size_height) and (widget_width >= min_size_width):
@@ -114,7 +107,7 @@ class Label(Widget):
                             y_text,
                             x_text,
                             message_to_display,
-                            curses.color_pair(self.color_normal)
+                            curses.color_pair(color_normal)
                         )
                     elif self.orientation == 'VERTICAL':
 
@@ -147,7 +140,7 @@ class Label(Widget):
                                     y_text + count,
                                     x_text,
                                     CHAR,
-                                    curses.color_pair(self.color_normal)
+                                    curses.color_pair(color_normal)
                                 )
                                 count += 1
 

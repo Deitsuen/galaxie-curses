@@ -22,25 +22,15 @@ class Window(Widget):
         Widget.__init__(self)
         self.name = 'Window'
 
-        if self.style.attribute:
-            self.text_fg = self.style.attribute['text']['STATE_NORMAL']
-            self.widget_bg = self.style.attribute['bg']['STATE_NORMAL']
-            self.color_normal = self.style.get_curses_pairs(fg=self.text_fg, bg=self.widget_bg)
-
-        else:
-            self.color_normal = 0
-
         # Internal Widget Setting
         self.title = ''
 
         self.widget_to_display = {}
         self.widget_to_display_id = ''
 
-    # def set_drawing_boundaries(self, orig_x, orig_y, height, width):
-    #     self.orig_x = orig_x
-    #     self.orig_y = orig_y
-    #     self.height = height
-    #     self.width = width
+        # Make a Style heritage attribute
+        if self.style.attribute:
+            self.attribute = self.style.attribute
 
     def draw(self):
 
@@ -59,67 +49,64 @@ class Window(Widget):
 
     # GLXC Window Functions
     def draw_in_area(self, drawing_area):
-
         self.widget = drawing_area
-        widget_height, widget_width = drawing_area.getmaxyx()
-        widget_y, widget_x = drawing_area.getbegyx()
-        min_size_width = (self.widget_spacing * 2) + self.widget_spacing
-        min_size_height = (self.widget_spacing * 2)
-        if (widget_height >= min_size_height) and (widget_width >= min_size_width):
-            if curses.has_colors():
-                drawing_area.bkgdset(
-                    ord(' '),
-                    curses.color_pair(self.color_normal))
-                drawing_area.bkgd(ord(' '), curses.color_pair(self.color_normal))
-                for I in range(widget_y, widget_height):
-                    drawing_area.addstr(
-                        I,
-                        0,
-                        str(' ' * int(widget_width - 1)),
-                        curses.color_pair(self.color_normal)
-                    )
-                    drawing_area.insstr(
-                        I,
-                        int(widget_width - 1),
-                        str(' '),
-                        curses.color_pair(self.color_normal)
-                    )
+        if self.attribute:
+            text_fg = self.attribute['text']['STATE_NORMAL']
+            widget_bg = self.attribute['bg']['STATE_NORMAL']
+            color_normal = self.style.get_curses_pairs(fg=text_fg, bg=widget_bg)
 
-                # Check widgets to display
-                if bool(self.widget_to_display):
-                    self.widget_to_display[self.widget_to_display_id].draw()
-                    self.widget_to_display[self.widget_to_display_id].set_style(self.style)
+        else:
+            color_normal = 0
 
-            # Creat a box and add the name of the windows like a king, who trust that !!!
-            if self.widget_decorated > 0:
-                drawing_area.box()
-                if not self.title == '':
-                    drawing_area.addstr(
-                        0,
-                        1,
-                        resize_text(self.title, widget_width - 2, '~')
-                    )
-            else:
-                if not self.title == '':
-                    drawing_area.addstr(
-                        0,
-                        0,
-                        resize_text(self.title, widget_width - 1, '~')
-                    )
+        widget_height, widget_width = self.widget.getmaxyx()
+
+        if curses.has_colors():
+            # Apply the Background color
+            self.widget.bkgdset(
+                ord(' '),
+                curses.color_pair(color_normal)
+            )
+            self.widget.bkgd(
+                ord(' '),
+                curses.color_pair(color_normal)
+            )
+
+            # Check widgets to display
+            if bool(self.widget_to_display):
+                self.widget_to_display[self.widget_to_display_id].draw()
+                self.widget_to_display[self.widget_to_display_id].set_style(self.style)
+
+        # Creat a box and add the name of the windows like a king, who trust that !!!
+        if self.widget_decorated > 0:
+            drawing_area.box()
+            if not self.title == '':
+                drawing_area.addstr(
+                    0,
+                    1,
+                    resize_text(self.title, widget_width - 2, '~')
+                )
+        else:
+            if not self.title == '':
+                drawing_area.addstr(
+                    0,
+                    0,
+                    resize_text(self.title, widget_width - 1, '~')
+                )
 
     def set_title(self, title):
         self.title = title
 
     def add(self, widget):
+        # set_parent is the set_parent from Widget common method
+        # information's will be transmit by it method
         widget.set_parent(self)
         id_max = len(self.widget_to_display.keys())
+
         if bool(self.widget_to_display):
             self.widget_to_display[id_max] = widget
             self.widget_to_display_id = id_max
         else:
             self.widget_to_display[id_max + 1] = widget
             self.widget_to_display_id = id_max + 1
-
-
 
 

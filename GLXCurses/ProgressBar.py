@@ -27,20 +27,9 @@ class ProgressBar(Widget):
         Widget.__init__(self)
         self.name = 'ProgressBar'
 
+        # Make a Style heritage attribute
         if self.style.attribute:
-            self.color_text = self.style.attribute['text']['STATE_NORMAL']
-            self.color_bg = self.style.attribute['bg']['STATE_NORMAL']
-            self.color_light = self.style.attribute['base']['STATE_NORMAL']
-
-            self.color_normal = self.style.get_curses_pairs(fg=self.color_text, bg=self.color_bg)
-            self.color_progressbar = self.style.get_curses_pairs(fg=self.color_light, bg=self.color_bg)
-            self.color_progressbar_inverted = self.style.get_curses_pairs(fg=self.color_bg, bg=self.color_light)
-            self.color_red = self.style.get_curses_pairs(fg='RED', bg='RED')
-            self.color_yellow = self.style.get_curses_pairs(fg='YELLOW', bg='YELLOW')
-        else:
-            self.color_normal = 0
-            self.color_progressbar = 0
-            self.color_progressbar_inverted = 0
+            self.attribute = self.style.attribute
 
         # The Percent value
         self.value = 0
@@ -102,6 +91,21 @@ class ProgressBar(Widget):
         self.draw_in_area(drawing_area)
 
     def draw_in_area(self, drawing_area):
+        if self.attribute:
+            color_text = self.attribute['text']['STATE_NORMAL']
+            color_bg = self.attribute['bg']['STATE_NORMAL']
+            color_light = self.attribute['base']['STATE_NORMAL']
+
+            color_normal = self.style.get_curses_pairs(fg=color_text, bg=color_bg)
+            color_progressbar = self.style.get_curses_pairs(fg=color_light, bg=color_bg)
+            color_progressbar_inverted = self.style.get_curses_pairs(fg=color_bg, bg=color_light)
+            color_red = self.style.get_curses_pairs(fg='RED', bg='RED')
+            color_yellow = self.style.get_curses_pairs(fg='YELLOW', bg='YELLOW')
+        else:
+            color_normal = 0
+            color_progressbar = 0
+            color_progressbar_inverted = 0
+
         spacing = self.get_spacing()
 
         self.widget = drawing_area
@@ -182,7 +186,7 @@ class ProgressBar(Widget):
                         y_text,
                         x_progress - 1,
                         self.progressbar_border[:len(self.progressbar_border)/2],
-                        curses.color_pair(self.color_normal)
+                        curses.color_pair(color_normal)
                     )
 
                     # Draw the progressbar1 background
@@ -196,7 +200,7 @@ class ProgressBar(Widget):
                                 y_progress,
                                 widget_width - spacing - 2 - count,
                                 CHAR,
-                                curses.color_pair(self.color_progressbar)
+                                curses.color_pair(color_progressbar)
                             )
                             count += 1
                         #self.widget.attron(curses.A_REVERSE)
@@ -206,7 +210,7 @@ class ProgressBar(Widget):
                                 y_progress,
                                 widget_width - spacing - 2 - count,
                                 CHAR,
-                                curses.color_pair(self.color_progressbar_inverted)
+                                curses.color_pair(color_progressbar_inverted)
                             )
                             count += 1
                         #self.widget.attroff(curses.A_REVERSE)
@@ -217,7 +221,7 @@ class ProgressBar(Widget):
                                 y_progress,
                                 x_progress + count,
                                 CHAR,
-                                curses.color_pair(self.color_progressbar)
+                                curses.color_pair(color_progressbar)
                             )
                             count += 1
                         #self.widget.attron(curses.A_REVERSE)
@@ -227,7 +231,7 @@ class ProgressBar(Widget):
                                 y_progress,
                                 x_progress + count,
                                 CHAR,
-                                curses.color_pair(self.color_progressbar_inverted)
+                                curses.color_pair(color_progressbar_inverted)
                             )
                             count += 1
                         #self.widget.attroff(curses.A_REVERSE)
@@ -237,7 +241,7 @@ class ProgressBar(Widget):
                         y_progress,
                         widget_width - spacing - 1,
                         self.progressbar_border[-len(self.progressbar_border)/2:],
-                        curses.color_pair(self.color_normal)
+                        curses.color_pair(color_normal)
                     )
 
                 elif self.get_orientation().upper() == 'VERTICAL':
@@ -305,7 +309,7 @@ class ProgressBar(Widget):
                         y_progress,
                         x_progress,
                         curses.ACS_HLINE,
-                        curses.color_pair(self.color_normal)
+                        curses.color_pair(color_normal)
                     )
                     # Draw the Vertical ProgressBar with Justification and PositionType
                     if self.get_inverted():
@@ -317,7 +321,7 @@ class ProgressBar(Widget):
                                 widget_height - spacing - 2 - count,
                                 x_progress,
                                 CHAR,
-                                curses.color_pair(self.color_progressbar)
+                                curses.color_pair(color_progressbar)
                             )
                             count += 1
 
@@ -328,7 +332,7 @@ class ProgressBar(Widget):
                                 widget_height - spacing - 2 - count,
                                 x_progress,
                                 CHAR,
-                                curses.color_pair(self.color_progressbar_inverted)
+                                curses.color_pair(color_progressbar_inverted)
                             )
                             count += 1
                         #self.widget.attroff(curses.A_REVERSE)
@@ -338,7 +342,7 @@ class ProgressBar(Widget):
                             widget_height - spacing - 1,
                             x_progress,
                             curses.ACS_HLINE,
-                            curses.color_pair(self.color_normal)
+                            curses.color_pair(color_normal)
                         )
                     else:
                         # Draw the Vertical ProgressBar with Justification and PositionType
@@ -348,7 +352,7 @@ class ProgressBar(Widget):
                                 y_progress + count,
                                 x_progress,
                                 CHAR,
-                                curses.color_pair(self.color_progressbar)
+                                curses.color_pair(color_progressbar)
                             )
                             count += 1
 
@@ -359,7 +363,7 @@ class ProgressBar(Widget):
                                 y_progress + count,
                                 x_progress,
                                 CHAR,
-                                curses.color_pair(self.color_progressbar_inverted)
+                                curses.color_pair(color_progressbar_inverted)
                             )
                             count += 1
                         # self.widget.attroff(curses.A_REVERSE)
@@ -369,7 +373,7 @@ class ProgressBar(Widget):
                             widget_height - spacing - 1,
                             x_progress,
                             curses.ACS_HLINE,
-                            curses.color_pair(self.color_normal)
+                            curses.color_pair(color_normal)
                         )
 
     # Internal widget functions

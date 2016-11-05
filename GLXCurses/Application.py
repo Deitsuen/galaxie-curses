@@ -62,6 +62,7 @@ class Application(object):
         self.windows_id_number = ''
         self.active_window_id = ''
         self.windows = {}
+        self.attribute = self.style.get_default_style()
 
         # Fake Widget
         self.parent = self.screen
@@ -125,7 +126,7 @@ class Application(object):
 
     def add_window(self, glxc_window):
         # set_parent is the set_parent from Widget common method
-        # information's will be transmit by it methode
+        # information's will be transmit by it method
         glxc_window.set_parent(self)
 
         # Display only one active window

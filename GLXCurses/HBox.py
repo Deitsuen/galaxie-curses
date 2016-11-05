@@ -14,15 +14,12 @@ class HBox(Widget):
         Widget.__init__(self)
         self.name = 'HBox'
 
-
         self.subwins_spacing = 0
-
         self.widget_to_display = []
         self.widget_subwins = {}
         self.h_widget_list = {}
         self.widget_to_display_id = ''
         self.number_of_widget_to_display = 0
-
 
     # GLXC HBox Functions
     def draw(self):
@@ -57,7 +54,7 @@ class HBox(Widget):
                     # Get the Children Spacing
                     spacing = widget.get_spacing()
 
-                    # Check if that the frist element
+                    # Check if that the first element
                     if index == 0:
                         subwin = self.widget.subwin(
                             widget_height - spacing * 2,
