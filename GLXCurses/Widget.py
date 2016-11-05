@@ -39,11 +39,10 @@ class Widget(object):
         # It can receive parent Style() or a new Style() during a set_parent() / un_parent() call
         # GLXCApplication is a special case where it have no parent, it role is to impose it own style to each Widget
         self.style = Style()
+        self.style_backup = None
 
         # Widget Parent Information's
-        self.parent = ''
-        self.parent_spacing = 0
-        self.parent_style = ''
+        self.parent = None
 
     # Common Widget mandatory
     def get(self):
@@ -80,7 +79,10 @@ class Widget(object):
 
     # Parent Management
     def get_parent(self):
-        return self.parent
+        if self.parent:
+            return self.parent
+        else:
+            return self
 
     def get_parent_size(self):
         return self.get_parent().widget.getmaxyx()
@@ -95,36 +97,23 @@ class Widget(object):
 
         self._set_parent(parent)
 
-        self.parent_spacing = self.get_parent().parent_spacing
         self.screen = self.get_parent().screen
 
         # Widget start with own Style, and will use the Style of it parent when it add to a contener
         # GLXCApplication Widget is a special case where it parent is it self.
-        if self.get_parent().style:
-            self.parent_style = parent.style
-            self.set_style(parent.style)
-            #self.attribute = parent.attribute
-        else:
-            self.parent_style = ''
 
-    def get_parent_spacing(self):
-        self.parent_spacing = self.parent.parent_spacing
-        return self.parent_spacing
-
-    def get_parent_style(self):
-
-        if self.parent:
-            self.parent_style = self.parent.get_style()
-            return self.parent_style
-        else:
-            self.parent_style = ''
-            return self.style
+        self.style_backup = self.get_style()
+        self.set_style(self.get_parent().get_style())
 
     def un_parent(self):
-        self.parent = ''
-        self.parent_style = ''
-        self.parent_spacing = 0
-        self.style = Style()
+        self.parent = None
+        self.set_style(self.style_backup)
+
+    def get_parent_spacing(self):
+        return self.get_parent().get_spacing()
+
+    def get_parent_style(self):
+        return self.get_parent().get_style()
 
     def get_screen(self):
         return self.screen
