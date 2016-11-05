@@ -158,10 +158,10 @@ class Label(Widget):
                         # Draw the Vertical Label with Justification and PositionType
 
                         message_to_display = resize_text(self.text, widget_height - 1, '~')
-                        if len(message_to_display) > 2:
+                        if len(message_to_display) > 2 :
                             count = 0
                             for CHAR in message_to_display:
-                                drawing_area.insstr(
+                                drawing_area.insch(
                                     y_text + count,
                                     x_text,
                                     CHAR,

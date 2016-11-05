@@ -38,7 +38,7 @@ class Widget(object):
         # Widget Parent Information's
         self.parent = ''
         self.parent_spacing = 0
-        self.parent_style = self.style
+        self.parent_style = ''
 
     # Common Widget mandatory
     def get(self):
@@ -87,22 +87,32 @@ class Widget(object):
         self.parent = parent
         self.parent_spacing = self.parent.parent_spacing
         self.screen = self.parent.screen
+
+        # Widget start with own Style, and will use the Style of it parent when it add to a contener
+        # GLXCApplication Widget is a special case where it parent is it self.
         if parent.style:
             self.parent_style = parent.style
+            self.style = parent.style
         else:
-            self.parent_style = self.style
+            self.parent_style = ''
 
     def get_parent_spacing(self):
         self.parent_spacing = self.parent.parent_spacing
         return self.parent_spacing
 
     def get_parent_style(self):
-        self.parent_style = self.parent.parent_style
-        return self.parent.parent_style
+        if self.parent:
+            self.parent_style = self.parent.get_style()
+            return self.parent_style
+        else:
+            self.parent_style = ''
+            return self.style
 
     def un_parent(self):
         self.parent = ''
+        self.parent_style = ''
         self.parent_spacing = 0
+        self.style = Style()
 
     def get_screen(self):
         return self.screen

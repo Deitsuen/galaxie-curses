@@ -96,13 +96,13 @@ class Application(object):
 
     def set_parent(self, parent):
         self.parent = parent
+        # self.style Should not be touch
 
     def get_parent_spacing(self):
         return self.parent.spacing
 
     def get_parent_style(self):
-        self.parent_style = self.parent.parent_style
-        return self.parent.parent_style
+        return self.style
 
     def remove_parent(self):
         self.parent = ''
@@ -124,7 +124,11 @@ class Application(object):
         return self.style
 
     def add_window(self, glxc_window):
+        # set_parent is the set_parent from Widget common method
+        # information's will be transmit by it methode
         glxc_window.set_parent(self)
+
+        # Display only one active window
         id_max = len(self.windows.keys())
         if id_max == 0:
             self.windows[id_max] = glxc_window
@@ -145,6 +149,7 @@ class Application(object):
         self.statusbar = glx_statusbar
 
     def remove_statusbar(self, glx_statusbar):
+        glx_statusbar.un_parent()
         self.statusbar = ''
 
     def add_toolbar(self, glx_toolbar):
@@ -152,6 +157,7 @@ class Application(object):
         self.toolbar = glx_toolbar
 
     def remove_toolbar(self, glx_toolbar):
+        glx_toolbar.un_parent()
         self.toolbar = ''
 
     def refresh(self):

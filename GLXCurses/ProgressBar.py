@@ -365,7 +365,7 @@ class ProgressBar(Widget):
                         # self.widget.attroff(curses.A_REVERSE)
 
                         # Draw last interface Character
-                        self.widget.addch(
+                        self.widget.insch(
                             widget_height - spacing - 1,
                             x_progress,
                             curses.ACS_HLINE,
