@@ -73,20 +73,15 @@ class ProgressBar(Widget):
 
         self.char = ' '
 
-        # Default color
-        self.fg_color = curses.COLOR_YELLOW
-        self.bg_color = curses.COLOR_BLACK
-
     def draw(self):
         parent_height, parent_width = self.get_parent_size()
         parent_y, parent_x = self.get_parent_origin()
-        spacing = self.get_spacing()
 
         drawing_area = self.parent.widget.subwin(
-            parent_height - (spacing * 2),
-            parent_width - (spacing * 2),
-            parent_y + spacing,
-            parent_x + spacing
+            parent_height - (self.get_spacing() * 2),
+            parent_width - (self.get_spacing() * 2),
+            parent_y + self.get_spacing(),
+            parent_x + self.get_spacing()
         )
 
         self.draw_in_area(drawing_area)
@@ -95,30 +90,11 @@ class ProgressBar(Widget):
         return self.attribute[elem][state]
 
     def draw_in_area(self, drawing_area):
-        if self.attribute:
-            color_text = self.get_attr('text', 'STATE_NORMAL')
-
-            color_bg = self.attribute['bg']['STATE_NORMAL']
-            color_light = self.attribute['base']['STATE_NORMAL']
-
-            color_normal = self.get_style().get_curses_pairs(fg=color_text, bg=color_bg)
-            color_progressbar = self.get_style().get_curses_pairs(fg=color_light, bg=color_bg)
-            color_progressbar_inverted = self.get_style().get_curses_pairs(fg=color_bg, bg=color_light)
-            color_red = self.get_style().get_curses_pairs(fg='RED', bg='RED')
-            color_yellow = self.get_style().get_curses_pairs(fg='YELLOW', bg='YELLOW')
-        else:
-            color_normal = 0
-            color_progressbar = 0
-            color_progressbar_inverted = 0
-
-        spacing = self.get_spacing()
-
         self.widget = drawing_area
         widget_height, widget_width = self.widget.getmaxyx()
-        widget_y, widget_x = self.widget.getbegyx()
 
-        min_size_width = (spacing * 2) + spacing
-        min_size_height = (spacing * 2)
+        min_size_width = (self.get_spacing() * 2) + self.get_spacing()
+        min_size_height = (self.get_spacing() * 2)
 
         height_ok = widget_height >= min_size_height
         width_ok = widget_width >= min_size_width
@@ -128,75 +104,34 @@ class ProgressBar(Widget):
 
         # Many Thing's
         # Check if the text can be display
-        text_have_necessary_width = (self.preferred_width + (spacing * 2) >= 1)
-        text_have_necessary_height = (self.preferred_height + (spacing * 2) >= 1)
+        text_have_necessary_width = (self.preferred_width + (self.get_spacing() * 2) >= 1)
+        text_have_necessary_height = (self.preferred_height + (self.get_spacing() * 2) >= 1)
         if not text_have_necessary_height or not text_have_necessary_width:
             return
 
-
         # Orientation: HORIZONTAL, VERTICAL
         if self.get_orientation().upper() == 'HORIZONTAL':
-            self.draw_horizontal(color_normal)
+            self.draw_horizontal()
 
         elif self.get_orientation().upper() == 'VERTICAL':
-            self.draw_vertical(color_normal, color_progressbar, color_progressbar_inverted, spacing, widget_height,
-                               widget_width)
+            self.draw_vertical()
 
-    def draw_vertical(self, color_normal, color_progressbar, color_progressbar_inverted, spacing, widget_height,
-                      widget_width):
+    def draw_vertical(self):
+        widget_height, widget_width = self.widget.getmaxyx()
+
         # WIDTH
         self.preferred_width = 1
         # HEIGHT
         self.preferred_height = 0
         self.preferred_height += len(self.progressbar_border)
-        self.preferred_height += spacing * 2
-        progress_height = widget_height
-        progress_height -= spacing * 2
-        progress_height -= len(self.progressbar_border)
-        progress_text = str(self.char * progress_height)
-        y_progress = spacing
-        x_progress = 0
+        self.preferred_height += self.get_spacing() * 2
+
+        y_progress = self.get_spacing()
         # Check Justification
-        if self.get_justify().upper() == 'CENTER':
-            x_progress = widget_width / 2
-        elif self.get_justify().upper() == 'LEFT':
-            x_progress = spacing
-        elif self.get_justify().upper() == 'RIGHT':
-            x_progress = widget_width - spacing - (len(self.progressbar_border) / 2)
-
-        # PositionType: CENTER, TOP, BOTTOM
+        x_progress = self.check_vertical_justification(widget_width)
         if self.get_show_text():
-            tmp_string = ''
-            if self.get_position_type().upper() == 'CENTER':
-                if progress_height - (len(self.progressbar_border) / 2) > len(self.text):
-                    tmp_string += progress_text[:(len(progress_text) / 2) - len(self.text) / 2]
-                    tmp_string += self.text
-                    tmp_string += progress_text[-(len(progress_text) - len(tmp_string)):]
-                elif progress_height - (len(self.progressbar_border) / 2) >= self.preferred_height:
-                    tmp_string += self.text
-                else:
-                    tmp_string += progress_text[:progress_height]
-                progress_text = tmp_string
-
-            elif self.get_position_type().upper() == 'TOP':
-                if progress_height - (len(self.progressbar_border) / 2) >= len(self.text):
-                    tmp_string += self.text
-                    tmp_string += progress_text[-(len(progress_text) - len(self.text)):]
-                elif progress_height - (len(self.progressbar_border) / 2) >= self.preferred_height:
-                    tmp_string += self.text
-                else:
-                    tmp_string += progress_text[:progress_height]
-                progress_text = tmp_string
-
-            elif self.get_position_type().upper() == 'BOTTOM':
-                if progress_height - (len(self.progressbar_border) / 2) >= len(self.text):
-                    tmp_string += progress_text[:(len(progress_text) - len(self.text))]
-                    tmp_string += self.text
-                elif progress_height - (len(self.progressbar_border) / 2) >= self.preferred_height:
-                    tmp_string += self.text
-                else:
-                    tmp_string += progress_text[:progress_height]
-                progress_text = tmp_string
+            # PositionType: CENTER, TOP, BOTTOM
+            progress_text = self.check_vertical_position_type(widget_height)
 
         # Draw Vertical ProgressBar
         # Draw first interface Character
@@ -204,7 +139,10 @@ class ProgressBar(Widget):
             y_progress,
             x_progress,
             curses.ACS_HLINE,
-            curses.color_pair(color_normal)
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('base', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_NORMAL'))
+            )
         )
         # Draw the Vertical ProgressBar with Justification and PositionType
         if self.get_inverted():
@@ -213,31 +151,38 @@ class ProgressBar(Widget):
             count = 0
             for CHAR in progress_text:
                 self.widget.addch(
-                    widget_height - spacing - 2 - count,
+                    widget_height - self.get_spacing() - 2 - count,
                     x_progress,
                     CHAR,
-                    curses.color_pair(color_progressbar)
+                    curses.color_pair(self.get_style().get_curses_pairs(
+                        fg=self.get_attr('base', 'STATE_NORMAL'),
+                        bg=self.get_attr('bg', 'STATE_NORMAL'))
+                    )
                 )
                 count += 1
 
-            # self.widget.attron(curses.A_REVERSE)
             count = 0
             for CHAR in progress_text[:int((widget_height - self.preferred_height) * self.value / 100)]:
                 self.widget.addch(
-                    widget_height - spacing - 2 - count,
+                    widget_height - self.get_spacing() - 2 - count,
                     x_progress,
                     CHAR,
-                    curses.color_pair(color_progressbar_inverted)
+                    curses.color_pair(self.get_style().get_curses_pairs(
+                        fg=self.get_attr('bg', 'STATE_NORMAL'),
+                        bg=self.get_attr('base', 'STATE_NORMAL'))
+                    )
                 )
                 count += 1
-            # self.widget.attroff(curses.A_REVERSE)
 
             # Draw last interface Character
             self.widget.insch(
-                widget_height - spacing - 1,
+                widget_height - self.get_spacing() - 1,
                 x_progress,
                 curses.ACS_HLINE,
-                curses.color_pair(color_normal)
+                curses.color_pair(self.get_style().get_curses_pairs(
+                    fg=self.get_attr('base', 'STATE_NORMAL'),
+                    bg=self.get_attr('bg', 'STATE_NORMAL'))
+                )
             )
         else:
             # Draw the Vertical ProgressBar with Justification and PositionType
@@ -247,37 +192,89 @@ class ProgressBar(Widget):
                     y_progress + count,
                     x_progress,
                     CHAR,
-                    curses.color_pair(color_progressbar)
+                    curses.color_pair(self.get_style().get_curses_pairs(
+                        fg=self.get_attr('base', 'STATE_NORMAL'),
+                        bg=self.get_attr('bg', 'STATE_NORMAL'))
+                    )
                 )
                 count += 1
 
-            # self.widget.attron(curses.A_REVERSE)
+            # Redraw with color inverted but apply percent calculation
             count = 1
             for CHAR in progress_text[:int((widget_height - self.preferred_height) * self.value / 100)]:
                 self.widget.addstr(
                     y_progress + count,
                     x_progress,
                     CHAR,
-                    curses.color_pair(color_progressbar_inverted)
+                    curses.color_pair(self.get_style().get_curses_pairs(
+                        fg=self.get_attr('bg', 'STATE_NORMAL'),
+                        bg=self.get_attr('base', 'STATE_NORMAL'))
+                    )
                 )
                 count += 1
-            # self.widget.attroff(curses.A_REVERSE)
 
             # Draw last interface Character
             self.widget.insch(
-                widget_height - spacing - 1,
+                widget_height - self.get_spacing() - 1,
                 x_progress,
                 curses.ACS_HLINE,
-                curses.color_pair(color_normal)
+                curses.color_pair(self.get_style().get_curses_pairs(
+                    fg=self.get_attr('base', 'STATE_NORMAL'),
+                    bg=self.get_attr('bg', 'STATE_NORMAL'))
+                )
             )
 
-    def draw_horizontal(self, color_normal):
-        color_progressbar_inverted = self.get_style().get_curses_pairs(
-            fg=self.get_attr('bg', 'STATE_NORMAL'),
-            bg=self.get_attr('base', 'STATE_NORMAL')
-        )
-        y_text = 0
-        y_progress = 0
+    def check_vertical_justification(self, widget_width):
+        x_progress = 0
+        if self.get_justify().upper() == 'CENTER':
+            x_progress = widget_width / 2
+        elif self.get_justify().upper() == 'LEFT':
+            x_progress = self.get_spacing()
+        elif self.get_justify().upper() == 'RIGHT':
+            x_progress = widget_width - self.get_spacing() - (len(self.progressbar_border) / 2)
+
+        return x_progress
+
+    def check_vertical_position_type(self, widget_height):
+        progress_height = widget_height
+        progress_height -= self.get_spacing() * 2
+        progress_height -= len(self.progressbar_border)
+        progress_text = str(self.char * progress_height)
+        tmp_string = ''
+        if self.get_position_type().upper() == 'CENTER':
+            if progress_height - (len(self.progressbar_border) / 2) > len(self.text):
+                tmp_string += progress_text[:(len(progress_text) / 2) - len(self.text) / 2]
+                tmp_string += self.text
+                tmp_string += progress_text[-(len(progress_text) - len(tmp_string)):]
+            elif progress_height - (len(self.progressbar_border) / 2) >= self.preferred_height:
+                tmp_string += self.text
+            else:
+                tmp_string += progress_text[:progress_height]
+            progress_text = tmp_string
+
+        elif self.get_position_type().upper() == 'TOP':
+            if progress_height - (len(self.progressbar_border) / 2) >= len(self.text):
+                tmp_string += self.text
+                tmp_string += progress_text[-(len(progress_text) - len(self.text)):]
+            elif progress_height - (len(self.progressbar_border) / 2) >= self.preferred_height:
+                tmp_string += self.text
+            else:
+                tmp_string += progress_text[:progress_height]
+            progress_text = tmp_string
+
+        elif self.get_position_type().upper() == 'BOTTOM':
+            if progress_height - (len(self.progressbar_border) / 2) >= len(self.text):
+                tmp_string += progress_text[:(len(progress_text) - len(self.text))]
+                tmp_string += self.text
+            elif progress_height - (len(self.progressbar_border) / 2) >= self.preferred_height:
+                tmp_string += self.text
+            else:
+                tmp_string += progress_text[:progress_height]
+            progress_text = tmp_string
+
+        return progress_text
+
+    def draw_horizontal(self):
         widget_height, widget_width = self.widget.getmaxyx()
 
         self.preferred_width = 0
@@ -285,49 +282,13 @@ class ProgressBar(Widget):
         self.preferred_width += self.get_spacing() * 2
         # HEIGHT
         self.preferred_height = 1
-        progress_width = widget_width
-        progress_width -= self.get_spacing() * 2
-        progress_width -= len(self.progressbar_border)
-        progress_text = str(self.char * progress_width)
-        # Justification:
-        justify = self.get_justify().upper()
-        text = self.get_text()
+
         x_progress = len(self.progressbar_border) / 2 + self.get_spacing()
-        tmp_string = ''
-        if self.get_show_text():
-            if justify == 'CENTER':
-                tmp_string += progress_text[:(len(progress_text) / 2) - len(text) / 2]
-                tmp_string += text
-                tmp_string += progress_text[-(len(progress_text) - len(tmp_string)):]
-                progress_text = tmp_string
 
-            elif justify == 'LEFT':
-                tmp_string += text
-                tmp_string += progress_text[-(len(progress_text) - len(text)):]
-                progress_text = tmp_string
-
-            elif justify == 'RIGHT':
-                tmp_string += progress_text[:(len(progress_text) - len(text))]
-                tmp_string += text
-                progress_text = tmp_string
+        progress_text = self.check_horizontal_justification(widget_width)
 
         # PositionType: CENTER, TOP, BOTTOM
-        position_type = self.get_position_type().upper()
-        if position_type == 'CENTER':
-            if (widget_height / 2) > self.preferred_height:
-                y_text = (widget_height / 2) - self.preferred_height
-                y_progress = (widget_height / 2) - self.preferred_height
-            else:
-                y_text = 0 + self.get_spacing()
-                y_progress = 0 + self.get_spacing()
-
-        elif position_type == 'TOP':
-            y_text = 0 + self.get_spacing()
-            y_progress = 0 + self.get_spacing()
-
-        elif position_type == 'BOTTOM':
-            y_text = widget_height - self.preferred_height - self.get_spacing()
-            y_progress = widget_height - self.preferred_height - self.get_spacing()
+        y_progress, y_text = self.check_horizontal_position_type(widget_height)
 
         # DRAWING
         # Justify the text to center of a string it have small len as the progress bar
@@ -336,7 +297,10 @@ class ProgressBar(Widget):
             y_text,
             x_progress - 1,
             self.progressbar_border[:len(self.progressbar_border) / 2],
-            curses.color_pair(color_normal)
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('base', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_NORMAL'))
+            )
         )
         # Draw the progressbar1 background
         # Draw Left to Right Horizontal Progress Bar
@@ -354,17 +318,18 @@ class ProgressBar(Widget):
                     )
                 )
                 count += 1
-            # self.widget.attron(curses.A_REVERSE)
             count = 0
             for CHAR in progress_text[:int((widget_width - self.preferred_width) * self.get_value() / 100)]:
                 self.widget.addstr(
                     y_progress,
                     widget_width - self.get_spacing() - 2 - count,
                     CHAR,
-                    curses.color_pair(color_progressbar_inverted)
+                    curses.color_pair(self.get_style().get_curses_pairs(
+                        fg=self.get_attr('bg', 'STATE_NORMAL'),
+                        bg=self.get_attr('base', 'STATE_NORMAL'))
+                    )
                 )
                 count += 1
-                # self.widget.attroff(curses.A_REVERSE)
         else:
             count = 0
             for CHAR in progress_text:
@@ -378,33 +343,86 @@ class ProgressBar(Widget):
                     )
                 )
                 count += 1
-            # self.widget.attron(curses.A_REVERSE)
             count = 0
             for CHAR in progress_text[:int((widget_width - self.preferred_width) * self.get_value() / 100)]:
                 self.widget.addstr(
                     y_progress,
                     x_progress + count,
                     CHAR,
-                    curses.color_pair(color_progressbar_inverted)
+                    curses.color_pair(self.get_style().get_curses_pairs(
+                        fg=self.get_attr('bg', 'STATE_NORMAL'),
+                        bg=self.get_attr('base', 'STATE_NORMAL'))
+                    )
                 )
                 count += 1
-                # self.widget.attroff(curses.A_REVERSE)
-
         # Interface management
         self.widget.insstr(
             y_progress,
             widget_width - self.get_spacing() - 1,
             self.progressbar_border[-len(self.progressbar_border) / 2:],
-            curses.color_pair(color_normal)
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('base', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_NORMAL'))
+            )
         )
+
+    def check_horizontal_justification(self, widget_width):
+        progress_width = widget_width
+        progress_width -= self.get_spacing() * 2
+        progress_width -= len(self.progressbar_border)
+        progress_text = str(self.char * progress_width)
+        # Justification:
+        justify = self.get_justify().upper()
+        tmp_string = ''
+        if self.get_show_text():
+            if justify == 'CENTER':
+                tmp_string += progress_text[:(len(progress_text) / 2) - len(self.get_text()) / 2]
+                tmp_string += self.get_text()
+                tmp_string += progress_text[-(len(progress_text) - len(tmp_string)):]
+                progress_text = tmp_string
+
+            elif justify == 'LEFT':
+                tmp_string += self.get_text()
+                tmp_string += progress_text[-(len(progress_text) - len(self.get_text())):]
+                progress_text = tmp_string
+
+            elif justify == 'RIGHT':
+                tmp_string += progress_text[:(len(progress_text) - len(self.get_text()))]
+                tmp_string += self.get_text()
+                progress_text = tmp_string
+
+        return progress_text
+
+    def check_horizontal_position_type(self, widget_height):
+        y_text = 0
+        y_progress = 0
+        position_type = self.get_position_type().upper()
+        if position_type == 'CENTER':
+            if (widget_height / 2) > self.preferred_height:
+                y_text = (widget_height / 2) - self.preferred_height
+                y_progress = (widget_height / 2) - self.preferred_height
+            else:
+                y_text = 0 + self.get_spacing()
+                y_progress = 0 + self.get_spacing()
+
+        elif position_type == 'TOP':
+            y_text = 0 + self.get_spacing()
+            y_progress = 0 + self.get_spacing()
+
+        elif position_type == 'BOTTOM':
+            y_text = widget_height - self.preferred_height - self.get_spacing()
+            y_progress = widget_height - self.preferred_height - self.get_spacing()
+
+        return y_progress, y_text
+
+
 
     # Internal widget functions
     def set_text(self, text):
         self.text = text
 
     def get_text(self):
-        #return self.text
-        return str(self.get_value()) + "%"
+        return self.text
 
     def set_value(self, percent=0):
         if 0 <= percent <= 100:

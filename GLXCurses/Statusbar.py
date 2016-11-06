@@ -19,21 +19,21 @@ class Statusbar(Widget):
         if self.style.attribute:
             self.color_text = self.style.attribute['light']['STATE_NORMAL']
             self.color_bg = self.style.attribute['dark']['STATE_NORMAL']
-            self.color_normal = self.style.get_curses_pairs(fg=self.color_text, bg=self.color_bg)
+            self.color_normal = self.get_style().get_curses_pairs(fg=self.color_text, bg=self.color_bg)
 
         else:
             self.color_normal = 0
 
     def draw(self):
 
-        screen_height, screen_width = self.screen.getmaxyx()
+        screen_height, screen_width = self.get_screen().getmaxyx()
 
         # Place the status bar from the end of the screen by look if it have a tool bar before
         if not self.parent.toolbar == '':
             line_from_max_screen_height = 2
         else:
             line_from_max_screen_height = 1
-        self.widget = self.screen.subwin(
+        self.widget = self.get_screen().subwin(
             0,
             0,
             screen_height - line_from_max_screen_height,

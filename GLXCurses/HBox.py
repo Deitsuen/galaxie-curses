@@ -14,11 +14,9 @@ class HBox(Widget):
         Widget.__init__(self)
         self.name = 'HBox'
 
-        self.subwins_spacing = 0
-        self.widget_to_display = []
-        self.widget_subwins = {}
-        self.h_widget_list = {}
-        self.widget_to_display_id = ''
+        self.widget_to_display = list()
+        self.h_widget_list = list()
+        self.widget_to_display_id = None
         self.number_of_widget_to_display = 0
 
     # GLXC HBox Functions
@@ -26,7 +24,7 @@ class HBox(Widget):
         parent_height, parent_width = self.get_parent_size()
         parent_y, parent_x = self.get_parent_origin()
 
-        drawing_area = self.parent.widget.subwin(
+        drawing_area = self.get_parent().widget.subwin(
             parent_height - (self.get_spacing() * 2),
             parent_width - (self.get_spacing() * 2),
             parent_y + self.get_spacing(),
@@ -51,36 +49,37 @@ class HBox(Widget):
                 devised_box_size = int(widget_width / len(self.widget_to_display))
                 index = 0
                 for widget in self.widget_to_display:
+
                     # Get the Children Spacing
-                    spacing = widget.get_spacing()
+                    children_spacing = widget.get_spacing()
 
                     # Check if that the first element
                     if index == 0:
-                        subwin = self.widget.subwin(
-                            widget_height - spacing * 2,
-                            devised_box_size - spacing,
-                            widget_y + spacing,
-                            widget_x + spacing
+                        sub_win = self.widget.subwin(
+                            widget_height - children_spacing * 2,
+                            devised_box_size - children_spacing,
+                            widget_y + children_spacing,
+                            widget_x + children_spacing
                         )
                     # Normal
                     elif 1 <= index <= len(self.widget_to_display) - 2:
-                        subwin = self.widget.subwin(
-                            widget_height - spacing * 2,
-                            devised_box_size - (spacing / 2),
-                            widget_y + spacing,
-                            widget_x + (devised_box_size * index) + (spacing / 2)
+                        sub_win = self.widget.subwin(
+                            widget_height - children_spacing * 2,
+                            devised_box_size - (children_spacing / 2),
+                            widget_y + children_spacing,
+                            widget_x + (devised_box_size * index) + (children_spacing / 2)
                         )
                     # Check if that the last element
                     else:
-                        subwin = self.widget.subwin(
-                            widget_height - spacing * 2,
+                        sub_win = self.widget.subwin(
+                            widget_height - children_spacing * 2,
                             0,
-                            widget_y + spacing,
-                            widget_x + (devised_box_size * index) + (spacing / 2)
+                            widget_y + children_spacing,
+                            widget_x + (devised_box_size * index) + (children_spacing / 2)
                         )
 
                     # Drawing
-                    widget.draw_in_area(subwin)
+                    widget.draw_in_area(sub_win)
 
                     index += 1
 

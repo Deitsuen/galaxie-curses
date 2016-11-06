@@ -14,7 +14,7 @@ class MenuModel(Widget):
         self.name = 'MenuModel'
 
         # Internal Widget Setting
-        self.app_info_label = ''
+        self.app_info_label = None
 
         # Make a Style heritage attribute
         if self.style.attribute:
