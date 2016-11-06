@@ -14,30 +14,27 @@ class VBox(Widget):
         Widget.__init__(self)
         self.name = 'VBox'
 
-        self.widget_to_display = []
-        self.widget_subwins = {}
-        self.h_widget_list = {}
-        self.widget_to_display_id = ''
+        self.widget_to_display = list()
+        self.h_widget_list = list()
+        self.widget_to_display_id = None
         self.number_of_widget_to_display = 0
 
     # GLXC VBox Functions
     def draw(self):
         parent_height, parent_width = self.get_parent_size()
         parent_y, parent_x = self.get_parent_origin()
-        spacing = self.get_spacing()
 
         drawing_area = self.parent.widget.subwin(
-            parent_height - (spacing * 2),
-            parent_width - (spacing * 2),
-            parent_y + spacing,
-            parent_x + spacing
+            parent_height - (self.get_spacing() * 2),
+            parent_width - (self.get_spacing() * 2),
+            parent_y + self.get_spacing(),
+            parent_x + self.get_spacing()
         )
         self.draw_in_area(drawing_area)
 
     def draw_in_area(self, drawing_area):
 
         self.widget = drawing_area
-
         widget_height, widget_width = self.get_size()
         widget_y, widget_x = self.get_origin()
 
@@ -51,37 +48,36 @@ class VBox(Widget):
                 index = 0
                 for widget in self.widget_to_display:
                     # Get the Children Spacing
-                    spacing = widget.get_spacing()
 
                     # Check if that the frist element
                     if index == 0:
-                        subwin = self.widget.subwin(
-                                devised_box_size - spacing,
-                                widget_width - spacing * 2,
-                                widget_y + spacing,
-                                widget_x + spacing
+                        sub_win = self.widget.subwin(
+                                devised_box_size - widget.get_spacing(),
+                                widget_width - widget.get_spacing() * 2,
+                                widget_y + widget.get_spacing(),
+                                widget_x + widget.get_spacing()
                         )
                     # Normal
                     elif 1 <= index <= len(self.widget_to_display)-2:
-                        subwin = self.widget.subwin(
-                                devised_box_size - (spacing / 2),
-                                widget_width - spacing * 2,
-                                widget_y + (devised_box_size * index) + (spacing / 2),
-                                widget_x + spacing
+                        sub_win = self.widget.subwin(
+                                devised_box_size - (widget.get_spacing() / 2),
+                                widget_width - widget.get_spacing() * 2,
+                                widget_y + (devised_box_size * index) + (widget.get_spacing() / 2),
+                                widget_x + widget.get_spacing()
                         )
                     # Check if that the last element
                     else:
-                        subwin = self.widget.subwin(
+                        sub_win = self.widget.subwin(
                                 0,
-                                widget_width - spacing * 2,
-                                widget_y + (devised_box_size * index) + (spacing / 2),
-                                widget_x + spacing
+                                widget_width - widget.get_spacing() * 2,
+                                widget_y + (devised_box_size * index) + (widget.get_spacing() / 2),
+                                widget_x + widget.get_spacing()
                         )
 
                     index += 1
 
                     # Finally
-                    widget.draw_in_area(subwin)
+                    widget.draw_in_area(sub_win)
 
     def add(self, widget):
         widget.set_parent(self)

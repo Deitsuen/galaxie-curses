@@ -171,11 +171,11 @@ class Label(Widget):
     def set_text(self, text):
         self.text = text
         if self.orientation == 'HORIZONTAL':
-            self.preferred_width = len(self.text)
+            self.preferred_width = len(self.get_text())
             self.preferred_height = 1
         elif self.orientation == 'VERTICAL':
             self.preferred_width = 1
-            self.preferred_height = len(self.text)
+            self.preferred_height = len(self.get_text())
 
     def get_text(self):
         return self.text
@@ -191,11 +191,11 @@ class Label(Widget):
     def set_orientation(self, orientation):
         self.orientation = orientation
         if self.orientation == 'HORIZONTAL':
-            self.preferred_width = len(self.text)
+            self.preferred_width = len(self.get_text())
             self.preferred_height = 1
         elif self.orientation == 'VERTICAL':
             self.preferred_width = 1
-            self.preferred_height = len(self.text)
+            self.preferred_height = len(self.get_text())
 
     def get_orientation(self):
         return self.orientation
