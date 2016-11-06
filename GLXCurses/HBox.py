@@ -50,32 +50,29 @@ class HBox(Widget):
                 index = 0
                 for widget in self.widget_to_display:
 
-                    # Get the Children Spacing
-                    children_spacing = widget.get_spacing()
-
                     # Check if that the first element
                     if index == 0:
                         sub_win = self.widget.subwin(
-                            widget_height - children_spacing * 2,
-                            devised_box_size - children_spacing,
-                            widget_y + children_spacing,
-                            widget_x + children_spacing
+                            widget_height - widget.get_spacing() * 2,
+                            devised_box_size - widget.get_spacing(),
+                            widget_y + widget.get_spacing(),
+                            widget_x + widget.get_spacing()
                         )
                     # Normal
                     elif 1 <= index <= len(self.widget_to_display) - 2:
                         sub_win = self.widget.subwin(
-                            widget_height - children_spacing * 2,
-                            devised_box_size - (children_spacing / 2),
-                            widget_y + children_spacing,
-                            widget_x + (devised_box_size * index) + (children_spacing / 2)
+                            widget_height - widget.get_spacing() * 2,
+                            devised_box_size - (widget.get_spacing() / 2),
+                            widget_y + widget.get_spacing(),
+                            widget_x + (devised_box_size * index) + (widget.get_spacing() / 2)
                         )
                     # Check if that the last element
                     else:
                         sub_win = self.widget.subwin(
-                            widget_height - children_spacing * 2,
+                            widget_height - widget.get_spacing() * 2,
                             0,
-                            widget_y + children_spacing,
-                            widget_x + (devised_box_size * index) + (children_spacing / 2)
+                            widget_y + widget.get_spacing(),
+                            widget_x + (devised_box_size * index) + (widget.get_spacing() / 2)
                         )
 
                     # Drawing
