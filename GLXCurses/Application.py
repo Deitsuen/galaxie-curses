@@ -65,7 +65,6 @@ class Application(object):
         self.attribute = self.style.get_default_style()
 
         # Fake Widget
-        #self.parent = self.screen
         self.widget = None
         self.spacing = 0
         self.parent_spacing = 0
