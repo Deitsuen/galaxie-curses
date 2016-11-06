@@ -16,13 +16,9 @@ class Statusbar(Widget):
         # Widget Setting
         self.statusbar_stack = []
 
-        if self.style.attribute:
-            self.color_text = self.style.attribute['light']['STATE_NORMAL']
-            self.color_bg = self.style.attribute['dark']['STATE_NORMAL']
-            self.color_normal = self.get_style().get_curses_pairs(fg=self.color_text, bg=self.color_bg)
-
-        else:
-            self.color_normal = 0
+        # Make a Style heritage attribute
+        if self.get_style().attribute:
+            self.attribute = self.get_style().attribute
 
     def draw(self):
 
@@ -48,11 +44,17 @@ class Statusbar(Widget):
                     0,
                     0,
                     str(' ' * (width - 1)),
-                    curses.color_pair(self.color_normal)
+                    curses.color_pair(self.get_style().get_curses_pairs(
+                        fg=self.get_attr('white', 'STATE_NORMAL'),
+                        bg=self.get_attr('black', 'STATE_NORMAL'))
+                    )
                 )
             self.widget.insstr(
                     str(' '),
-                    curses.color_pair(self.color_normal)
+                    curses.color_pair(self.get_style().get_curses_pairs(
+                        fg=self.get_attr('white', 'STATE_NORMAL'),
+                        bg=self.get_attr('black', 'STATE_NORMAL'))
+                    )
                 )
 
         # If it have something inside the Statusbar stack they display it but care about the display size
@@ -76,6 +78,9 @@ class Statusbar(Widget):
                     0,
                     str(message_to_display)
                 )
+
+    def get_attr(self, elem, state):
+        return self.attribute[elem][state]
 
     def push(self, text):
         self.statusbar_stack.append(text)
