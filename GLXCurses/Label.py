@@ -48,32 +48,24 @@ class Label(Widget):
     def draw(self):
         parent_height, parent_width = self.parent.get_size()
         parent_y, parent_x = self.parent.get_origin()
-        self.parent_spacing = self.parent.get_spacing()
 
         drawing_area = self.parent.widget.subwin(
-                parent_height - (self.widget_spacing * 2),
-                parent_width - (self.widget_spacing * 2),
-                parent_y + self.widget_spacing,
-                parent_x + self.widget_spacing
+                parent_height - (self.get_spacing() * 2),
+                parent_width - (self.get_spacing() * 2),
+                parent_y + self.get_spacing(),
+                parent_x + self.get_spacing()
         )
 
         self.draw_in_area(drawing_area)
 
     def draw_in_area(self, drawing_area):
         self.widget = drawing_area
-        if self.attribute:
-            text_fg = self.attribute['text']['STATE_NORMAL']
-            widget_bg = self.attribute['bg']['STATE_NORMAL']
-            color_normal = self.style.get_curses_pairs(fg=text_fg, bg=widget_bg)
-
-        else:
-            color_normal = 0
 
         widget_height, widget_width = drawing_area.getmaxyx()
-        min_size_width = (self.widget_spacing * 2) + self.widget_spacing
-        min_size_height = (self.widget_spacing * 2)
+        min_size_width = (self.get_spacing() * 2) + self.get_spacing()
+        min_size_height = (self.get_spacing() * 2)
         if (widget_height >= min_size_height) and (widget_width >= min_size_width):
-            if not self.text == '':
+            if self.text:
                 # Check if the text can be display
                 text_have_necessary_width = (self.preferred_width + self.get_spacing() >= 1)
                 text_have_necessary_height = (self.preferred_height + self.get_spacing() >= 1)
@@ -81,58 +73,62 @@ class Label(Widget):
                     y_text = 0
                     x_text = 0
                     # Orientation: HORIZONTAL, VERTICAL
-                    if self.orientation == 'HORIZONTAL':
+                    if self.get_orientation().upper() == 'HORIZONTAL':
 
                         # Check Justification
-                        if self.justification == 'CENTER':
+                        if self.get_justify().upper() == 'CENTER':
                             x_text = (widget_width / 2) - (self.preferred_width / 2)
-                        elif self.justification == 'LEFT':
+                        elif self.get_justify().upper() == 'LEFT':
                             x_text = 0 + self.get_spacing()
-                        elif self.justification == 'RIGHT':
+                        elif self.get_justify().upper() == 'RIGHT':
                             x_text = widget_width - self.preferred_width
 
                         # PositionType: CENTER, TOP, BOTTOM
-                        if self.position_type == 'CENTER':
+                        if self.get_position_type().upper() == 'CENTER':
                             if (widget_height / 2) > self.preferred_height:
                                 y_text = (widget_height / 2) - self.preferred_height
                             else:
                                 y_text = 0
-                        elif self.position_type == 'TOP':
+                        elif self.get_position_type().upper() == 'TOP':
                             y_text = 0
-                        elif self.position_type == 'BOTTOM':
+                        elif self.get_position_type().upper() == 'BOTTOM':
                             y_text = widget_height - self.preferred_height
+
                         # Draw the Horizontal Label with Justification and PositionType
                         message_to_display = resize_text(self.text, widget_width - 1, '~')
                         drawing_area.insstr(
                             y_text,
                             x_text,
                             message_to_display,
-                            curses.color_pair(color_normal)
+                            curses.color_pair(self.get_style().get_curses_pairs(
+                                fg=self.get_attr('text', 'STATE_NORMAL'),
+                                bg=self.get_attr('bg', 'STATE_NORMAL'))
+                            )
                         )
-                    elif self.orientation == 'VERTICAL':
+                    elif self.get_orientation().upper() == 'VERTICAL':
 
                         # Check Justification
-                        if self.justification == 'CENTER':
+                        if self.get_justify().upper() == 'CENTER':
                             x_text = (widget_width - self.get_spacing() / 2) - (self.preferred_width - self.get_spacing() / 2)
-                        elif self.justification == 'LEFT':
+                        elif self.get_justify().upper() == 'LEFT':
                             x_text = 0 + self.get_spacing()
-                        elif self.justification == 'RIGHT':
+                        elif self.get_justify().upper() == 'RIGHT':
                             x_text = widget_width - self.preferred_width - self.get_spacing()
 
                         # PositionType: CENTER, TOP, BOTTOM
-                        if self.position_type == 'CENTER':
+                        if self.get_position_type().upper() == 'CENTER':
                             # y_text = (widget_height / 2) - (self.preferred_height / 2)
                             if (widget_height / 2) > (self.preferred_height / 2):
                                 y_text = (widget_height / 2) - (self.preferred_height / 2)
                             else:
                                 y_text = 0
-                        elif self.position_type == 'TOP':
+                        elif self.get_position_type().upper() == 'TOP':
                             y_text = 0
-                        elif self.position_type == 'BOTTOM':
+                        elif self.get_position_type().upper() == 'BOTTOM':
                             y_text = widget_height - self.preferred_height
                         # Draw the Vertical Label with Justification and PositionType
 
-                        message_to_display = resize_text(self.text, widget_height - 1, '~')
+                        message_to_display = resize_text(self.get_text(), widget_height - 1, '~')
                         if len(message_to_display) > 2 :
                             count = 0
                             for CHAR in message_to_display:
@@ -140,9 +136,15 @@ class Label(Widget):
                                     y_text + count,
                                     x_text,
                                     CHAR,
-                                    curses.color_pair(color_normal)
+                                    curses.color_pair(self.get_style().get_curses_pairs(
+                                        fg=self.get_attr('text', 'STATE_NORMAL'),
+                                        bg=self.get_attr('bg', 'STATE_NORMAL'))
+                                    )
                                 )
                                 count += 1
+
+    def get_attr(self, elem, state):
+        return self.attribute[elem][state]
 
     # Internal widget functions
     def set_text(self, text):
