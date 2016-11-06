@@ -15,25 +15,25 @@ class Widget(object):
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Widget'
 
-        # Color's and Style
-        #self.override_background_color = 0
-
         # State
         self.state = dict()
-        self.state['NORMAL'] = 1
-        self.state['ACTIVE'] = 0
-        self.state['PRELIGHT'] = 0
-        self.state['SELECTED'] = 0
-        self.state['INSENSITIVE'] = 0
-        self.state['INCONSISTENT'] = 0
-        self.state['FOCUSED'] = 0
+        self.state['NORMAL'] = True
+        self.state['ACTIVE'] = None
+        self.state['PRELIGHT'] = None
+        self.state['SELECTED'] = None
+        self.state['INSENSITIVE'] = None
+        self.state['INCONSISTENT'] = None
+        self.state['FOCUSED'] = None
 
-        self.widget = ''
+        # Widget
+        self.widget = None
         self.widget_spacing = 0
         self.widget_decorated = 0
-        self.attribute = ''
 
-        self.screen = ''
+        # Widget Parent
+        self.parent = None
+        self.screen = None
+        self.attribute = None
 
         # Each Widget come with it own Style by default
         # It can receive parent Style() or a new Style() during a set_parent() / un_parent() call
@@ -41,8 +41,6 @@ class Widget(object):
         self.style = Style()
         self.style_backup = None
 
-        # Widget Parent Information's
-        self.parent = None
 
     # Common Widget mandatory
     def get(self):
