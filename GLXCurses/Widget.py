@@ -63,7 +63,7 @@ class Widget(object):
     def set_decorated(self, decorated):
         self.widget_decorated = decorated
 
-    def get_decorated(self, decorated):
+    def get_decorated(self):
         return self.widget_decorated
 
     # Each Galaxie Curses Component's must have a draw method
@@ -97,7 +97,7 @@ class Widget(object):
 
         self._set_parent(parent)
 
-        self.screen = self.get_parent().screen
+        self.screen = self.get_parent().get_screen()
 
         # Widget start with own Style, and will use the Style of it parent when it add to a contener
         # GLXCApplication Widget is a special case where it parent is it self.
