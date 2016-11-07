@@ -157,6 +157,63 @@ class Button(Widget):
     def get_attr(self, elem, state):
         return self.attribute[elem][state]
 
+    def select(self):
+        self.widget.addstr(
+            self.Y + 1,
+            self.X + 1,
+            self.LabelButton,
+            curses.color_pair(1)
+        )
+        self.widget.addstr(
+            self.Y + 1,
+            self.X + self.Underline + 1,
+            self.LabelButton[self.Underline],
+            curses.A_REVERSE | curses.color_pair(3)
+        )
+        self.widget.move(
+            self.Y + 1,
+            self.X + self.Underline + 1
+        )
+        self.Selected = 1
+
+    def unselected(self):
+        self.widget.addstr(
+            self.Y + 1,
+            self.X + 1,
+            self.LabelButton,
+            curses.color_pair(4)
+        )
+        self.widget.addstr(
+            self.Y + 1,
+            self.X + self.Underline + 1,
+            self.LabelButton[self.Underline],
+            curses.A_REVERSE | curses.color_pair(3)
+        )
+        self.Selected = 0
+
+    def state(self):
+        if self.Selected:
+            return 1
+        else:
+            return 0
+
+    def key_pressed(self, char):
+        if char > 255:
+            return 0  # skip control-characters
+        if chr(char).upper() == self.LabelButton[self.Underline]:
+            return 1
+        else:
+            return 0
+
+    def mouse_clicked(self, mouse_event):
+        (mouse_event_id, x, y, z, event) = mouse_event
+        if (self.YParent + 3) <= y <= (self.YParent + 3):
+            if self.X + self.XParent <= x < (self.X + self.XParent + self.Width - 1):
+                return 1
+        else:
+            return 0
+
+
     # Internal widget functions
     def set_text(self, text):
         self.text = text
