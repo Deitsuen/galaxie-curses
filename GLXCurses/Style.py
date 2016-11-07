@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
-import itertools
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -114,95 +113,32 @@ class Style(object):
         return style
 
     def init_curses_pairs(self):
-
-        # Prepare a list with the palette
         self.curses_colors = list()
-        self.curses_colors.append(curses.COLOR_BLACK)
-        self.curses_colors.append(curses.COLOR_WHITE)
-        self.curses_colors.append(curses.A_BOLD | curses.COLOR_WHITE)
-        self.curses_colors.append(curses.COLOR_BLUE)
-        self.curses_colors.append(curses.COLOR_RED)
-        self.curses_colors.append(curses.COLOR_MAGENTA)
-        self.curses_colors.append(curses.COLOR_CYAN)
-        self.curses_colors.append(curses.COLOR_GREEN)
-        self.curses_colors.append(curses.COLOR_YELLOW)
-        self.curses_colors.append(curses.A_BOLD | curses.COLOR_YELLOW)
-        self.curses_colors.append(curses.A_BOLD | curses.COLOR_RED)
+        self.curses_colors.append('BLACK')
+        self.curses_colors.append('RED')
+        self.curses_colors.append('GREEN')
+        self.curses_colors.append('YELLOW')
+        self.curses_colors.append('BLUE')
+        self.curses_colors.append('MAGENTA')
+        self.curses_colors.append('CYAN')
+        self.curses_colors.append('WHITE')
 
-        # Prepare a Combination List for each Color
-        curses_colors_pairs = list(itertools.product(self.curses_colors, self.curses_colors))
-        curses_colors_pairs.insert(0, [curses.COLOR_WHITE, curses.COLOR_BLACK])
+        self.curses_colors_pairs = list()
+        self.curses_colors_pairs.append('WHITE' + '/' + 'BLACK')
 
-        # Add Default setting and mer
-        #curses_colors_pairs.append((black, white))
-        #curses_colors_pairs += fb
-
-        index = 1
-        for I in curses_colors_pairs:
-            curses.init_pair(index, int(I[0]), int(I[1]))
-            index += 1
+        counter = 1
+        for foreground in self.curses_colors:
+            for background in self.curses_colors:
+                self.curses_colors_pairs.append(str(foreground) + '/' + str(background))
+                curses.init_pair(counter, self.curses_colors.index(foreground), self.curses_colors.index(background))
+                counter += 1
 
     def get_curses_pairs(self, fg='WHITE', bg='BLACK'):
-        fg = fg.upper()
-        bg = bg.upper()
-
-        def get_int_to_color(integer):
-            if integer == curses.COLOR_BLACK:
-                return 'BLACK'
-            elif integer == curses.COLOR_WHITE:
-                return 'GRAY'
-            elif integer == curses.A_BOLD | curses.COLOR_WHITE:
-                return 'WHITE'
-            elif integer == curses.COLOR_BLUE:
-                return 'BLUE'
-            elif integer == curses.COLOR_RED:
-                return 'RED'
-            elif integer == curses.COLOR_MAGENTA:
-                return 'MAGENTA'
-            elif integer == curses.COLOR_CYAN:
-                return 'CYAN'
-            elif integer == curses.COLOR_GREEN:
-                return 'GREEN'
-            elif integer == curses.COLOR_YELLOW:
-                return 'ORANGE'
-            elif integer == curses.A_BOLD | curses.COLOR_YELLOW:
-                return 'YELLOW'
-            elif integer == curses.A_BOLD | curses.COLOR_RED:
-                return 'PINK'
-
-        def get_color_to_int(color):
-            if color == 'BLACK':
-                return curses.COLOR_BLACK
-            if color == 'GRAY':
-                return curses.COLOR_WHITE
-            if color == 'WHITE':
-                return curses.A_BOLD | curses.COLOR_WHITE
-            if color == 'BLUE':
-                return curses.COLOR_BLUE
-            if color == 'RED':
-                return curses.COLOR_RED
-            if color == 'MAGENTA':
-                return curses.COLOR_MAGENTA
-            if color == 'CYAN':
-                return curses.COLOR_CYAN
-            if color == 'GREEN':
-                return curses.COLOR_GREEN
-            if color == 'ORANGE':
-                return curses.COLOR_YELLOW
-            if color == 'YELLOW':
-                return curses.A_BOLD | curses.COLOR_YELLOW
-            if color == 'PINK':
-                return curses.A_BOLD | curses.COLOR_RED
-
-        fg = get_color_to_int(fg)
-        bg = get_color_to_int(bg)
-
-        if self.curses_colors_pairs.index((fg, bg)):
-            pairs = self.curses_colors_pairs.index((fg, bg))
+        if fg in self.curses_colors and bg in self.curses_colors:
+            pairs = self.curses_colors_pairs.index(str(fg).upper() + '/' + str(bg).upper())
             return pairs
         else:
             return 0
 
     def get_style(self):
         return self.style
-

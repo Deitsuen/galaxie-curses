@@ -106,4 +106,7 @@ class Window(Widget):
             self.widget_to_display[id_max + 1] = widget
             self.widget_to_display_id = id_max + 1
 
+    def get_attr(self, elem, state):
+        return self.attribute[elem][state]
+
 
