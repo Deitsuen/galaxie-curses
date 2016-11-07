@@ -36,7 +36,6 @@ class Window(Widget):
 
         parent_height, parent_width = self.parent.get_size()
         parent_y, parent_x = self.parent.get_origin()
-        self.parent_spacing = self.parent.get_spacing()
 
         drawing_area = self.parent.widget.subwin(
                 parent_height - (self.widget_spacing * 2),
@@ -50,31 +49,29 @@ class Window(Widget):
     # GLXC Window Functions
     def draw_in_area(self, drawing_area):
         self.widget = drawing_area
-        if self.attribute:
-            text_fg = self.attribute['text']['STATE_NORMAL']
-            widget_bg = self.attribute['bg']['STATE_NORMAL']
-            color_normal = self.style.get_curses_pairs(fg=text_fg, bg=widget_bg)
-
-        else:
-            color_normal = 0
 
         widget_height, widget_width = self.widget.getmaxyx()
 
-        if curses.has_colors():
-            # Apply the Background color
-            self.widget.bkgdset(
-                ord(' '),
-                curses.color_pair(color_normal)
+        # Apply the Background color
+        self.widget.bkgdset(
+            ord(' '),
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('text', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_NORMAL'))
             )
-            self.widget.bkgd(
-                ord(' '),
-                curses.color_pair(color_normal)
+        )
+        self.widget.bkgd(
+            ord(' '),
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('text', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_NORMAL'))
             )
+        )
 
-            # Check widgets to display
-            if bool(self.widget_to_display):
-                self.widget_to_display[self.widget_to_display_id].draw()
-                self.widget_to_display[self.widget_to_display_id].set_style(self.style)
+        # Check widgets to display
+        if bool(self.widget_to_display):
+            self.widget_to_display[self.widget_to_display_id].draw()
+            self.widget_to_display[self.widget_to_display_id].set_style(self.style)
 
         # Creat a box and add the name of the windows like a king, who trust that !!!
         if self.widget_decorated > 0:
