@@ -41,6 +41,14 @@ class Widget(object):
         self.style = Style()
         self.style_backup = None
 
+        # Size Management
+        self.width = 0
+        self.height = 0
+        self.preferred_height = 0
+        self.preferred_width = 0
+        self.natural_height = 0
+        self.natural_width = 0
+        self.preferred_size = 0
 
     # Common Widget mandatory
     def get(self):
@@ -48,9 +56,6 @@ class Widget(object):
 
     def get_origin(self):
         return self.widget.getbegyx()
-
-    def get_size(self):
-        return self.widget.getmaxyx()
 
     def set_spacing(self, spacing):
         self.widget_spacing = spacing
@@ -64,10 +69,10 @@ class Widget(object):
     def get_decorated(self):
         return self.widget_decorated
 
-    # Each Galaxie Curses Component's must have a draw method
     def refresh(self):
         self.draw()
 
+    # Each Galaxie Curses Component's must have a draw method
     def show(self):
         self.draw()
 
@@ -75,13 +80,13 @@ class Widget(object):
         self.draw()
         self.parent.draw()
 
-    # Parent Management
     def get_parent(self):
         if self.parent:
             return self.parent
         else:
             return self
 
+    # Parent Management
     def get_parent_size(self):
         return self.get_parent().widget.getmaxyx()
 
@@ -119,10 +124,10 @@ class Widget(object):
     def set_widget(self, widget):
         self.widget = widget
 
-    # Name management use for GLXCStyle color's
     def set_name(self, name):
         self.name = name
 
+    # Name management use for GLXCStyle color's
     def get_name(self):
         return self.name
 
@@ -137,3 +142,44 @@ class Widget(object):
 
     def override_background_color(self, color):
         self.style.attribute['bg']['STATE_NORMAL'] = str(color).upper()
+
+    # Size management
+    def get_width(self):
+        return self.width
+
+    def set_width(self, width):
+        self.width = width
+
+    def get_height(self):
+        return self.height
+
+    def set_height(self, height):
+        self.height = height
+
+    def get_preferred_height(self):
+        return self.preferred_height
+
+    def set_preferred_height(self, height):
+        self.preferred_height = height
+
+    def get_preferred_width(self):
+        return self.preferred_width
+
+    def set_preferred_width(self, preferred_width):
+        self.preferred_width = preferred_width
+
+    def get_preferred_size(self):
+        # should preserve the Y X of ncuses ?
+        return self.preferred_size
+
+    def set_preferred_size(self):
+        # should preserve the Y X of ncuses ?
+        return self.preferred_size
+
+    def get_size(self):
+        return self.widget.getmaxyx()
+
+
+
+
+

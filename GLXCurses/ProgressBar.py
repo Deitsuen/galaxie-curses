@@ -50,8 +50,8 @@ class ProgressBar(Widget):
         self.inverted = 0
 
         # Label
-        self.text = ''
-        self.show_text = 0
+        self.text = None
+        self.show_text = None
         # Interface
         self.progressbar_border = '[]'
         self.progressbar_vertical_border = '__'

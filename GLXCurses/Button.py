@@ -27,106 +27,140 @@ class Button(Widget):
         Widget.__init__(self)
         self.name = 'Button'
 
+        # Internal Widget Setting
+        self.text = None
+        # Interface
+        self.button_border = '[  ]'
+        self.button_border_selected = '[<  >]'
+        # Size management
+        self.preferred_height = 1
+        if self.get_text():
+            self.preferred_width = 0
+            self.preferred_width += len(self.get_text())
+            self.preferred_width += len(self.button_border) / 2
+            self.preferred_width += self.get_spacing() * 2
+
         # Make a Style heritage attribute
         if self.style.attribute:
             self.attribute = self.style.attribute
 
-        # Internal Widget Setting
-        self.text = ''
-        self.preferred_height = 1
-        self.preferred_width = len(self.text)
-
         # Justification: LEFT, RIGHT, CENTER
         self.justification = 'CENTER'
+
+        # Orientation: HORIZONTAL, VERTICAL
+        self.orientation = 'HORIZONTAL'
 
         # PositionType: CENTER, TOP, BOTTOM
         self.position_type = 'CENTER'
 
     def draw(self):
-        parent_height, parent_width = self.parent.get_size()
-        parent_y, parent_x = self.parent.get_origin()
-        self.parent_spacing = self.parent.get_spacing()
+        parent_height, parent_width = self.get_parent().get_size()
+        parent_y, parent_x = self.get_parent().get_origin()
 
-        drawing_area = self.parent.widget.subwin(
-                parent_height - (self.widget_spacing * 2),
-                parent_width - (self.widget_spacing * 2),
-                parent_y + self.widget_spacing,
-                parent_x + self.widget_spacing
+        drawing_area = self.get_parent().widget.subwin(
+                parent_height - (self.get_spacing() * 2),
+                parent_width - (self.get_spacing() * 2),
+                parent_y + self.get_spacing(),
+                parent_x + self.get_spacing()
         )
 
         self.draw_in_area(drawing_area)
 
     def draw_in_area(self, drawing_area):
-
         self.widget = drawing_area
 
-        widget_height, widget_width = drawing_area.getmaxyx()
-        widget_y, widget_x = drawing_area.getbegyx()
-        min_size_width = (self.widget_spacing * 2) + self.widget_spacing
-        min_size_height = (self.widget_spacing * 2)
-        if (widget_height >= min_size_height) and (widget_width >= min_size_width ):
-            if curses.has_colors():
-                drawing_area.bkgdset(ord(' '), curses.color_pair(self.style.colors.index('Label')))
-                drawing_area.bkgd(ord(' '), curses.color_pair(self.style.colors.index('Label')))
-                for I in range(widget_y, widget_height):
-                    drawing_area.insstr(
-                        I,
-                        0,
-                        str(' ' * int(widget_width - 1)),
-                        curses.color_pair(self.style.colors.index('Label'))
-                    )
-                    drawing_area.insstr(
-                        I,
-                        int(widget_width - 1),
-                        str(' '),
-                        curses.color_pair(self.style.colors.index('Label'))
-                    )
-            # Compute text position
+        self.height, self.width = self.get_size()
+        min_size_width = (self.get_spacing() * 2) + self.get_spacing()
+        min_size_height = (self.get_spacing() * 2)
+        height_ok = self.get_height() >= min_size_height
+        width_ok = self.get_width() >= min_size_width
+        if not height_ok or not width_ok:
+            return
 
-            if not self.text == '':
-                # Check if the text can be display
-                text_have_necessary_width = (self.preferred_width + self.get_spacing() >= 1)
-                text_have_necessary_height = (self.preferred_height + self.get_spacing() >= 1)
-                if text_have_necessary_width and text_have_necessary_height:
-                    y_text = 0
-                    x_text = 0
+        # Many Thing's
+        # Check if the text can be display
+        text_have_necessary_width = (self.get_preferred_width() >= 1)
+        text_have_necessary_height = (self.get_preferred_height() >= 1)
+        if not text_have_necessary_height or not text_have_necessary_width:
+            return
 
-                    # Check Justification
-                    if self.justification == 'CENTER':
-                        x_text = (widget_width / 2) - (self.preferred_width / 2)
-                    elif self.justification == 'LEFT':
-                        x_text = 0 + self.get_spacing()
-                    elif self.justification == 'RIGHT':
-                        x_text = widget_width - self.preferred_width
+        if self.get_text():
 
-                    # PositionType: CENTER, TOP, BOTTOM
-                    if self.position_type == 'CENTER':
-                        if (widget_height / 2) > self.preferred_height:
-                            y_text = (widget_height / 2) - self.preferred_height
-                        else:
-                            y_text = 0
-                    elif self.position_type == 'TOP':
-                        y_text = 0
-                    elif self.position_type == 'BOTTOM':
-                        y_text = widget_height - self.preferred_height
-                    # Draw the Horizontal Label with Justification and PositionType
-                    message_to_display = resize_text(self.text, widget_width - 1, '~')
-                    drawing_area.insstr(
-                        y_text,
-                        x_text,
-                        message_to_display,
-                        curses.color_pair(self.style.colors.index('Label'))
-                    )
+            # Check if the text can be display
+            text_have_necessary_width = (self.preferred_width >= 1)
+            text_have_necessary_height = (self.preferred_height >= 1)
+            if text_have_necessary_width and text_have_necessary_height:
+                x_text = self.check_horizontal_justification()
+                y_text = self.check_horizontal_position_type()
+                self.draw_button(x_text, y_text)
+
+    def check_horizontal_justification(self):
+        # Check Justification
+        x_text = 0
+        if self.get_justify().upper() == 'CENTER':
+            x_text = (self.get_width() / 2) - (self.get_preferred_width() / 2) - (len(self.button_border)/2)
+        elif self.get_justify().upper() == 'LEFT':
+            x_text = 0 + self.get_spacing()
+        elif self.get_justify().upper() == 'RIGHT':
+            x_text = self.get_width() - self.get_preferred_width()
+
+        return x_text
+
+    def check_horizontal_position_type(self):
+        # PositionType: CENTER, TOP, BOTTOM
+        y_text = 0
+        if self.get_position_type().upper() == 'CENTER':
+            if (self.get_height() / 2) > self.get_preferred_height():
+                y_text = (self.get_height() / 2) - self.get_preferred_height()
+            else:
+                y_text = 0
+        elif self.get_position_type().upper() == 'TOP':
+            y_text = 0
+        elif self.get_position_type().upper() == 'BOTTOM':
+            y_text = self.get_height() - self.get_preferred_height()
+
+        return y_text
+
+    def draw_button(self, x_text, y_text):
+        # Interface management
+        self.widget.addstr(
+            y_text,
+            x_text,
+            self.button_border[:len(self.button_border) / 2],
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('base', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_NORMAL'))
+            )
+        )
+        # Draw the Horizontal Button with Justification and PositionType
+        message_to_display = resize_text(self.get_text(), self.get_width(), '~')
+        self.widget.addstr(
+            y_text,
+            x_text + len(self.button_border) / 2,
+            message_to_display,
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('text', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_NORMAL'))
+            )
+        )
+        # Interface management
+        self.widget.insstr(
+            y_text,
+            x_text + (len(self.button_border) / 2) + len(message_to_display),
+            self.button_border[-len(self.button_border) / 2:],
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('base', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_NORMAL'))
+            )
+        )
+
+    def get_attr(self, elem, state):
+        return self.attribute[elem][state]
 
     # Internal widget functions
     def set_text(self, text):
         self.text = text
-        if self.orientation == 'HORIZONTAL':
-            self.preferred_width = len(self.text)
-            self.preferred_height = 1
-        elif self.orientation == 'VERTICAL':
-            self.preferred_width = 1
-            self.preferred_height = len(self.text)
+        self.preferred_width = len(self.get_text())
 
     def get_text(self):
         return self.text
@@ -138,23 +172,9 @@ class Button(Widget):
     def get_justify(self):
         return self.justification
 
-    # Orientation: HORIZONTAL, VERTICAL
-    def set_orientation(self, orientation):
-        self.orientation = orientation
-        if self.orientation == 'HORIZONTAL':
-            self.preferred_width = len(self.text)
-            self.preferred_height = 1
-        elif self.orientation == 'VERTICAL':
-            self.preferred_width = 1
-            self.preferred_height = len(self.text)
-
-    def get_orientation(self):
-        return self.orientation
-
     # PositionType: CENTER, TOP, BOTTOM
     def set_position_type(self, position_type):
         self.position_type = position_type
 
     def get_position_type(self):
         return self.position_type
-

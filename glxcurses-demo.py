@@ -27,46 +27,31 @@ if __name__ == '__main__':
     win_for_progressbar.set_title('Progress Bar Widget')
     win_for_progressbar.set_decorated(1)
     win_for_progressbar.set_spacing(1)
-    win_for_progressbar.attribute['bg']['STATE_NORMAL'] = 'RED'
+    win_for_progressbar.override_background_color('CYAN')
     # Create a Window
     win6 = GLXCurses.Window()
     win6.set_title('Label Widget')
     win6.set_decorated(1)
     win6.set_spacing(1)
 
-
     # Create a Label
     label1 = GLXCurses.Label()
     label1.set_text('Super thing 1')
     label1.set_justify('RIGHT')
-    # label1.set_position_type('CENTER')
-    # label1.set_orientation('VERTICAL')
-    label1.attribute['text']['STATE_NORMAL'] = 'RED'
-    label1.attribute['text']['STATE_NORMAL'] = 'YELLOW'
-    label1.attribute['text']['STATE_NORMAL'] = 'CYAN'
-
-    #label1.override_background_color('GREEN')
-    label1.attribute['bg']['STATE_NORMAL'] = 'GREEN'
+    label1.set_text('RED')
+    label1.override_color('RED')
+    label1.override_background_color('GREEN')
 
     label2 = GLXCurses.Label()
-
     label2.set_justify('RIGHT')
-    # label2.set_position_type('CENTER')
     label2.set_orientation('VERTICAL')
+    label2.set_text('YELLOW')
+    label2.override_color('YELLOW')
 
     label3 = GLXCurses.Label()
     label3.set_justify('LEFT')
-    # label3.set_position_type('CENTER')
-    # label3.set_orientation('VERTICAL')
-
-    label1.set_text('RED')
-    label1.attribute['text']['STATE_NORMAL'] = 'RED'
-
-    label2.set_text('YELLOW')
-    label2.attribute['text']['STATE_NORMAL'] = 'YELLOW'
-
     label3.set_text('CYAN')
-    label3.attribute['text']['STATE_NORMAL'] = 'CYAN'
+    label3.override_color('CYAN')
 
     progressbar1 = GLXCurses.ProgressBar()
     progressbar1.set_spacing(0)
@@ -133,7 +118,6 @@ if __name__ == '__main__':
     progressbar6.set_justify('CENTER')
     progressbar6.set_orientation('VERTICAL')
     progressbar6.set_inverted(1)
-
 
     progressbar7 = GLXCurses.ProgressBar()
     progressbar7.set_spacing(0)
@@ -202,10 +186,14 @@ if __name__ == '__main__':
     progressbar12.set_inverted(1)
 
 
+    # Creat Button
+    Button1 = GLXCurses.Button()
+    Button1.set_text('Button1')
+
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
     vbox1.subwins_spacing = 0
-    vbox1.add(progressbar1)
+    vbox1.add(Button1)
     vbox1.add(win_for_progressbar)
     vbox1.add(win6)
 
@@ -251,7 +239,7 @@ if __name__ == '__main__':
     #hbox.add(win6)
 
     win1.add(hbox)
-    #win6.style.attribute['bg']['STATE_NORMAL'] = 'RED'
+
 
     # Creat a Status Bar
     toolbar = GLXCurses.Toolbar()
@@ -269,10 +257,10 @@ if __name__ == '__main__':
     ]
     statusbar = GLXCurses.Statusbar()
     # Add Everything inside the Application
-    app.add_menubar(menu)
+    #app.add_menubar(menu)
     app.add_window(win1)
-    app.add_statusbar(statusbar)
-    app.add_toolbar(toolbar)
+    #app.add_statusbar(statusbar)
+    #app.add_toolbar(toolbar)
 
     # Main loop
     count = 1
@@ -280,7 +268,6 @@ if __name__ == '__main__':
     while True:
         input_event = app.getch()
         if curses.KEY_RESIZE:
-            screen_height, screen_width = app.screen.getmaxyx()
             message_text = ''
             message_text += 'Screen Size:'
             message_text += str(app.get_parent_size())
@@ -292,47 +279,47 @@ if __name__ == '__main__':
             progressbar1.set_text(value)
 
             progressbar2.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
+            value = '{0:}{1:}'.format(progressbar2.get_value(), '%')
             progressbar2.set_text(value)
 
             progressbar3.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
+            value = '{0:}{1:}'.format(progressbar3.get_value(), '%')
             progressbar3.set_text(value)
 
             progressbar4.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
+            value = '{0:}{1:}'.format(progressbar4.get_value(), '%')
             progressbar4.set_text(value)
 
             progressbar5.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
+            value = '{0:}{1:}'.format(progressbar5.get_value(), '%')
             progressbar5.set_text(value)
 
             progressbar6.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
+            value = '{0:}{1:}'.format(progressbar6.get_value(), '%')
             progressbar6.set_text(value)
 
             progressbar7.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
+            value = '{0:}{1:}'.format(progressbar7.get_value(), '%')
             progressbar7.set_text(value)
 
             progressbar8.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
+            value = '{0:}{1:}'.format(progressbar8.get_value(), '%')
             progressbar8.set_text(value)
 
             progressbar9.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
+            value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
             progressbar9.set_text(value)
 
             progressbar10.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
+            value = '{0:}{1:}'.format(progressbar10.get_value(), '%')
             progressbar10.set_text(value)
 
             progressbar11.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
+            value = '{0:}{1:}'.format(progressbar11.get_value(), '%')
             progressbar11.set_text(value)
 
             progressbar12.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
+            value = '{0:}{1:}'.format(progressbar12.get_value(), '%')
             progressbar12.set_text(value)
 
             app.refresh()

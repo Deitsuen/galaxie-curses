@@ -29,8 +29,6 @@ class Label(Widget):
 
         # Internal Widget Setting
         self.text = ''
-        self.preferred_height = 1
-        self.preferred_width = len(self.text)
 
         # Make a Style heritage attribute
         if self.style.attribute:
@@ -139,20 +137,21 @@ class Label(Widget):
 
     def draw_vertical(self, widget_height, x_text, y_text):
         # Draw the Vertical Label with Justification and PositionType
-        message_to_display = resize_text(self.get_text(), widget_height - 1, '~')
-        if len(message_to_display) > 2:
-            count = 0
-            for CHAR in message_to_display:
-                self.widget.insch(
-                    y_text + count,
-                    x_text,
-                    CHAR,
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('text', 'STATE_NORMAL'),
-                        bg=self.get_attr('bg', 'STATE_NORMAL'))
+        if widget_height - 1 > 2:
+            message_to_display = resize_text(self.get_text(), widget_height - 1, '~')
+            if len(message_to_display) > 2:
+                count = 0
+                for CHAR in message_to_display:
+                    self.widget.insch(
+                        y_text + count,
+                        x_text,
+                        CHAR,
+                        curses.color_pair(self.get_style().get_curses_pairs(
+                            fg=self.get_attr('text', 'STATE_NORMAL'),
+                            bg=self.get_attr('bg', 'STATE_NORMAL'))
+                        )
                     )
-                )
-                count += 1
+                    count += 1
 
     def draw_horizontal(self, widget_width, x_text, y_text):
         # Draw the Horizontal Label with Justification and PositionType

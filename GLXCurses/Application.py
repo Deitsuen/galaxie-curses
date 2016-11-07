@@ -141,7 +141,7 @@ class Application(object):
         self.menubar = glxc_menu_bar
 
     def remove_menubar(self, glxc_menu_bar):
-        self.menubar = ''
+        self.menubar = None
 
     def add_statusbar(self, glx_statusbar):
         glx_statusbar.set_parent(self)
@@ -149,7 +149,7 @@ class Application(object):
 
     def remove_statusbar(self, glx_statusbar):
         glx_statusbar.un_parent()
-        self.statusbar = ''
+        self.statusbar = None
 
     def add_toolbar(self, glx_toolbar):
         glx_toolbar.set_parent(self)
@@ -157,7 +157,7 @@ class Application(object):
 
     def remove_toolbar(self, glx_toolbar):
         glx_toolbar.un_parent()
-        self.toolbar = ''
+        self.toolbar = None
 
     def refresh(self):
         # Clean the screen
@@ -167,16 +167,16 @@ class Application(object):
         self.draw()
 
         # Check main widget to display
-        if not self.widget == '':
+        if self.widget:
             self.windows[self.active_window_id].refresh()
 
-        if not self.menubar == '':
+        if self.menubar:
             self.menubar.refresh()
 
-        if not self.statusbar == '':
+        if self.statusbar:
             self.statusbar.refresh()
 
-        if not self.toolbar == '':
+        if self.toolbar:
             self.toolbar.refresh()
 
         # After have redraw everything it's time to refresh the screen
@@ -184,19 +184,19 @@ class Application(object):
 
     def draw(self):
         parent_height, parent_width = self.screen.getmaxyx()
-        if not self.menubar == '':
+        if self.menubar:
             menu_bar_height = 1
         else:
             menu_bar_height = 0
-        if not self.statusbar == '':
+        if self.statusbar:
             status_bar_height = 1
         else:
             status_bar_height = 0
-        if not self.message_bar == '':
+        if self.message_bar:
             message_bar_height = 1
         else:
             message_bar_height = 0
-        if not self.toolbar == '':
+        if self.toolbar:
             tool_bar_height = 1
         else:
             tool_bar_height = 0
