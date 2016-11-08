@@ -22,8 +22,6 @@ class Statusbar(Widget):
 
     def draw(self):
 
-        screen_height, screen_width = self.get_screen().getmaxyx()
-
         # Place the status bar from the end of the screen by look if it have a tool bar before
         if self.parent.toolbar:
             line_from_max_screen_height = 2
@@ -34,7 +32,7 @@ class Statusbar(Widget):
             0,
             0,
             self.get_screen_height() - line_from_max_screen_height,
-            0
+            self.get_screen_x()
         )
         self.set_widget(drawing_area)
 

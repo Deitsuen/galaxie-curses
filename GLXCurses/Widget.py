@@ -143,6 +143,14 @@ class Widget(object):
         self.screen_height, self.screen_width = self.get_screen().getmaxyx()
         return self.screen_width
 
+    def get_screen_x(self):
+        self.screen_y, self.screen_x = self.get_screen().getbegyx()
+        return self.screen_x
+
+    def gef_screen_y(self):
+        self.screen_y, self.screen_x = self.get_screen().getbegyx()
+        return self.screen_y
+
     def get_widget(self):
         return self.widget
 
