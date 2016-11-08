@@ -174,4 +174,3 @@ class Style(object):
 
     def get_style(self):
         return self.style
-
