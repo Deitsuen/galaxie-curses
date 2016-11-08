@@ -21,15 +21,20 @@ class MenuModel(Widget):
             self.attribute = self.get_style().attribute
 
     def draw(self):
-        actual_x_size, actual_y_size = self.get_screen().getmaxyx()
         app_info_label = self.app_info_label
-        self.widget = self.get_screen().subwin(0, 0, 0, 0)
+        drawing_area = self.get_screen().subwin(
+            0,
+            0,
+            0,
+            0
+        )
+        self.set_widget(drawing_area)
 
         if curses.has_colors():
             self.widget.addstr(
                     0,
                     0,
-                    str(' ' * int(actual_y_size)),
+                    str(' ' * (self.get_width() - 1)),
                     curses.color_pair(self.get_style().get_curses_pairs(
                         fg=self.get_attr('dark', 'STATE_NORMAL'),
                         bg=self.get_attr('light', 'STATE_NORMAL'))
@@ -43,10 +48,10 @@ class MenuModel(Widget):
                     )
                 )
         if self.app_info_label:
-            if not actual_y_size + 1 <= len(app_info_label):
+            if not self.get_height() + 1 <= len(app_info_label):
                 self.widget.addstr(
                     0,
-                    (actual_y_size - 1) - len(str(app_info_label[:-1])),
+                    (self.get_width() - 1) - len(str(app_info_label[:-1])),
                     app_info_label[:-1],
                     curses.color_pair(self.get_style().get_curses_pairs(
                         fg=self.get_attr('dark', 'STATE_NORMAL'),
@@ -55,7 +60,7 @@ class MenuModel(Widget):
                 )
                 self.widget.insstr(
                     0,
-                    actual_y_size - 1,
+                    self.get_width() - 1,
                     app_info_label[-1:],
                     curses.color_pair(self.get_style().get_curses_pairs(
                         fg=self.get_attr('dark', 'STATE_NORMAL'),

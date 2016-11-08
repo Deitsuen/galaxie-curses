@@ -23,7 +23,7 @@ class Window(Widget):
         self.name = 'Window'
 
         # Internal Widget Setting
-        self.title = ''
+        self.title = None
 
         self.widget_to_display = {}
         self.widget_to_display_id = ''
@@ -48,9 +48,7 @@ class Window(Widget):
 
     # GLXC Window Functions
     def draw_in_area(self, drawing_area):
-        self.widget = drawing_area
-
-        widget_height, widget_width = self.widget.getmaxyx()
+        self.set_widget(drawing_area)
 
         # Apply the Background color
         self.widget.bkgdset(
@@ -76,34 +74,37 @@ class Window(Widget):
         # Creat a box and add the name of the windows like a king, who trust that !!!
         if self.widget_decorated > 0:
             drawing_area.box()
-            if not self.title == '':
-                drawing_area.addstr(
+            if self.get_title():
+                self.get_widget().addstr(
                     0,
                     1,
-                    resize_text(self.title, widget_width - 2, '~')
+                    resize_text(self.get_title(), self.get_width() - 2, '~')
                 )
         else:
-            if not self.title == '':
-                drawing_area.addstr(
+            if self.get_title():
+                self.get_widget().addstr(
                     0,
                     0,
-                    resize_text(self.title, widget_width - 1, '~')
+                    resize_text(self.get_title(), self.get_width() - 1, '~')
                 )
 
     def set_title(self, title):
         self.title = title
 
-    def add(self, widget):
+    def get_title(self):
+        return self.title
+
+    def add(self, glxc_widget):
         # set_parent is the set_parent from Widget common method
         # information's will be transmit by it method
-        widget.set_parent(self)
+        glxc_widget.set_parent(self)
         id_max = len(self.widget_to_display.keys())
 
         if bool(self.widget_to_display):
-            self.widget_to_display[id_max] = widget
+            self.widget_to_display[id_max] = glxc_widget
             self.widget_to_display_id = id_max
         else:
-            self.widget_to_display[id_max + 1] = widget
+            self.widget_to_display[id_max + 1] = glxc_widget
             self.widget_to_display_id = id_max + 1
 
     def get_attr(self, elem, state):

@@ -22,28 +22,26 @@ class Statusbar(Widget):
 
     def draw(self):
 
-        screen_height, screen_width = self.get_screen().getmaxyx()
-
         # Place the status bar from the end of the screen by look if it have a tool bar before
-        if not self.parent.toolbar == '':
+        if self.parent.toolbar:
             line_from_max_screen_height = 2
         else:
             line_from_max_screen_height = 1
-        self.widget = self.get_screen().subwin(
+
+        drawing_area = self.get_screen().subwin(
             0,
             0,
-            screen_height - line_from_max_screen_height,
-            0
+            self.get_screen_height() - line_from_max_screen_height,
+            self.get_screen_x()
         )
-        # Get the Status Bar size
-        height, width = self.widget.getmaxyx()
+        self.set_widget(drawing_area)
 
         # Clean the entire line
         if curses.has_colors():
             self.widget.addstr(
                     0,
                     0,
-                    str(' ' * (width - 1)),
+                    str(' ' * (self.get_width() - 1)),
                     curses.color_pair(self.get_style().get_curses_pairs(
                         fg=self.get_attr('white', 'STATE_NORMAL'),
                         bg=self.get_attr('black', 'STATE_NORMAL'))
@@ -60,8 +58,8 @@ class Statusbar(Widget):
         # If it have something inside the Statusbar stack they display it but care about the display size
         if len(self.statusbar_stack):
             message_to_display = self.statusbar_stack[-1]
-            if not len(message_to_display) <= width - 1:
-                start, end = message_to_display[:width - 1], message_to_display[width - 1:]
+            if not len(message_to_display) <= self.get_width() - 1:
+                start, end = message_to_display[:self.get_width() - 1], message_to_display[self.get_width() - 1:]
                 self.widget.addstr(
                     0,
                     0,
@@ -69,8 +67,8 @@ class Statusbar(Widget):
                 )
                 self.widget.insstr(
                     0,
-                    width - 1,
-                    str(message_to_display[:width][-1:])
+                    self.get_width() - 1,
+                    str(message_to_display[:self.get_width()][-1:])
                 )
             else:
                 self.widget.addstr(
