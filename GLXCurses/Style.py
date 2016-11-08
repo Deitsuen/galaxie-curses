@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
-
+import itertools
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -10,6 +10,17 @@ __author__ = 'Tuux'
 
 class Style(object):
     def __init__(self):
+        # The White is CRAY and YELLOW is ORANGE
+        self.curses_native_colormap = {
+            'BLACK': curses.COLOR_BLACK,
+            'RED': curses.COLOR_RED,
+            'GREEN': curses.COLOR_GREEN,
+            'YELLOW': curses.COLOR_YELLOW,
+            'BLUE': curses.COLOR_BLUE,
+            'MAGENTA': curses.COLOR_MAGENTA,
+            'CYAN': curses.COLOR_CYAN,
+            'WHITE': curses.COLOR_WHITE,
+        }
         self.curses_colors = list()
         self.curses_colors_pairs = list()
         self.attribute = self.get_default_style()
@@ -122,6 +133,10 @@ class Style(object):
         self.curses_colors.append('MAGENTA')
         self.curses_colors.append('CYAN')
         self.curses_colors.append('WHITE')
+        #
+        # self.curses_colors.append('GRAY')
+        # self.curses_colors.append('ORANGE')
+        #self.curses_colors.append('PINK')
 
         self.curses_colors_pairs = list()
         self.curses_colors_pairs.append('WHITE' + '/' + 'BLACK')
@@ -132,6 +147,23 @@ class Style(object):
                 self.curses_colors_pairs.append(str(foreground) + '/' + str(background))
                 curses.init_pair(counter, self.curses_colors.index(foreground), self.curses_colors.index(background))
                 counter += 1
+
+    def get_color_to_int(self, color):
+        color = str(color).upper()
+        if color in self.curses_native_colormap.keys():
+            return self.curses_native_colormap[color]
+        else:
+            return None
+
+    def get_int_to_color(self, integer):
+        for color in self.curses_native_colormap.keys():
+            if integer == self.curses_native_colormap[color]:
+                return color
+            else:
+                pass
+
+    def get_generated_pairs(self):
+        return list(itertools.product(self.curses_native_colormap.values(), self.curses_native_colormap.values()))
 
     def get_curses_pairs(self, fg='WHITE', bg='BLACK'):
         if fg in self.curses_colors and bg in self.curses_colors:

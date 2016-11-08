@@ -157,38 +157,16 @@ class Button(Widget):
     def get_attr(self, elem, state):
         return self.attribute[elem][state]
 
-    def select(self):
-        self.widget.addstr(
-            self.Y + 1,
-            self.X + 1,
-            self.LabelButton,
-            curses.color_pair(1)
-        )
-        self.widget.addstr(
-            self.Y + 1,
-            self.X + self.Underline + 1,
-            self.LabelButton[self.Underline],
-            curses.A_REVERSE | curses.color_pair(3)
-        )
-        self.widget.move(
-            self.Y + 1,
-            self.X + self.Underline + 1
-        )
-        self.Selected = 1
+    ['STATE_NORMAL']
+    ['STATE_ACTIVE']
+    ['STATE_PRELIGHT']
+    ['STATE_SELECTED']
+    ['STATE_INSENSITIVE']
+
+    def normal(self):
+        pass
 
     def unselected(self):
-        self.widget.addstr(
-            self.Y + 1,
-            self.X + 1,
-            self.LabelButton,
-            curses.color_pair(4)
-        )
-        self.widget.addstr(
-            self.Y + 1,
-            self.X + self.Underline + 1,
-            self.LabelButton[self.Underline],
-            curses.A_REVERSE | curses.color_pair(3)
-        )
         self.Selected = 0
 
     def state(self):

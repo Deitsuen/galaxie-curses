@@ -18,12 +18,10 @@ class Widget(object):
         # State
         self.state = dict()
         self.state['NORMAL'] = True
-        self.state['ACTIVE'] = None
-        self.state['PRELIGHT'] = None
-        self.state['SELECTED'] = None
-        self.state['INSENSITIVE'] = None
-        self.state['INCONSISTENT'] = None
-        self.state['FOCUSED'] = None
+        self.state['ACTIVE'] = True
+        self.state['PRELIGHT'] = False
+        self.state['SELECTED'] = False
+        self.state['INSENSITIVE'] = False
 
         # Widget
         self.widget = None
