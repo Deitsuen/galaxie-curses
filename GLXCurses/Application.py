@@ -69,7 +69,7 @@ class Application(object):
         self.spacing = 0
         self.parent_spacing = 0
         self.parent_style = self.style
-        self.type = 'Application'
+
 
 
     # Common Widget mandatory
@@ -95,6 +95,7 @@ class Application(object):
         return self.get_parent().getbegyx()
 
     def set_parent(self, parent):
+
         pass
 
     def get_parent_spacing(self):

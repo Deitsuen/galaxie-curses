@@ -42,6 +42,10 @@ class Widget(object):
         self.style_backup = None
 
         # Size Management
+        self.parent_y = 0
+        self.parent_x = 0
+        self.parent_width = 0
+        self.parent_height = 0
         self.y = 0
         self.x = 0
         self.width = 0
@@ -109,6 +113,10 @@ class Widget(object):
 
         self.style_backup = self.get_style()
         self.set_style(self.get_parent().get_style())
+
+        # POUR MO
+        #self.parent_height, self.parent_width = self.get_parent().get_size()
+        #self.parent_y, self.parent_x = self.get_parent().get_origin()
 
     def un_parent(self):
         self.parent = None
