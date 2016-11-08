@@ -30,7 +30,6 @@ class Toolbar(Widget):
             self.color_text_prefix = 0
             self.color_normal = 0
 
-
         self.max_button_number = 10
         self.button_list = [
             'Help',
@@ -48,13 +47,22 @@ class Toolbar(Widget):
     def draw(self):
         item_list = self.button_list
         labels_end_coord = ['', '', '', '', '', '', '', '', '', '', '', '']
-        screen_height, screen_width = self.screen.getmaxyx()
+        screen_height, screen_width = self.get_screen().getmaxyx()
 
-        self.widget = self.screen.subwin(0, 0, screen_height - 1, 0)
-        widget_height, widget_width = self.widget.getmaxyx()
+        drawing_area = self.get_screen().subwin(
+            0,
+            0,
+            screen_height - 1,
+            0
+        )
+
+        self.draw_in_area(drawing_area, item_list, labels_end_coord, screen_width)
+
+    def draw_in_area(self, drawing_area, item_list, labels_end_coord, screen_width):
+        self.set_widget(drawing_area)
+        widget_height, widget_width = self.get_widget().getmaxyx()
         widget_width -= 1
         req_button_number = len(item_list) + 1
-
         pos = 0
         if widget_width < req_button_number * 7:
             for i in range(0, req_button_number):
@@ -75,7 +83,6 @@ class Toolbar(Widget):
                 if req_button_number - 1 - i < (md + 1) / 2:
                     pos += 1
                 labels_end_coord[i] = pos
-
         if req_button_number > self.max_button_number:
             req_button_number = self.max_button_number
 

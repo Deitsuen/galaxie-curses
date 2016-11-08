@@ -21,10 +21,10 @@ class VBox(Widget):
 
     # GLXC VBox Functions
     def draw(self):
-        parent_height, parent_width = self.get_parent_size()
-        parent_y, parent_x = self.get_parent_origin()
+        parent_height, parent_width = self.get_parent().get_size()
+        parent_y, parent_x = self.get_parent().get_origin()
 
-        drawing_area = self.parent.widget.subwin(
+        drawing_area = self.get_parent().get_widget().subwin(
             parent_height - (self.get_spacing() * 2),
             parent_width - (self.get_spacing() * 2),
             parent_y + self.get_spacing(),
@@ -46,7 +46,7 @@ class VBox(Widget):
                 for widget in self.widget_to_display:
                     # Check if that the frist element
                     if index == 0:
-                        sub_win = self.widget.subwin(
+                        sub_win = self.get_widget().subwin(
                                 devised_box_size - widget.get_spacing(),
                                 self.get_width() - widget.get_spacing() * 2,
                                 self.get_y() + widget.get_spacing(),
@@ -54,7 +54,7 @@ class VBox(Widget):
                         )
                     # Normal
                     elif 1 <= index <= len(self.widget_to_display)-2:
-                        sub_win = self.widget.subwin(
+                        sub_win = self.get_widget().subwin(
                                 devised_box_size - (widget.get_spacing() / 2),
                                 self.get_width() - widget.get_spacing() * 2,
                                 self.get_y() + (devised_box_size * index) + (widget.get_spacing() / 2),
@@ -62,7 +62,7 @@ class VBox(Widget):
                         )
                     # Check if that the last element
                     else:
-                        sub_win = self.widget.subwin(
+                        sub_win = self.get_widget().subwin(
                                 0,
                                 self.get_width() - widget.get_spacing() * 2,
                                 self.get_y() + (devised_box_size * index) + (widget.get_spacing() / 2),

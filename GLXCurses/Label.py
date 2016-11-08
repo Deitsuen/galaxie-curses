@@ -45,7 +45,7 @@ class Label(Widget):
 
     def draw(self):
         parent_height, parent_width = self.get_parent().get_size()
-        parent_y, parent_x = self.parent.get_origin()
+        parent_y, parent_x = self.get_parent().get_origin()
 
         drawing_area = self.get_parent().get_widget().subwin(
                 parent_height - (self.get_spacing() * 2),

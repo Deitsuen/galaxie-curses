@@ -31,7 +31,7 @@ class MenuModel(Widget):
         self.set_widget(drawing_area)
 
         if curses.has_colors():
-            self.widget.addstr(
+            self.get_widget().addstr(
                     0,
                     0,
                     str(' ' * (self.get_width() - 1)),
@@ -40,7 +40,7 @@ class MenuModel(Widget):
                         bg=self.get_attr('light', 'STATE_NORMAL'))
                     )
                 )
-            self.widget.bkgdset(
+            self.get_widget().bkgdset(
                     ord(' '),
                     curses.color_pair(self.get_style().get_curses_pairs(
                         fg=self.get_attr('dark', 'STATE_NORMAL'),
@@ -49,7 +49,7 @@ class MenuModel(Widget):
                 )
         if self.app_info_label:
             if not self.get_height() + 1 <= len(app_info_label):
-                self.widget.addstr(
+                self.get_widget().addstr(
                     0,
                     (self.get_width() - 1) - len(str(app_info_label[:-1])),
                     app_info_label[:-1],
@@ -58,7 +58,7 @@ class MenuModel(Widget):
                         bg=self.get_attr('light', 'STATE_NORMAL'))
                     )
                 )
-                self.widget.insstr(
+                self.get_widget().insstr(
                     0,
                     self.get_width() - 1,
                     app_info_label[-1:],

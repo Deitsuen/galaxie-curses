@@ -21,10 +21,10 @@ class HBox(Widget):
 
     # GLXC HBox Functions
     def draw(self):
-        parent_height, parent_width = self.get_parent_size()
-        parent_y, parent_x = self.get_parent_origin()
+        parent_height, parent_width = self.get_parent().get_size()
+        parent_y, parent_x = self.get_parent().get_origin()
 
-        drawing_area = self.get_parent().widget.subwin(
+        drawing_area = self.get_parent().get_widget().subwin(
             parent_height - (self.get_spacing() * 2),
             parent_width - (self.get_spacing() * 2),
             parent_y + self.get_spacing(),
@@ -48,7 +48,7 @@ class HBox(Widget):
 
                     # Check if that the first element
                     if index == 0:
-                        sub_win = self.widget.subwin(
+                        sub_win = self.get_widget().subwin(
                             self.get_height() - glxc_widget.get_spacing() * 2,
                             devised_box_size - glxc_widget.get_spacing(),
                             self.get_y() + glxc_widget.get_spacing(),
@@ -56,7 +56,7 @@ class HBox(Widget):
                         )
                     # Normal
                     elif 1 <= index <= len(self.glxcwidget_to_display) - 2:
-                        sub_win = self.widget.subwin(
+                        sub_win = self.get_widget().subwin(
                             self.get_height() - glxc_widget.get_spacing() * 2,
                             devised_box_size - (glxc_widget.get_spacing() / 2),
                             self.get_y() + glxc_widget.get_spacing(),
@@ -64,7 +64,7 @@ class HBox(Widget):
                         )
                     # Check if that the last element
                     else:
-                        sub_win = self.widget.subwin(
+                        sub_win = self.get_widget().subwin(
                             self.get_height() - glxc_widget.get_spacing() * 2,
                             0,
                             self.get_y() + glxc_widget.get_spacing(),
