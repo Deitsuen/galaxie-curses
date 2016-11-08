@@ -14,7 +14,7 @@ class HBox(Widget):
         Widget.__init__(self)
         self.name = 'HBox'
 
-        self.widget_to_display = list()
+        self.glxcwidget_to_display = list()
         self.h_widget_list = list()
         self.widget_to_display_id = None
         self.number_of_widget_to_display = 0
@@ -34,52 +34,48 @@ class HBox(Widget):
         self.draw_in_area(drawing_area)
 
     def draw_in_area(self, drawing_area):
-
-        self.widget = drawing_area
-
-        widget_height, widget_width = self.get_size()
-        widget_y, widget_x = self.get_origin()
+        self.set_widget(drawing_area)
 
         # Check widgets to display
-        is_large_enough = (widget_width >= self.number_of_widget_to_display + 1)
-        is_high_enough = (widget_height >= self.number_of_widget_to_display + 1)
+        is_large_enough = (self.get_width() >= self.number_of_widget_to_display + 1)
+        is_high_enough = (self.get_height() >= self.number_of_widget_to_display + 1)
 
         if is_high_enough and is_large_enough:
-            if self.widget_to_display:
-                devised_box_size = int(widget_width / len(self.widget_to_display))
+            if self.glxcwidget_to_display:
+                devised_box_size = int(self.get_width() / len(self.glxcwidget_to_display))
                 index = 0
-                for widget in self.widget_to_display:
+                for glxc_widget in self.glxcwidget_to_display:
 
                     # Check if that the first element
                     if index == 0:
                         sub_win = self.widget.subwin(
-                            widget_height - widget.get_spacing() * 2,
-                            devised_box_size - widget.get_spacing(),
-                            widget_y + widget.get_spacing(),
-                            widget_x + widget.get_spacing()
+                            self.get_height() - glxc_widget.get_spacing() * 2,
+                            devised_box_size - glxc_widget.get_spacing(),
+                            self.get_y() + glxc_widget.get_spacing(),
+                            self.get_x() + glxc_widget.get_spacing()
                         )
                     # Normal
-                    elif 1 <= index <= len(self.widget_to_display) - 2:
+                    elif 1 <= index <= len(self.glxcwidget_to_display) - 2:
                         sub_win = self.widget.subwin(
-                            widget_height - widget.get_spacing() * 2,
-                            devised_box_size - (widget.get_spacing() / 2),
-                            widget_y + widget.get_spacing(),
-                            widget_x + (devised_box_size * index) + (widget.get_spacing() / 2)
+                            self.get_height() - glxc_widget.get_spacing() * 2,
+                            devised_box_size - (glxc_widget.get_spacing() / 2),
+                            self.get_y() + glxc_widget.get_spacing(),
+                            self.get_x() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2)
                         )
                     # Check if that the last element
                     else:
                         sub_win = self.widget.subwin(
-                            widget_height - widget.get_spacing() * 2,
+                            self.get_height() - glxc_widget.get_spacing() * 2,
                             0,
-                            widget_y + widget.get_spacing(),
-                            widget_x + (devised_box_size * index) + (widget.get_spacing() / 2)
+                            self.get_y() + glxc_widget.get_spacing(),
+                            self.get_x() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2)
                         )
 
                     # Drawing
-                    widget.draw_in_area(sub_win)
+                    glxc_widget.draw_in_area(sub_win)
 
                     index += 1
 
     def add(self, widget):
         widget.set_parent(self)
-        self.widget_to_display.append(widget)
+        self.glxcwidget_to_display.append(widget)

@@ -33,45 +33,40 @@ class VBox(Widget):
         self.draw_in_area(drawing_area)
 
     def draw_in_area(self, drawing_area):
-
-        self.widget = drawing_area
-        widget_height, widget_width = self.get_size()
-        widget_y, widget_x = self.get_origin()
+        self.set_widget(drawing_area)
 
         # Check widgets to display
-        is_large_enough = (widget_width >= self.number_of_widget_to_display + 1)
-        is_high_enough = (widget_height >= self.number_of_widget_to_display + 1)
+        is_large_enough = (self.get_width() >= self.number_of_widget_to_display + 1)
+        is_high_enough = (self.get_height() >= self.number_of_widget_to_display + 1)
 
         if is_high_enough and is_large_enough:
             if self.widget_to_display:
-                devised_box_size = int(widget_height / len(self.widget_to_display))
+                devised_box_size = int(self.get_height() / len(self.widget_to_display))
                 index = 0
                 for widget in self.widget_to_display:
-                    # Get the Children Spacing
-
                     # Check if that the frist element
                     if index == 0:
                         sub_win = self.widget.subwin(
                                 devised_box_size - widget.get_spacing(),
-                                widget_width - widget.get_spacing() * 2,
-                                widget_y + widget.get_spacing(),
-                                widget_x + widget.get_spacing()
+                                self.get_width() - widget.get_spacing() * 2,
+                                self.get_y() + widget.get_spacing(),
+                                self.get_x() + widget.get_spacing()
                         )
                     # Normal
                     elif 1 <= index <= len(self.widget_to_display)-2:
                         sub_win = self.widget.subwin(
                                 devised_box_size - (widget.get_spacing() / 2),
-                                widget_width - widget.get_spacing() * 2,
-                                widget_y + (devised_box_size * index) + (widget.get_spacing() / 2),
-                                widget_x + widget.get_spacing()
+                                self.get_width() - widget.get_spacing() * 2,
+                                self.get_y() + (devised_box_size * index) + (widget.get_spacing() / 2),
+                                self.get_x() + widget.get_spacing()
                         )
                     # Check if that the last element
                     else:
                         sub_win = self.widget.subwin(
                                 0,
-                                widget_width - widget.get_spacing() * 2,
-                                widget_y + (devised_box_size * index) + (widget.get_spacing() / 2),
-                                widget_x + widget.get_spacing()
+                                self.get_width() - widget.get_spacing() * 2,
+                                self.get_y() + (devised_box_size * index) + (widget.get_spacing() / 2),
+                                self.get_x() + widget.get_spacing()
                         )
 
                     index += 1

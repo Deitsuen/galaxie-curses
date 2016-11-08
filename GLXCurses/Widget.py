@@ -42,6 +42,8 @@ class Widget(object):
         self.style_backup = None
 
         # Size Management
+        self.y = 0
+        self.x = 0
         self.width = 0
         self.height = 0
         self.preferred_height = 0
@@ -121,8 +123,13 @@ class Widget(object):
     def get_screen(self):
         return self.screen
 
+    def get_widget(self):
+        return self.widget
+
     def set_widget(self, widget):
         self.widget = widget
+        self.height, self.width = self.get_size()
+        self.y, self.x = self.get_origin()
 
     def set_name(self, name):
         self.name = name
@@ -178,6 +185,12 @@ class Widget(object):
 
     def get_size(self):
         return self.widget.getmaxyx()
+
+    def get_x(self):
+        return self.x
+
+    def get_y(self):
+        return self.y
 
 
 

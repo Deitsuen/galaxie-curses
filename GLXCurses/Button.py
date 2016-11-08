@@ -68,8 +68,8 @@ class Button(Widget):
 
     def draw_in_area(self, drawing_area):
         self.widget = drawing_area
-
         self.height, self.width = self.get_size()
+
         min_size_width = (self.get_spacing() * 2) + self.get_spacing()
         min_size_height = (self.get_spacing() * 2)
         height_ok = self.get_height() >= min_size_height
@@ -157,12 +157,16 @@ class Button(Widget):
     def get_attr(self, elem, state):
         return self.attribute[elem][state]
 
-    def select(self):
+    def pressed(self):
+        self.pressed = 1
+
+
+    def released(self):
         self.widget.addstr(
             self.Y + 1,
             self.X + 1,
             self.LabelButton,
-            curses.color_pair(1)
+            curses.color_pair(4)
         )
         self.widget.addstr(
             self.Y + 1,
@@ -170,13 +174,39 @@ class Button(Widget):
             self.LabelButton[self.Underline],
             curses.A_REVERSE | curses.color_pair(3)
         )
-        self.widget.move(
-            self.Y + 1,
-            self.X + self.Underline + 1
-        )
-        self.Selected = 1
+        self.Selected = 0
 
-    def unselected(self):
+    def clicked(self):
+        self.widget.addstr(
+            self.Y + 1,
+            self.X + 1,
+            self.LabelButton,
+            curses.color_pair(4)
+        )
+        self.widget.addstr(
+            self.Y + 1,
+            self.X + self.Underline + 1,
+            self.LabelButton[self.Underline],
+            curses.A_REVERSE | curses.color_pair(3)
+        )
+        self.Selected = 0
+
+    def enter(self):
+        self.widget.addstr(
+            self.Y + 1,
+            self.X + 1,
+            self.LabelButton,
+            curses.color_pair(4)
+        )
+        self.widget.addstr(
+            self.Y + 1,
+            self.X + self.Underline + 1,
+            self.LabelButton[self.Underline],
+            curses.A_REVERSE | curses.color_pair(3)
+        )
+        self.Selected = 0
+
+    def leave(self):
         self.widget.addstr(
             self.Y + 1,
             self.X + 1,
