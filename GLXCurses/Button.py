@@ -67,10 +67,9 @@ class Button(Widget):
         self.draw_in_area(drawing_area)
 
     def draw_in_area(self, drawing_area):
-        self.widget = drawing_area
-        self.height, self.width = self.get_size()
+        self.set_widget(drawing_area)
 
-        min_size_width = (self.get_spacing() * 2) + self.get_spacing()
+        min_size_width = (self.get_spacing() * 2) + 3
         min_size_height = (self.get_spacing() * 2)
         height_ok = self.get_height() >= min_size_height
         width_ok = self.get_width() >= min_size_width

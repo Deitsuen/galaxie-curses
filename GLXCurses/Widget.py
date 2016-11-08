@@ -42,6 +42,10 @@ class Widget(object):
         self.style_backup = None
 
         # Size Management
+        self.screen_height = 0
+        self.screen_width = 0
+        self.screen_y = 0
+        self.screen_x = 0
         self.parent_y = 0
         self.parent_x = 0
         self.parent_width = 0
@@ -130,6 +134,14 @@ class Widget(object):
 
     def get_screen(self):
         return self.screen
+
+    def get_screen_height(self):
+        self.screen_height, self.screen_width = self.get_screen().getmaxyx()
+        return self.screen_height
+
+    def get_screen_width(self):
+        self.screen_height, self.screen_width = self.get_screen().getmaxyx()
+        return self.screen_width
 
     def get_widget(self):
         return self.widget
