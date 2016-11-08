@@ -59,34 +59,23 @@ class Widget(object):
         self.preferred_size = 0
 
     # Common Widget mandatory
-    def get(self):
-        return self.widget
 
-    def get_origin(self):
-        return self.widget.getbegyx()
+    # Screen
+    def get_screen_height(self):
+        self.screen_height, self.screen_width = self.get_screen().getmaxyx()
+        return self.screen_height
 
-    def set_spacing(self, spacing):
-        self.widget_spacing = spacing
+    def get_screen_width(self):
+        self.screen_height, self.screen_width = self.get_screen().getmaxyx()
+        return self.screen_width
 
-    def get_spacing(self):
-        return self.widget_spacing
+    def get_screen_x(self):
+        self.screen_y, self.screen_x = self.get_screen().getbegyx()
+        return self.screen_x
 
-    def set_decorated(self, decorated):
-        self.widget_decorated = decorated
-
-    def get_decorated(self):
-        return self.widget_decorated
-
-    def refresh(self):
-        self.draw()
-
-    # Each Galaxie Curses Component's must have a draw method
-    def show(self):
-        self.draw()
-
-    def show_all(self):
-        self.draw()
-        self.parent.draw()
+    def gef_screen_y(self):
+        self.screen_y, self.screen_x = self.get_screen().getbegyx()
+        return self.screen_y
 
     def get_parent(self):
         if self.parent:
@@ -133,22 +122,7 @@ class Widget(object):
     def get_screen(self):
         return self.screen
 
-    def get_screen_height(self):
-        self.screen_height, self.screen_width = self.get_screen().getmaxyx()
-        return self.screen_height
-
-    def get_screen_width(self):
-        self.screen_height, self.screen_width = self.get_screen().getmaxyx()
-        return self.screen_width
-
-    def get_screen_x(self):
-        self.screen_y, self.screen_x = self.get_screen().getbegyx()
-        return self.screen_x
-
-    def gef_screen_y(self):
-        self.screen_y, self.screen_x = self.get_screen().getbegyx()
-        return self.screen_y
-
+    # Widget
     def get_widget(self):
         return self.widget
 
@@ -157,13 +131,38 @@ class Widget(object):
         self.height, self.width = self.get_size()
         self.y, self.x = self.get_origin()
 
+    def get_origin(self):
+        return self.widget.getbegyx()
+
+    def set_spacing(self, spacing):
+        self.widget_spacing = spacing
+
+    def get_spacing(self):
+        return self.widget_spacing
+
+    def set_decorated(self, decorated):
+        self.widget_decorated = decorated
+
+    def get_decorated(self):
+        return self.widget_decorated
+
+    def refresh(self):
+        self.draw()
+
+    def show(self):
+        self.draw()
+
+    def show_all(self):
+        self.draw()
+        self.parent.draw()
+
     def set_name(self, name):
         self.name = name
 
-    # Name management use for GLXCStyle color's
     def get_name(self):
         return self.name
 
+    # Name management use for GLXCStyle color's
     def set_style(self, style):
         self.style = style
 

@@ -33,15 +33,14 @@ class Window(Widget):
             self.attribute = self.style.attribute
 
     def draw(self):
+        parent_height, parent_width = self.get_parent().get_size()
+        parent_y, parent_x = self.get_parent().get_origin()
 
-        parent_height, parent_width = self.parent.get_size()
-        parent_y, parent_x = self.parent.get_origin()
-
-        drawing_area = self.parent.widget.subwin(
-                parent_height - (self.widget_spacing * 2),
-                parent_width - (self.widget_spacing * 2),
-                parent_y + self.widget_spacing,
-                parent_x + self.widget_spacing
+        drawing_area = self.get_parent().get_widget().subwin(
+                parent_height - (self.get_spacing() * 2),
+                parent_width - (self.get_spacing() * 2),
+                parent_y + self.get_spacing(),
+                parent_x + self.get_spacing()
         )
 
         self.draw_in_area(drawing_area)
@@ -51,14 +50,14 @@ class Window(Widget):
         self.set_widget(drawing_area)
 
         # Apply the Background color
-        self.widget.bkgdset(
+        self.get_widget().bkgdset(
             ord(' '),
             curses.color_pair(self.get_style().get_curses_pairs(
                 fg=self.get_attr('text', 'STATE_NORMAL'),
                 bg=self.get_attr('bg', 'STATE_NORMAL'))
             )
         )
-        self.widget.bkgd(
+        self.get_widget().bkgd(
             ord(' '),
             curses.color_pair(self.get_style().get_curses_pairs(
                 fg=self.get_attr('text', 'STATE_NORMAL'),
@@ -69,11 +68,11 @@ class Window(Widget):
         # Check widgets to display
         if bool(self.widget_to_display):
             self.widget_to_display[self.widget_to_display_id].draw()
-            self.widget_to_display[self.widget_to_display_id].set_style(self.style)
+            self.widget_to_display[self.widget_to_display_id].set_style(self.get_style())
 
         # Creat a box and add the name of the windows like a king, who trust that !!!
-        if self.widget_decorated > 0:
-            drawing_area.box()
+        if self.get_decorated():
+            self.get_widget().box()
             if self.get_title():
                 self.get_widget().addstr(
                     0,
@@ -109,5 +108,6 @@ class Window(Widget):
 
     def get_attr(self, elem, state):
         return self.attribute[elem][state]
+
 
 

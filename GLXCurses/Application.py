@@ -73,17 +73,12 @@ class Application(object):
 
 
     # Common Widget mandatory
-    def get(self):
-        return self.widget
 
-    def get_origin(self):
-        return self.widget.getbegyx()
+    # Screen
 
-    def get_size(self):
-        return self.widget.getmaxyx()
-
-    def get_spacing(self):
-        return self.spacing
+    # Parent
+    def set_parent(self, parent):
+        pass
 
     def get_parent(self):
         return self.widget
@@ -94,15 +89,24 @@ class Application(object):
     def get_parent_origin(self):
         return self.get_parent().getbegyx()
 
-    def set_parent(self, parent):
-
-        pass
-
     def get_parent_spacing(self):
         return self.get_parent().spacing
 
     def get_parent_style(self):
         return self.style
+
+    # Widget
+    def get_widget(self):
+        return self.widget
+
+    def get_size(self):
+        return self.widget.getmaxyx()
+
+    def get_origin(self):
+        return self.widget.getbegyx()
+
+    def get_spacing(self):
+        return self.spacing
 
     def remove_parent(self):
         pass
