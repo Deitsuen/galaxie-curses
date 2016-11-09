@@ -271,11 +271,17 @@ if __name__ == '__main__':
             message_text = ''
             message_text += 'Screen Size:'
             message_text += str(app.get_parent_size())
-            statusbar.push(message_text)
+
+            if Button1.mouse_clicked(curses.getmouse()):
+                message_text += ' '
+                message_text += 'Button1 Clicked:'
 
             if Button1.key_pressed(input_event):
                 pass
 
+
+
+            statusbar.push(message_text)
             # Status Bar Demo
             progressbar1.set_value(randint(0, 100))
             value = '{0:}{1:}'.format(progressbar1.get_value(), '%')

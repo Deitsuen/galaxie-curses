@@ -29,6 +29,9 @@ class Button(Widget):
 
         # Internal Widget Setting
         self.text = None
+        self.text_x = 0
+        self.text_y = 0
+        
         # Interface
         self.button_border = '[  ]'
         self.button_border_selected = '[<  >]'
@@ -37,7 +40,7 @@ class Button(Widget):
         if self.get_text():
             self.preferred_width = 0
             self.preferred_width += len(self.get_text())
-            self.preferred_width += len(self.button_border) / 2
+            self.preferred_width += len(self.button_border)
             self.preferred_width += self.get_spacing() * 2
 
         # Make a Style heritage attribute
@@ -89,42 +92,42 @@ class Button(Widget):
             text_have_necessary_width = (self.preferred_width >= 1)
             text_have_necessary_height = (self.preferred_height >= 1)
             if text_have_necessary_width and text_have_necessary_height:
-                x_text = self.check_horizontal_justification()
-                y_text = self.check_horizontal_position_type()
-                self.draw_button(x_text, y_text)
+                self.text_x = self.check_horizontal_justification()
+                self.text_y = self.check_horizontal_position_type()
+                self.draw_button()
 
     def check_horizontal_justification(self):
         # Check Justification
-        x_text = 0
-        if self.get_justify().upper() == 'CENTER':
-            x_text = (self.get_width() / 2) - (self.get_preferred_width() / 2) - (len(self.button_border)/2)
-        elif self.get_justify().upper() == 'LEFT':
-            x_text = 0 + self.get_spacing()
-        elif self.get_justify().upper() == 'RIGHT':
-            x_text = self.get_width() - self.get_preferred_width()
+        self.text_x = 0
+        if self.get_justify() == 'CENTER':
+            self.text_x = (self.get_width() / 2) - (self.get_preferred_width() / 2) - (len(self.button_border)/2)
+        elif self.get_justify() == 'LEFT':
+            self.text_x = 0 + self.get_spacing()
+        elif self.get_justify() == 'RIGHT':
+            self.text_x = self.get_width() - self.get_preferred_width()
 
-        return x_text
+        return self.text_x
 
     def check_horizontal_position_type(self):
         # PositionType: CENTER, TOP, BOTTOM
-        y_text = 0
-        if self.get_position_type().upper() == 'CENTER':
+        self.text_y = 0
+        if self.get_position_type() == 'CENTER':
             if (self.get_height() / 2) > self.get_preferred_height():
-                y_text = (self.get_height() / 2) - self.get_preferred_height()
+                self.text_y = (self.get_height() / 2) - self.get_preferred_height()
             else:
-                y_text = 0
-        elif self.get_position_type().upper() == 'TOP':
-            y_text = 0
-        elif self.get_position_type().upper() == 'BOTTOM':
-            y_text = self.get_height() - self.get_preferred_height()
+                self.text_y = 0
+        elif self.get_position_type() == 'TOP':
+            self.text_y = 0
+        elif self.get_position_type() == 'BOTTOM':
+            self.text_y = self.get_height() - self.get_preferred_height()
 
-        return y_text
+        return self.text_y
 
-    def draw_button(self, x_text, y_text):
+    def draw_button(self):
         # Interface management
-        self.widget.addstr(
-            y_text,
-            x_text,
+        self.get_widget().addstr(
+            self.text_y,
+            self.text_x,
             self.button_border[:len(self.button_border) / 2],
             curses.color_pair(self.get_style().get_curses_pairs(
                 fg=self.get_attr('base', 'STATE_NORMAL'),
@@ -133,9 +136,9 @@ class Button(Widget):
         )
         # Draw the Horizontal Button with Justification and PositionType
         message_to_display = resize_text(self.get_text(), self.get_width(), '~')
-        self.widget.addstr(
-            y_text,
-            x_text + len(self.button_border) / 2,
+        self.get_widget().addstr(
+            self.text_y,
+            self.text_x + len(self.button_border) / 2,
             message_to_display,
             curses.color_pair(self.get_style().get_curses_pairs(
                 fg=self.get_attr('text', 'STATE_NORMAL'),
@@ -143,9 +146,9 @@ class Button(Widget):
             )
         )
         # Interface management
-        self.widget.insstr(
-            y_text,
-            x_text + (len(self.button_border) / 2) + len(message_to_display),
+        self.get_widget().insstr(
+            self.text_y,
+            self.text_x + (len(self.button_border) / 2) + len(message_to_display),
             self.button_border[-len(self.button_border) / 2:],
             curses.color_pair(self.get_style().get_curses_pairs(
                 fg=self.get_attr('base', 'STATE_NORMAL'),
@@ -159,66 +162,47 @@ class Button(Widget):
     def pressed(self):
         self.pressed = 1
 
-
     def released(self):
-        self.widget.addstr(
-            self.Y + 1,
-            self.X + 1,
-            self.LabelButton,
-            curses.color_pair(4)
-        )
-        self.widget.addstr(
-            self.Y + 1,
-            self.X + self.Underline + 1,
-            self.LabelButton[self.Underline],
-            curses.A_REVERSE | curses.color_pair(3)
-        )
-        self.Selected = 0
+        pass
 
     def clicked(self):
-        self.widget.addstr(
-            self.Y + 1,
-            self.X + 1,
-            self.LabelButton,
-            curses.color_pair(4)
+        # Interface management
+        self.get_widget().addstr(
+            self.text_y,
+            self.text_x,
+            self.button_border[:len(self.button_border) / 2],
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('base', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_PRELIGHT'))
+            )
         )
-        self.widget.addstr(
-            self.Y + 1,
-            self.X + self.Underline + 1,
-            self.LabelButton[self.Underline],
-            curses.A_REVERSE | curses.color_pair(3)
+        # Draw the Horizontal Button with Justification and PositionType
+        message_to_display = resize_text(self.get_text(), self.get_width(), '~')
+        self.get_widget().addstr(
+            self.text_y,
+            self.text_x + len(self.button_border) / 2,
+            message_to_display,
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('text', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_PRELIGHT'))
+            )
         )
-        self.Selected = 0
+        # Interface management
+        self.get_widget().insstr(
+            self.text_y,
+            self.text_x + (len(self.button_border) / 2) + len(message_to_display),
+            self.button_border[-len(self.button_border) / 2:],
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('base', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_PRELIGHT'))
+            )
+        )
 
     def enter(self):
-        self.widget.addstr(
-            self.Y + 1,
-            self.X + 1,
-            self.LabelButton,
-            curses.color_pair(4)
-        )
-        self.widget.addstr(
-            self.Y + 1,
-            self.X + self.Underline + 1,
-            self.LabelButton[self.Underline],
-            curses.A_REVERSE | curses.color_pair(3)
-        )
-        self.Selected = 0
+        pass
 
     def leave(self):
-        self.widget.addstr(
-            self.Y + 1,
-            self.X + 1,
-            self.LabelButton,
-            curses.color_pair(4)
-        )
-        self.widget.addstr(
-            self.Y + 1,
-            self.X + self.Underline + 1,
-            self.LabelButton[self.Underline],
-            curses.A_REVERSE | curses.color_pair(3)
-        )
-        self.Selected = 0
+        pass
 
     def state(self):
         if self.Selected:
@@ -236,8 +220,9 @@ class Button(Widget):
 
     def mouse_clicked(self, mouse_event):
         (mouse_event_id, x, y, z, event) = mouse_event
-        if (self.YParent + 3) <= y <= (self.YParent + 3):
-            if self.X + self.XParent <= x < (self.X + self.XParent + self.Width - 1):
+        if self.text_y + self.get_preferred_height() >= y >= self.text_y + self.get_preferred_height():
+            self.clicked()
+            if self.text_x <= x <= self.text_x + len(self.button_border) + len(self.get_text()) - 1:
                 return 1
         else:
             return 0
