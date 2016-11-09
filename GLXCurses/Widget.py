@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from GLXCurses.Style import Style
+import curses
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -22,6 +23,36 @@ class Widget(object):
         self.state['PRELIGHT'] = False
         self.state['SELECTED'] = False
         self.state['INSENSITIVE'] = False
+
+        self.curses_mouse_states = {
+            curses.BUTTON1_PRESSED: 'Button 1 Pressed',
+            curses.BUTTON1_RELEASED: 'Button 1 Released',
+            curses.BUTTON1_CLICKED: 'Button 1 Clicked',
+            curses.BUTTON1_DOUBLE_CLICKED: 'Button 1 Double-Clicked',
+            curses.BUTTON1_TRIPLE_CLICKED: 'Button 1 Triple-Clicked',
+
+            curses.BUTTON2_PRESSED: 'Button 2 Pressed',
+            curses.BUTTON2_RELEASED: 'Button 2 Released',
+            curses.BUTTON2_CLICKED: 'Button 2 Clicked',
+            curses.BUTTON2_DOUBLE_CLICKED: 'Button 2 Double-Clicked',
+            curses.BUTTON2_TRIPLE_CLICKED: 'Button 2 Triple-Clicked',
+
+            curses.BUTTON3_PRESSED: 'Button 3 Pressed',
+            curses.BUTTON3_RELEASED: 'Button 3 Released',
+            curses.BUTTON3_CLICKED: 'Button 3 Clicked',
+            curses.BUTTON3_DOUBLE_CLICKED: 'Button 3 Double-Clicked',
+            curses.BUTTON3_TRIPLE_CLICKED: 'Button 3 Triple-Clicked',
+
+            curses.BUTTON4_PRESSED: 'Button 4 Pressed',
+            curses.BUTTON4_RELEASED: 'Button 4 Released',
+            curses.BUTTON4_CLICKED: 'Button 4 Clicked',
+            curses.BUTTON4_DOUBLE_CLICKED: 'Button 4 Double-Clicked',
+            curses.BUTTON4_TRIPLE_CLICKED: 'Button 4 Triple-Clicked',
+
+            curses.BUTTON_SHIFT: 'Button Shift',
+            curses.BUTTON_CTRL: 'Button Ctrl',
+            curses.BUTTON_ALT: 'Button Alt'
+        }
 
         # Widget
         self.widget = None

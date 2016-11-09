@@ -266,18 +266,25 @@ if __name__ == '__main__':
     count = 1
     app.refresh()
     while True:
+        message_text = ''
         input_event = app.getch()
         if curses.KEY_RESIZE:
-            message_text = ''
             message_text += 'Screen Size:'
             message_text += str(app.get_parent_size())
+            message_text += ' '
 
-            if Button1.mouse_clicked(curses.getmouse()):
+        if input_event == curses.KEY_MOUSE:
+            if Button1.mouse_event(curses.getmouse()):
+
+                message_text += Button1.get_states()
                 message_text += ' '
-                message_text += 'Button1 Clicked:'
 
-            if Button1.key_pressed(input_event):
-                pass
+
+
+
+
+            # if Button1.key_pressed(input_event):
+            #     pass
 
 
 
