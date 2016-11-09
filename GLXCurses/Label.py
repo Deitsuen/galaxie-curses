@@ -25,6 +25,7 @@ def resize_text(text, max_width, separator='~'):
 class Label(Widget):
     def __init__(self):
         Widget.__init__(self)
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Label'
 
         # Internal Widget Setting

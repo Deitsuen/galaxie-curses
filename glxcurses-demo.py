@@ -273,22 +273,7 @@ if __name__ == '__main__':
             message_text += str(app.get_parent_size())
             message_text += ' '
 
-        if input_event == curses.KEY_MOUSE:
-            if Button1.mouse_event(curses.getmouse()):
 
-                message_text += Button1.get_states()
-                message_text += ' '
-
-
-
-
-
-            # if Button1.key_pressed(input_event):
-            #     pass
-
-
-
-            statusbar.push(message_text)
             # Status Bar Demo
             progressbar1.set_value(randint(0, 100))
             value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
@@ -339,7 +324,18 @@ if __name__ == '__main__':
             progressbar12.set_text(value)
 
             app.refresh()
-            pass
+
+        if input_event == curses.KEY_MOUSE:
+            if Button1.mouse_event(curses.getmouse()):
+
+                message_text += Button1.get_states()
+                message_text += ' '
+                statusbar.push(message_text)
+                app.refresh()
+
+            # if Button1.key_pressed(input_event):
+            #     pass
+
         if input_event == ord('q'):
             break
         count += 1

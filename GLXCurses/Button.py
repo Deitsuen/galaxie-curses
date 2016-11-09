@@ -26,6 +26,7 @@ def resize_text(text, max_width, separator='~'):
 class Button(Widget):
     def __init__(self):
         Widget.__init__(self)
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Button'
 
         # Internal Widget Setting
@@ -275,8 +276,6 @@ class Button(Widget):
                     bg=self.get_attr('bg', 'STATE_PRELIGHT'))
                 )
             )
-
-
 
     def enter(self):
         pass

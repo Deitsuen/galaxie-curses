@@ -10,12 +10,10 @@ __author__ = 'Tuux'
 
 class Widget(object):
     def __init__(self):
-        self.type = 'Widget'
-
-        # Widget Setting
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Widget'
 
+        # Widget Setting
         # State
         self.state = dict()
         self.state['NORMAL'] = True
