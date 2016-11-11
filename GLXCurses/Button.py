@@ -33,8 +33,8 @@ class Button(Widget):
         self.set_can_default(1)
         # Internal Widget Setting
         self.text = None
-        self.text_x = 0
-        self.text_y = 0
+        self.label_x = 0
+        self.label_y = 0
 
 
         # Interface
@@ -44,12 +44,8 @@ class Button(Widget):
 
 
         # Size management
-        self.preferred_height = 1
-        if self.get_text():
-            self.preferred_width = 0
-            self.preferred_width += len(self.get_text())
-            self.preferred_width += len(self.button_border)
-            self.preferred_width += self.get_spacing() * 2
+        self.set_preferred_height(1)
+        self.update_preferred_sizes()
 
         # Make a Style heritage attribute
         if self.style.attribute:
@@ -64,13 +60,25 @@ class Button(Widget):
         # PositionType: CENTER, TOP, BOTTOM
         self.position_type = 'CENTER'
 
-
-
         self.states_list = None
+
+    def update_preferred_sizes(self):
+        if self.get_text():
+            self.preferred_width = 0
+            self.preferred_width += len(self.get_text())
+            self.preferred_width += len(self.button_border)
+            self.preferred_width += self.get_spacing() * 2
 
     def draw(self):
         parent_height, parent_width = self.get_parent().get_size()
         parent_y, parent_x = self.get_parent().get_origin()
+
+        min_size_width = (self.get_spacing() * 2) + 1
+        min_size_height = (self.get_spacing() * 2) + 1
+        height_ok = self.get_parent().get_height() >= min_size_height
+        width_ok = self.get_parent().get_width() >= min_size_width
+        if not height_ok or not width_ok:
+            return
 
         drawing_area = self.get_parent().widget.subwin(
             parent_height - (self.get_spacing() * 2),
@@ -84,13 +92,6 @@ class Button(Widget):
     def draw_in_area(self, drawing_area):
         self.set_widget(drawing_area)
 
-        min_size_width = (self.get_spacing() * 2) + 3
-        min_size_height = (self.get_spacing() * 2)
-        height_ok = self.get_height() >= min_size_height
-        width_ok = self.get_width() >= min_size_width
-        if not height_ok or not width_ok:
-            return
-
         # Many Thing's
         # Check if the text can be display
         text_have_necessary_width = (self.get_preferred_width() >= 1)
@@ -101,41 +102,43 @@ class Button(Widget):
         if self.get_text():
 
             # Check if the text can be display
-            text_have_necessary_width = (self.preferred_width >= 1)
-            text_have_necessary_height = (self.preferred_height >= 1)
+            text_have_necessary_width = (self.get_preferred_width() >= 1)
+            text_have_necessary_height = (self.get_preferred_height() >= 1)
             if text_have_necessary_width and text_have_necessary_height:
-                self.text_x = self.check_horizontal_justification()
-                self.text_y = self.check_horizontal_position_type()
                 self.draw_button()
 
     def check_horizontal_justification(self):
         # Check Justification
-        self.text_x = 0
+        self.label_x = 0
         if self.get_justify() == 'CENTER':
-            self.text_x = (self.get_width() / 2) - (self.get_preferred_width() / 2) - (len(self.button_border) / 2)
+            self.label_x = (self.get_width() / 2) - (self.get_preferred_width() / 2)
         elif self.get_justify() == 'LEFT':
-            self.text_x = 0 + self.get_spacing()
+            self.label_x = 0 + self.get_spacing()
         elif self.get_justify() == 'RIGHT':
-            self.text_x = self.get_width() - self.get_preferred_width()
+            self.label_x = self.get_width() - self.get_preferred_width()
 
-        return self.text_x
+        return self.label_x
 
     def check_horizontal_position_type(self):
         # PositionType: CENTER, TOP, BOTTOM
-        self.text_y = 0
+        self.label_y = 0
         if self.get_position_type() == 'CENTER':
             if (self.get_height() / 2) > self.get_preferred_height():
-                self.text_y = (self.get_height() / 2) - self.get_preferred_height()
+                self.label_y = (self.get_height() / 2) - self.get_preferred_height()
             else:
-                self.text_y = 0
+                self.label_y = 0
         elif self.get_position_type() == 'TOP':
-            self.text_y = 0
+            self.label_y = 0
         elif self.get_position_type() == 'BOTTOM':
-            self.text_y = self.get_height() - self.get_preferred_height()
+            self.label_y = self.get_height() - self.get_preferred_height()
 
-        return self.text_y
+        return self.label_y
 
     def draw_button(self):
+        self.check_selected()
+        self.update_preferred_sizes()
+        self.label_x = self.check_horizontal_justification()
+        self.label_y = self.check_horizontal_position_type()
         if self.state['PRELIGHT']:
             self.prelight()
         elif self.state['NORMAL']:
@@ -147,8 +150,8 @@ class Button(Widget):
     def normal(self):
             # Interface management
             self.get_widget().addstr(
-                self.text_y,
-                self.text_x,
+                self.label_y,
+                self.label_x,
                 self.button_border[:len(self.button_border) / 2],
                 curses.color_pair(self.get_style().get_curses_pairs(
                     fg=self.get_attr('base', 'STATE_NORMAL'),
@@ -158,8 +161,8 @@ class Button(Widget):
             # Draw the Horizontal Button with Justification and PositionType
             message_to_display = resize_text(self.get_text(), self.get_width(), '~')
             self.get_widget().addstr(
-                self.text_y,
-                self.text_x + len(self.button_border) / 2,
+                self.label_y,
+                self.label_x + len(self.button_border) / 2,
                 message_to_display,
                 curses.color_pair(self.get_style().get_curses_pairs(
                     fg=self.get_attr('text', 'STATE_NORMAL'),
@@ -168,8 +171,8 @@ class Button(Widget):
             )
             # Interface management
             self.get_widget().insstr(
-                self.text_y,
-                self.text_x + (len(self.button_border) / 2) + len(message_to_display),
+                self.label_y,
+                self.label_x + (len(self.button_border) / 2) + len(message_to_display),
                 self.button_border[-len(self.button_border) / 2:],
                 curses.color_pair(self.get_style().get_curses_pairs(
                     fg=self.get_attr('base', 'STATE_NORMAL'),
@@ -180,8 +183,8 @@ class Button(Widget):
     def prelight(self):
         # Interface management
         self.get_widget().addstr(
-            self.text_y,
-            self.text_x,
+            self.label_y,
+            self.label_x,
             self.button_border[:len(self.button_border) / 2],
             curses.color_pair(self.get_style().get_curses_pairs(
                 fg=self.get_attr('dark', 'STATE_NORMAL'),
@@ -191,8 +194,8 @@ class Button(Widget):
         # Draw the Horizontal Button with Justification and PositionType
         message_to_display = resize_text(self.get_text(), self.get_width(), '~')
         self.get_widget().addstr(
-            self.text_y,
-            self.text_x + len(self.button_border) / 2,
+            self.label_y,
+            self.label_x + len(self.button_border) / 2,
             message_to_display,
             curses.color_pair(self.get_style().get_curses_pairs(
                 fg=self.get_attr('dark', 'STATE_NORMAL'),
@@ -201,8 +204,8 @@ class Button(Widget):
         )
         # Interface management
         self.get_widget().insstr(
-            self.text_y,
-            self.text_x + (len(self.button_border) / 2) + len(message_to_display),
+            self.label_y,
+            self.label_x + (len(self.button_border) / 2) + len(message_to_display),
             self.button_border[-len(self.button_border) / 2:],
             curses.color_pair(self.get_style().get_curses_pairs(
                 fg=self.get_attr('dark', 'STATE_NORMAL'),
@@ -229,8 +232,8 @@ class Button(Widget):
             # Read the mouse event information's
             (mouse_event_id, x, y, z, event) = mouse_event
             # Be sure we select really the Button
-            if self.text_y + self.get_preferred_height() >= y >= self.text_y + self.get_preferred_height():
-                if self.text_x <= x <= self.text_x + len(self.button_border) + len(self.get_text()) - 1:
+            if self.label_y + self.get_preferred_height() >= y >= self.label_y + self.get_preferred_height():
+                if self.label_x <= x <= self.label_x + len(self.button_border) + len(self.get_text()) - 1:
                     # We are sure about the button have been clicked
                     #
                     self.states_list = '; '.join(state_string for state, state_string

@@ -48,6 +48,13 @@ class Label(Widget):
         parent_height, parent_width = self.get_parent().get_size()
         parent_y, parent_x = self.get_parent().get_origin()
 
+        min_size_width = (self.get_spacing() * 2) + 1
+        min_size_height = (self.get_spacing() * 2) + 1
+        height_ok = self.get_parent().get_height() >= min_size_height
+        width_ok = self.get_parent().get_width() >= min_size_width
+        if not height_ok or not width_ok:
+            return
+
         drawing_area = self.get_parent().get_widget().subwin(
                 parent_height - (self.get_spacing() * 2),
                 parent_width - (self.get_spacing() * 2),

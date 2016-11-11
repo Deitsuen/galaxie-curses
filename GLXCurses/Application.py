@@ -65,6 +65,8 @@ class Application(object):
         # Fake Widget
         self.widget = None
         self.spacing = 0
+        self.height = 0
+        self.width = 0
         self.parent_spacing = 0
         self.parent_style = self.style
 
@@ -112,6 +114,18 @@ class Application(object):
     def get_screen(self):
         return self.screen
 
+    def get_height(self):
+        return self.height
+
+    def set_height(self, height):
+        self.height = height
+
+    def get_width(self):
+        return self.width
+
+    def set_width(self, width):
+        self.width = width
+
     # GLXCApplication function
     def set_name(self, name):
         self.name = name
@@ -129,6 +143,7 @@ class Application(object):
         # set_parent is the set_parent from Widget common method
         # information's will be transmit by it method
         glxc_window.set_parent(self)
+
 
         # Display only one active window
         id_max = len(self.windows.keys())
@@ -210,11 +225,12 @@ class Application(object):
         interface_elements_height += status_bar_height
         interface_elements_height += tool_bar_height
 
-        height = parent_height - interface_elements_height
-        width = 0
+        self.set_height(parent_height - interface_elements_height)
+        self.set_width(0)
         begin_y = menu_bar_height
         begin_x = 0
-        self.widget = self.screen.subwin(height, width, begin_y, begin_x)
+        self.widget = self.screen.subwin(self.get_height(), self.get_width(), begin_y, begin_x)
+
 
     def getch(self):
         return self.screen.getch()
