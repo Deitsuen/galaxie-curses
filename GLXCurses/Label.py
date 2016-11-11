@@ -30,7 +30,9 @@ class Label(Widget):
 
         # Internal Widget Setting
         self.text = ''
-
+        self.text_x = 0
+        self.text_y = 0
+        
         # Size management
         self.set_preferred_height(1)
         self.update_preferred_sizes()
@@ -82,72 +84,71 @@ class Label(Widget):
 
                     # Orientation: HORIZONTAL, VERTICAL
                     if self.get_orientation() == 'HORIZONTAL':
-                        x_text = self.check_horizontal_justification()
-                        y_text = self.check_horizontal_position_type()
-                        self.draw_horizontal(x_text, y_text)
+                        self.text_x = self.check_horizontal_justification()
+                        self.text_y = self.check_horizontal_position_type()
+                        self.draw_horizontal_label()
 
                     elif self.get_orientation() == 'VERTICAL':
-                        x_text = self.check_vertical_justification()
-                        y_text = self.check_vertical_position_type()
-                        self.draw_vertical(x_text, y_text)
+                        self.text_x = self.check_vertical_justification()
+                        self.text_y = self.check_vertical_position_type()
+                        self.draw_vertical_label()
 
     def check_vertical_justification(self):
         # Check Justification
         if self.get_justify().upper() == 'CENTER':
-            x_text = (self.get_width() / 2) - (self.get_preferred_width() / 2)
+            self.text_x = (self.get_width() / 2) - (self.get_preferred_width() / 2)
         elif self.get_justify().upper() == 'LEFT':
-            x_text = 0 + self.get_spacing()
+            self.text_x = 0 + self.get_spacing()
         elif self.get_justify().upper() == 'RIGHT':
-            x_text = self.get_width() - self.get_preferred_width() - self.get_spacing()
+            self.text_x = self.get_width() - self.get_preferred_width() - self.get_spacing()
 
-        return x_text
+        return self.text_x
 
     def check_vertical_position_type(self):
         # PositionType: CENTER, TOP, BOTTOM
-        y_text = 0
+        self.text_y = 0
         if self.get_position_type().upper() == 'CENTER':
-            # y_text = (widget_height / 2) - (self.preferred_height / 2)
             if (self.get_height() / 2) > (self.preferred_height / 2):
-                y_text = (self.get_height() / 2) - (self.get_preferred_height() / 2)
+                self.text_y = (self.get_height() / 2) - (self.get_preferred_height() / 2)
             else:
-                y_text = 0
+                self.text_y = 0
         elif self.get_position_type().upper() == 'TOP':
-            y_text = 0
+            self.text_y = 0
         elif self.get_position_type().upper() == 'BOTTOM':
-            y_text = self.get_height() - self.get_preferred_height()
-        return y_text
+            self.text_y = self.get_height() - self.get_preferred_height()
+        return self.text_y
 
     def check_horizontal_justification(self):
         # Check Justification
-        x_text = 0
+        self.text_x = 0
         if self.get_justify() == 'CENTER':
-            x_text = (self.get_width() / 2) - (self.get_preferred_width() / 2)
+            self.text_x = (self.get_width() / 2) - (self.get_preferred_width() / 2)
         elif self.get_justify() == 'LEFT':
-            x_text = 0 + self.get_spacing()
+            self.text_x = 0 + self.get_spacing()
         elif self.get_justify() == 'RIGHT':
-            x_text = self.get_width() - self.get_preferred_width()
+            self.text_x = self.get_width() - self.get_preferred_width()
 
-        return x_text
+        return self.text_x
 
     def check_horizontal_position_type(self):
         # PositionType: CENTER, TOP, BOTTOM
-        y_text = 0
+        self.text_y = 0
         if self.get_position_type().upper() == 'CENTER':
             if (self.get_height() / 2) > self.get_preferred_height():
-                y_text = (self.get_height() / 2) - self.get_preferred_height()
+                self.text_y = (self.get_height() / 2) - self.get_preferred_height()
             else:
-                y_text = 0
+                self.text_y = 0
         elif self.get_position_type() == 'TOP':
-            y_text = 0
+            self.text_y = 0
         elif self.get_position_type() == 'BOTTOM':
-            y_text = self.get_height() - self.get_preferred_height()
+            self.text_y = self.get_height() - self.get_preferred_height()
 
-        return y_text
+        return self.text_y
 
     def get_attr(self, elem, state):
         return self.attribute[elem][state]
 
-    def draw_vertical(self, x_text, y_text):
+    def draw_vertical_label(self):
         # Draw the Vertical Label with Justification and PositionType
         if self.get_height() - 1 > 2:
             message_to_display = resize_text(self.get_text(), self.get_height() - (self.get_spacing() * 2), '~')
@@ -155,8 +156,8 @@ class Label(Widget):
                 increment = 0
                 for CHAR in message_to_display:
                     self.get_widget().insch(
-                        y_text + increment,
-                        x_text,
+                        self.text_y + increment,
+                        self.text_x,
                         CHAR,
                         curses.color_pair(self.get_style().get_curses_pairs(
                             fg=self.get_attr('text', 'STATE_NORMAL'),
@@ -165,12 +166,12 @@ class Label(Widget):
                     )
                     increment += 1
 
-    def draw_horizontal(self, x_text, y_text):
+    def draw_horizontal_label(self):
         # Draw the Horizontal Label with Justification and PositionType
         message_to_display = resize_text(self.get_text(), self.get_width() - (self.get_spacing() * 2), '~')
         self.get_widget().addstr(
-            y_text,
-            x_text,
+            self.text_y,
+            self.text_x,
             message_to_display,
             curses.color_pair(self.get_style().get_curses_pairs(
                 fg=self.get_attr('text', 'STATE_NORMAL'),
@@ -198,12 +199,6 @@ class Label(Widget):
     # Internal widget functions
     def set_text(self, text):
         self.text = text
-        if self.get_orientation() == 'HORIZONTAL':
-            self.set_preferred_width(len(self.get_text()) + (self.get_spacing() * 2))
-            self.set_preferred_height(1)
-        elif self.get_orientation() == 'VERTICAL':
-            self.set_preferred_width(1)
-            self.set_preferred_height(len(self.get_text()) + (self.get_spacing() * 2))
         self.update_preferred_sizes()
 
     def get_text(self):
@@ -220,12 +215,6 @@ class Label(Widget):
     # Orientation: HORIZONTAL, VERTICAL
     def set_orientation(self, orientation):
         self.orientation = str(orientation).upper()
-        if self.get_orientation() == 'HORIZONTAL':
-            self.set_preferred_width(len(self.get_text()) + (self.get_spacing() * 2))
-            self.set_preferred_height(1)
-        elif self.get_orientation() == 'VERTICAL':
-            self.set_preferred_width(1)
-            self.set_preferred_height(len(self.get_text()) + (self.get_spacing() * 2))
         self.update_preferred_sizes()
 
     def get_orientation(self):
