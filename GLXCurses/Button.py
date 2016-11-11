@@ -139,15 +139,51 @@ class Button(Widget):
         self.update_preferred_sizes()
         self.label_x = self.check_horizontal_justification()
         self.label_y = self.check_horizontal_position_type()
-        if self.state['PRELIGHT']:
-            self.prelight()
+
+        if not self.get_sensitive():
+            self.draw_button_insensitive()
+        elif self.state['PRELIGHT']:
+            self.draw_button_prelight()
         elif self.state['NORMAL']:
-            self.normal()
+            self.draw_button_normal()
 
     def get_attr(self, elem, state):
         return self.attribute[elem][state]
 
-    def normal(self):
+    def draw_button_insensitive(self):
+            # Interface management
+            self.get_widget().addstr(
+                self.label_y,
+                self.label_x,
+                self.button_border[:len(self.button_border) / 2],
+                curses.color_pair(self.get_style().get_curses_pairs(
+                    fg=self.get_attr('bg', 'STATE_NORMAL'),
+                    bg=self.get_attr('bg', 'STATE_NORMAL'))
+                ) | curses.A_BOLD
+            )
+            # Draw the Horizontal Button with Justification and PositionType
+            message_to_display = resize_text(self.get_text(), self.get_width(), '~')
+            self.get_widget().addstr(
+                self.label_y,
+                self.label_x + len(self.button_border) / 2,
+                message_to_display,
+                curses.color_pair(self.get_style().get_curses_pairs(
+                    fg=self.get_attr('bg', 'STATE_NORMAL'),
+                    bg=self.get_attr('bg', 'STATE_NORMAL'))
+                ) | curses.A_BOLD
+            )
+            # Interface management
+            self.get_widget().insstr(
+                self.label_y,
+                self.label_x + (len(self.button_border) / 2) + len(message_to_display),
+                self.button_border[-len(self.button_border) / 2:],
+                curses.color_pair(self.get_style().get_curses_pairs(
+                    fg=self.get_attr('bg', 'STATE_NORMAL'),
+                    bg=self.get_attr('bg', 'STATE_NORMAL'))
+                ) | curses.A_BOLD
+            )
+
+    def draw_button_normal(self):
             # Interface management
             self.get_widget().addstr(
                 self.label_y,
@@ -180,7 +216,7 @@ class Button(Widget):
                 )
             )
 
-    def prelight(self):
+    def draw_button_prelight(self):
         # Interface management
         self.get_widget().addstr(
             self.label_y,
@@ -244,7 +280,7 @@ class Button(Widget):
                         self.check_selected()
                         self.state['PRELIGHT'] = True
                         self.state['NORMAL'] = False
-                    if event == curses.BUTTON1_RELEASED:
+                    elif event == curses.BUTTON1_RELEASED:
                         self.state['PRELIGHT'] = False
                         self.state['NORMAL'] = True
                     return 1

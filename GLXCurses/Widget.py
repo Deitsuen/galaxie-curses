@@ -374,7 +374,10 @@ class Widget(object):
         return self.height_request
 
     def set_is_focus(self, boolean):
-        self.is_focus = bool(boolean)
+        if not self.get_sensitive():
+            self.is_focus = False
+        else:
+            self.is_focus = bool(boolean)
 
     def get_is_focus(self):
         return self.is_focus
@@ -400,6 +403,8 @@ class Widget(object):
     def set_sensitive(self, boolean):
         self.sensitive = bool(boolean)
         self.state['INSENSITIVE'] = bool(boolean)
+        if not self.get_sensitive():
+            self.set_is_focus(0)
 
     def get_sensitive(self):
         return self.sensitive
