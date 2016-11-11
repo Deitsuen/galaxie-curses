@@ -31,6 +31,10 @@ class Label(Widget):
         # Internal Widget Setting
         self.text = ''
 
+        # Size management
+        self.set_preferred_height(1)
+        self.update_preferred_sizes()
+
         # Make a Style heritage attribute
         if self.style.attribute:
             self.attribute = self.style.attribute
@@ -174,6 +178,21 @@ class Label(Widget):
             )
         )
 
+    def update_preferred_sizes(self):
+        if self.get_text():
+            if self.get_orientation() == 'VERTICAL':
+                self.preferred_width = 1
+                self.preferred_height = 0
+                self.preferred_height += len(self.get_text())
+                self.preferred_height += self.get_spacing() * 2
+            else:
+                self.preferred_height = 1
+                self.preferred_width = 0
+                self.preferred_width += len(self.get_text())
+                self.preferred_width += self.get_spacing() * 2
+        else:
+            return
+
     # Internal widget functions
     def set_text(self, text):
         self.text = text
@@ -183,6 +202,7 @@ class Label(Widget):
         elif self.get_orientation() == 'VERTICAL':
             self.set_preferred_width(1)
             self.set_preferred_height(len(self.get_text()) + (self.get_spacing() * 2))
+        self.update_preferred_sizes()
 
     def get_text(self):
         return self.text
@@ -190,6 +210,7 @@ class Label(Widget):
     # Justification: LEFT, RIGHT, CENTER
     def set_justify(self, justification):
         self.justification = str(justification).upper()
+        self.update_preferred_sizes()
 
     def get_justify(self):
         return self.justification
@@ -203,6 +224,7 @@ class Label(Widget):
         elif self.get_orientation() == 'VERTICAL':
             self.set_preferred_width(1)
             self.set_preferred_height(len(self.get_text()) + (self.get_spacing() * 2))
+        self.update_preferred_sizes()
 
     def get_orientation(self):
         return self.orientation
@@ -210,6 +232,7 @@ class Label(Widget):
     # PositionType: CENTER, TOP, BOTTOM
     def set_position_type(self, position_type):
         self.position_type = str(position_type).upper()
+        self.update_preferred_sizes()
 
     def get_position_type(self):
         return self.position_type
