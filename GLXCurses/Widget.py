@@ -55,7 +55,8 @@ class Widget(object):
         # Widget
         self.widget = None
         self.widget_spacing = 0
-        self.widget_decorated = 0
+        self.widget_decorated = None
+        self.sensitive = None
 
         # Widget Parent
         self.parent = None
@@ -112,6 +113,18 @@ class Widget(object):
         else:
             return self
 
+    # Sets the sensitivity of a widget.
+    # A widget is sensitive if the user can interact with it. Insensitive widgets are “grayed out”
+    # and the user can’t interact with them.
+    def set_sensitive(self, boolean_sensitive):
+        if boolean_sensitive > 0:
+            self.sensitive = True
+        else:
+            self.sensitive = None
+
+    def get_sensitive(self):
+        return self.sensitive
+
     # Parent Management
     def get_parent_size(self):
         return self.get_parent().widget.getmaxyx()
@@ -119,6 +132,9 @@ class Widget(object):
     def get_parent_origin(self):
         return self.parent.widget.getbegyx()
 
+    # This function is useful only when implementing subclasses of GtkContainer.
+    # Sets the container as the parent of widget , and takes care of some details such as updating the state
+    # and style of the child to reflect its new location. The opposite function is gtk_widget_unparent().
     def _set_parent(self, parent):
         self.parent = parent
 
@@ -138,7 +154,7 @@ class Widget(object):
         #self.parent_height, self.parent_width = self.get_parent().get_size()
         #self.parent_y, self.parent_x = self.get_parent().get_origin()
 
-    def un_parent(self):
+    def unparent(self):
         self.parent = None
         self.set_style(self.style_backup)
 

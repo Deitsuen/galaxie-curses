@@ -65,7 +65,7 @@ class Button(Widget):
         self.state['SELECTED'] = False
         self.state['INSENSITIVE'] = False
 
-        self.states = None
+        self.states_list = None
 
     def draw(self):
         parent_height, parent_width = self.get_parent().get_size()
@@ -292,27 +292,28 @@ class Button(Widget):
             return 0
 
     def mouse_event(self, mouse_event):
-        # Read the mouse event information's
-        (mouse_event_id, x, y, z, event) = mouse_event
-        # Be sure we select really the Button
-        if self.text_y + self.get_preferred_height() >= y >= self.text_y + self.get_preferred_height():
-            if self.text_x <= x <= self.text_x + len(self.button_border) + len(self.get_text()) - 1:
-                # We are sure about the button have been clicked
-                #
-                self.states = '; '.join(state_string for state, state_string
-                                        in self.curses_mouse_states.viewitems()
-                                        if event & state)
-                if event == curses.BUTTON1_PRESSED:
-                    self.state['SELECTED'] = True
-                    self.state['PRELIGHT'] = True
-                    self.state['NORMAL'] = False
-                if event == curses.BUTTON1_RELEASED:
-                    self.state['PRELIGHT'] = False
-                    self.state['NORMAL'] = True
-                return 1
-        else:
-            self.state['PRELIGHT'] = False
-            return 0
+        if self.get_sensitive():
+            # Read the mouse event information's
+            (mouse_event_id, x, y, z, event) = mouse_event
+            # Be sure we select really the Button
+            if self.text_y + self.get_preferred_height() >= y >= self.text_y + self.get_preferred_height():
+                if self.text_x <= x <= self.text_x + len(self.button_border) + len(self.get_text()) - 1:
+                    # We are sure about the button have been clicked
+                    #
+                    self.states_list = '; '.join(state_string for state, state_string
+                                                 in self.curses_mouse_states.viewitems()
+                                                 if event & state)
+                    if event == curses.BUTTON1_PRESSED:
+                        self.state['SELECTED'] = True
+                        self.state['PRELIGHT'] = True
+                        self.state['NORMAL'] = False
+                    if event == curses.BUTTON1_RELEASED:
+                        self.state['PRELIGHT'] = False
+                        self.state['NORMAL'] = True
+                    return 1
+            else:
+                self.state['PRELIGHT'] = False
+                return 0
 
     # Internal widget functions
     def set_text(self, text):
@@ -337,5 +338,5 @@ class Button(Widget):
         return self.position_type
 
     # State
-    def get_states(self):
-        return self.states
+    def get_states_list(self):
+        return self.states_list

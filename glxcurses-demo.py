@@ -328,7 +328,7 @@ if __name__ == '__main__':
         if input_event == curses.KEY_MOUSE:
             if Button1.mouse_event(curses.getmouse()):
 
-                message_text += Button1.get_states()
+                message_text += Button1.get_states_list()
                 message_text += ' '
                 statusbar.push(message_text)
                 app.refresh()
