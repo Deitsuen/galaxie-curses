@@ -27,16 +27,22 @@ class Button(Widget):
     def __init__(self):
         Widget.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
-        self.set_name('Button')
 
+        self.set_name('Button')
+        self.set_can_focus(1)
+        self.set_can_default(1)
         # Internal Widget Setting
         self.text = None
         self.text_x = 0
         self.text_y = 0
 
+
         # Interface
-        self.button_border = '[  ]'
-        self.button_border_selected = '[<  >]'
+        self.interface = '[  ]'
+        self.interface_selected = '[<  >]'
+        self.button_border = self.interface
+
+
         # Size management
         self.preferred_height = 1
         if self.get_text():
@@ -139,40 +145,6 @@ class Button(Widget):
         return self.attribute[elem][state]
 
     def normal(self):
-        # Interface management
-        if self.state['SELECTED']:
-            # Interface management
-            self.get_widget().addstr(
-                self.text_y,
-                self.text_x,
-                self.button_border_selected[:len(self.button_border_selected) / 2],
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('base', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_NORMAL'))
-                )
-            )
-            # Draw the Horizontal Button with Justification and PositionType
-            message_to_display = resize_text(self.get_text(), self.get_width(), '~')
-            self.get_widget().addstr(
-                self.text_y,
-                self.text_x + len(self.button_border_selected) / 2,
-                message_to_display,
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('text', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_NORMAL'))
-                )
-            )
-            # Interface management
-            self.get_widget().insstr(
-                self.text_y,
-                self.text_x + (len(self.button_border_selected) / 2) + len(message_to_display),
-                self.button_border_selected[-len(self.button_border_selected) / 2:],
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('base', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_NORMAL'))
-                )
-            )
-        else:
             # Interface management
             self.get_widget().addstr(
                 self.text_y,
@@ -207,70 +179,36 @@ class Button(Widget):
 
     def prelight(self):
         # Interface management
-        if self.state['SELECTED']:
-            # Interface management
-            self.get_widget().addstr(
-                self.text_y,
-                self.text_x,
-                self.button_border_selected[:len(self.button_border_selected) / 2],
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('dark', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_PRELIGHT'))
-                )
+        self.get_widget().addstr(
+            self.text_y,
+            self.text_x,
+            self.button_border[:len(self.button_border) / 2],
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('dark', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_PRELIGHT'))
             )
-            # Draw the Horizontal Button with Justification and PositionType
-            message_to_display = resize_text(self.get_text(), self.get_width(), '~')
-            self.get_widget().addstr(
-                self.text_y,
-                self.text_x + len(self.button_border_selected) / 2,
-                message_to_display,
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('dark', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_PRELIGHT'))
-                )
+        )
+        # Draw the Horizontal Button with Justification and PositionType
+        message_to_display = resize_text(self.get_text(), self.get_width(), '~')
+        self.get_widget().addstr(
+            self.text_y,
+            self.text_x + len(self.button_border) / 2,
+            message_to_display,
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('dark', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_PRELIGHT'))
             )
-            # Interface management
-            self.get_widget().insstr(
-                self.text_y,
-                self.text_x + (len(self.button_border_selected) / 2) + len(message_to_display),
-                self.button_border_selected[-len(self.button_border_selected) / 2:],
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('dark', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_PRELIGHT'))
-                )
+        )
+        # Interface management
+        self.get_widget().insstr(
+            self.text_y,
+            self.text_x + (len(self.button_border) / 2) + len(message_to_display),
+            self.button_border[-len(self.button_border) / 2:],
+            curses.color_pair(self.get_style().get_curses_pairs(
+                fg=self.get_attr('dark', 'STATE_NORMAL'),
+                bg=self.get_attr('bg', 'STATE_PRELIGHT'))
             )
-        else:
-            # Interface management
-            self.get_widget().addstr(
-                self.text_y,
-                self.text_x,
-                self.button_border[:len(self.button_border) / 2],
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('dark', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_PRELIGHT'))
-                )
-            )
-            # Draw the Horizontal Button with Justification and PositionType
-            message_to_display = resize_text(self.get_text(), self.get_width(), '~')
-            self.get_widget().addstr(
-                self.text_y,
-                self.text_x + len(self.button_border) / 2,
-                message_to_display,
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('dark', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_PRELIGHT'))
-                )
-            )
-            # Interface management
-            self.get_widget().insstr(
-                self.text_y,
-                self.text_x + (len(self.button_border) / 2) + len(message_to_display),
-                self.button_border[-len(self.button_border) / 2:],
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('dark', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_PRELIGHT'))
-                )
-            )
+        )
 
     def enter(self):
         pass
@@ -299,7 +237,8 @@ class Button(Widget):
                                                  in self.curses_mouse_states.viewitems()
                                                  if event & state)
                     if event == curses.BUTTON1_PRESSED:
-                        self.state['SELECTED'] = True
+                        self.set_is_focus(1)
+                        self.check_selected()
                         self.state['PRELIGHT'] = True
                         self.state['NORMAL'] = False
                     if event == curses.BUTTON1_RELEASED:
@@ -335,3 +274,13 @@ class Button(Widget):
     # State
     def get_states_list(self):
         return self.states_list
+
+    def check_selected(self):
+        if self.get_can_focus():
+            if self.get_is_focus():
+                self.button_border = self.interface_selected
+            else:
+                self.button_border = self.interface
+        else:
+            pass
+

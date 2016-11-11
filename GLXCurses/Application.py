@@ -14,7 +14,7 @@ class Application(object):
     def __init__(self):
         try:
             # Initialize curses
-            os.environ["NCURSES_NO_UTF8_ACS"] = "1"
+            os.environ["NCURSES_NO_UTF8_ACS"] = '1'
             self.screen = curses.initscr()
 
             # Turn off echoing of keys, and enter cbreak mode,
