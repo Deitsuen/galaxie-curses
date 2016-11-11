@@ -410,8 +410,8 @@ class Widget(object):
     def get_style(self):
         return self.style
 
-    def set_tooltip_text(self, string):
-        self.tooltip_text = string
+    def set_tooltip_text(self, text):
+        self.tooltip_text = text
 
     def get_tooltip_text(self):
         return self.tooltip_text

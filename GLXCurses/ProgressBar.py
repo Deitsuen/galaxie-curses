@@ -26,7 +26,7 @@ def resize_text(text, max_width, separator='~'):
 class ProgressBar(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.name = 'ProgressBar'
+        self.set_name('ProgressBar')
 
         # Make a Style heritage attribute
         if self.get_style().attribute:

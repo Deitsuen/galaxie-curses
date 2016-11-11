@@ -27,7 +27,7 @@ class Button(Widget):
     def __init__(self):
         Widget.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
-        self.name = 'Button'
+        self.set_name('Button')
 
         # Internal Widget Setting
         self.text = None

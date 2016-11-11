@@ -19,7 +19,7 @@ def resize_text(text, max_width, separator='~'):
 class Window(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.name = 'Window'
+        self.set_name('Window')
 
         # Internal Widget Setting
         self.title = None

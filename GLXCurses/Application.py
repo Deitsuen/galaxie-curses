@@ -12,8 +12,6 @@ __author__ = 'Tuux'
 
 class Application(object):
     def __init__(self):
-        self.name = 'Application'
-
         try:
             # Initialize curses
             os.environ["NCURSES_NO_UTF8_ACS"] = "1"
@@ -58,7 +56,7 @@ class Application(object):
         self.toolbar = None
 
         # Store Variables
-        self.name = None
+        self.name = 'Application'
         self.windows_id_number = None
         self.active_window_id = None
         self.windows = {}

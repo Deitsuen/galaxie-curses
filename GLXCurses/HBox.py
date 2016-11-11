@@ -12,7 +12,7 @@ __author__ = 'Tuux'
 class HBox(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.name = 'HBox'
+        self.set_name('HBox')
 
         self.glxcwidget_to_display = list()
         self.h_widget_list = list()

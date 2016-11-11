@@ -13,7 +13,7 @@ class VBox(Widget):
     def __init__(self):
         Widget.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
-        self.name = 'VBox'
+        self.set_name('VBox')
 
         self.widget_to_display = list()
         self.h_widget_list = list()

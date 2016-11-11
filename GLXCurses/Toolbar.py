@@ -11,7 +11,7 @@ __author__ = 'Tuux'
 class Toolbar(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.name = 'Toolbar'
+        self.set_name('Toolbar')
 
         # Widget setting
         if self.style.attribute:

@@ -11,7 +11,7 @@ __author__ = 'Tuux'
 class MenuModel(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.name = 'MenuModel'
+        self.set_name('MenuModel')
 
         # Internal Widget Setting
         self.app_info_label = None
