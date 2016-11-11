@@ -58,12 +58,7 @@ class Button(Widget):
         # PositionType: CENTER, TOP, BOTTOM
         self.position_type = 'CENTER'
 
-        # State
-        self.state['NORMAL'] = True
-        self.state['ACTIVE'] = False
-        self.state['PRELIGHT'] = False
-        self.state['SELECTED'] = False
-        self.state['INSENSITIVE'] = False
+
 
         self.states_list = None
 

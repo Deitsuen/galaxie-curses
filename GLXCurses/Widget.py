@@ -59,15 +59,8 @@ class Widget(object):
         self.sensitive = None
 
         # Widget Parent
-        self.parent = None
         self.screen = None
         self.attribute = None
-
-        # Each Widget come with it own Style by default
-        # It can receive parent Style() or a new Style() during a set_parent() / un_parent() call
-        # GLXCApplication is a special case where it have no parent, it role is to impose it own style to each Widget
-        self.style = Style()
-        self.style_backup = None
 
         # Size Management
         self.screen_height = 0
@@ -87,6 +80,77 @@ class Widget(object):
         self.natural_height = 0
         self.natural_width = 0
         self.preferred_size = 0
+
+        # Property
+        # If True, the application will paint directly on the widget
+        self.app_paintable = False
+
+        # If True, the widget can be the default widget
+        self.can_default = False
+
+        # If True, the widget can accept the input focus
+        self.can_focus = False
+
+        # If True, the widget is part of a composite widget
+        self.composite_child = False
+
+        # If True, the widget is double buffered
+        self.double_buffered = False
+
+        # The event mask that decides what kind of Event this widget gets.
+        self.events = None
+
+        # The mask that decides what kind of extension events this widget gets.
+        self.extension_events = None
+
+        # If True, the widget is the default widget
+        self.has_default = False
+
+        # If True, the widget has the input focus
+        self.has_focus = False
+
+        # A value of True indicates that widget can have a tooltip
+        self.has_tooltip = False
+
+        # The height request of the widget, or -1 if natural request should be used.
+        self.height_request = -1
+
+        # If True, the widget is the focus widget within the toplevel
+        self.is_focus = False
+
+        # The name of the widget
+        self.name = None
+
+        # If True show_all() should not affect this widget
+        self.no_show_all = False
+
+        # The parent widget of this widget. Must be a Container widget.
+        self.parent = None
+
+        # If True, the widget will receive the default action when it is focused.
+        self.receives_default = None
+
+        # If True, the widget responds to input
+        self.sensitive = False
+
+        # The style of the widget, which contains information about how it will look (colors etc).
+        # Each Widget come with it own Style by default
+        # It can receive parent Style() or a new Style() during a set_parent() / un_parent() call
+        # GLXCApplication is a special case where it have no parent, it role is to impose it own style to each Widget
+        self.style = Style()
+        self.style_backup = None
+
+        # Sets the text of tooltip to be the given string.
+        self.tooltip_text = None
+
+        # If True, the widget is visible
+        self.visible = True
+
+        # The width request of the widget, or -1 if natural request should be used.
+        self.width_request = -1
+
+        # The widget's window if realized, None otherwise.
+        self.window = None
 
     # Common Widget mandatory
 
@@ -112,18 +176,6 @@ class Widget(object):
             return self.parent
         else:
             return self
-
-    # Sets the sensitivity of a widget.
-    # A widget is sensitive if the user can interact with it. Insensitive widgets are “grayed out”
-    # and the user can’t interact with them.
-    def set_sensitive(self, boolean_sensitive):
-        if boolean_sensitive > 0:
-            self.sensitive = True
-        else:
-            self.sensitive = None
-
-    def get_sensitive(self):
-        return self.sensitive
 
     # Parent Management
     def get_parent_size(self):
@@ -201,19 +253,7 @@ class Widget(object):
         self.draw()
         self.parent.draw()
 
-    def set_name(self, name):
-        self.name = name
-
-    def get_name(self):
-        return self.name
-
     # Name management use for GLXCStyle color's
-    def set_style(self, style):
-        self.style = style
-
-    def get_style(self):
-        return self.style
-
     def override_color(self, color):
         self.style.attribute['text']['STATE_NORMAL'] = str(color).upper()
 
@@ -262,7 +302,131 @@ class Widget(object):
     def get_y(self):
         return self.y
 
+    # State
+    # Sets the sensitivity of a widget.
+    # A widget is sensitive if the user can interact with it. Insensitive widgets are “grayed out”
+    # and the user can’t interact with them.
+    # Properties
+    def set_app_paintable(self, boolean):
+        self.app_paintable = bool(boolean)
 
+    def get_app_paintable(self):
+        return self.app_paintable
 
+    def set_can_default(self, boolean):
+        self.can_default = bool(boolean)
 
+    def get_can_default(self):
+        return self.can_default
 
+    def set_can_focus(self, boolean):
+        self.can_focus = bool(boolean)
+
+    def get_can_focus(self):
+        return self.can_focus
+
+    def set_composite_child(self, boolean):
+        self.composite_child = bool(boolean)
+
+    def get_composite_child(self):
+        return self.composite_child
+
+    def set_double_buffered(self, boolean):
+        self.double_buffered = bool(boolean)
+
+    def get_double_buffered(self):
+        return self.double_buffered
+
+    def set_events(self, events):
+        self.events = events
+
+    def get_events(self):
+        return self.events
+
+    def set_extension_events(self, extension_events):
+        self.extension_events = extension_events
+
+    def get_extension_events(self):
+        return self.extension_events
+
+    def set_has_default(self, boolean):
+        self.has_default = bool(boolean)
+
+    def get_has_default(self):
+        return self.has_default
+
+    def set_has_focus(self, boolean):
+        self.has_focus = bool(boolean)
+
+    def get_has_focus(self):
+        return self.has_focus
+
+    def set_has_tooltip(self, boolean):
+        self.has_tooltip = bool(boolean)
+
+    def get_has_tooltip(self):
+        return self.has_tooltip
+
+    def set_height_request(self, height):
+        self.height_request = height
+
+    def get_height_request(self):
+        return self.height_request
+
+    def set_is_focus(self, boolean):
+        self.is_focus = bool(boolean)
+
+    def get_is_focus(self):
+        return self.is_focus
+
+    def set_name(self, string):
+        self.name = string
+
+    def get_name(self):
+        return self.name
+
+    def set_no_show_all(self, boolean):
+        self.no_show_all = bool(boolean)
+
+    def get_no_show_all(self):
+        return self.no_show_all
+
+    def set_receives_default(self, boolean):
+        self.receives_default = bool(boolean)
+
+    def get_receives_default(self):
+        return self.receives_default
+
+    def set_sensitive(self, boolean):
+        self.sensitive = bool(boolean)
+        self.state['INSENSITIVE'] = bool(boolean)
+
+    def get_sensitive(self):
+        return self.sensitive
+
+    def set_style(self, style):
+        self.style = style
+
+    def get_style(self):
+        return self.style
+
+    def set_tooltip_text(self, string):
+        self.tooltip_text = string
+
+    def get_tooltip_text(self):
+        return self.tooltip_text
+
+    def set_visible(self, boolean):
+        self.visible = bool(boolean)
+
+    def get_visible(self):
+        return self.visible
+
+    def set_width_request(self, width):
+        self.width_request = width
+
+    def get_width_request(self):
+        return self.width_request
+
+    def get_window(self):
+        return self.window

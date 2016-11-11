@@ -245,11 +245,11 @@ if __name__ == '__main__':
     toolbar = GLXCurses.Toolbar()
     toolbar.button_list = [
         'Help',
-        'Options',
-        '',
-        '',
-        '',
-        '',
+        'Normal',
+        'Active',
+        'Prelight',
+        'Selected',
+        'Insensitive',
         '',
         '',
         'Menu',
@@ -336,6 +336,28 @@ if __name__ == '__main__':
             # if Button1.key_pressed(input_event):
             #     pass
 
+        # ToolBar
+        if input_event == curses.KEY_F1:
+            app.refresh()
+        if input_event == curses.KEY_F2:
+            app.refresh()
+        if input_event == curses.KEY_F3:
+            app.refresh()
+        if input_event == curses.KEY_F4:
+            app.refresh()
+        if input_event == curses.KEY_F5:
+            app.refresh()
+        if input_event == curses.KEY_F6:
+            Button1.set_sensitive(not Button1.get_sensitive())
+            app.refresh()
+        if input_event == curses.KEY_F7:
+            app.refresh()
+        if input_event == curses.KEY_F8:
+            app.refresh()
+        if input_event == curses.KEY_F9:
+            app.refresh()
+        if input_event == curses.KEY_F10:
+            break
         if input_event == ord('q'):
             break
         count += 1
