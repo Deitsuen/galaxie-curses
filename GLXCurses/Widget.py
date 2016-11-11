@@ -251,7 +251,7 @@ class Widget(object):
 
     def show_all(self):
         self.draw()
-        self.parent.draw()
+        self.get_parent().draw()
 
     # Name management use for GLXCStyle color's
     def override_color(self, color):
@@ -294,7 +294,7 @@ class Widget(object):
         return self.preferred_size
 
     def get_size(self):
-        return self.widget.getmaxyx()
+        return self.get_widget().getmaxyx()
 
     def get_x(self):
         return self.x

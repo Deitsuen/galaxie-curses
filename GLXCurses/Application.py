@@ -186,19 +186,19 @@ class Application(object):
 
         # Check main widget to display
         if self.widget:
-            self.windows[self.active_window_id].refresh()
+            self.windows[self.active_window_id].draw()
 
         if self.menubar:
-            self.menubar.refresh()
+            self.menubar.draw()
 
         if self.statusbar:
-            self.statusbar.refresh()
+            self.statusbar.draw()
 
         if self.toolbar:
-            self.toolbar.refresh()
+            self.toolbar.draw()
 
         # After have redraw everything it's time to refresh the screen
-        self.get_parent().refresh()
+        self.get_screen().refresh()
 
     def draw(self):
         parent_height, parent_width = self.screen.getmaxyx()

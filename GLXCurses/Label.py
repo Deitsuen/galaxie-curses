@@ -90,11 +90,11 @@ class Label(Widget):
     def check_vertical_justification(self):
         # Check Justification
         if self.get_justify().upper() == 'CENTER':
-            x_text = (self.get_width() - self.get_spacing() / 2) - (self.preferred_width - self.get_spacing() / 2)
+            x_text = (self.get_width() / 2) - (self.get_preferred_width() / 2)
         elif self.get_justify().upper() == 'LEFT':
             x_text = 0 + self.get_spacing()
         elif self.get_justify().upper() == 'RIGHT':
-            x_text = self.get_width() - self.preferred_width - self.get_spacing()
+            x_text = self.get_width() - self.get_preferred_width() - self.get_spacing()
 
         return x_text
 
@@ -104,7 +104,7 @@ class Label(Widget):
         if self.get_position_type().upper() == 'CENTER':
             # y_text = (widget_height / 2) - (self.preferred_height / 2)
             if (self.get_height() / 2) > (self.preferred_height / 2):
-                y_text = (self.get_height() / 2) - (self.preferred_height / 2)
+                y_text = (self.get_height() / 2) - (self.get_preferred_height() / 2)
             else:
                 y_text = 0
         elif self.get_position_type().upper() == 'TOP':

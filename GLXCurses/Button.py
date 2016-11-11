@@ -58,6 +58,8 @@ class Button(Widget):
         # PositionType: CENTER, TOP, BOTTOM
         self.position_type = 'CENTER'
 
+        # Sensitive
+        self.set_sensitive(1)
         self.states_list = None
 
     def update_preferred_sizes(self):

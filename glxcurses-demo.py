@@ -361,7 +361,6 @@ if __name__ == '__main__':
             break
         elif input_event == ord('q'):
             break
-
         count += 1
 
     # App Close
