@@ -180,16 +180,18 @@ class Label(Widget):
 
     def update_preferred_sizes(self):
         if self.get_text():
+            preferred_width = 0
+            preferred_height = 0
             if self.get_orientation() == 'VERTICAL':
-                self.preferred_width = 1
-                self.preferred_height = 0
-                self.preferred_height += len(self.get_text())
-                self.preferred_height += self.get_spacing() * 2
+                preferred_width = 1
+                preferred_height += len(self.get_text())
+                preferred_height += self.get_spacing() * 2
             else:
-                self.preferred_height = 1
-                self.preferred_width = 0
-                self.preferred_width += len(self.get_text())
-                self.preferred_width += self.get_spacing() * 2
+                preferred_height = 1
+                preferred_width += len(self.get_text())
+                preferred_width += self.get_spacing() * 2
+            self.set_preferred_height(preferred_height)
+            self.set_preferred_width(preferred_width)
         else:
             return
 
