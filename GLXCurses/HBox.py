@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import curses
 from GLXCurses.Widget import Widget
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -82,8 +81,6 @@ class HBox(Widget):
 
                     # Drawing
                     glxc_widget.draw_widget_in_area(sub_win)
-
-
 
     def add(self, widget):
         widget.set_parent(self)

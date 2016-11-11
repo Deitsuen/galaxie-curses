@@ -70,8 +70,6 @@ class Application(object):
         self.parent_spacing = 0
         self.parent_style = self.style
 
-
-
     # Common Widget mandatory
 
     # Screen
@@ -144,7 +142,6 @@ class Application(object):
         # information's will be transmit by it method
         glxc_window.set_parent(self)
 
-
         # Display only one active window
         id_max = len(self.windows.keys())
         if id_max == 0:
@@ -158,7 +155,7 @@ class Application(object):
         glxc_menu_bar.set_parent(self)
         self.menubar = glxc_menu_bar
 
-    def remove_menubar(self, glxc_menu_bar):
+    def remove_menubar(self):
         self.menubar = None
 
     def add_statusbar(self, glx_statusbar):
@@ -231,7 +228,6 @@ class Application(object):
         begin_x = 0
         self.widget = self.screen.subwin(self.get_height(), self.get_width(), begin_y, begin_x)
 
-
     def getch(self):
         return self.screen.getch()
 
@@ -240,4 +236,3 @@ class Application(object):
         self.screen.keypad(False)
         curses.echo()
         curses.endwin()
-

@@ -227,6 +227,3 @@ class Label(Widget):
 
     def get_position_type(self):
         return self.position_type
-
-
-
