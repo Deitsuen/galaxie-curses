@@ -172,8 +172,5 @@ class Style(object):
         else:
             return 0
 
-    def get_style(self):
-        return self.style
-
     def get_attr(self, elem, state):
         return self.attribute[elem][state]

@@ -23,33 +23,33 @@ class Widget(object):
         self.state['INSENSITIVE'] = False
 
         self.curses_mouse_states = {
-            curses.BUTTON1_PRESSED: 'Button 1 Pressed',
-            curses.BUTTON1_RELEASED: 'Button 1 Released',
-            curses.BUTTON1_CLICKED: 'Button 1 Clicked',
-            curses.BUTTON1_DOUBLE_CLICKED: 'Button 1 Double-Clicked',
-            curses.BUTTON1_TRIPLE_CLICKED: 'Button 1 Triple-Clicked',
+            curses.BUTTON1_PRESSED: 'BUTTON1_PRESS',
+            curses.BUTTON1_RELEASED: 'BUTTON1_RELEASED',
+            curses.BUTTON1_CLICKED: 'BUTTON1_CLICKED',
+            curses.BUTTON1_DOUBLE_CLICKED: 'BUTTON1_DOUBLE_CLICKED',
+            curses.BUTTON1_TRIPLE_CLICKED: 'BUTTON1_TRIPLE_CLICKED',
 
-            curses.BUTTON2_PRESSED: 'Button 2 Pressed',
-            curses.BUTTON2_RELEASED: 'Button 2 Released',
-            curses.BUTTON2_CLICKED: 'Button 2 Clicked',
-            curses.BUTTON2_DOUBLE_CLICKED: 'Button 2 Double-Clicked',
-            curses.BUTTON2_TRIPLE_CLICKED: 'Button 2 Triple-Clicked',
+            curses.BUTTON2_PRESSED: 'BUTTON2_PRESSED',
+            curses.BUTTON2_RELEASED: 'BUTTON2_RELEASED',
+            curses.BUTTON2_CLICKED: 'BUTTON2_CLICKED',
+            curses.BUTTON2_DOUBLE_CLICKED: 'BUTTON2_DOUBLE_CLICKED',
+            curses.BUTTON2_TRIPLE_CLICKED: 'BUTTON2_TRIPLE_CLICKED',
 
-            curses.BUTTON3_PRESSED: 'Button 3 Pressed',
-            curses.BUTTON3_RELEASED: 'Button 3 Released',
-            curses.BUTTON3_CLICKED: 'Button 3 Clicked',
-            curses.BUTTON3_DOUBLE_CLICKED: 'Button 3 Double-Clicked',
-            curses.BUTTON3_TRIPLE_CLICKED: 'Button 3 Triple-Clicked',
+            curses.BUTTON3_PRESSED: 'BUTTON3_PRESSED',
+            curses.BUTTON3_RELEASED: 'BUTTON3_RELEASED',
+            curses.BUTTON3_CLICKED: 'BUTTON3_CLICKED',
+            curses.BUTTON3_DOUBLE_CLICKED: 'BUTTON3_DOUBLE_CLICKED',
+            curses.BUTTON3_TRIPLE_CLICKED: 'BUTTON3_TRIPLE_CLICKED',
 
-            curses.BUTTON4_PRESSED: 'Button 4 Pressed',
-            curses.BUTTON4_RELEASED: 'Button 4 Released',
-            curses.BUTTON4_CLICKED: 'Button 4 Clicked',
-            curses.BUTTON4_DOUBLE_CLICKED: 'Button 4 Double-Clicked',
-            curses.BUTTON4_TRIPLE_CLICKED: 'Button 4 Triple-Clicked',
+            curses.BUTTON4_PRESSED: 'BUTTON4_PRESSED',
+            curses.BUTTON4_RELEASED: 'BUTTON4_RELEASED',
+            curses.BUTTON4_CLICKED: 'BUTTON4_CLICKED',
+            curses.BUTTON4_DOUBLE_CLICKED: 'BUTTON4_DOUBLE_CLICKED',
+            curses.BUTTON4_TRIPLE_CLICKED: 'BUTTON4_TRIPLE_CLICKED',
 
-            curses.BUTTON_SHIFT: 'Button Shift',
-            curses.BUTTON_CTRL: 'Button Ctrl',
-            curses.BUTTON_ALT: 'Button Alt'
+            curses.BUTTON_SHIFT: 'BUTTON_SHIFT',
+            curses.BUTTON_CTRL: 'BUTTON_CTRL',
+            curses.BUTTON_ALT: 'BUTTON_ALT'
         }
 
         # Widget
@@ -255,10 +255,10 @@ class Widget(object):
 
     # Name management use for GLXCStyle color's
     def override_color(self, color):
-        self.style.attribute['text']['STATE_NORMAL'] = str(color).upper()
+        self.get_style().attribute['text']['STATE_NORMAL'] = str(color).upper()
 
     def override_background_color(self, color):
-        self.style.attribute['bg']['STATE_NORMAL'] = str(color).upper()
+        self.get_style().attribute['bg']['STATE_NORMAL'] = str(color).upper()
 
     # Size management
     def get_width(self):
