@@ -174,3 +174,6 @@ class Style(object):
 
     def get_style(self):
         return self.style
+
+    def get_attr(self, elem, state):
+        return self.attribute[elem][state]

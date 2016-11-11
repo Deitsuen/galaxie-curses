@@ -38,9 +38,9 @@ class HBox(Widget):
             parent_x + self.get_spacing()
         )
 
-        self.draw_in_area(drawing_area)
+        self.draw_widget_in_area(drawing_area)
 
-    def draw_in_area(self, drawing_area):
+    def draw_widget_in_area(self, drawing_area):
         self.set_widget(drawing_area)
 
         # Check widgets to display
@@ -78,10 +78,12 @@ class HBox(Widget):
                             self.get_x() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2)
                         )
 
-                    # Drawing
-                    glxc_widget.draw_in_area(sub_win)
-
                     index += 1
+
+                    # Drawing
+                    glxc_widget.draw_widget_in_area(sub_win)
+
+
 
     def add(self, widget):
         widget.set_parent(self)

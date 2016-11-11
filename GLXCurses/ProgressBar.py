@@ -91,12 +91,12 @@ class ProgressBar(Widget):
             parent_x + self.get_spacing()
         )
 
-        self.draw_in_area(drawing_area)
+        self.draw_widget_in_area(drawing_area)
 
     def get_attr(self, elem, state):
         return self.attribute[elem][state]
 
-    def draw_in_area(self, drawing_area):
+    def draw_widget_in_area(self, drawing_area):
         self.set_widget(drawing_area)
 
         height_ok = self.get_height() > self.get_preferred_height()

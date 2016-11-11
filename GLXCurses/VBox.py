@@ -31,9 +31,9 @@ class VBox(Widget):
             parent_y + self.get_spacing(),
             parent_x + self.get_spacing()
         )
-        self.draw_in_area(drawing_area)
+        self.draw_widget_in_area(drawing_area)
 
-    def draw_in_area(self, drawing_area):
+    def draw_widget_in_area(self, drawing_area):
         self.set_widget(drawing_area)
 
         # Check widgets to display
@@ -44,36 +44,36 @@ class VBox(Widget):
             if self.widget_to_display:
                 devised_box_size = int(self.get_height() / len(self.widget_to_display))
                 index = 0
-                for widget in self.widget_to_display:
+                for glxc_widget in self.widget_to_display:
                     # Check if that the frist element
                     if index == 0:
                         sub_win = self.get_widget().subwin(
-                                devised_box_size - widget.get_spacing(),
-                                self.get_width() - widget.get_spacing() * 2,
-                                self.get_y() + widget.get_spacing(),
-                                self.get_x() + widget.get_spacing()
+                                devised_box_size - glxc_widget.get_spacing(),
+                                self.get_width() - glxc_widget.get_spacing() * 2,
+                                self.get_y() + glxc_widget.get_spacing(),
+                                self.get_x() + glxc_widget.get_spacing()
                         )
                     # Normal
                     elif 1 <= index <= len(self.widget_to_display)-2:
                         sub_win = self.get_widget().subwin(
-                                devised_box_size - (widget.get_spacing() / 2),
-                                self.get_width() - widget.get_spacing() * 2,
-                                self.get_y() + (devised_box_size * index) + (widget.get_spacing() / 2),
-                                self.get_x() + widget.get_spacing()
+                                devised_box_size - (glxc_widget.get_spacing() / 2),
+                                self.get_width() - glxc_widget.get_spacing() * 2,
+                                self.get_y() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2),
+                                self.get_x() + glxc_widget.get_spacing()
                         )
                     # Check if that the last element
                     else:
                         sub_win = self.get_widget().subwin(
                                 0,
-                                self.get_width() - widget.get_spacing() * 2,
-                                self.get_y() + (devised_box_size * index) + (widget.get_spacing() / 2),
-                                self.get_x() + widget.get_spacing()
+                                self.get_width() - glxc_widget.get_spacing() * 2,
+                                self.get_y() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2),
+                                self.get_x() + glxc_widget.get_spacing()
                         )
 
                     index += 1
 
-                    # Finally
-                    widget.draw_in_area(sub_win)
+                    # Drawing
+                    glxc_widget.draw_widget_in_area(sub_win)
 
     def add(self, widget):
         widget.set_parent(self)

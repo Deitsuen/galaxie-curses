@@ -49,10 +49,10 @@ class Window(Widget):
                 parent_x + self.get_spacing()
         )
 
-        self.draw_in_area(drawing_area)
+        self.draw_widget_in_area(drawing_area)
 
     # GLXC Window Functions
-    def draw_in_area(self, drawing_area):
+    def draw_widget_in_area(self, drawing_area):
         self.set_widget(drawing_area)
 
         # Apply the Background color

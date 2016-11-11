@@ -62,9 +62,9 @@ class Label(Widget):
                 parent_x + self.get_spacing()
         )
 
-        self.draw_in_area(drawing_area)
+        self.draw_widget_in_area(drawing_area)
 
-    def draw_in_area(self, drawing_area):
+    def draw_widget_in_area(self, drawing_area):
         self.set_widget(drawing_area)
 
         min_size_width = (self.get_spacing() * 2) + self.get_spacing()

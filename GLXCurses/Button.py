@@ -87,9 +87,9 @@ class Button(Widget):
             parent_x + self.get_spacing()
         )
 
-        self.draw_in_area(drawing_area)
+        self.draw_widget_in_area(drawing_area)
 
-    def draw_in_area(self, drawing_area):
+    def draw_widget_in_area(self, drawing_area):
         self.set_widget(drawing_area)
 
         # Many Thing's
@@ -143,27 +143,24 @@ class Button(Widget):
         if not self.get_sensitive():
             self.draw_the_good_button(
                 color=curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('bg', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_NORMAL'))
+                    fg=self.get_style().get_attr('bg', 'STATE_NORMAL'),
+                    bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
                 ) | curses.A_BOLD
             )
         elif self.state['PRELIGHT']:
             self.draw_the_good_button(
                 color=curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('dark', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_PRELIGHT'))
+                    fg=self.get_style().get_attr('dark', 'STATE_NORMAL'),
+                    bg=self.get_style().get_attr('bg', 'STATE_PRELIGHT'))
                 )
             )
         elif self.state['NORMAL']:
             self.draw_the_good_button(
                 color=curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('text', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_NORMAL'))
+                    fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
+                    bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
                 )
             )
-
-    def get_attr(self, elem, state):
-        return self.attribute[elem][state]
 
     def draw_the_good_button(self, color):
         # Interface management
