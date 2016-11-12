@@ -11,3 +11,4 @@ from GLXCurses.Label import Label
 from GLXCurses.ProgressBar import ProgressBar
 from GLXCurses.Button import Button
 from GLXCurses.HSeparator import HSeparator
+from GLXCurses.VSeparator import VSeparator

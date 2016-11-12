@@ -54,7 +54,7 @@ class Widget(object):
 
         # Widget
         self.widget = None
-        self.widget_spacing = 0
+        self.spacing = 0
         self.widget_decorated = None
         self.sensitive = None
 
@@ -232,10 +232,10 @@ class Widget(object):
         return self.widget.getbegyx()
 
     def set_spacing(self, spacing):
-        self.widget_spacing = spacing
+        self.spacing = spacing
 
     def get_spacing(self):
-        return self.widget_spacing
+        return self.spacing
 
     def set_decorated(self, decorated):
         self.widget_decorated = decorated

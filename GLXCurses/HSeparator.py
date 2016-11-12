@@ -15,7 +15,6 @@ class HSeparator(Widget):
         self.set_name('HSeparator')
 
         # Internal Widget Setting
-        self.text = ''
         self.hseperator_x = 0
         self.hseperator_y = 0
         
@@ -59,7 +58,7 @@ class HSeparator(Widget):
     def check_horizontal_position_type(self):
         # PositionType: CENTER, TOP, BOTTOM
         self.hseperator_y = 0
-        if self.get_position_type().upper() == 'CENTER':
+        if self.get_position_type() == 'CENTER':
             if (self.get_height() / 2) > self.get_preferred_height():
                 self.hseperator_y = (self.get_height() / 2) - self.get_preferred_height()
             else:

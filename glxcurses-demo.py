@@ -190,13 +190,15 @@ if __name__ == '__main__':
     Button1 = GLXCurses.Button()
     Button1.set_text('Button1')
 
-    HSepartor = GLXCurses.HSeparator()
-
+    VSepartor = GLXCurses.HSeparator()
+    VSepartor.set_spacing(0)
+    VSepartor.set_position_type('center')
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
     vbox1.subwins_spacing = 0
     vbox1.add(Button1)
-    vbox1.add(HSepartor)
+    vbox1.add(VSepartor)
+
     vbox1.add(win_for_progressbar)
     vbox1.add(win6)
 
