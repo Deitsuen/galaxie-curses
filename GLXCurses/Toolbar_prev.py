@@ -59,7 +59,7 @@ class Toolbar(Widget):
         self.draw_in_area(drawing_area, item_list, labels_end_coord, screen_width)
 
     def draw_in_area(self, drawing_area, item_list, labels_end_coord, screen_width):
-        self.set_widget(drawing_area)
+        self.set_curses_subwin(drawing_area)
         widget_height, widget_width = self.get_curses_subwin().getmaxyx()
         widget_width -= 1
         req_button_number = len(item_list) + 1
@@ -220,7 +220,7 @@ class ToolbarButton(Widget):
         self.draw_widget_in_area(drawing_area)
 
     def draw_widget_in_area(self, drawing_area):
-        self.set_widget(drawing_area)
+        self.set_curses_subwin(drawing_area)
 
         # Many Thing's
         # Check if the text can be display

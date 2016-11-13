@@ -28,7 +28,7 @@ class MenuModel(Widget):
             0,
             0
         )
-        self.set_widget(drawing_area)
+        self.set_curses_subwin(drawing_area)
 
         if curses.has_colors():
             self.get_curses_subwin().addstr(

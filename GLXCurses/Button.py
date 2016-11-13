@@ -111,7 +111,7 @@ class Button(Widget):
         if not height_ok or not width_ok:
             return
 
-        drawing_area = self.get_parent().widget.subwin(
+        drawing_area = self.get_parent().get_curses_subwin().subwin(
             parent_height - (self.get_spacing() * 2),
             parent_width - (self.get_spacing() * 2),
             parent_y + self.get_spacing(),
@@ -121,7 +121,7 @@ class Button(Widget):
         self.draw_widget_in_area(drawing_area)
 
     def draw_widget_in_area(self, drawing_area):
-        self.set_widget(drawing_area)
+        self.set_curses_subwin(drawing_area)
 
         # Many Thing's
         # Check if the text can be display

@@ -34,7 +34,7 @@ class Statusbar(Widget):
             self.get_screen_height() - line_from_max_screen_height,
             self.get_screen_x()
         )
-        self.set_widget(drawing_area)
+        self.set_curses_subwin(drawing_area)
 
         # Clean the entire line
         if curses.has_colors():

@@ -34,7 +34,7 @@ class VBox(Widget):
         self.draw_widget_in_area(drawing_area)
 
     def draw_widget_in_area(self, drawing_area):
-        self.set_widget(drawing_area)
+        self.set_curses_subwin(drawing_area)
 
         # Check widgets to display
         is_large_enough = (self.get_width() >= self.number_of_widget_to_display + 1)

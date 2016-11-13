@@ -71,7 +71,7 @@ class Label(Widget):
         self.draw_widget_in_area(drawing_area)
 
     def draw_widget_in_area(self, drawing_area):
-        self.set_widget(drawing_area)
+        self.set_curses_subwin(drawing_area)
 
         min_size_width = (self.get_spacing() * 2) + self.get_spacing()
         min_size_height = (self.get_spacing() * 2)

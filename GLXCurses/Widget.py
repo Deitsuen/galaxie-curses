@@ -151,7 +151,7 @@ class Widget(object):
         return self.get_parent().curses_subwin.getmaxyx()
 
     def get_parent_origin(self):
-        return self.parent.widget.getbegyx()
+        return self.get_parent().curses_subwin.getbegyx()
 
     # This function is useful only when implementing subclasses of GtkContainer.
     # Sets the container as the parent of curses_subwin , and takes care of some details such as updating the state
@@ -192,13 +192,13 @@ class Widget(object):
     def get_curses_subwin(self):
         return self.curses_subwin
 
-    def set_widget(self, widget):
-        self.curses_subwin = widget
+    def set_curses_subwin(self, subwin):
+        self.curses_subwin = subwin
         self.height, self.width = self.get_size()
         self.y, self.x = self.get_origin()
 
     def get_origin(self):
-        return self.curses_subwin.getbegyx()
+        return self.get_curses_subwin().getbegyx()
 
     def set_spacing(self, spacing):
         self.spacing = spacing

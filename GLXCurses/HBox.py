@@ -40,7 +40,7 @@ class HBox(Widget):
         self.draw_widget_in_area(drawing_area)
 
     def draw_widget_in_area(self, drawing_area):
-        self.set_widget(drawing_area)
+        self.set_curses_subwin(drawing_area)
 
         # Check widgets to display
         is_large_enough = (self.get_width() >= self.number_of_widget_to_display + 1)
@@ -81,7 +81,8 @@ class HBox(Widget):
 
                     # Drawing
                     glxc_widget.draw_widget_in_area(sub_win)
+                    #glxc_widget.curses_subwin = sub_win
 
     def add(self, widget):
-        #widget.set_parent(self)
+        widget.set_parent(self)
         self.glxcwidget_to_display.append(widget)

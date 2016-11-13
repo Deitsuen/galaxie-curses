@@ -97,7 +97,7 @@ class ProgressBar(Widget):
         return self.attribute[elem][state]
 
     def draw_widget_in_area(self, drawing_area):
-        self.set_widget(drawing_area)
+        self.set_curses_subwin(drawing_area)
 
         height_ok = self.get_height() > self.get_preferred_height()
         width_ok = self.get_width() > self.get_preferred_width()
