@@ -45,6 +45,37 @@ class Button(Widget):
         self.set_preferred_height(1)
         self.update_preferred_sizes()
 
+        # States
+        self.curses_mouse_states = {
+            curses.BUTTON1_PRESSED: 'BUTTON1_PRESS',
+            curses.BUTTON1_RELEASED: 'BUTTON1_RELEASED',
+            curses.BUTTON1_CLICKED: 'BUTTON1_CLICKED',
+            curses.BUTTON1_DOUBLE_CLICKED: 'BUTTON1_DOUBLE_CLICKED',
+            curses.BUTTON1_TRIPLE_CLICKED: 'BUTTON1_TRIPLE_CLICKED',
+
+            curses.BUTTON2_PRESSED: 'BUTTON2_PRESSED',
+            curses.BUTTON2_RELEASED: 'BUTTON2_RELEASED',
+            curses.BUTTON2_CLICKED: 'BUTTON2_CLICKED',
+            curses.BUTTON2_DOUBLE_CLICKED: 'BUTTON2_DOUBLE_CLICKED',
+            curses.BUTTON2_TRIPLE_CLICKED: 'BUTTON2_TRIPLE_CLICKED',
+
+            curses.BUTTON3_PRESSED: 'BUTTON3_PRESSED',
+            curses.BUTTON3_RELEASED: 'BUTTON3_RELEASED',
+            curses.BUTTON3_CLICKED: 'BUTTON3_CLICKED',
+            curses.BUTTON3_DOUBLE_CLICKED: 'BUTTON3_DOUBLE_CLICKED',
+            curses.BUTTON3_TRIPLE_CLICKED: 'BUTTON3_TRIPLE_CLICKED',
+
+            curses.BUTTON4_PRESSED: 'BUTTON4_PRESSED',
+            curses.BUTTON4_RELEASED: 'BUTTON4_RELEASED',
+            curses.BUTTON4_CLICKED: 'BUTTON4_CLICKED',
+            curses.BUTTON4_DOUBLE_CLICKED: 'BUTTON4_DOUBLE_CLICKED',
+            curses.BUTTON4_TRIPLE_CLICKED: 'BUTTON4_TRIPLE_CLICKED',
+
+            curses.BUTTON_SHIFT: 'BUTTON_SHIFT',
+            curses.BUTTON_CTRL: 'BUTTON_CTRL',
+            curses.BUTTON_ALT: 'BUTTON_ALT'
+        }
+
         # Make a Style heritage attribute
         if self.style.attribute:
             self.attribute = self.style.attribute
@@ -164,7 +195,7 @@ class Button(Widget):
 
     def draw_the_good_button(self, color):
         # Interface management
-        self.get_widget().addstr(
+        self.get_curses_subwin().addstr(
             self.label_y,
             self.label_x,
             self.button_border[:len(self.button_border) / 2],
@@ -172,14 +203,14 @@ class Button(Widget):
         )
         # Draw the Horizontal Button with Justification and PositionType
         message_to_display = resize_text(self.get_text(), self.get_width(), '~')
-        self.get_widget().addstr(
+        self.get_curses_subwin().addstr(
             self.label_y,
             self.label_x + len(self.button_border) / 2,
             message_to_display,
             color
         )
         # Interface management
-        self.get_widget().insstr(
+        self.get_curses_subwin().insstr(
             self.label_y,
             self.label_x + (len(self.button_border) / 2) + len(message_to_display),
             self.button_border[-len(self.button_border) / 2:],
@@ -205,8 +236,8 @@ class Button(Widget):
             # Read the mouse event information's
             (mouse_event_id, x, y, z, event) = mouse_event
             # Be sure we select really the Button
-            if self.label_y + self.get_preferred_height() >= y >= self.label_y + self.get_preferred_height():
-                if self.label_x <= x <= self.label_x + len(self.button_border) + len(self.get_text()) - 1:
+            if self.label_y >= y > self.label_y - self.get_preferred_height():
+                if (self.label_x - 1) + len(self.button_border) + len(self.get_text()) >= x > (self.label_x - 1):
                     # We are sure about the button have been clicked
                     #
                     self.states_list = '; '.join(state_string for state, state_string
@@ -275,7 +306,7 @@ class Button(Widget):
                 self.state['PRELIGHT'] = False
                 return 0
 
-    # Internal widget functions
+    # Internal curses_subwin functions
     def set_text(self, text):
         self.text = text
         self.preferred_width = len(self.get_text())

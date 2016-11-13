@@ -31,10 +31,10 @@ class Style(object):
 
         # GLXCurses States Type:
         # STATE_NORMAL      - The state during normal operation.
-        # STATE_ACTIVE      - The widget is currently active, such as a button pushed
-        # STATE_PRELIGHT    - The mouse pointer is over the widget.
-        # STATE_SELECTED    - The widget is selected
-        # STATE_INSENSITIVE - The widget is disabled
+        # STATE_ACTIVE      - The curses_subwin is currently active, such as a button pushed
+        # STATE_PRELIGHT    - The mouse pointer is over the curses_subwin.
+        # STATE_SELECTED    - The curses_subwin is selected
+        # STATE_INSENSITIVE - The curses_subwin is disabled
 
         # GLXCurses Attributes Type:
         # text_fg     - a list of 5 foreground colors - one for each state
@@ -47,7 +47,7 @@ class Style(object):
         # black  - the black color
         # white  - the white color
 
-        # An color to be used for the foreground colors in each widget state.
+        # An color to be used for the foreground colors in each curses_subwin state.
         style['text_fg'] = dict()
         style['text_fg']['STATE_NORMAL'] = 'WHITE'
         style['text_fg']['STATE_ACTIVE'] = 'WHITE'
@@ -55,7 +55,7 @@ class Style(object):
         style['text_fg']['STATE_SELECTED'] = 'WHITE'
         style['text_fg']['STATE_INSENSITIVE'] = 'WHITE'
 
-        # An color to be used for the background colors in each widget state.
+        # An color to be used for the background colors in each curses_subwin state.
         style['bg'] = dict()
         style['bg']['STATE_NORMAL'] = 'BLUE'
         style['bg']['STATE_ACTIVE'] = 'BLUE'
@@ -63,7 +63,7 @@ class Style(object):
         style['bg']['STATE_SELECTED'] = 'CYAN'
         style['bg']['STATE_INSENSITIVE'] = 'BLUE'
 
-        # An color to be used for the light colors in each widget state.
+        # An color to be used for the light colors in each curses_subwin state.
         # The light colors are slightly lighter than the bg colors and used for creating shadows.
         style['light'] = dict()
         style['light']['STATE_NORMAL'] = 'CYAN'
@@ -72,7 +72,7 @@ class Style(object):
         style['light']['STATE_SELECTED'] = 'WHITE'
         style['light']['STATE_INSENSITIVE'] = 'WHITE'
 
-        # An color to be used for the dark colors in each widget state.
+        # An color to be used for the dark colors in each curses_subwin state.
         # The dark colors are slightly darker than the bg colors and used for creating shadows.
         style['dark'] = dict()
         style['dark']['STATE_NORMAL'] = 'BLACK'
@@ -81,7 +81,7 @@ class Style(object):
         style['dark']['STATE_SELECTED'] = 'BLACK'
         style['dark']['STATE_INSENSITIVE'] = 'BLACK'
 
-        # An color to be used for the mid colors (between light and dark) in each widget state
+        # An color to be used for the mid colors (between light and dark) in each curses_subwin state
         style['mid'] = dict()
         style['mid']['STATE_NORMAL'] = 'YELLOW'
         style['mid']['STATE_ACTIVE'] = 'WHITE'
@@ -89,7 +89,7 @@ class Style(object):
         style['mid']['STATE_SELECTED'] = 'WHITE'
         style['mid']['STATE_INSENSITIVE'] = 'WHITE'
 
-        # An color to be used for the text colors in each widget state.
+        # An color to be used for the text colors in each curses_subwin state.
         style['text'] = dict()
         style['text']['STATE_NORMAL'] = 'WHITE'
         style['text']['STATE_ACTIVE'] = 'WHITE'
@@ -97,7 +97,7 @@ class Style(object):
         style['text']['STATE_SELECTED'] = 'WHITE'
         style['text']['STATE_INSENSITIVE'] = 'WHITE'
 
-        # An color to be used for the base colors in each widget state.
+        # An color to be used for the base colors in each curses_subwin state.
         style['base'] = dict()
         style['base']['STATE_NORMAL'] = 'WHITE'
         style['base']['STATE_ACTIVE'] = 'WHITE'

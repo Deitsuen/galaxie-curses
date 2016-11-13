@@ -61,7 +61,7 @@ class Label(Widget):
         if not height_ok or not width_ok:
             return
 
-        drawing_area = self.get_parent().get_widget().subwin(
+        drawing_area = self.get_parent().get_curses_subwin().subwin(
                 parent_height - (self.get_spacing() * 2),
                 parent_width - (self.get_spacing() * 2),
                 parent_y + self.get_spacing(),
@@ -155,7 +155,7 @@ class Label(Widget):
             if len(message_to_display) > 2:
                 increment = 0
                 for CHAR in message_to_display:
-                    self.get_widget().insch(
+                    self.get_curses_subwin().insch(
                         self.text_y + increment,
                         self.text_x,
                         CHAR,
@@ -169,7 +169,7 @@ class Label(Widget):
     def draw_horizontal_label(self):
         # Draw the Horizontal Label with Justification and PositionType
         message_to_display = resize_text(self.get_text(), self.get_width() - (self.get_spacing() * 2), '~')
-        self.get_widget().addstr(
+        self.get_curses_subwin().addstr(
             self.text_y,
             self.text_x,
             message_to_display,
@@ -196,7 +196,7 @@ class Label(Widget):
         else:
             return
 
-    # Internal widget functions
+    # Internal curses_subwin functions
     def set_text(self, text):
         self.text = text
         self.update_preferred_sizes()

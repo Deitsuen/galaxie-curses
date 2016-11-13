@@ -30,7 +30,7 @@ class HBox(Widget):
         if not height_ok or not width_ok:
             return
 
-        drawing_area = self.get_parent().get_widget().subwin(
+        drawing_area = self.get_parent().get_curses_subwin().subwin(
             parent_height - (self.get_spacing() * 2),
             parent_width - (self.get_spacing() * 2),
             parent_y + self.get_spacing(),
@@ -54,7 +54,7 @@ class HBox(Widget):
 
                     # Check if that the first element
                     if index == 0:
-                        sub_win = self.get_widget().subwin(
+                        sub_win = self.get_curses_subwin().subwin(
                             self.get_height() - glxc_widget.get_spacing() * 2,
                             devised_box_size - glxc_widget.get_spacing(),
                             self.get_y() + glxc_widget.get_spacing(),
@@ -62,7 +62,7 @@ class HBox(Widget):
                         )
                     # Normal
                     elif 1 <= index <= len(self.glxcwidget_to_display) - 2:
-                        sub_win = self.get_widget().subwin(
+                        sub_win = self.get_curses_subwin().subwin(
                             self.get_height() - glxc_widget.get_spacing() * 2,
                             devised_box_size - (glxc_widget.get_spacing() / 2),
                             self.get_y() + glxc_widget.get_spacing(),
@@ -70,7 +70,7 @@ class HBox(Widget):
                         )
                     # Check if that the last element
                     else:
-                        sub_win = self.get_widget().subwin(
+                        sub_win = self.get_curses_subwin().subwin(
                             self.get_height() - glxc_widget.get_spacing() * 2,
                             0,
                             self.get_y() + glxc_widget.get_spacing(),

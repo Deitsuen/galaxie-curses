@@ -39,7 +39,7 @@ class HSeparator(Widget):
         if not height_ok or not width_ok:
             return
 
-        drawing_area = self.get_parent().get_widget().subwin(
+        drawing_area = self.get_parent().get_curses_subwin().subwin(
                 parent_height - (self.get_spacing() * 2),
                 parent_width - (self.get_spacing() * 2),
                 parent_y + self.get_spacing(),
@@ -74,7 +74,7 @@ class HSeparator(Widget):
     def draw_horizontal_separator(self):
         # Draw the Horizontal Separator with PositionType
         for x in range(self.get_x(), self.get_width()):
-            self.get_widget().insch(
+            self.get_curses_subwin().insch(
                 self.hseperator_y,
                 self.hseperator_x + x,
                 curses.ACS_HLINE,

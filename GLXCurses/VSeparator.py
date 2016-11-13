@@ -34,7 +34,7 @@ class VSeparator(Widget):
         self.vseperator_y = self.get_spacing()
 
         # Size management
-        self.set_preferred_height(1)
+        #self.set_preferred_height(1)
 
         # Make a Style heritage attribute
         if self.style.attribute:
@@ -56,7 +56,7 @@ class VSeparator(Widget):
         if not height_ok or not width_ok:
             return
 
-        drawing_area = self.get_parent().get_widget().subwin(
+        drawing_area = self.get_parent().get_curses_subwin().subwin(
             parent_height - (self.get_spacing()),
             parent_width - (self.get_spacing() * 2),
             parent_y + self.get_spacing(),
@@ -90,7 +90,7 @@ class VSeparator(Widget):
         if self.get_height() >= 1 + (self.get_spacing() * 2):
             increment = 0
             for y in range(self.vseperator_y, self.get_height() - self.get_spacing()):
-                self.get_widget().insch(
+                self.get_curses_subwin().insch(
                     self.vseperator_y + increment,
                     self.vseperator_x,
                     curses.ACS_VLINE,
@@ -108,7 +108,7 @@ class VSeparator(Widget):
         self.set_preferred_height(preferred_height)
         self.set_preferred_width(preferred_width)
 
-    # Internal widget functions
+    # Internal curses_subwin functions
     # Justification: LEFT, RIGHT, CENTER
     def set_justify(self, justification):
         self.justification = str(justification).upper()

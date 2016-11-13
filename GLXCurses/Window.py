@@ -42,7 +42,7 @@ class Window(Widget):
         # if not height_ok or not width_ok:
         #     return
 
-        drawing_area = self.get_parent().get_widget().subwin(
+        drawing_area = self.get_parent().get_curses_subwin().subwin(
                 parent_height - (self.get_spacing() * 2),
                 parent_width - (self.get_spacing() * 2),
                 parent_y + self.get_spacing(),
@@ -56,14 +56,14 @@ class Window(Widget):
         self.set_widget(drawing_area)
 
         # Apply the Background color
-        self.get_widget().bkgdset(
+        self.get_curses_subwin().bkgdset(
             ord(' '),
             curses.color_pair(self.get_style().get_curses_pairs(
                 fg=self.get_attr('text', 'STATE_NORMAL'),
                 bg=self.get_attr('bg', 'STATE_NORMAL'))
             )
         )
-        self.get_widget().bkgd(
+        self.get_curses_subwin().bkgd(
             ord(' '),
             curses.color_pair(self.get_style().get_curses_pairs(
                 fg=self.get_attr('text', 'STATE_NORMAL'),
@@ -78,16 +78,16 @@ class Window(Widget):
 
         # Creat a box and add the name of the windows like a king, who trust that !!!
         if self.get_decorated():
-            self.get_widget().box()
+            self.get_curses_subwin().box()
             if self.get_title():
-                self.get_widget().addstr(
+                self.get_curses_subwin().addstr(
                     0,
                     1,
                     resize_text(self.get_title(), self.get_width() - 2, '~')
                 )
         else:
             if self.get_title():
-                self.get_widget().addstr(
+                self.get_curses_subwin().addstr(
                     0,
                     0,
                     resize_text(self.get_title(), self.get_width() - 1, '~')

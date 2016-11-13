@@ -25,7 +25,7 @@ class VBox(Widget):
         parent_height, parent_width = self.get_parent().get_size()
         parent_y, parent_x = self.get_parent().get_origin()
 
-        drawing_area = self.get_parent().get_widget().subwin(
+        drawing_area = self.get_parent().get_curses_subwin().subwin(
             parent_height - (self.get_spacing() * 2),
             parent_width - (self.get_spacing() * 2),
             parent_y + self.get_spacing(),
@@ -47,7 +47,7 @@ class VBox(Widget):
                 for glxc_widget in self.widget_to_display:
                     # Check if that the frist element
                     if index == 0:
-                        sub_win = self.get_widget().subwin(
+                        sub_win = self.get_curses_subwin().subwin(
                                 devised_box_size - glxc_widget.get_spacing(),
                                 self.get_width() - glxc_widget.get_spacing() * 2,
                                 self.get_y() + glxc_widget.get_spacing(),
@@ -55,7 +55,7 @@ class VBox(Widget):
                         )
                     # Normal
                     elif 1 <= index <= len(self.widget_to_display)-2:
-                        sub_win = self.get_widget().subwin(
+                        sub_win = self.get_curses_subwin().subwin(
                                 devised_box_size - (glxc_widget.get_spacing() / 2),
                                 self.get_width() - glxc_widget.get_spacing() * 2,
                                 self.get_y() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2),
@@ -63,7 +63,7 @@ class VBox(Widget):
                         )
                     # Check if that the last element
                     else:
-                        sub_win = self.get_widget().subwin(
+                        sub_win = self.get_curses_subwin().subwin(
                                 0,
                                 self.get_width() - glxc_widget.get_spacing() * 2,
                                 self.get_y() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2),
@@ -74,6 +74,7 @@ class VBox(Widget):
 
                     # Drawing
                     glxc_widget.draw_widget_in_area(sub_win)
+
 
     def add(self, widget):
         widget.set_parent(self)

@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     # Create a Window
     win1 = GLXCurses.Window()
-    #win1.set_title('My super Window 1')
+    #win_main.set_title('My super Window 1')
 
     # Create a Window
     win_for_progressbar = GLXCurses.Window()
@@ -190,14 +190,18 @@ if __name__ == '__main__':
     Button1 = GLXCurses.Button()
     Button1.set_text('Button1')
 
-    VSepartor = GLXCurses.HSeparator()
-    VSepartor.set_spacing(0)
-    VSepartor.set_position_type('center')
+    RadioButton1 = GLXCurses.RadioButton()
+    RadioButton1.set_text('RadioButton1')
+
+    HSepartor = GLXCurses.HSeparator()
+    HSepartor.set_spacing(0)
+    #VSepartor.set_position_type('center')
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
     vbox1.subwins_spacing = 0
     vbox1.add(Button1)
-    vbox1.add(VSepartor)
+    vbox1.add(HSepartor)
+    vbox1.add(RadioButton1)
 
     vbox1.add(win_for_progressbar)
     vbox1.add(win6)
@@ -331,9 +335,16 @@ if __name__ == '__main__':
             app.refresh()
 
         if input_event == curses.KEY_MOUSE:
-            if Button1.mouse_event(curses.getmouse()):
+            event = curses.getmouse()
+            # if Button1.mouse_event(mouse_event):
+            #
+            #     message_text += Button1.get_states_list()
+            #     message_text += ' '
+            #     statusbar.push(message_text)
+            #     app.refresh()
 
-                message_text += Button1.get_states_list()
+            if RadioButton1.mouse_event(event):
+                message_text += RadioButton1.get_states_list()
                 message_text += ' '
                 statusbar.push(message_text)
                 app.refresh()
@@ -351,10 +362,10 @@ if __name__ == '__main__':
         elif input_event == curses.KEY_F4:
             app.refresh()
         elif input_event == curses.KEY_F5:
-            Button1.set_is_focus(not Button1.get_is_focus())
+            #Button1.set_is_focus(not Button1.get_is_focus())
             app.refresh()
         elif input_event == curses.KEY_F6:
-            Button1.set_sensitive(not Button1.get_sensitive())
+            #Button1.set_sensitive(not Button1.get_sensitive())
             app.refresh()
         elif input_event == curses.KEY_F7:
             app.refresh()

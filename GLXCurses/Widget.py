@@ -14,7 +14,6 @@ class Widget(object):
         self.name = 'Widget'
 
         # Widget Setting
-        # State
         self.state = dict()
         self.state['NORMAL'] = True
         self.state['ACTIVE'] = True
@@ -22,38 +21,8 @@ class Widget(object):
         self.state['SELECTED'] = False
         self.state['INSENSITIVE'] = False
 
-        self.curses_mouse_states = {
-            curses.BUTTON1_PRESSED: 'BUTTON1_PRESS',
-            curses.BUTTON1_RELEASED: 'BUTTON1_RELEASED',
-            curses.BUTTON1_CLICKED: 'BUTTON1_CLICKED',
-            curses.BUTTON1_DOUBLE_CLICKED: 'BUTTON1_DOUBLE_CLICKED',
-            curses.BUTTON1_TRIPLE_CLICKED: 'BUTTON1_TRIPLE_CLICKED',
-
-            curses.BUTTON2_PRESSED: 'BUTTON2_PRESSED',
-            curses.BUTTON2_RELEASED: 'BUTTON2_RELEASED',
-            curses.BUTTON2_CLICKED: 'BUTTON2_CLICKED',
-            curses.BUTTON2_DOUBLE_CLICKED: 'BUTTON2_DOUBLE_CLICKED',
-            curses.BUTTON2_TRIPLE_CLICKED: 'BUTTON2_TRIPLE_CLICKED',
-
-            curses.BUTTON3_PRESSED: 'BUTTON3_PRESSED',
-            curses.BUTTON3_RELEASED: 'BUTTON3_RELEASED',
-            curses.BUTTON3_CLICKED: 'BUTTON3_CLICKED',
-            curses.BUTTON3_DOUBLE_CLICKED: 'BUTTON3_DOUBLE_CLICKED',
-            curses.BUTTON3_TRIPLE_CLICKED: 'BUTTON3_TRIPLE_CLICKED',
-
-            curses.BUTTON4_PRESSED: 'BUTTON4_PRESSED',
-            curses.BUTTON4_RELEASED: 'BUTTON4_RELEASED',
-            curses.BUTTON4_CLICKED: 'BUTTON4_CLICKED',
-            curses.BUTTON4_DOUBLE_CLICKED: 'BUTTON4_DOUBLE_CLICKED',
-            curses.BUTTON4_TRIPLE_CLICKED: 'BUTTON4_TRIPLE_CLICKED',
-
-            curses.BUTTON_SHIFT: 'BUTTON_SHIFT',
-            curses.BUTTON_CTRL: 'BUTTON_CTRL',
-            curses.BUTTON_ALT: 'BUTTON_ALT'
-        }
-
         # Widget
-        self.widget = None
+        self.curses_subwin = None
         self.spacing = 0
         self.widget_decorated = None
         self.sensitive = None
@@ -82,58 +51,58 @@ class Widget(object):
         self.preferred_size = 0
 
         # Property
-        # If True, the application will paint directly on the widget
+        # If True, the application will paint directly on the curses_subwin
         self.app_paintable = False
 
-        # If True, the widget can be the default widget
+        # If True, the curses_subwin can be the default curses_subwin
         self.can_default = False
 
-        # If True, the widget can accept the input focus
+        # If True, the curses_subwin can accept the input focus
         self.can_focus = False
 
-        # If True, the widget is part of a composite widget
+        # If True, the curses_subwin is part of a composite curses_subwin
         self.composite_child = False
 
-        # If True, the widget is double buffered
+        # If True, the curses_subwin is double buffered
         self.double_buffered = False
 
-        # The event mask that decides what kind of Event this widget gets.
+        # The event mask that decides what kind of Event this curses_subwin gets.
         self.events = None
 
-        # The mask that decides what kind of extension events this widget gets.
+        # The mask that decides what kind of extension events this curses_subwin gets.
         self.extension_events = None
 
-        # If True, the widget is the default widget
+        # If True, the curses_subwin is the default curses_subwin
         self.has_default = False
 
-        # If True, the widget has the input focus
+        # If True, the curses_subwin has the input focus
         self.has_focus = False
 
-        # A value of True indicates that widget can have a tooltip
+        # A value of True indicates that curses_subwin can have a tooltip
         self.has_tooltip = False
 
-        # The height request of the widget, or -1 if natural request should be used.
+        # The height request of the curses_subwin, or -1 if natural request should be used.
         self.height_request = -1
 
-        # If True, the widget is the focus widget within the toplevel
+        # If True, the curses_subwin is the focus curses_subwin within the toplevel
         self.is_focus = False
 
-        # The name of the widget
+        # The name of the curses_subwin
         self.name = None
 
-        # If True show_all() should not affect this widget
+        # If True show_all() should not affect this curses_subwin
         self.no_show_all = False
 
-        # The parent widget of this widget. Must be a Container widget.
+        # The parent curses_subwin of this curses_subwin. Must be a Container curses_subwin.
         self.parent = None
 
-        # If True, the widget will receive the default action when it is focused.
+        # If True, the curses_subwin will receive the default action when it is focused.
         self.receives_default = None
 
-        # If True, the widget responds to input
+        # If True, the curses_subwin responds to input
         self.sensitive = False
 
-        # The style of the widget, which contains information about how it will look (colors etc).
+        # The style of the curses_subwin, which contains information about how it will look (colors etc).
         # Each Widget come with it own Style by default
         # It can receive parent Style() or a new Style() during a set_parent() / un_parent() call
         # GLXCApplication is a special case where it have no parent, it role is to impose it own style to each Widget
@@ -143,13 +112,13 @@ class Widget(object):
         # Sets the text of tooltip to be the given string.
         self.tooltip_text = None
 
-        # If True, the widget is visible
+        # If True, the curses_subwin is visible
         self.visible = True
 
-        # The width request of the widget, or -1 if natural request should be used.
+        # The width request of the curses_subwin, or -1 if natural request should be used.
         self.width_request = -1
 
-        # The widget's window if realized, None otherwise.
+        # The curses_subwin's window if realized, None otherwise.
         self.window = None
 
     # Common Widget mandatory
@@ -179,13 +148,13 @@ class Widget(object):
 
     # Parent Management
     def get_parent_size(self):
-        return self.get_parent().widget.getmaxyx()
+        return self.get_parent().curses_subwin.getmaxyx()
 
     def get_parent_origin(self):
         return self.parent.widget.getbegyx()
 
     # This function is useful only when implementing subclasses of GtkContainer.
-    # Sets the container as the parent of widget , and takes care of some details such as updating the state
+    # Sets the container as the parent of curses_subwin , and takes care of some details such as updating the state
     # and style of the child to reflect its new location. The opposite function is gtk_widget_unparent().
     def _set_parent(self, parent):
         self.parent = parent
@@ -220,16 +189,16 @@ class Widget(object):
         return self.screen
 
     # Widget
-    def get_widget(self):
-        return self.widget
+    def get_curses_subwin(self):
+        return self.curses_subwin
 
     def set_widget(self, widget):
-        self.widget = widget
+        self.curses_subwin = widget
         self.height, self.width = self.get_size()
         self.y, self.x = self.get_origin()
 
     def get_origin(self):
-        return self.widget.getbegyx()
+        return self.curses_subwin.getbegyx()
 
     def set_spacing(self, spacing):
         self.spacing = spacing
@@ -294,7 +263,7 @@ class Widget(object):
         return self.preferred_size
 
     def get_size(self):
-        return self.get_widget().getmaxyx()
+        return self.get_curses_subwin().getmaxyx()
 
     def get_x(self):
         return self.x
@@ -303,8 +272,8 @@ class Widget(object):
         return self.y
 
     # State
-    # Sets the sensitivity of a widget.
-    # A widget is sensitive if the user can interact with it. Insensitive widgets are “grayed out”
+    # Sets the sensitivity of a curses_subwin.
+    # A curses_subwin is sensitive if the user can interact with it. Insensitive widgets are “grayed out”
     # and the user can’t interact with them.
     # Properties
     def set_app_paintable(self, boolean):
