@@ -74,8 +74,9 @@ class VBox(Widget):
 
                     # Drawing
                     glxc_widget.draw_widget_in_area(sub_win)
+                    #widget.set_parent
 
 
     def add(self, widget):
-        widget.set_parent(self)
+        #widget.set_parent(self)
         self.widget_to_display.append(widget)

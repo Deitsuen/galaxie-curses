@@ -37,9 +37,9 @@ class RadioButton(Widget):
         self.label_y = 0
 
         # Interface
-        self.interface = '[  ]'
-        self.interface_selected = '[<  >]'
-        self.button_border = self.interface
+        self.interface_unactivated = '( ) '
+        self.interface_active = '(*) '
+        self.interface = self.interface_unactivated
 
         # Size management
         self.set_preferred_height(1)
@@ -99,7 +99,7 @@ class RadioButton(Widget):
         if self.get_text():
             self.preferred_width = 0
             self.preferred_width += len(self.get_text())
-            self.preferred_width += len(self.button_border)
+            self.preferred_width += len(self.interface)
             self.preferred_width += self.get_spacing() * 2
 
     def draw(self):
@@ -167,8 +167,23 @@ class RadioButton(Widget):
 
         return self.label_y
 
+    def check_active(self):
+        if self.state['ACTIVE']:
+            self.interface = self.interface_active
+        else:
+            self.interface = self.interface_unactivated
+
+    def set_active(self, boolean):
+        self.state['ACTIVE'] = bool(boolean)
+        self.check_active()
+
+    def get_active(self):
+        self.check_active()
+        return self.state['ACTIVE']
+
     def draw_button(self):
         self.check_selected()
+        self.check_active()
         self.update_preferred_sizes()
         self.label_x = self.check_horizontal_justification()
         self.label_y = self.check_horizontal_position_type()
@@ -200,22 +215,15 @@ class RadioButton(Widget):
         self.get_curses_subwin().addstr(
             self.label_y,
             self.label_x,
-            self.button_border[:len(self.button_border) / 2],
+            self.interface,
             color
         )
         # Draw the Horizontal Button with Justification and PositionType
         message_to_display = resize_text(self.get_text(), self.get_width(), '~')
         self.get_curses_subwin().addstr(
             self.label_y,
-            self.label_x + len(self.button_border) / 2,
+            self.label_x + len(self.interface),
             message_to_display,
-            color
-        )
-        # Interface management
-        self.get_curses_subwin().insstr(
-            self.label_y,
-            self.label_x + (len(self.button_border) / 2) + len(message_to_display),
-            self.button_border[-len(self.button_border) / 2:],
             color
         )
 
@@ -239,7 +247,7 @@ class RadioButton(Widget):
             (mouse_event_id, x, y, z, event) = mouse_event
             # Be sure we select really the Button
             if self.label_y >= y > self.label_y - self.get_preferred_height():
-                if (self.label_x - 1) + len(self.button_border) + len(self.get_text()) >= x > (self.label_x - 1):
+                if (self.label_x - 1) + len(self.interface) + len(self.get_text()) >= x > (self.label_x - 1):
                     # We are sure about the button have been clicked
                     #
                     self.states_list = '; '.join(state_string for state, state_string
@@ -249,9 +257,11 @@ class RadioButton(Widget):
                         self.set_is_focus(1)
                         self.check_selected()
                         self.state['PRELIGHT'] = True
+                        self.set_active(not self.get_active())
                     elif event == curses.BUTTON1_RELEASED:
                         self.state['PRELIGHT'] = False
                     if event == curses.BUTTON1_CLICKED:
+                        self.set_active(not self.get_active())
                         self.set_is_focus(1)
                     if event == curses.BUTTON1_DOUBLE_CLICKED:
                         self.set_is_focus(1)
@@ -337,8 +347,8 @@ class RadioButton(Widget):
     def check_selected(self):
         if self.get_can_focus():
             if self.get_is_focus():
-                self.button_border = self.interface_selected
+                self.interface = self.interface_active
             else:
-                self.button_border = self.interface
+                self.interface = self.interface_unactivated
         else:
             pass

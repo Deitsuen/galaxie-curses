@@ -129,7 +129,7 @@ class ProgressBar(Widget):
             progress_text = self.check_vertical_position_type()
 
         # Draw Vertical ProgressBar
-        # Draw first interface Character
+        # Draw first interface_unactive Character
         self.get_curses_subwin().addch(
             y_progress,
             x_progress,
@@ -169,7 +169,7 @@ class ProgressBar(Widget):
                 )
                 count += 1
 
-            # Draw last interface Character
+            # Draw last interface_unactive Character
             self.get_curses_subwin().insch(
                 self.get_height() - self.get_spacing() - 1,
                 x_progress,
@@ -208,7 +208,7 @@ class ProgressBar(Widget):
                 )
                 count += 1
 
-            # Draw last interface Character
+            # Draw last interface_unactive Character
             self.get_curses_subwin().insch(
                 self.get_height() - self.get_spacing() - 1,
                 x_progress,

@@ -16,7 +16,7 @@ class Widget(object):
         # Widget Setting
         self.state = dict()
         self.state['NORMAL'] = True
-        self.state['ACTIVE'] = True
+        self.state['ACTIVE'] = False
         self.state['PRELIGHT'] = False
         self.state['SELECTED'] = False
         self.state['INSENSITIVE'] = False

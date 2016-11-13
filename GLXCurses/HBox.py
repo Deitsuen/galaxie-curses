@@ -83,5 +83,5 @@ class HBox(Widget):
                     glxc_widget.draw_widget_in_area(sub_win)
 
     def add(self, widget):
-        widget.set_parent(self)
+        #widget.set_parent(self)
         self.glxcwidget_to_display.append(widget)
