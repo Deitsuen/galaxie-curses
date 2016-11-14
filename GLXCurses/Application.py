@@ -12,11 +12,9 @@ __author__ = 'Tuux'
 
 class Application(object):
     def __init__(self):
-        self.name = 'Application'
-
         try:
             # Initialize curses
-            os.environ["NCURSES_NO_UTF8_ACS"] = "1"
+            os.environ["NCURSES_NO_UTF8_ACS"] = '1'
             self.screen = curses.initscr()
 
             # Turn off echoing of keys, and enter cbreak mode,
@@ -58,30 +56,42 @@ class Application(object):
         self.toolbar = None
 
         # Store Variables
-        self.name = None
+        self.name = 'Application'
         self.windows_id_number = None
         self.active_window_id = None
         self.windows = {}
         self.attribute = self.style.get_default_style()
 
         # Fake Widget
-        self.widget = None
+        self.curses_subwin = None
         self.spacing = 0
+        self.screen_height = 0
+        self.screen_width = 0
+        self.screen_y = 0
+        self.screen_x = 0
+        self.parent_y = 0
+        self.parent_x = 0
+        self.parent_width = 0
+        self.parent_height = 0
+        self.y = 0
+        self.x = 0
+        self.width = 0
+        self.height = 0
+        self.preferred_height = 0
+        self.preferred_width = 0
+        self.natural_height = 0
+        self.natural_width = 0
+        self.preferred_size = 0
+
         self.parent_spacing = 0
         self.parent_style = self.style
-
-
-
-    # Common Widget mandatory
-
-    # Screen
 
     # Parent
     def set_parent(self, parent):
         pass
 
     def get_parent(self):
-        return self.widget
+        return self.curses_subwin
 
     def get_parent_size(self):
         return self.get_parent().getmaxyx()
@@ -96,14 +106,14 @@ class Application(object):
         return self.style
 
     # Widget
-    def get_widget(self):
-        return self.widget
+    def get_curses_subwin(self):
+        return self.curses_subwin
 
     def get_size(self):
-        return self.widget.getmaxyx()
+        return self.curses_subwin.getmaxyx()
 
     def get_origin(self):
-        return self.widget.getbegyx()
+        return self.curses_subwin.getbegyx()
 
     def get_spacing(self):
         return self.spacing
@@ -113,6 +123,48 @@ class Application(object):
 
     def get_screen(self):
         return self.screen
+
+    # Size management
+    def get_width(self):
+        return self.width
+
+    def set_width(self, width):
+        self.width = width
+
+    def get_height(self):
+        return self.height
+
+    def set_height(self, height):
+        self.height = height
+
+    def get_preferred_height(self):
+        return self.preferred_height
+
+    def set_preferred_height(self, height):
+        self.preferred_height = height
+
+    def get_preferred_width(self):
+        return self.preferred_width
+
+    def set_preferred_width(self, preferred_width):
+        self.preferred_width = preferred_width
+
+    def get_preferred_size(self):
+        # should preserve the Y X of ncuses ?
+        return self.preferred_size
+
+    def set_preferred_size(self):
+        # should preserve the Y X of ncuses ?
+        return self.preferred_size
+
+    def get_size(self):
+        return self.get_curses_subwin().getmaxyx()
+
+    def get_x(self):
+        return self.x
+
+    def get_y(self):
+        return self.y
 
     # GLXCApplication function
     def set_name(self, name):
@@ -145,7 +197,7 @@ class Application(object):
         glxc_menu_bar.set_parent(self)
         self.menubar = glxc_menu_bar
 
-    def remove_menubar(self, glxc_menu_bar):
+    def remove_menubar(self):
         self.menubar = None
 
     def add_statusbar(self, glx_statusbar):
@@ -171,21 +223,21 @@ class Application(object):
         # Calculate the Main Window size
         self.draw()
 
-        # Check main widget to display
-        if self.widget:
-            self.windows[self.active_window_id].refresh()
+        # Check main curses_subwin to display
+        if self.curses_subwin:
+            self.windows[self.active_window_id].draw()
 
         if self.menubar:
-            self.menubar.refresh()
+            self.menubar.draw()
 
         if self.statusbar:
-            self.statusbar.refresh()
+            self.statusbar.draw()
 
         if self.toolbar:
-            self.toolbar.refresh()
+            self.toolbar.draw()
 
         # After have redraw everything it's time to refresh the screen
-        self.get_parent().refresh()
+        self.get_screen().refresh()
 
     def draw(self):
         parent_height, parent_width = self.screen.getmaxyx()
@@ -212,11 +264,20 @@ class Application(object):
         interface_elements_height += status_bar_height
         interface_elements_height += tool_bar_height
 
-        height = parent_height - interface_elements_height
-        width = 0
+        self.set_height(parent_height - interface_elements_height)
+        self.set_width(0)
         begin_y = menu_bar_height
         begin_x = 0
-        self.widget = self.screen.subwin(height, width, begin_y, begin_x)
+        self.curses_subwin = self.screen.subwin(
+            self.get_height(),
+            self.get_width(),
+            begin_y,
+            begin_x
+        )
+        self.set_preferred_height(self.get_height())
+        self.set_preferred_width(self.get_width())
+        self.x = begin_x
+        self.y = begin_y
 
     def getch(self):
         return self.screen.getch()
@@ -226,4 +287,3 @@ class Application(object):
         self.screen.keypad(False)
         curses.echo()
         curses.endwin()
-

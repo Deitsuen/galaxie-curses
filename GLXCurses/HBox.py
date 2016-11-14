@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import curses
 from GLXCurses.Widget import Widget
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -12,7 +11,7 @@ __author__ = 'Tuux'
 class HBox(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.name = 'HBox'
+        self.set_name('HBox')
 
         self.glxcwidget_to_display = list()
         self.h_widget_list = list()
@@ -24,17 +23,24 @@ class HBox(Widget):
         parent_height, parent_width = self.get_parent().get_size()
         parent_y, parent_x = self.get_parent().get_origin()
 
-        drawing_area = self.get_parent().get_widget().subwin(
+        min_size_width = (self.get_spacing() * 2)
+        min_size_height = (self.get_spacing() * 2)
+        height_ok = self.get_parent().get_height() >= min_size_height
+        width_ok = self.get_parent().get_width() >= min_size_width
+        if not height_ok or not width_ok:
+            return
+
+        drawing_area = self.get_parent().get_curses_subwin().subwin(
             parent_height - (self.get_spacing() * 2),
             parent_width - (self.get_spacing() * 2),
             parent_y + self.get_spacing(),
             parent_x + self.get_spacing()
         )
 
-        self.draw_in_area(drawing_area)
+        self.draw_widget_in_area(drawing_area)
 
-    def draw_in_area(self, drawing_area):
-        self.set_widget(drawing_area)
+    def draw_widget_in_area(self, drawing_area):
+        self.set_curses_subwin(drawing_area)
 
         # Check widgets to display
         is_large_enough = (self.get_width() >= self.number_of_widget_to_display + 1)
@@ -48,7 +54,7 @@ class HBox(Widget):
 
                     # Check if that the first element
                     if index == 0:
-                        sub_win = self.get_widget().subwin(
+                        sub_win = self.get_curses_subwin().subwin(
                             self.get_height() - glxc_widget.get_spacing() * 2,
                             devised_box_size - glxc_widget.get_spacing(),
                             self.get_y() + glxc_widget.get_spacing(),
@@ -56,7 +62,7 @@ class HBox(Widget):
                         )
                     # Normal
                     elif 1 <= index <= len(self.glxcwidget_to_display) - 2:
-                        sub_win = self.get_widget().subwin(
+                        sub_win = self.get_curses_subwin().subwin(
                             self.get_height() - glxc_widget.get_spacing() * 2,
                             devised_box_size - (glxc_widget.get_spacing() / 2),
                             self.get_y() + glxc_widget.get_spacing(),
@@ -64,17 +70,18 @@ class HBox(Widget):
                         )
                     # Check if that the last element
                     else:
-                        sub_win = self.get_widget().subwin(
+                        sub_win = self.get_curses_subwin().subwin(
                             self.get_height() - glxc_widget.get_spacing() * 2,
                             0,
                             self.get_y() + glxc_widget.get_spacing(),
                             self.get_x() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2)
                         )
 
-                    # Drawing
-                    glxc_widget.draw_in_area(sub_win)
-
                     index += 1
+
+                    # Drawing
+                    glxc_widget.draw_widget_in_area(sub_win)
+                    #glxc_widget.curses_subwin = sub_win
 
     def add(self, widget):
         widget.set_parent(self)

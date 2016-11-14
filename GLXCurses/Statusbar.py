@@ -11,7 +11,7 @@ __author__ = 'Tuux'
 class Statusbar(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.name = 'Statusbar'
+        self.set_name('Statusbar')
 
         # Widget Setting
         self.statusbar_stack = []
@@ -34,11 +34,11 @@ class Statusbar(Widget):
             self.get_screen_height() - line_from_max_screen_height,
             self.get_screen_x()
         )
-        self.set_widget(drawing_area)
+        self.set_curses_subwin(drawing_area)
 
         # Clean the entire line
         if curses.has_colors():
-            self.widget.addstr(
+            self.curses_subwin.addstr(
                     0,
                     0,
                     str(' ' * (self.get_width() - 1)),
@@ -47,7 +47,7 @@ class Statusbar(Widget):
                         bg=self.get_attr('black', 'STATE_NORMAL'))
                     )
                 )
-            self.widget.insstr(
+            self.curses_subwin.insstr(
                     str(' '),
                     curses.color_pair(self.get_style().get_curses_pairs(
                         fg=self.get_attr('white', 'STATE_NORMAL'),
@@ -60,18 +60,18 @@ class Statusbar(Widget):
             message_to_display = self.statusbar_stack[-1]
             if not len(message_to_display) <= self.get_width() - 1:
                 start, end = message_to_display[:self.get_width() - 1], message_to_display[self.get_width() - 1:]
-                self.widget.addstr(
+                self.curses_subwin.addstr(
                     0,
                     0,
                     str(start)
                 )
-                self.widget.insstr(
+                self.curses_subwin.insstr(
                     0,
                     self.get_width() - 1,
                     str(message_to_display[:self.get_width()][-1:])
                 )
             else:
-                self.widget.addstr(
+                self.curses_subwin.addstr(
                     0,
                     0,
                     str(message_to_display)

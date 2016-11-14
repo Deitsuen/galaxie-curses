@@ -19,7 +19,7 @@ def resize_text(text, max_width, separator='~'):
 class Window(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.name = 'Window'
+        self.set_name('Window')
 
         # Internal Widget Setting
         self.title = None
@@ -35,28 +35,35 @@ class Window(Widget):
         parent_height, parent_width = self.get_parent().get_size()
         parent_y, parent_x = self.get_parent().get_origin()
 
-        drawing_area = self.get_parent().get_widget().subwin(
+        # min_size_width = (self.get_spacing() * 2) + 1
+        # min_size_height = (self.get_spacing() * 2) + 1
+        # height_ok = self.get_parent().get_height() >= min_size_height
+        # width_ok = self.get_parent().get_width() >= min_size_width
+        # if not height_ok or not width_ok:
+        #     return
+
+        drawing_area = self.get_parent().get_curses_subwin().subwin(
                 parent_height - (self.get_spacing() * 2),
                 parent_width - (self.get_spacing() * 2),
                 parent_y + self.get_spacing(),
                 parent_x + self.get_spacing()
         )
 
-        self.draw_in_area(drawing_area)
+        self.draw_widget_in_area(drawing_area)
 
     # GLXC Window Functions
-    def draw_in_area(self, drawing_area):
-        self.set_widget(drawing_area)
+    def draw_widget_in_area(self, drawing_area):
+        self.set_curses_subwin(drawing_area)
 
         # Apply the Background color
-        self.get_widget().bkgdset(
+        self.get_curses_subwin().bkgdset(
             ord(' '),
             curses.color_pair(self.get_style().get_curses_pairs(
                 fg=self.get_attr('text', 'STATE_NORMAL'),
                 bg=self.get_attr('bg', 'STATE_NORMAL'))
             )
         )
-        self.get_widget().bkgd(
+        self.get_curses_subwin().bkgd(
             ord(' '),
             curses.color_pair(self.get_style().get_curses_pairs(
                 fg=self.get_attr('text', 'STATE_NORMAL'),
@@ -69,18 +76,18 @@ class Window(Widget):
             self.widget_to_display[self.widget_to_display_id].draw()
             self.widget_to_display[self.widget_to_display_id].set_style(self.get_style())
 
-        # Creat a box and add the name of the windows like a king, who trust that !!!
+        # Create a box and add the name of the windows like a king, who trust that !!!
         if self.get_decorated():
-            self.get_widget().box()
+            self.get_curses_subwin().box()
             if self.get_title():
-                self.get_widget().addstr(
+                self.get_curses_subwin().addstr(
                     0,
                     1,
                     resize_text(self.get_title(), self.get_width() - 2, '~')
                 )
         else:
             if self.get_title():
-                self.get_widget().addstr(
+                self.get_curses_subwin().addstr(
                     0,
                     0,
                     resize_text(self.get_title(), self.get_width() - 1, '~')
@@ -92,21 +99,18 @@ class Window(Widget):
     def get_title(self):
         return self.title
 
-    def add(self, glxc_widget):
+    def add(self, widget):
         # set_parent is the set_parent from Widget common method
         # information's will be transmit by it method
-        glxc_widget.set_parent(self)
+        widget.set_parent(self)
         id_max = len(self.widget_to_display.keys())
 
         if bool(self.widget_to_display):
-            self.widget_to_display[id_max] = glxc_widget
+            self.widget_to_display[id_max] = widget
             self.widget_to_display_id = id_max
         else:
-            self.widget_to_display[id_max + 1] = glxc_widget
+            self.widget_to_display[id_max + 1] = widget
             self.widget_to_display_id = id_max + 1
 
     def get_attr(self, elem, state):
         return self.attribute[elem][state]
-
-
-

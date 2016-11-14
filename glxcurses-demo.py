@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     # Create a Window
     win1 = GLXCurses.Window()
-    #win1.set_title('My super Window 1')
+    #win_main.set_title('My super Window 1')
 
     # Create a Window
     win_for_progressbar = GLXCurses.Window()
@@ -190,10 +190,19 @@ if __name__ == '__main__':
     Button1 = GLXCurses.Button()
     Button1.set_text('Button1')
 
+    RadioButton1 = GLXCurses.RadioButton()
+    RadioButton1.set_text('RadioButton1')
+
+    HSepartor = GLXCurses.HSeparator()
+    HSepartor.set_spacing(0)
+    #VSepartor.set_position_type('center')
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
     vbox1.subwins_spacing = 0
     vbox1.add(Button1)
+    vbox1.add(HSepartor)
+    vbox1.add(RadioButton1)
+
     vbox1.add(win_for_progressbar)
     vbox1.add(win6)
 
@@ -245,11 +254,11 @@ if __name__ == '__main__':
     toolbar = GLXCurses.Toolbar()
     toolbar.button_list = [
         'Help',
-        'Options',
-        '',
-        '',
-        '',
-        '',
+        'Normal',
+        'Active',
+        'Prelight',
+        'Selected',
+        'Insensitive',
         '',
         '',
         'Menu',
@@ -266,22 +275,14 @@ if __name__ == '__main__':
     count = 1
     app.refresh()
     while True:
+        message_text = ''
         input_event = app.getch()
         if curses.KEY_RESIZE:
-            message_text = ''
             message_text += 'Screen Size:'
             message_text += str(app.get_parent_size())
-
-            if Button1.mouse_clicked(curses.getmouse()):
-                message_text += ' '
-                message_text += 'Button1 Clicked:'
-
-            if Button1.key_pressed(input_event):
-                pass
+            message_text += ' '
 
 
-
-            statusbar.push(message_text)
             # Status Bar Demo
             progressbar1.set_value(randint(0, 100))
             value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
@@ -332,8 +333,49 @@ if __name__ == '__main__':
             progressbar12.set_text(value)
 
             app.refresh()
-            pass
-        if input_event == ord('q'):
+
+        if input_event == curses.KEY_MOUSE:
+            event = curses.getmouse()
+            # if Button1.mouse_event(mouse_event):
+            #
+            #     message_text += Button1.get_states_list()
+            #     message_text += ' '
+            #     statusbar.push(message_text)
+            #     app.refresh()
+
+            if RadioButton1.mouse_event(event):
+                message_text += RadioButton1.get_states_list()
+                message_text += ' '
+                statusbar.push(message_text)
+                app.refresh()
+
+            # if Button1.key_pressed(input_event):
+            #     pass
+
+        # ToolBar
+        if input_event == curses.KEY_F1:
+            app.refresh()
+        elif input_event == curses.KEY_F2:
+            app.refresh()
+        elif input_event == curses.KEY_F3:
+            app.refresh()
+        elif input_event == curses.KEY_F4:
+            app.refresh()
+        elif input_event == curses.KEY_F5:
+            #Button1.set_is_focus(not Button1.get_is_focus())
+            app.refresh()
+        elif input_event == curses.KEY_F6:
+            #Button1.set_sensitive(not Button1.get_sensitive())
+            app.refresh()
+        elif input_event == curses.KEY_F7:
+            app.refresh()
+        elif input_event == curses.KEY_F8:
+            app.refresh()
+        elif input_event == curses.KEY_F9:
+            app.refresh()
+        elif input_event == curses.KEY_F10:
+            break
+        elif input_event == ord('q'):
             break
         count += 1
 

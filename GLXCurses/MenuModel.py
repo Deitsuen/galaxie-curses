@@ -11,7 +11,7 @@ __author__ = 'Tuux'
 class MenuModel(Widget):
     def __init__(self):
         Widget.__init__(self)
-        self.name = 'MenuModel'
+        self.set_name('MenuModel')
 
         # Internal Widget Setting
         self.app_info_label = None
@@ -28,10 +28,10 @@ class MenuModel(Widget):
             0,
             0
         )
-        self.set_widget(drawing_area)
+        self.set_curses_subwin(drawing_area)
 
         if curses.has_colors():
-            self.get_widget().addstr(
+            self.get_curses_subwin().addstr(
                     0,
                     0,
                     str(' ' * (self.get_width() - 1)),
@@ -40,7 +40,7 @@ class MenuModel(Widget):
                         bg=self.get_attr('light', 'STATE_NORMAL'))
                     )
                 )
-            self.get_widget().bkgdset(
+            self.get_curses_subwin().bkgdset(
                     ord(' '),
                     curses.color_pair(self.get_style().get_curses_pairs(
                         fg=self.get_attr('dark', 'STATE_NORMAL'),
@@ -49,7 +49,7 @@ class MenuModel(Widget):
                 )
         if self.app_info_label:
             if not self.get_height() + 1 <= len(app_info_label):
-                self.get_widget().addstr(
+                self.get_curses_subwin().addstr(
                     0,
                     (self.get_width() - 1) - len(str(app_info_label[:-1])),
                     app_info_label[:-1],
@@ -58,7 +58,7 @@ class MenuModel(Widget):
                         bg=self.get_attr('light', 'STATE_NORMAL'))
                     )
                 )
-                self.get_widget().insstr(
+                self.get_curses_subwin().insstr(
                     0,
                     self.get_width() - 1,
                     app_info_label[-1:],
