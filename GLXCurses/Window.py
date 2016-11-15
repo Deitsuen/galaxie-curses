@@ -31,19 +31,6 @@ class Window(Widget):
         if self.style.attribute:
             self.attribute = self.style.attribute
 
-    def draw(self):
-        parent_height, parent_width = self.get_parent().get_curses_subwin().getmaxyx()
-        parent_y, parent_x = self.get_parent().get_curses_subwin().getbegyx()
-
-        drawing_area = self.get_parent().get_curses_subwin().subwin(
-                parent_height - (self.get_spacing() * 2),
-                parent_width - (self.get_spacing() * 2),
-                parent_y + self.get_spacing(),
-                parent_x + self.get_spacing()
-        )
-
-        self.draw_widget_in_area(drawing_area)
-
     # GLXC Window Functions
     def draw_widget_in_area(self, drawing_area):
         self.set_curses_subwin(drawing_area)
@@ -66,8 +53,8 @@ class Window(Widget):
 
         # Check widgets to display
         if bool(self.widget_to_display):
-            self.widget_to_display[self.widget_to_display_id].draw()
             self.widget_to_display[self.widget_to_display_id].set_style(self.get_style())
+            self.widget_to_display[self.widget_to_display_id].draw()
 
         # Create a box and add the name of the windows like a king, who trust that !!!
         if self.get_decorated():

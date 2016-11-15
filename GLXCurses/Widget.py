@@ -404,3 +404,24 @@ class Widget(object):
 
     def get_window(self):
         return self.window
+
+    # DRAW
+    def draw(self):
+        self.height, self.width = self.get_parent().get_curses_subwin().getmaxyx()
+        self.y, self.x = self.get_parent().get_curses_subwin().getbegyx()
+
+        min_size_width = (self.get_spacing() * 2) + 1
+        min_size_height = (self.get_spacing() * 2) + 1
+        height_ok = self.get_height() >= min_size_height
+        width_ok = self.get_width() >= min_size_width
+        if not height_ok or not width_ok:
+            return
+
+        drawing_area = self.get_parent().get_curses_subwin().subwin(
+            self.get_height() - (self.get_spacing() * 2),
+            self.get_width() - (self.get_spacing() * 2),
+            self.get_y() + self.get_spacing(),
+            self.get_x() + self.get_spacing()
+        )
+
+        self.draw_widget_in_area(drawing_area)

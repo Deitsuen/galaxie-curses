@@ -19,18 +19,6 @@ class HBox(Widget):
         self.number_of_widget_to_display = 0
 
     # GLXC HBox Functions
-    def draw(self):
-        parent_height, parent_width = self.get_parent().get_curses_subwin().getmaxyx()
-        parent_y, parent_x = self.get_parent().get_curses_subwin().getbegyx()
-
-        drawing_area = self.get_parent().get_curses_subwin().subwin(
-            parent_height - (self.get_spacing() * 2),
-            parent_width - (self.get_spacing() * 2),
-            parent_y + self.get_spacing(),
-            parent_x + self.get_spacing()
-        )
-        self.draw_widget_in_area(drawing_area)
-
     def draw_widget_in_area(self, drawing_area):
         self.set_curses_subwin(drawing_area)
 
