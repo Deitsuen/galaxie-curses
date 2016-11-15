@@ -102,8 +102,7 @@ class RadioButton(Widget):
             self.preferred_width += len(self.interface)
             self.preferred_width += self.get_spacing() * 2
 
-    def draw_widget_in_area(self, drawing_area):
-        self.set_curses_subwin(drawing_area)
+    def draw_widget_in_area(self):
 
         # Many Thing's
         # Check if the text can be display

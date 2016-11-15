@@ -32,8 +32,7 @@ class Window(Widget):
             self.attribute = self.style.attribute
 
     # GLXC Window Functions
-    def draw_widget_in_area(self, drawing_area):
-        self.set_curses_subwin(drawing_area)
+    def draw_widget_in_area(self):
 
         # Apply the Background color
         self.get_curses_subwin().bkgdset(

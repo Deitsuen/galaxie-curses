@@ -423,5 +423,6 @@ class Widget(object):
             self.get_y() + self.get_spacing(),
             self.get_x() + self.get_spacing()
         )
-
-        self.draw_widget_in_area(drawing_area)
+        self.set_curses_subwin(drawing_area)
+        if (self.get_height() > self.preferred_height) and (self.get_width() > self.preferred_width):
+            self.draw_widget_in_area()

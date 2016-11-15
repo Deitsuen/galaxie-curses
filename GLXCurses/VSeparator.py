@@ -45,8 +45,7 @@ class VSeparator(Widget):
 
         self.update_preferred_sizes()
 
-    def draw_widget_in_area(self, drawing_area):
-        self.set_curses_subwin(drawing_area)
+    def draw_widget_in_area(self):
 
         if (self.get_height() >= 1 + (self.get_spacing() * 2)) and (self.get_width() >= 1 + (self.get_spacing() * 2)):
             self.vseperator_x = self.check_justification()

@@ -50,28 +50,23 @@ class Label(Widget):
         # PositionType: CENTER, TOP, BOTTOM
         self.position_type = 'CENTER'
 
-    def draw_widget_in_area(self, drawing_area):
-        self.set_curses_subwin(drawing_area)
+    def draw_widget_in_area(self):
+        if self.get_text():
+            # Check if the text can be display
+            text_have_necessary_width = (self.get_preferred_width() + self.get_spacing() >= 1)
+            text_have_necessary_height = (self.get_preferred_height() + self.get_spacing() >= 1)
+            if text_have_necessary_width and text_have_necessary_height:
 
-        min_size_width = (self.get_spacing() * 2) + self.get_spacing()
-        min_size_height = (self.get_spacing() * 2)
-        if (self.get_height() >= min_size_height) and (self.get_width() >= min_size_width):
-            if self.get_text():
-                # Check if the text can be display
-                text_have_necessary_width = (self.get_preferred_width() + self.get_spacing() >= 1)
-                text_have_necessary_height = (self.get_preferred_height() + self.get_spacing() >= 1)
-                if text_have_necessary_width and text_have_necessary_height:
+                # Orientation: HORIZONTAL, VERTICAL
+                if self.get_orientation() == 'HORIZONTAL':
+                    self.text_x = self.check_horizontal_justification()
+                    self.text_y = self.check_horizontal_position_type()
+                    self.draw_horizontal_label()
 
-                    # Orientation: HORIZONTAL, VERTICAL
-                    if self.get_orientation() == 'HORIZONTAL':
-                        self.text_x = self.check_horizontal_justification()
-                        self.text_y = self.check_horizontal_position_type()
-                        self.draw_horizontal_label()
-
-                    elif self.get_orientation() == 'VERTICAL':
-                        self.text_x = self.check_vertical_justification()
-                        self.text_y = self.check_vertical_position_type()
-                        self.draw_vertical_label()
+                elif self.get_orientation() == 'VERTICAL':
+                    self.text_x = self.check_vertical_justification()
+                    self.text_y = self.check_vertical_position_type()
+                    self.draw_vertical_label()
 
     def check_vertical_justification(self):
         # Check Justification
@@ -130,21 +125,20 @@ class Label(Widget):
 
     def draw_vertical_label(self):
         # Draw the Vertical Label with Justification and PositionType
-        if self.get_height() - 1 > 2:
-            message_to_display = resize_text(self.get_text(), self.get_height() - (self.get_spacing() * 2), '~')
-            if len(message_to_display) > 2:
-                increment = 0
-                for CHAR in message_to_display:
-                    self.get_curses_subwin().insch(
-                        self.text_y + increment,
-                        self.text_x,
-                        CHAR,
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('text', 'STATE_NORMAL'),
-                            bg=self.get_attr('bg', 'STATE_NORMAL'))
-                        )
+        message_to_display = resize_text(self.get_text(), self.get_height() - (self.get_spacing() * 2), '~')
+        if len(message_to_display) > 2:
+            increment = 0
+            for CHAR in message_to_display:
+                self.get_curses_subwin().insch(
+                    self.text_y + increment,
+                    self.text_x,
+                    CHAR,
+                    curses.color_pair(self.get_style().get_curses_pairs(
+                        fg=self.get_attr('text', 'STATE_NORMAL'),
+                        bg=self.get_attr('bg', 'STATE_NORMAL'))
                     )
-                    increment += 1
+                )
+                increment += 1
 
     def draw_horizontal_label(self):
         # Draw the Horizontal Label with Justification and PositionType

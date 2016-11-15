@@ -28,8 +28,7 @@ class HSeparator(Widget):
         # PositionType: CENTER, TOP, BOTTOM
         self.position_type = 'CENTER'
 
-    def draw_widget_in_area(self, drawing_area):
-        self.set_curses_subwin(drawing_area)
+    def draw_widget_in_area(self):
         self.update_preferred_sizes()
         self.check_horizontal_position_type()
         if (self.get_height() >= self.get_preferred_height()) and (self.get_width() >= self.get_preferred_width()):
