@@ -103,8 +103,8 @@ class RadioButton(Widget):
             self.preferred_width += self.get_spacing() * 2
 
     def draw(self):
-        parent_height, parent_width = self.get_parent().get_size()
-        parent_y, parent_x = self.get_parent().get_origin()
+        parent_height, parent_width = self.get_parent().get_curses_subwin().getmaxyx()
+        parent_y, parent_x = self.get_parent().get_curses_subwin().getbegyx()
 
         min_size_width = (self.get_spacing() * 2) + 1
         min_size_height = (self.get_spacing() * 2) + 1

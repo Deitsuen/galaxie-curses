@@ -20,8 +20,8 @@ class HBox(Widget):
 
     # GLXC HBox Functions
     def draw(self):
-        parent_height, parent_width = self.get_parent().get_size()
-        parent_y, parent_x = self.get_parent().get_origin()
+        parent_height, parent_width = self.get_parent().get_curses_subwin().getmaxyx()
+        parent_y, parent_x = self.get_parent().get_curses_subwin().getbegyx()
 
         drawing_area = self.get_parent().get_curses_subwin().subwin(
             parent_height - (self.get_spacing() * 2),
