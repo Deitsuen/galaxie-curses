@@ -225,6 +225,8 @@ class RadioButton(Widget):
             # Read the mouse event information's
             (mouse_event_id, x, y, z, event) = mouse_event
             # Be sure we select really the Button
+            y -= self.y
+            x -= self.x
             if self.label_y >= y > self.label_y - self.get_preferred_height():
                 if (self.label_x - 1) + len(self.interface) + len(self.get_text()) >= x > (self.label_x - 1):
                     # We are sure about the button have been clicked

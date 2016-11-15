@@ -214,6 +214,8 @@ class Button(Widget):
         if self.get_sensitive():
             # Read the mouse event information's
             (mouse_event_id, x, y, z, event) = mouse_event
+            y -= self.y
+            x -= self.x
             # Be sure we select really the Button
             if self.label_y >= y > self.label_y - self.get_preferred_height():
                 if (self.label_x - 1) + len(self.button_border) + len(self.get_text()) >= x > (self.label_x - 1):
