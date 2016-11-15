@@ -44,6 +44,7 @@ class VBox(Widget):
             if self.widget_to_display:
                 devised_box_size = int(self.get_height() / len(self.widget_to_display))
                 index = 0
+                total_vertical_spacing = 0
                 for glxc_widget in self.widget_to_display:
                     # Check if that the frist element
                     if index == 0:
@@ -53,6 +54,7 @@ class VBox(Widget):
                                 self.get_y() + glxc_widget.get_spacing(),
                                 self.get_x() + glxc_widget.get_spacing()
                         )
+                        total_vertical_spacing += glxc_widget.get_spacing()
                     # Normal
                     elif 1 <= index <= len(self.widget_to_display)-2:
                         sub_win = self.get_curses_subwin().subwin(
@@ -61,10 +63,15 @@ class VBox(Widget):
                                 self.get_y() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2),
                                 self.get_x() + glxc_widget.get_spacing()
                         )
+                        total_vertical_spacing += glxc_widget.get_spacing() / 2
                     # Check if that the last element
                     else:
+                        last_element_vertical_size = self.get_height()
+                        last_element_vertical_size -= (devised_box_size * index)
+                        last_element_vertical_size -= total_vertical_spacing
+                        #last_element_vertical_size -= glxc_widget.get_spacing()
                         sub_win = self.get_curses_subwin().subwin(
-                                0,
+                                last_element_vertical_size,
                                 self.get_width() - glxc_widget.get_spacing() * 2,
                                 self.get_y() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2),
                                 self.get_x() + glxc_widget.get_spacing()

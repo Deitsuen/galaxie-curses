@@ -198,7 +198,7 @@ if __name__ == '__main__':
     #VSepartor.set_position_type('center')
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
-    vbox1.subwins_spacing = 0
+    vbox1.subwins_spacing = 4
     vbox1.add(Button1)
     vbox1.add(HSepartor)
     vbox1.add(RadioButton1)

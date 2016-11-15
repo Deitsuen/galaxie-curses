@@ -23,20 +23,12 @@ class HBox(Widget):
         parent_height, parent_width = self.get_parent().get_size()
         parent_y, parent_x = self.get_parent().get_origin()
 
-        min_size_width = (self.get_spacing() * 2)
-        min_size_height = (self.get_spacing() * 2)
-        height_ok = self.get_parent().get_height() >= min_size_height
-        width_ok = self.get_parent().get_width() >= min_size_width
-        if not height_ok or not width_ok:
-            return
-
         drawing_area = self.get_parent().get_curses_subwin().subwin(
             parent_height - (self.get_spacing() * 2),
             parent_width - (self.get_spacing() * 2),
             parent_y + self.get_spacing(),
             parent_x + self.get_spacing()
         )
-
         self.draw_widget_in_area(drawing_area)
 
     def draw_widget_in_area(self, drawing_area):
@@ -50,6 +42,7 @@ class HBox(Widget):
             if self.glxcwidget_to_display:
                 devised_box_size = int(self.get_width() / len(self.glxcwidget_to_display))
                 index = 0
+                total_horizontal_spacing = 0
                 for glxc_widget in self.glxcwidget_to_display:
 
                     # Check if that the first element
@@ -60,6 +53,7 @@ class HBox(Widget):
                             self.get_y() + glxc_widget.get_spacing(),
                             self.get_x() + glxc_widget.get_spacing()
                         )
+                        total_horizontal_spacing += glxc_widget.get_spacing()
                     # Normal
                     elif 1 <= index <= len(self.glxcwidget_to_display) - 2:
                         sub_win = self.get_curses_subwin().subwin(
@@ -68,11 +62,16 @@ class HBox(Widget):
                             self.get_y() + glxc_widget.get_spacing(),
                             self.get_x() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2)
                         )
-                    # Check if that the last element
+                        total_horizontal_spacing += glxc_widget.get_spacing() / 2
                     else:
+                        # Check if that the last element
+                        last_element_horizontal_size = self.get_width()
+                        last_element_horizontal_size -= (devised_box_size * index)
+                        last_element_horizontal_size -= total_horizontal_spacing
+                        last_element_horizontal_size -= glxc_widget.get_spacing()
                         sub_win = self.get_curses_subwin().subwin(
                             self.get_height() - glxc_widget.get_spacing() * 2,
-                            0,
+                            last_element_horizontal_size,
                             self.get_y() + glxc_widget.get_spacing(),
                             self.get_x() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2)
                         )
@@ -86,3 +85,5 @@ class HBox(Widget):
     def add(self, widget):
         widget.set_parent(self)
         self.glxcwidget_to_display.append(widget)
+
+
