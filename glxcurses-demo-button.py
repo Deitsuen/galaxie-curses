@@ -3,7 +3,7 @@
 import GLXCurses
 import sys
 import curses
-from random import randint
+
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -14,11 +14,7 @@ if __name__ == '__main__':
     app = GLXCurses.Application()
     app.set_name('Galaxie-Curse Demo')
 
-    # Create the main Window
-    win_main = GLXCurses.Window()
-    win_main.set_title('Button Demo')
-
-    # Creat Button
+    # Create Buttons
     Button1 = GLXCurses.Button()
     Button1.set_text('Button')
 
@@ -30,16 +26,18 @@ if __name__ == '__main__':
 
     # Creat a new Horizontal Box contener
     hbox = GLXCurses.HBox()
-    hbox.subwins_spacing = 0
+    hbox.set_spacing(1)
 
     hbox.add(Button1)
     hbox.add(RadioButton1)
     hbox.add(CheckButton1)
 
-
+    # Create the main Window
+    win_main = GLXCurses.Window()
+    win_main.set_title('Press q key for exit.')
     win_main.add(hbox)
 
-    # Creat a Status Bar
+    # Create a Status Bar
     statusbar = GLXCurses.Statusbar()
     # Add Everything inside the Application
     app.add_window(win_main)
@@ -74,9 +72,6 @@ if __name__ == '__main__':
                 message_text += ' '
                 statusbar.push(message_text)
                 app.refresh()
-
-            # if Button1.key_pressed(input_event):
-            #     pass
 
         if input_event == ord('q'):
             break

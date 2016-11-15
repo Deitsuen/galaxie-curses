@@ -238,11 +238,14 @@ class CheckButton(Widget):
                         self.set_is_focus(1)
                         self.check_selected()
                         self.state['PRELIGHT'] = True
-                        self.set_active(not self.get_active())
                     elif event == curses.BUTTON1_RELEASED:
                         self.state['PRELIGHT'] = False
+                        self.set_active(not self.get_active())
+                        self.check_selected()
+                        self.set_is_focus(1)
                     if event == curses.BUTTON1_CLICKED:
                         self.set_active(not self.get_active())
+                        self.check_selected()
                         self.set_is_focus(1)
                     if event == curses.BUTTON1_DOUBLE_CLICKED:
                         self.set_is_focus(1)
@@ -255,7 +258,12 @@ class CheckButton(Widget):
                         self.state['PRELIGHT'] = True
                     elif event == curses.BUTTON2_RELEASED:
                         self.state['PRELIGHT'] = False
+                        self.set_active(not self.get_active())
+                        self.check_selected()
+                        self.set_is_focus(1)
                     if event == curses.BUTTON2_CLICKED:
+                        self.set_active(not self.get_active())
+                        self.check_selected()
                         self.set_is_focus(1)
                     if event == curses.BUTTON2_DOUBLE_CLICKED:
                         self.set_is_focus(1)
@@ -268,7 +276,12 @@ class CheckButton(Widget):
                         self.state['PRELIGHT'] = True
                     elif event == curses.BUTTON3_RELEASED:
                         self.state['PRELIGHT'] = False
+                        self.set_active(not self.get_active())
+                        self.check_selected()
+                        self.set_is_focus(1)
                     if event == curses.BUTTON3_CLICKED:
+                        self.set_active(not self.get_active())
+                        self.check_selected()
                         self.set_is_focus(1)
                     if event == curses.BUTTON3_DOUBLE_CLICKED:
                         self.set_is_focus(1)
@@ -281,7 +294,12 @@ class CheckButton(Widget):
                         self.state['PRELIGHT'] = True
                     elif event == curses.BUTTON4_RELEASED:
                         self.state['PRELIGHT'] = False
+                        self.set_active(not self.get_active())
+                        self.check_selected()
+                        self.set_is_focus(1)
                     if event == curses.BUTTON4_CLICKED:
+                        self.set_active(not self.get_active())
+                        self.check_selected()
                         self.set_is_focus(1)
                     if event == curses.BUTTON4_DOUBLE_CLICKED:
                         self.set_is_focus(1)
