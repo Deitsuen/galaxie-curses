@@ -11,5 +11,6 @@ from GLXCurses.Label import Label
 from GLXCurses.ProgressBar import ProgressBar
 from GLXCurses.Button import Button
 from GLXCurses.RadioButton import RadioButton
+from GLXCurses.CheckButton import CheckButton
 from GLXCurses.HSeparator import HSeparator
 from GLXCurses.VSeparator import VSeparator
