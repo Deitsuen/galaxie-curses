@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from GLXCurses.Style import Style
+import uuid
 import curses
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -12,6 +13,8 @@ class Widget(object):
     def __init__(self):
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Widget'
+        # Unique ID it permit to individually identify a widget by example for get_focus get_default
+        self.id = uuid.uuid1().int
 
         # Widget Setting
         self.state = dict()
@@ -30,6 +33,7 @@ class Widget(object):
         # Widget Parent
         self.screen = None
         self.attribute = None
+        self.application = None
 
         # Size Management
         self.screen_height = 0
@@ -51,58 +55,58 @@ class Widget(object):
         self.preferred_size = 0
 
         # Property
-        # If True, the application will paint directly on the curses_subwin
+        # If True, the application will paint directly on the widget
         self.app_paintable = False
 
-        # If True, the curses_subwin can be the default curses_subwin
+        # If True, the widget can be the default widget
         self.can_default = False
 
-        # If True, the curses_subwin can accept the input focus
+        # If True, the widget can accept the input focus
         self.can_focus = False
 
-        # If True, the curses_subwin is part of a composite curses_subwin
+        # If True, the widget is part of a composite widget
         self.composite_child = False
 
-        # If True, the curses_subwin is double buffered
+        # If True, the widget is double buffered
         self.double_buffered = False
 
-        # The event mask that decides what kind of Event this curses_subwin gets.
+        # The event mask that decides what kind of Event this widget gets.
         self.events = None
 
-        # The mask that decides what kind of extension events this curses_subwin gets.
+        # The mask that decides what kind of extension events this widget gets.
         self.extension_events = None
 
-        # If True, the curses_subwin is the default curses_subwin
+        # If True, the widget is the default widget
         self.has_default = False
 
-        # If True, the curses_subwin has the input focus
+        # If True, the widget has the input focus
         self.has_focus = False
 
-        # A value of True indicates that curses_subwin can have a tooltip
+        # A value of True indicates that widget can have a tooltip
         self.has_tooltip = False
 
-        # The height request of the curses_subwin, or -1 if natural request should be used.
-        self.height_request = -1
+        # The height request of the widget, or 0 if natural/expendable request should be used.
+        self.height_request = 0
 
-        # If True, the curses_subwin is the focus curses_subwin within the toplevel
+        # If True, the widget is the focus widget within the widget
         self.is_focus = False
 
-        # The name of the curses_subwin
+        # The name of the widget
         self.name = None
 
-        # If True show_all() should not affect this curses_subwin
+        # If True show_all() should not affect this widget
         self.no_show_all = False
 
-        # The parent curses_subwin of this curses_subwin. Must be a Container curses_subwin.
+        # The parent widget of this widget. Must be a Container widget.
         self.parent = None
 
-        # If True, the curses_subwin will receive the default action when it is focused.
+        # If True, the widget will receive the default action when it is focused.
         self.receives_default = None
 
-        # If True, the curses_subwin responds to input
+        # If True, the widget responds to input
         self.sensitive = False
 
-        # The style of the curses_subwin, which contains information about how it will look (colors etc).
+        # The style of the widget, which contains information about how it will look (colors etc).
         # Each Widget come with it own Style by default
         # It can receive parent Style() or a new Style() during a set_parent() / un_parent() call
         # GLXCApplication is a special case where it have no parent, it role is to impose it own style to each Widget
@@ -112,13 +116,13 @@ class Widget(object):
         # Sets the text of tooltip to be the given string.
         self.tooltip_text = None
 
-        # If True, the curses_subwin is visible
+        # If True, the widget is visible
         self.visible = True
 
-        # The width request of the curses_subwin, or -1 if natural request should be used.
-        self.width_request = -1
+        # The width request of the widget, or -1 if natural/expendable request should be used.
+        self.width_request = 0
 
-        # The curses_subwin's window if realized, None otherwise.
+        # The widget's window if realized, None otherwise.
         self.window = None
 
     # Common Widget mandatory
@@ -163,7 +167,8 @@ class Widget(object):
 
         self._set_parent(parent)
 
-        self.screen = self.get_parent().get_screen()
+        self.set_screen(self.get_parent().get_screen())
+        self.set_application(self.get_parent().get_application())
 
         # Widget start with own Style, and will use the Style of it parent when it add to a contener
         # GLXCApplication Widget is a special case where it parent is it self.
@@ -183,6 +188,9 @@ class Widget(object):
 
     def get_screen(self):
         return self.screen
+
+    def set_screen(self, screen):
+        self.screen = screen
 
     # Widget
     def get_curses_subwin(self):
@@ -420,3 +428,11 @@ class Widget(object):
         self.set_curses_subwin(drawing_area)
         if (self.get_height() > self.preferred_height) and (self.get_width() > self.preferred_width):
             self.draw_widget_in_area()
+
+    # Selection and Focus
+
+    def get_application(self):
+        return self.application
+
+    def set_application(self, application):
+        self.application = application

@@ -287,7 +287,7 @@ class Button(Widget):
                 self.state['PRELIGHT'] = False
                 return 0
 
-    # Internal curses_subwin functions
+    # Internal Widget functions
     def set_text(self, text):
         self.text = text
         self.preferred_width = len(self.get_text())

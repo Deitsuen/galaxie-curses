@@ -62,6 +62,10 @@ class Application(object):
         self.windows = {}
         self.attribute = self.style.get_default_style()
 
+        # Controller
+        self.widget_it_have_default = None
+        self.widget_it_have_focus = None
+
         # Fake Widget
         self.curses_subwin = None
         self.spacing = 0
@@ -85,6 +89,7 @@ class Application(object):
 
         self.parent_spacing = 0
         self.parent_style = self.style
+
 
     # Parent
     def set_parent(self, parent):
@@ -123,6 +128,9 @@ class Application(object):
 
     def get_screen(self):
         return self.screen
+
+    def set_screen(self, screen):
+        pass
 
     # Size management
     def get_width(self):
@@ -287,3 +295,10 @@ class Application(object):
         self.screen.keypad(False)
         curses.echo()
         curses.endwin()
+
+    # Focus and Selection
+    def get_application(self):
+        return self
+
+    def set_application(self, application):
+        pass
