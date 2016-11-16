@@ -65,6 +65,7 @@ class Application(object):
         # Controller
         self.widget_it_have_default = None
         self.widget_it_have_focus = None
+        self.widget_it_have_tooltip = None
 
         # Fake Widget
         self.curses_subwin = None
@@ -302,3 +303,22 @@ class Application(object):
 
     def set_application(self, application):
         pass
+
+    def get_default(self):
+        return self.widget_it_have_default
+
+    def set_default(self, widget_unique_id):
+        self.widget_it_have_default = widget_unique_id
+
+    def get_focus(self):
+        return self.widget_it_have_focus
+
+    def set_focus(self, widget_unique_id):
+        self.widget_it_have_focus = widget_unique_id
+
+    def get_tooltip(self):
+        return self.widget_it_have_tooltip
+
+    def set_tooltip(self, widget_unique_id):
+        self.widget_it_have_tooltip = widget_unique_id
+

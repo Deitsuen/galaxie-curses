@@ -320,17 +320,29 @@ class Widget(object):
     def get_extension_events(self):
         return self.extension_events
 
-    def set_has_default(self, boolean):
-        self.has_default = bool(boolean)
+    def set_has_default(self):
+        if self.get_application():
+            self.get_application().set_default(self.id)
+        else:
+            pass
 
     def get_has_default(self):
-        return self.has_default
+        if self.get_application():
+            return self.get_application().get_default()
+        else:
+            return None
 
-    def set_has_focus(self, boolean):
-        self.has_focus = bool(boolean)
+    def set_has_focus(self):
+        if self.get_application():
+            self.get_application().set_focus(self.id)
+        else:
+            pass
 
     def get_has_focus(self):
-        return self.has_focus
+        if self.get_application():
+            return self.get_application().get_focus()
+        else:
+            return None
 
     def set_has_tooltip(self, boolean):
         self.has_tooltip = bool(boolean)
