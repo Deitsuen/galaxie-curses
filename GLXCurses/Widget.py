@@ -171,10 +171,6 @@ class Widget(object):
         self.style_backup = self.get_style()
         self.set_style(self.get_parent().get_style())
 
-        # POUR MO
-        #self.parent_height, self.parent_width = self.get_parent().get_size()
-        #self.parent_y, self.parent_x = self.get_parent().get_origin()
-
     def unparent(self):
         self.parent = None
         self.set_style(self.style_backup)
@@ -255,11 +251,9 @@ class Widget(object):
         self.preferred_width = preferred_width
 
     def get_preferred_size(self):
-        # should preserve the Y X of ncuses ?
         return self.preferred_size
 
     def set_preferred_size(self):
-        # should preserve the Y X of ncuses ?
         return self.preferred_size
 
     def get_size(self):

@@ -310,7 +310,7 @@ class Button(Widget):
         return self.position_type
 
     # State
-    def get_states_list(self):
+    def get_states(self):
         return self.states_list
 
     def check_selected(self):

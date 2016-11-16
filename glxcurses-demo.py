@@ -4,6 +4,7 @@ import GLXCurses
 import sys
 import curses
 from random import randint
+
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -20,7 +21,7 @@ if __name__ == '__main__':
 
     # Create a Window
     win1 = GLXCurses.Window()
-    #win_main.set_title('My super Window 1')
+    # win_main.set_title('My super Window 1')
 
     # Create a Window
     win_for_progressbar = GLXCurses.Window()
@@ -185,24 +186,78 @@ if __name__ == '__main__':
     progressbar12.set_orientation('HORIZONTAL')
     progressbar12.set_inverted(1)
 
-
     # Creat Button
     Button1 = GLXCurses.Button()
     Button1.set_text('Button1')
 
+    Button2 = GLXCurses.Button()
+    Button2.set_text('Button2')
+
+    Button3 = GLXCurses.Button()
+    Button3.set_text('Button3')
+
+    vbox_button = GLXCurses.VBox()
+    vbox_button.add(Button1)
+    vbox_button.add(Button2)
+    vbox_button.add(Button3)
+
     RadioButton1 = GLXCurses.RadioButton()
     RadioButton1.set_text('RadioButton1')
 
+    RadioButton2 = GLXCurses.RadioButton()
+    RadioButton2.set_text('RadioButton2')
+
+    RadioButton3 = GLXCurses.RadioButton()
+    RadioButton3.set_text('RadioButton3')
+
+    vbox_radio_button = GLXCurses.VBox()
+    vbox_radio_button.add(RadioButton1)
+    vbox_radio_button.add(RadioButton2)
+    vbox_radio_button.add(RadioButton3)
+
+    CheckButton1 = GLXCurses.CheckButton()
+    CheckButton1.set_text('CheckButton1')
+
+    CheckButton2 = GLXCurses.CheckButton()
+    CheckButton2.set_text('CheckButton2')
+
+    CheckButton3 = GLXCurses.CheckButton()
+    CheckButton3.set_text('CheckButton3')
+
+    vbox_check_button = GLXCurses.VBox()
+    vbox_check_button.add(CheckButton1)
+    vbox_check_button.add(CheckButton2)
+    vbox_check_button.add(CheckButton3)
+
+    win_for_button = GLXCurses.Window()
+    win_for_button.set_title('Button')
+    win_for_button.set_decorated(1)
+    win_for_button.add(vbox_button)
+
+    win_for_radio_button = GLXCurses.Window()
+    win_for_radio_button.set_title('RadioButton')
+    win_for_radio_button.set_decorated(1)
+    win_for_radio_button.add(vbox_radio_button)
+
+    win_for_check_button = GLXCurses.Window()
+    win_for_check_button.set_title('CheckButton')
+    win_for_check_button.set_decorated(1)
+    win_for_check_button.add(vbox_check_button)
+
+    hbox_buttons = GLXCurses.HBox()
+    hbox_buttons.set_spacing(1)
+    hbox_buttons.add(win_for_button)
+    hbox_buttons.add(win_for_radio_button)
+    hbox_buttons.add(win_for_check_button)
+
     HSepartor = GLXCurses.HSeparator()
     HSepartor.set_spacing(0)
-    #VSepartor.set_position_type('center')
+    # VSepartor.set_position_type('center')
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
     vbox1.subwins_spacing = 4
-    vbox1.add(Button1)
-    vbox1.add(HSepartor)
-    vbox1.add(RadioButton1)
 
+    vbox1.add(hbox_buttons)
     vbox1.add(win_for_progressbar)
     vbox1.add(win6)
 
@@ -217,7 +272,7 @@ if __name__ == '__main__':
     hbox = GLXCurses.HBox()
     hbox.subwins_spacing = 0
     hbox.add(vbox1)
-    #hbox.add(vbox2)
+    # hbox.add(vbox2)
 
     hbox_progress_widgets = GLXCurses.HBox()
     hbox_progress_widgets.set_spacing(1)
@@ -244,11 +299,10 @@ if __name__ == '__main__':
     win_for_progressbar.add(hbox_progress_widgets)
 
     # hbox.set_spacing(0)
-    #hbox.add(win_for_progressbar)
-    #hbox.add(win6)
+    # hbox.add(win_for_progressbar)
+    # hbox.add(win6)
 
     win1.add(hbox)
-
 
     # Creat a Status Bar
     toolbar = GLXCurses.Toolbar()
@@ -281,7 +335,6 @@ if __name__ == '__main__':
             message_text += 'Screen Size:'
             message_text += str(app.get_parent_size())
             message_text += ' '
-
 
             # Status Bar Demo
             progressbar1.set_value(randint(0, 100))
@@ -336,21 +389,25 @@ if __name__ == '__main__':
 
         if input_event == curses.KEY_MOUSE:
             event = curses.getmouse()
-            # if Button1.mouse_event(mouse_event):
-            #
-            #     message_text += Button1.get_states_list()
-            #     message_text += ' '
-            #     statusbar.push(message_text)
-            #     app.refresh()
+            for Button in [Button1,
+                           Button2,
+                           Button3,
+                           CheckButton1,
+                           CheckButton2,
+                           CheckButton3,
+                           RadioButton1,
+                           RadioButton2,
+                           RadioButton3]:
+                if Button.mouse_event(event):
+                    message_text += Button.get_text()
+                    message_text += ':('
+                    message_text += Button.get_states()
+                    message_text += ')'
+                    statusbar.push(message_text)
+                    app.refresh()
 
-            if RadioButton1.mouse_event(event):
-                message_text += RadioButton1.get_states_list()
-                message_text += ' '
-                statusbar.push(message_text)
-                app.refresh()
-
-            # if Button1.key_pressed(input_event):
-            #     pass
+                    # if Button1.key_pressed(input_event):
+                    #     pass
 
         # ToolBar
         if input_event == curses.KEY_F1:
@@ -362,10 +419,10 @@ if __name__ == '__main__':
         elif input_event == curses.KEY_F4:
             app.refresh()
         elif input_event == curses.KEY_F5:
-            #Button1.set_is_focus(not Button1.get_is_focus())
+            # Button1.set_is_focus(not Button1.get_is_focus())
             app.refresh()
         elif input_event == curses.KEY_F6:
-            #Button1.set_sensitive(not Button1.get_sensitive())
+            # Button1.set_sensitive(not Button1.get_sensitive())
             app.refresh()
         elif input_event == curses.KEY_F7:
             app.refresh()

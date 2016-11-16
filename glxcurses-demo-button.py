@@ -58,17 +58,17 @@ if __name__ == '__main__':
         if input_event == curses.KEY_MOUSE:
             event = curses.getmouse()
             if RadioButton1.mouse_event(event):
-                message_text += RadioButton1.get_states_list()
+                message_text += RadioButton1.get_states()
                 message_text += ' '
                 statusbar.push(message_text)
                 app.refresh()
             elif Button1.mouse_event(event):
-                message_text += Button1.get_states_list()
+                message_text += Button1.get_states()
                 message_text += ' '
                 statusbar.push(message_text)
                 app.refresh()
             elif CheckButton1.mouse_event(event):
-                message_text += CheckButton1.get_states_list()
+                message_text += CheckButton1.get_states()
                 message_text += ' '
                 statusbar.push(message_text)
                 app.refresh()
