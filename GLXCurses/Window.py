@@ -31,6 +31,8 @@ class Window(Widget):
         if self.style.attribute:
             self.attribute = self.style.attribute
 
+        self.preferred_height = 2
+        self.preferred_width = 2
     # GLXC Window Functions
     def draw_widget_in_area(self):
 

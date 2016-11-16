@@ -18,12 +18,15 @@ class HBox(Widget):
         self.widget_to_display_id = None
         self.number_of_widget_to_display = 0
 
+        self.preferred_height = 2
+        self.preferred_width = 2
+
     # GLXC HBox Functions
     def draw_widget_in_area(self):
 
         # Check widgets to display
-        is_large_enough = (self.get_width() >= self.number_of_widget_to_display + 1)
-        is_high_enough = (self.get_height() >= self.number_of_widget_to_display + 1)
+        is_large_enough = (self.get_width() > 2)
+        is_high_enough = (self.get_height() > 2)
 
         if is_high_enough and is_large_enough:
             if self.glxcwidget_to_display:
