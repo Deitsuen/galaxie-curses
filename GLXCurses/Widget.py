@@ -166,7 +166,6 @@ class Widget(object):
     def set_parent(self, parent):
 
         self._set_parent(parent)
-
         self.set_screen(self.get_parent().get_screen())
 
         # POUR MO
