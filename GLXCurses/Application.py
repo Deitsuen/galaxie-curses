@@ -310,10 +310,10 @@ class Application(object):
     def set_default(self, widget_unique_id):
         self.widget_it_have_default = widget_unique_id
 
-    def get_focus(self):
+    def get_is_focus(self):
         return self.widget_it_have_focus
 
-    def set_focus(self, widget_unique_id):
+    def set_is_focus(self, widget_unique_id):
         self.widget_it_have_focus = widget_unique_id
 
     def get_tooltip(self):

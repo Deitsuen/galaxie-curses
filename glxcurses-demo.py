@@ -188,12 +188,15 @@ if __name__ == '__main__':
 
     # Creat Button
     Button1 = GLXCurses.Button()
+    Button1.set_application(app)
     Button1.set_text('Button1')
 
     Button2 = GLXCurses.Button()
+    Button2.set_application(app)
     Button2.set_text('Button2')
 
     Button3 = GLXCurses.Button()
+    Button3.set_application(app)
     Button3.set_text('Button3')
 
     vbox_button = GLXCurses.VBox()
@@ -202,12 +205,15 @@ if __name__ == '__main__':
     vbox_button.add(Button3)
 
     RadioButton1 = GLXCurses.RadioButton()
+    RadioButton1.set_application(app)
     RadioButton1.set_text('RadioButton1')
 
     RadioButton2 = GLXCurses.RadioButton()
+    RadioButton2.set_application(app)
     RadioButton2.set_text('RadioButton2')
 
     RadioButton3 = GLXCurses.RadioButton()
+    RadioButton3.set_application(app)
     RadioButton3.set_text('RadioButton3')
 
     vbox_radio_button = GLXCurses.VBox()
@@ -216,12 +222,15 @@ if __name__ == '__main__':
     vbox_radio_button.add(RadioButton3)
 
     CheckButton1 = GLXCurses.CheckButton()
+    CheckButton1.set_application(app)
     CheckButton1.set_text('CheckButton1')
 
     CheckButton2 = GLXCurses.CheckButton()
+    CheckButton2.set_application(app)
     CheckButton2.set_text('CheckButton2')
 
     CheckButton3 = GLXCurses.CheckButton()
+    CheckButton3.set_application(app)
     CheckButton3.set_text('CheckButton3')
 
     vbox_check_button = GLXCurses.VBox()

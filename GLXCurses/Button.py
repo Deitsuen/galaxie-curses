@@ -225,56 +225,56 @@ class Button(Widget):
                                                  in self.curses_mouse_states.viewitems()
                                                  if event & state)
                     if event == curses.BUTTON1_PRESSED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
                         self.check_selected()
                         self.state['PRELIGHT'] = True
                     elif event == curses.BUTTON1_RELEASED:
                         self.state['PRELIGHT'] = False
                     if event == curses.BUTTON1_CLICKED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
                     if event == curses.BUTTON1_DOUBLE_CLICKED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
                     if event == curses.BUTTON1_TRIPLE_CLICKED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
 
                     if event == curses.BUTTON2_PRESSED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
                         self.check_selected()
                         self.state['PRELIGHT'] = True
                     elif event == curses.BUTTON2_RELEASED:
                         self.state['PRELIGHT'] = False
                     if event == curses.BUTTON2_CLICKED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
                     if event == curses.BUTTON2_DOUBLE_CLICKED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
                     if event == curses.BUTTON2_TRIPLE_CLICKED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
 
                     if event == curses.BUTTON3_PRESSED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
                         self.check_selected()
                         self.state['PRELIGHT'] = True
                     elif event == curses.BUTTON3_RELEASED:
                         self.state['PRELIGHT'] = False
                     if event == curses.BUTTON3_CLICKED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
                     if event == curses.BUTTON3_DOUBLE_CLICKED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
                     if event == curses.BUTTON3_TRIPLE_CLICKED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
 
                     if event == curses.BUTTON4_PRESSED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
                         self.check_selected()
                         self.state['PRELIGHT'] = True
                     elif event == curses.BUTTON4_RELEASED:
                         self.state['PRELIGHT'] = False
                     if event == curses.BUTTON4_CLICKED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
                     if event == curses.BUTTON4_DOUBLE_CLICKED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
                     if event == curses.BUTTON4_TRIPLE_CLICKED:
-                        self.set_is_focus(1)
+                        self.get_application().set_is_focus(self.id)
 
                     if event == curses.BUTTON_SHIFT:
                         pass
@@ -315,9 +315,12 @@ class Button(Widget):
 
     def check_selected(self):
         if self.get_can_focus():
-            if self.get_is_focus():
-                self.button_border = self.interface_selected
-            else:
-                self.button_border = self.interface
+            if self.get_application():
+                if self.get_application().get_is_focus() == self.id:
+                    self.set_is_focus(True)
+                    self.button_border = self.interface_selected
+                else:
+                    self.set_is_focus(False)
+                    self.button_border = self.interface
         else:
             pass
