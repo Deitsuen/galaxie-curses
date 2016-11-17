@@ -16,12 +16,15 @@ if __name__ == '__main__':
 
     # Create Buttons
     Button1 = GLXCurses.Button()
+    Button1.set_application(app)
     Button1.set_text('Button')
 
     RadioButton1 = GLXCurses.RadioButton()
+    RadioButton1.set_application(app)
     RadioButton1.set_text('RadioButton')
 
     CheckButton1 = GLXCurses.CheckButton()
+    CheckButton1.set_application(app)
     CheckButton1.set_text('CheckButton')
 
     # Creat a new Horizontal Box contener
@@ -57,21 +60,16 @@ if __name__ == '__main__':
 
         if input_event == curses.KEY_MOUSE:
             event = curses.getmouse()
-            if RadioButton1.mouse_event(event):
-                message_text += RadioButton1.get_states()
-                message_text += ' '
-                statusbar.push(message_text)
-                app.refresh()
-            elif Button1.mouse_event(event):
-                message_text += Button1.get_states()
-                message_text += ' '
-                statusbar.push(message_text)
-                app.refresh()
-            elif CheckButton1.mouse_event(event):
-                message_text += CheckButton1.get_states()
-                message_text += ' '
-                statusbar.push(message_text)
-                app.refresh()
+            for Button in [Button1,
+                           CheckButton1,
+                           RadioButton1]:
+                if Button.mouse_event(event):
+                    message_text += Button.get_text()
+                    message_text += ':('
+                    message_text += Button.get_states()
+                    message_text += ')'
+                    statusbar.push(message_text)
+                    app.refresh()
 
         if input_event == ord('q'):
             break
