@@ -168,6 +168,8 @@ class Widget(object):
         self._set_parent(parent)
 
         self.set_screen(self.get_parent().get_screen())
+
+        # POUR MO
         #self.set_application(self.get_parent().get_application())
 
         # Widget start with own Style, and will use the Style of it parent when it add to a contener
