@@ -39,7 +39,7 @@ if __name__ == '__main__':
     hline = GLXCurses.HSeparator()
 
     label_press_q = GLXCurses.Label()
-    label_press_q.set_text('Press q key for exit ...')
+    label_press_q.set_text('Press q key to exit ...')
 
     # Create a main Vertical Box
     vbox_main = GLXCurses.VBox()
