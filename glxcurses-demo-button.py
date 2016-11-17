@@ -27,7 +27,7 @@ if __name__ == '__main__':
     CheckButton1.set_application(app)
     CheckButton1.set_text('CheckButton')
 
-    # Creat a new Horizontal Box contener
+    # Create a new Horizontal Box contener
     hbox = GLXCurses.HBox()
     hbox.set_spacing(1)
 
@@ -35,10 +35,23 @@ if __name__ == '__main__':
     hbox.add(RadioButton1)
     hbox.add(CheckButton1)
 
+    # Create a Horizontal Separator and a Label
+    hline = GLXCurses.HSeparator()
+
+    label_press_q = GLXCurses.Label()
+    label_press_q.set_text('Press q key for exit ...')
+
+    # Create a main Vertical Box
+    vbox_main = GLXCurses.VBox()
+    vbox_main.add(hline)
+    vbox_main.add(hbox)
+    vbox_main.add(hline)
+    vbox_main.add(label_press_q)
+
     # Create the main Window
     win_main = GLXCurses.Window()
-    win_main.set_title('Press q key for exit.')
-    win_main.add(hbox)
+    win_main.set_title('GLXCurses Buttons Demo.')
+    win_main.add(vbox_main)
 
     # Create a Status Bar
     statusbar = GLXCurses.Statusbar()
