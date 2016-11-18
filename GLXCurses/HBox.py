@@ -13,11 +13,7 @@ class HBox(Widget):
         Widget.__init__(self)
         self.set_name('HBox')
 
-        self.glxcwidget_to_display = list()
-        self.h_widget_list = list()
-        self.widget_to_display_id = None
-        self.number_of_widget_to_display = 0
-
+        self.children_list = list()
         self.preferred_height = 2
         self.preferred_width = 2
 
@@ -29,11 +25,11 @@ class HBox(Widget):
         is_high_enough = (self.get_height() > 2)
 
         if is_high_enough and is_large_enough:
-            if self.glxcwidget_to_display:
-                devised_box_size = int(self.get_width() / len(self.glxcwidget_to_display))
+            if self.children_list:
+                devised_box_size = int(self.get_width() / len(self.children_list))
                 index = 0
                 total_horizontal_spacing = 0
-                for glxc_widget in self.glxcwidget_to_display:
+                for glxc_widget in self.children_list:
 
                     # Check if that the first element
                     if index == 0:
@@ -45,7 +41,7 @@ class HBox(Widget):
                         )
                         total_horizontal_spacing += glxc_widget.get_spacing()
                     # Normal
-                    elif 1 <= index <= len(self.glxcwidget_to_display) - 2:
+                    elif 1 <= index <= len(self.children_list) - 2:
                         sub_win = self.get_curses_subwin().subwin(
                             self.get_height() - glxc_widget.get_spacing() * 2,
                             devised_box_size - (glxc_widget.get_spacing() / 2),
@@ -75,6 +71,6 @@ class HBox(Widget):
 
     def add(self, widget):
         widget.set_parent(self)
-        self.glxcwidget_to_display.append(widget)
+        self.children_list.append(widget)
 
 

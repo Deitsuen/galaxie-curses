@@ -15,13 +15,11 @@ class VBox(Widget):
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('VBox')
 
-        self.widget_to_display = list()
-        self.h_widget_list = list()
-        self.widget_to_display_id = None
-        self.number_of_widget_to_display = 0
+        self.children_list = list()
 
         self.preferred_height = 2
         self.preferred_width = 2
+
     # GLXC VBox Functions
     def draw_widget_in_area(self):
 
@@ -30,11 +28,11 @@ class VBox(Widget):
         is_high_enough = (self.get_height() > 2)
 
         if is_high_enough and is_large_enough:
-            if self.widget_to_display:
-                devised_box_size = int(self.get_height() / len(self.widget_to_display))
+            if self.children_list:
+                devised_box_size = int(self.get_height() / len(self.children_list))
                 index = 0
                 total_vertical_spacing = 0
-                for glxc_widget in self.widget_to_display:
+                for glxc_widget in self.children_list:
                     # Check if that the frist element
                     if index == 0:
                         sub_win = self.get_curses_subwin().subwin(
@@ -45,7 +43,7 @@ class VBox(Widget):
                         )
                         total_vertical_spacing += glxc_widget.get_spacing()
                     # Normal
-                    elif 1 <= index <= len(self.widget_to_display)-2:
+                    elif 1 <= index <= len(self.children_list)-2:
                         sub_win = self.get_curses_subwin().subwin(
                                 devised_box_size - (glxc_widget.get_spacing() / 2),
                                 self.get_width() - glxc_widget.get_spacing() * 2,
@@ -76,4 +74,4 @@ class VBox(Widget):
 
     def add(self, widget):
         #widget.set_parent(self)
-        self.widget_to_display.append(widget)
+        self.children_list.append(widget)
