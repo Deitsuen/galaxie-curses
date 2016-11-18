@@ -53,14 +53,19 @@ class Container(Widget):
     def add(self, widget):
         widget.set_parent(self)
         self.children_list.append(widget)
-        self.child_set(widget)
+        #self.child_set(widget)
 
     def remove(self, widget):
-        pass
+        self.child = None
 
+    # The set-resize_mode() method sets the "resize=mode" property of the container.
+    # he resize mode of a container determines whether a resize request will be passed to the container's parent
+    # (RESIZE_PARENT), queued for later execution (RESIZE_QUEUE) or executed immediately (RESIZE_IMMEDIATE).
     def set_resize_mode(self, resize_mode):
         self.resize_mode = str(resize_mode).upper
 
+    # The get_resize_mode() method returns the value of the "resize-mode" property for of the container.
+    # See set_resize_mode().
     def get_resize_mode(self):
         return self.resize_mode
 
@@ -75,7 +80,7 @@ class Container(Widget):
         pass
 
     def get_children(self):
-        pass
+        return self.child
 
     def propagate_expose(self, child, event):
         pass

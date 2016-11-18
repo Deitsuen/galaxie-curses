@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from GLXCurses.Widget import Widget
+from GLXCurses.Box import Box
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -8,12 +8,11 @@ from GLXCurses.Widget import Widget
 __author__ = 'Tuux'
 
 
-class HBox(Widget):
+class HBox(Box):
     def __init__(self):
-        Widget.__init__(self)
+        Box.__init__(self)
         self.set_name('HBox')
 
-        self.children_list = list()
         self.preferred_height = 2
         self.preferred_width = 2
 
@@ -67,10 +66,7 @@ class HBox(Widget):
                     # Drawing
                     glxc_widget.set_curses_subwin(sub_win)
                     glxc_widget.draw_widget_in_area()
-                    #glxc_widget.curses_subwin = sub_win
 
-    def add(self, widget):
-        widget.set_parent(self)
-        self.children_list.append(widget)
+
 
 
