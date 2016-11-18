@@ -144,6 +144,14 @@ class Widget(object):
         self.screen_y, self.screen_x = self.get_screen().getbegyx()
         return self.screen_y
 
+    # The set_child_visible() method determines if the widget should be mapped along with its parent.
+    # If is_visible is True the widget will be mapped with its parent if it has called the show() method.
+    def set_child_visible(self, is_visible):
+        self.set_visible(bool(is_visible))
+
+    def get_child_visible(self):
+        return self.set_visible
+
     def get_parent(self):
         if self.parent:
             return self.parent

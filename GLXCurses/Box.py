@@ -65,12 +65,13 @@ class Box(Container):
     def set_spacing(self, spacing):
         self.spacing = int(spacing)
 
-    # Gets the value set by gtk_box_set_spacing().
+    # Gets the value set by set_spacing().
     def get_spacing(self):
         return self.spacing
 
     def reorder_child(self, child, position):
-        pass
+        self.children_list.remove(child)
+        self.children_list.insert(position, child)
 
     def query_child_packing(self, child):
         pass
