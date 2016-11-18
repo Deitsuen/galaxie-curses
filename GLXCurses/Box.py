@@ -38,10 +38,10 @@ class Box(Container):
         self.position = 0
 
     def pack_start(self, child, expand=True, fill=True, padding=0):
-        pass
+        self.children_list.insert(0, child)
 
     def pack_end(self, child, expand=True, fill=True, padding=0):
-        pass
+        self.children_list.append(child)
 
     def pack_start_defaults(self, widget):
         pass

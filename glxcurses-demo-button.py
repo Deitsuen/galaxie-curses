@@ -31,9 +31,9 @@ if __name__ == '__main__':
     hbox = GLXCurses.HBox()
     hbox.set_spacing(1)
 
-    hbox.add(Button1)
-    hbox.add(RadioButton1)
-    hbox.add(CheckButton1)
+    hbox.pack_end(Button1)
+    hbox.pack_end(RadioButton1)
+    hbox.pack_end(CheckButton1)
 
     # Create a Horizontal Separator and a Label
     hline = GLXCurses.HSeparator()
@@ -43,10 +43,10 @@ if __name__ == '__main__':
 
     # Create a main Vertical Box
     vbox_main = GLXCurses.VBox()
-    vbox_main.add(hline)
-    vbox_main.add(hbox)
-    vbox_main.add(hline)
-    vbox_main.add(label_press_q)
+    vbox_main.pack_end(hline)
+    vbox_main.pack_end(hbox)
+    vbox_main.pack_end(hline)
+    vbox_main.pack_end(label_press_q)
 
     # Create the main Window
     win_main = GLXCurses.Window()

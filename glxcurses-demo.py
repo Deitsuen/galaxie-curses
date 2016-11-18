@@ -200,9 +200,9 @@ if __name__ == '__main__':
     Button3.set_text('Button3')
 
     vbox_button = GLXCurses.VBox()
-    vbox_button.add(Button1)
-    vbox_button.add(Button2)
-    vbox_button.add(Button3)
+    vbox_button.pack_end(Button1)
+    vbox_button.pack_end(Button2)
+    vbox_button.pack_end(Button3)
 
     RadioButton1 = GLXCurses.RadioButton()
     RadioButton1.set_application(app)
@@ -217,9 +217,9 @@ if __name__ == '__main__':
     RadioButton3.set_text('RadioButton3')
 
     vbox_radio_button = GLXCurses.VBox()
-    vbox_radio_button.add(RadioButton1)
-    vbox_radio_button.add(RadioButton2)
-    vbox_radio_button.add(RadioButton3)
+    vbox_radio_button.pack_end(RadioButton1)
+    vbox_radio_button.pack_end(RadioButton2)
+    vbox_radio_button.pack_end(RadioButton3)
 
     CheckButton1 = GLXCurses.CheckButton()
     CheckButton1.set_application(app)
@@ -234,9 +234,9 @@ if __name__ == '__main__':
     CheckButton3.set_text('CheckButton3')
 
     vbox_check_button = GLXCurses.VBox()
-    vbox_check_button.add(CheckButton1)
-    vbox_check_button.add(CheckButton2)
-    vbox_check_button.add(CheckButton3)
+    vbox_check_button.pack_end(CheckButton1)
+    vbox_check_button.pack_end(CheckButton2)
+    vbox_check_button.pack_end(CheckButton3)
 
     win_for_button = GLXCurses.Window()
     win_for_button.set_title('Button')
@@ -255,9 +255,9 @@ if __name__ == '__main__':
 
     hbox_buttons = GLXCurses.HBox()
     hbox_buttons.set_spacing(1)
-    hbox_buttons.add(win_for_button)
-    hbox_buttons.add(win_for_radio_button)
-    hbox_buttons.add(win_for_check_button)
+    hbox_buttons.pack_end(win_for_button)
+    hbox_buttons.pack_end(win_for_radio_button)
+    hbox_buttons.pack_end(win_for_check_button)
 
     HSepartor = GLXCurses.HSeparator()
     HSepartor.set_spacing(0)
@@ -265,22 +265,21 @@ if __name__ == '__main__':
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
     vbox1.subwins_spacing = 4
-
-    vbox1.add(hbox_buttons)
-    vbox1.add(win_for_progressbar)
-    vbox1.add(win6)
+    vbox1.pack_end(hbox_buttons)
+    vbox1.pack_end(win_for_progressbar)
+    vbox1.pack_end(win6)
 
     hbox_label = GLXCurses.HBox()
     hbox_label.subwins_spacing = 0
-    hbox_label.add(label1)
-    hbox_label.add(label2)
-    hbox_label.add(label3)
+    hbox_label.pack_end(label1)
+    hbox_label.pack_end(label2)
+    hbox_label.pack_end(label3)
     win6.add(hbox_label)
 
     # Creat a new Horizontal Box contener
     hbox = GLXCurses.HBox()
     hbox.subwins_spacing = 0
-    hbox.add(vbox1)
+    hbox.pack_end(vbox1)
     # hbox.add(vbox2)
 
     hbox_progress_widgets = GLXCurses.HBox()
@@ -288,28 +287,28 @@ if __name__ == '__main__':
     hbox_progress = GLXCurses.HBox()
     vbox_progress = GLXCurses.VBox()
 
-    hbox_progress_widgets.add(vbox_progress)
-    hbox_progress_widgets.add(hbox_progress)
+    hbox_progress_widgets.pack_end(vbox_progress)
+    hbox_progress_widgets.pack_end(hbox_progress)
 
-    hbox_progress.add(progressbar1)
-    hbox_progress.add(progressbar2)
-    hbox_progress.add(progressbar3)
-    hbox_progress.add(progressbar4)
-    hbox_progress.add(progressbar5)
-    hbox_progress.add(progressbar6)
+    hbox_progress.pack_end(progressbar1)
+    hbox_progress.pack_end(progressbar2)
+    hbox_progress.pack_end(progressbar3)
+    hbox_progress.pack_end(progressbar4)
+    hbox_progress.pack_end(progressbar5)
+    hbox_progress.pack_end(progressbar6)
 
-    vbox_progress.add(progressbar7)
-    vbox_progress.add(progressbar8)
-    vbox_progress.add(progressbar9)
-    vbox_progress.add(progressbar10)
-    vbox_progress.add(progressbar11)
-    vbox_progress.add(progressbar12)
+    vbox_progress.pack_end(progressbar7)
+    vbox_progress.pack_end(progressbar8)
+    vbox_progress.pack_end(progressbar9)
+    vbox_progress.pack_end(progressbar10)
+    vbox_progress.pack_end(progressbar11)
+    vbox_progress.pack_end(progressbar12)
 
     win_for_progressbar.add(hbox_progress_widgets)
 
     # hbox.set_spacing(0)
-    # hbox.add(win_for_progressbar)
-    # hbox.add(win6)
+    # hbox.pack_end(win_for_progressbar)
+    # hbox.pack_end(win6)
 
     win1.add(hbox)
 
