@@ -227,6 +227,39 @@ class Window(Bin):
         else:
             return False
 
+    # The get_focus() method returns the current focused widget within the window.
+    # The focus widget is the widget that would have the focus if the toplevel window is focused.
+    def get_focus(self):
+        if self.get_child().get_has_focus() and self.get_is_focus():
+            return self.get_child()
+        else:
+            return None
+
+    # The set_default() method sets the window's default widget to the value specified by default_widget.
+    # If default_widget is None the window's default widget is unset.
+    # The default widget is the widget that's activated when the user presses Enter in a window.
+    # When setting (rather than unsetting) the default widget
+    # it's generally easier to call the grab_default() method on the widget.
+    # Before making a widget the default widget, you must set the CAN_DEFAULT
+    def set_default(self, default_widget):
+        # default_widget , the widget to be the default, or None to unset the default widget.
+        if default_widget.get_can_default():
+            self.set_has_default(default_widget)
+        else:
+            self.set_has_default(None)
+
+    # The activate_default() method activates the default widget.
+    # If there is no default widget or the default widget cannot be activated,
+    # the window's focus widget (if any) is activated.
+    # This method returns False if no default widget could be activated or there is no focus widget.
+    def activate_default(self):
+        if not self.get_child():
+            return False
+        elif not self.get_child().get_has_default():
+            return False
+        else:
+            return 'sa maman'
+
     def add(self, widget):
         # set_parent is the set_parent from Widget common method
         # information's will be transmit by it method
