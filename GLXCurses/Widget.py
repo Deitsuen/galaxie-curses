@@ -19,6 +19,8 @@ class Widget(Object):
         self.id = uuid.uuid1().int
 
         # Widget Setting
+        self.set_flags()
+
         self.state = dict()
         self.state['NORMAL'] = True
         self.state['ACTIVE'] = False
@@ -30,7 +32,6 @@ class Widget(Object):
         self.curses_subwin = None
         self.spacing = 0
         self.widget_decorated = None
-        self.sensitive = None
 
         # Widget Parent
         self.screen = None
@@ -57,8 +58,6 @@ class Widget(Object):
         self.preferred_size = 0
 
         # Property
-        self.set_flags()
-
         # If True, the application will paint directly on the widget
         self.set_app_paintable(False)
 
@@ -342,12 +341,6 @@ class Widget(Object):
     def get_has_default(self):
         return self.flags['HAS_DEFAULT']
 
-    def set_has_focus(self, boolean):
-        self.flags['HAS_FOCUS'] = bool(boolean)
-
-    def get_has_focus(self):
-        return self.flags['HAS_FOCUS']
-
     def set_has_tooltip(self, boolean):
         self.has_tooltip = bool(boolean)
 
@@ -387,15 +380,6 @@ class Widget(Object):
     def get_receives_default(self):
         return self.receives_default
 
-    def set_sensitive(self, boolean):
-        self.sensitive = bool(boolean)
-        self.state['INSENSITIVE'] = bool(boolean)
-        if not self.get_sensitive():
-            self.set_is_focus(0)
-
-    def get_sensitive(self):
-        return self.sensitive
-
     def set_style(self, style):
         self.style = style
 
@@ -409,10 +393,25 @@ class Widget(Object):
         return self.tooltip_text
 
     def set_visible(self, boolean):
-        self.visible = bool(boolean)
+        self.flags['VISIBLE'] = bool(boolean)
 
     def get_visible(self):
-        return self.visible
+        return self.flags['VISIBLE']
+
+    def set_has_focus(self, boolean):
+        self.flags['HAS_FOCUS'] = bool(boolean)
+
+    def get_has_focus(self):
+        return self.flags['HAS_FOCUS']
+
+    def set_sensitive(self, boolean):
+        self.sensitive = bool(boolean)
+        self.state['INSENSITIVE'] = bool(boolean)
+        if not self.get_sensitive():
+            self.set_is_focus(0)
+
+    def get_sensitive(self):
+        return self.sensitive
 
     def set_width_request(self, width):
         self.width_request = width
