@@ -24,16 +24,15 @@ if __name__ == '__main__':
     # win_main.set_title('My super Window 1')
 
     # Create a Window
-    win_for_progressbar = GLXCurses.Window()
-    win_for_progressbar.set_title('Progress Bar Widget')
-    win_for_progressbar.set_decorated(1)
-    win_for_progressbar.set_spacing(1)
-    win_for_progressbar.override_background_color('CYAN')
+    frame_for_progressbar = GLXCurses.Frame()
+    frame_for_progressbar.set_label('Progress Bar Widget')
+    frame_for_progressbar.set_spacing(1)
+    frame_for_progressbar.override_background_color('CYAN')
+
     # Create a Window
-    win6 = GLXCurses.Window()
-    win6.set_title('Label Widget')
-    win6.set_decorated(1)
-    win6.set_spacing(1)
+    frame_for_labels = GLXCurses.Frame()
+    frame_for_labels.set_label('Label Widget')
+    frame_for_labels.set_spacing(1)
 
     # Create a Label
     label1 = GLXCurses.Label()
@@ -238,43 +237,40 @@ if __name__ == '__main__':
     vbox_check_button.pack_end(CheckButton2)
     vbox_check_button.pack_end(CheckButton3)
 
-    win_for_button = GLXCurses.Window()
-    win_for_button.set_title('Button')
-    win_for_button.set_decorated(1)
-    win_for_button.add(vbox_button)
+    frame_for_button = GLXCurses.Frame()
+    frame_for_button.set_label('Button')
+    frame_for_button.add(vbox_button)
 
-    win_for_radio_button = GLXCurses.Window()
-    win_for_radio_button.set_title('RadioButton')
-    win_for_radio_button.set_decorated(1)
-    win_for_radio_button.add(vbox_radio_button)
+    frame_for_radio_button = GLXCurses.Frame()
+    frame_for_radio_button.set_label('RadioButton')
+    frame_for_radio_button.add(vbox_radio_button)
 
-    win_for_check_button = GLXCurses.Window()
-    win_for_check_button.set_title('CheckButton')
-    win_for_check_button.set_decorated(1)
-    win_for_check_button.add(vbox_check_button)
+    frame_for_check_button = GLXCurses.Frame()
+    frame_for_check_button.set_label('CheckButton')
+    frame_for_check_button.add(vbox_check_button)
 
     hbox_buttons = GLXCurses.HBox()
     hbox_buttons.set_spacing(1)
-    hbox_buttons.pack_end(win_for_button)
-    hbox_buttons.pack_end(win_for_radio_button)
-    hbox_buttons.pack_end(win_for_check_button)
+    hbox_buttons.pack_end(frame_for_button)
+    hbox_buttons.pack_end(frame_for_radio_button)
+    hbox_buttons.pack_end(frame_for_check_button)
 
     HSepartor = GLXCurses.HSeparator()
     HSepartor.set_spacing(0)
     # VSepartor.set_position_type('center')
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
-    vbox1.subwins_spacing = 4
+    vbox1.subwins_spacing = 0
     vbox1.pack_end(hbox_buttons)
-    vbox1.pack_end(win_for_progressbar)
-    vbox1.pack_end(win6)
+    vbox1.pack_end(frame_for_progressbar)
+    vbox1.pack_end(frame_for_labels)
 
     hbox_label = GLXCurses.HBox()
     hbox_label.subwins_spacing = 0
     hbox_label.pack_end(label1)
     hbox_label.pack_end(label2)
     hbox_label.pack_end(label3)
-    win6.add(hbox_label)
+    frame_for_labels.add(hbox_label)
 
     # Creat a new Horizontal Box contener
     hbox = GLXCurses.HBox()
@@ -304,7 +300,7 @@ if __name__ == '__main__':
     vbox_progress.pack_end(progressbar11)
     vbox_progress.pack_end(progressbar12)
 
-    win_for_progressbar.add(hbox_progress_widgets)
+    frame_for_progressbar.add(hbox_progress_widgets)
 
     # hbox.set_spacing(0)
     # hbox.pack_end(win_for_progressbar)

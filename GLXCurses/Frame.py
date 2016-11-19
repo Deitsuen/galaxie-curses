@@ -28,6 +28,9 @@ class Frame(Bin):
         self.preferred_height = 2
         self.preferred_width = 2
 
+        self.set_decorated(1)
+        #self.set_spacing(1)
+
         ####################
         # Frame Properties #
         ####################
@@ -77,21 +80,14 @@ class Frame(Bin):
             self.get_child().draw()
 
         # Create a box and add the name of the windows like a king, who trust that !!!
-        if self.get_decorated():
-            self.get_curses_subwin().box()
-            if self.get_label():
-                self.get_curses_subwin().addstr(
-                    0,
-                    1,
-                    resize_text(self.get_label(), self.get_width() - 2, '~')
-                )
-        else:
-            if self.get_label():
-                self.get_curses_subwin().addstr(
-                    0,
-                    0,
-                    resize_text(self.get_label(), self.get_width() - 1, '~')
-                )
+        self.get_curses_subwin().box()
+        if self.get_label():
+            self.get_curses_subwin().addstr(
+                0,
+                1,
+                resize_text(self.get_label(), self.get_width() - 2, '~')
+            )
+
 
     # The set_label() method sets the text of the label as specified by label.
     # If label is None the current label is removed.
@@ -104,7 +100,7 @@ class Frame(Bin):
     # The get_label() method returns the text in the label widget.
     # If there is no label widget or the label widget is not a Label the method returns None.
     def get_label(self):
-        if not self.get_label_widget() or not self.get_label():
+        if self.get_label_widget():
             return None
         else:
             return self.label

@@ -19,6 +19,13 @@ if __name__ == '__main__':
     win_main = GLXCurses.Window()
     win_main.set_decorated(1)
 
+
+    # Create a Frame
+    frame1 = GLXCurses.Frame()
+    frame1.set_label('Galaxie-Curse Container Frame Demo')
+
+    win_main.add(frame1)
+
     app.add_window(win_main)
 
     # Main loop
