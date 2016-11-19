@@ -5,6 +5,7 @@ from GLXCurses.Widget import Widget
 from GLXCurses.Container import Container
 from GLXCurses.Bin import Bin
 from GLXCurses.Window import Window
+from GLXCurses.Frame import Frame
 from GLXCurses.Box import Box
 from GLXCurses.VBox import VBox
 from GLXCurses.HBox import HBox

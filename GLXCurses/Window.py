@@ -260,11 +260,5 @@ class Window(Bin):
         else:
             return 'sa maman'
 
-    def add(self, widget):
-        # set_parent is the set_parent from Widget common method
-        # information's will be transmit by it method
-        widget.set_parent(self)
-        self.child = widget
-
     def get_attr(self, elem, state):
         return self.attribute[elem][state]

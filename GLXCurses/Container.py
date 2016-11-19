@@ -52,8 +52,7 @@ class Container(Widget):
     # Adding a widget to a container usually results in the resizing and redrawing of the container contents.
     def add(self, widget):
         widget.set_parent(self)
-        self.children_list.append(widget)
-        #self.child_set(widget)
+        self.child = widget
 
     def remove(self, widget):
         self.child = None
