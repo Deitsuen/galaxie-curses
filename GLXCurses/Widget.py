@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from GLXCurses.Style import Style
+from GLXCurses.Object import Object
 import uuid
 import curses
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -9,8 +10,9 @@ import curses
 __author__ = 'Tuux'
 
 
-class Widget(object):
+class Widget(Object):
     def __init__(self):
+        Object.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Widget'
         # Unique ID it permit to individually identify a widget by example for get_focus get_default
@@ -55,20 +57,22 @@ class Widget(object):
         self.preferred_size = 0
 
         # Property
+        self.set_flags()
+
         # If True, the application will paint directly on the widget
-        self.app_paintable = False
+        self.set_app_paintable(False)
 
         # If True, the widget can be the default widget
-        self.can_default = False
+        self.set_can_default(False)
 
         # If True, the widget can accept the input focus
-        self.can_focus = False
+        self.set_can_focus(False)
 
         # If True, the widget is part of a composite widget
-        self.composite_child = False
+        self.set_composite_child(False)
 
         # If True, the widget is double buffered
-        self.double_buffered = False
+        self.set_double_buffered(False)
 
         # The event mask that decides what kind of Event this widget gets.
         self.events = None
@@ -77,10 +81,10 @@ class Widget(object):
         self.extension_events = None
 
         # If True, the widget is the default widget
-        self.has_default = False
+        self.set_has_default(False)
 
         # If True, the widget has the input focus
-        self.has_focus = False
+        self.set_has_focus(False)
 
         # A value of True indicates that widget can have a tooltip
         self.has_tooltip = False
@@ -104,7 +108,7 @@ class Widget(object):
         self.receives_default = None
 
         # If True, the widget responds to input
-        self.sensitive = False
+        self.set_sensitive(False)
 
         # The style of the widget, which contains information about how it will look (colors etc).
         # Each Widget come with it own Style by default
@@ -117,7 +121,7 @@ class Widget(object):
         self.tooltip_text = None
 
         # If True, the widget is visible
-        self.visible = True
+        self.set_visible(True)
 
         # The width request of the widget, or -1 if natural/expendable request should be used.
         self.width_request = 0
@@ -157,6 +161,9 @@ class Widget(object):
             return self.parent
         else:
             return self
+
+    def get_toplevel(self):
+        return self.flags['TOPLEVEL']
 
     # Parent Management
     def get_parent_size(self):
@@ -288,34 +295,34 @@ class Widget(object):
     # and the user can’t interact with them.
     # Properties
     def set_app_paintable(self, boolean):
-        self.app_paintable = bool(boolean)
+        self.flags['APP_PAINTABLE'] = bool(boolean)
 
     def get_app_paintable(self):
-        return self.app_paintable
+        return self.flags['APP_PAINTABLE']
 
     def set_can_default(self, boolean):
-        self.can_default = bool(boolean)
+        self.flags['CAN_DEFAULT'] = bool(boolean)
 
     def get_can_default(self):
-        return self.can_default
+        return self.flags['CAN_DEFAULT']
 
     def set_can_focus(self, boolean):
-        self.can_focus = bool(boolean)
+        self.flags['CAN_FOCUS'] = bool(boolean)
 
     def get_can_focus(self):
-        return self.can_focus
+        return self.flags['CAN_FOCUS']
 
     def set_composite_child(self, boolean):
-        self.composite_child = bool(boolean)
+        self.flags['COMPOSITE_CHILD'] = bool(boolean)
 
     def get_composite_child(self):
-        return self.composite_child
+        return self.flags['COMPOSITE_CHILD']
 
     def set_double_buffered(self, boolean):
-        self.double_buffered = bool(boolean)
+        self.flags['DOUBLE_BUFFERED'] = bool(boolean)
 
     def get_double_buffered(self):
-        return self.double_buffered
+        return self.flags['DOUBLE_BUFFERED']
 
     def set_events(self, events):
         self.events = events
@@ -329,29 +336,17 @@ class Widget(object):
     def get_extension_events(self):
         return self.extension_events
 
-    def set_has_default(self):
-        if self.get_application():
-            self.get_application().set_default(self.id)
-        else:
-            pass
+    def set_has_default(self, boolean):
+        self.flags['HAS_DEFAULT'] = bool(boolean)
 
     def get_has_default(self):
-        if self.get_application():
-            return self.get_application().get_default()
-        else:
-            return None
+        return self.flags['HAS_DEFAULT']
 
-    def set_has_focus(self):
-        if self.get_application():
-            self.get_application().set_focus(self.id)
-        else:
-            pass
+    def set_has_focus(self, boolean):
+        self.flags['HAS_FOCUS'] = bool(boolean)
 
     def get_has_focus(self):
-        if self.get_application():
-            return self.get_application().get_focus()
-        else:
-            return None
+        return self.flags['HAS_FOCUS']
 
     def set_has_tooltip(self, boolean):
         self.has_tooltip = bool(boolean)

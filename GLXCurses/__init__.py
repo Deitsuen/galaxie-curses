@@ -1,5 +1,6 @@
 from GLXCurses.Application import Application
 from GLXCurses.Style import Style
+from GLXCurses.Object import Object
 from GLXCurses.Widget import Widget
 from GLXCurses.Window import Window
 from GLXCurses.Container import Container
