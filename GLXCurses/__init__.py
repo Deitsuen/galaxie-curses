@@ -2,8 +2,9 @@ from GLXCurses.Application import Application
 from GLXCurses.Style import Style
 from GLXCurses.Object import Object
 from GLXCurses.Widget import Widget
-from GLXCurses.Window import Window
 from GLXCurses.Container import Container
+from GLXCurses.Bin import Bin
+from GLXCurses.Window import Window
 from GLXCurses.Box import Box
 from GLXCurses.VBox import VBox
 from GLXCurses.HBox import HBox
