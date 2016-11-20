@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
+from GLXCurses import glxc
 from GLXCurses.Widget import Widget
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE

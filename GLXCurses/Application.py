@@ -3,8 +3,10 @@
 import curses
 import sys
 import os
+from GLXCurses import glxc
 from GLXCurses.Style import Style
 import locale
+
 locale.setlocale(locale.LC_ALL, '')
 code = locale.getpreferredencoding()
 
@@ -12,7 +14,6 @@ code = locale.getpreferredencoding()
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
-
 
 
 class Application(object):
@@ -95,7 +96,6 @@ class Application(object):
 
         self.parent_spacing = 0
         self.parent_style = self.style
-
 
     # Parent
     def set_parent(self, parent):
@@ -326,4 +326,3 @@ class Application(object):
 
     def set_tooltip(self, widget_unique_id):
         self.widget_it_have_tooltip = widget_unique_id
-

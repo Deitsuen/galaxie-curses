@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
+from GLXCurses import glxc
 from GLXCurses.Bin import Bin
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -46,7 +47,7 @@ class Frame(Bin):
         # SHADOW_OUT
         # SHADOW_ETCHED_IN
         # SHADOW_ETCHED_OUT
-        self.shadow_type = 'SHADOW_NONE'
+        self.shadow_type = glxc.SHADOW_NONE
 
     # GLXC Frame Functions
     def draw_widget_in_area(self):
