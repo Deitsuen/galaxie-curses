@@ -22,7 +22,6 @@ class Frame(Bin):
         self.preferred_width = 2
 
         self.set_decorated(1)
-        #self.set_spacing(1)
 
         ####################
         # Frame Properties #
@@ -55,15 +54,15 @@ class Frame(Bin):
         self.get_curses_subwin().bkgdset(
             ord(' '),
             curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self._get_attr('text', 'STATE_NORMAL'),
-                bg=self._get_attr('bg', 'STATE_NORMAL'))
+                fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
+                bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
             )
         )
         self.get_curses_subwin().bkgd(
             ord(' '),
             curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self._get_attr('text', 'STATE_NORMAL'),
-                bg=self._get_attr('bg', 'STATE_NORMAL'))
+                fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
+                bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
             )
         )
 
@@ -144,9 +143,6 @@ class Frame(Bin):
         return self.shadow_type
 
     # Internal
-    def _get_attr(self, elem, state):
-        return self.attribute[elem][state]
-
     def _get_label_x(self):
         xalign, yalign = self.get_label_align()
 

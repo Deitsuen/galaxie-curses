@@ -173,5 +173,5 @@ class Style(object):
             return 0
 
     # Internal
-    def _get_attr(self, elem, state):
+    def get_attr(self, elem, state):
         return self.attribute[elem][state]
