@@ -24,7 +24,7 @@ if __name__ == '__main__':
     frame1 = GLXCurses.Frame()
     frame1.set_label('Galaxie-Curse Container Frame Demo')
     frame1.set_spacing(1)
-    frame1.set_label_align(1, 0.0)
+    frame1.set_label_align(0.5, 0.0)
 
     win_main.add(frame1)
 

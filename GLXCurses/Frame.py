@@ -22,6 +22,7 @@ class Frame(Bin):
         self.preferred_width = 2
 
         self.set_decorated(1)
+        self.imposed_spacing = 1
 
         ####################
         # Frame Properties #
@@ -130,6 +131,7 @@ class Frame(Bin):
         return self.label_xalign, self.label_yalign
 
     def set_shadow_type(self, type):
+        type = str(type).upper()
         # The set_shadow_type() method sets the frame's shadow type to the value of type.
         # The type must be one of:
         # SHADOW_NONE
@@ -145,10 +147,15 @@ class Frame(Bin):
     # Internal
     def _get_label_x(self):
         xalign, yalign = self.get_label_align()
-
-        value = int((self.get_width() - len(self.get_label())) * xalign)
-        if value < 0:
-            value = 0
+        value = 0
+        value += int((self.get_width() - len(self.get_label())) * xalign)
+        if value <= 0:
+            value = self._get_imposed_spacing()
+            return value
+        if 0 < xalign <= 0.5:
+            value += self._get_imposed_spacing()
+        elif 0.5 <= xalign <= 1.0:
+            value -= self._get_imposed_spacing()
         return value
 
     def _get_label_y(self):
@@ -159,10 +166,16 @@ class Frame(Bin):
         return value
 
     def _get_resided_label_text(self, separator='~'):
-        border_width = self.get_width() - len(self.get_label())
-        if border_width <= 0:
-            text_to_return = self.get_label()[:self.get_width()]
+        border_width = self.get_width() - len(self.get_label()) + (self._get_imposed_spacing() * 2)
+        max_width = self.get_width() - (self._get_imposed_spacing() * 2)
+        if border_width <= self._get_imposed_spacing() * 2 + 1:
+            text_to_return = self.get_label()[:(max_width / 2) - 1] + separator + self.get_label()[-max_width / 2:]
             return text_to_return
         else:
             return self.get_label()
 
+    def _get_imposed_spacing(self):
+        return int(self.imposed_spacing)
+
+    def _set_imposed_spacing(self, spacing):
+        self.imposed_spacing = int(spacing)
