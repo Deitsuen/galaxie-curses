@@ -153,22 +153,22 @@ class Button(Widget):
         if not self.get_sensitive():
             self.draw_the_good_button(
                 color=curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_style().get_attr('bg', 'STATE_NORMAL'),
-                    bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                    fg=self.get_style()._get_attr('bg', 'STATE_NORMAL'),
+                    bg=self.get_style()._get_attr('bg', 'STATE_NORMAL'))
                 ) | curses.A_BOLD
             )
         elif self.state['PRELIGHT']:
             self.draw_the_good_button(
                 color=curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_style().get_attr('dark', 'STATE_NORMAL'),
-                    bg=self.get_style().get_attr('bg', 'STATE_PRELIGHT'))
+                    fg=self.get_style()._get_attr('dark', 'STATE_NORMAL'),
+                    bg=self.get_style()._get_attr('bg', 'STATE_PRELIGHT'))
                 )
             )
         elif self.state['NORMAL']:
             self.draw_the_good_button(
                 color=curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                    bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                    fg=self.get_style()._get_attr('text', 'STATE_NORMAL'),
+                    bg=self.get_style()._get_attr('bg', 'STATE_NORMAL'))
                 )
             )
 

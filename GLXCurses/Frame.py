@@ -9,13 +9,6 @@ from GLXCurses.Bin import Bin
 __author__ = 'Tuux'
 
 
-def resize_text(text, max_width, separator='~'):
-    if max_width < len(text):
-        return text[:(max_width / 2) - 1] + separator + text[-max_width / 2:]
-    else:
-        return text
-
-
 class Frame(Bin):
     def __init__(self):
         Bin.__init__(self)
@@ -62,15 +55,15 @@ class Frame(Bin):
         self.get_curses_subwin().bkgdset(
             ord(' '),
             curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_attr('text', 'STATE_NORMAL'),
-                bg=self.get_attr('bg', 'STATE_NORMAL'))
+                fg=self._get_attr('text', 'STATE_NORMAL'),
+                bg=self._get_attr('bg', 'STATE_NORMAL'))
             )
         )
         self.get_curses_subwin().bkgd(
             ord(' '),
             curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_attr('text', 'STATE_NORMAL'),
-                bg=self.get_attr('bg', 'STATE_NORMAL'))
+                fg=self._get_attr('text', 'STATE_NORMAL'),
+                bg=self._get_attr('bg', 'STATE_NORMAL'))
             )
         )
 
@@ -81,13 +74,14 @@ class Frame(Bin):
 
         # Create a box and add the name of the windows like a king, who trust that !!!
         self.get_curses_subwin().box()
+
+        # Add the Label
         if self.get_label():
             self.get_curses_subwin().addstr(
-                0,
-                1,
-                resize_text(self.get_label(), self.get_width() - 2, '~')
+                self._get_label_y(),
+                self._get_label_x(),
+                self._get_resided_label_text()
             )
-
 
     # The set_label() method sets the text of the label as specified by label.
     # If label is None the current label is removed.
@@ -134,7 +128,7 @@ class Frame(Bin):
         self.label_yalign = yalign
 
     def get_label_align(self):
-        return tuple((self.label_xalign, self.label_yalign))
+        return self.label_xalign, self.label_yalign
 
     def set_shadow_type(self, type):
         # The set_shadow_type() method sets the frame's shadow type to the value of type.
@@ -150,5 +144,29 @@ class Frame(Bin):
         return self.shadow_type
 
     # Internal
-    def get_attr(self, elem, state):
+    def _get_attr(self, elem, state):
         return self.attribute[elem][state]
+
+    def _get_label_x(self):
+        xalign, yalign = self.get_label_align()
+
+        value = int((self.get_width() - len(self.get_label())) * xalign)
+        if value < 0:
+            value = 0
+        return value
+
+    def _get_label_y(self):
+        xalign, yalign = self.get_label_align()
+        value = int(self.get_height() * yalign)
+        if value < 0:
+            value = 0
+        return value
+
+    def _get_resided_label_text(self, separator='~'):
+        border_width = self.get_width() - len(self.get_label())
+        if border_width <= 0:
+            text_to_return = self.get_label()[:self.get_width()]
+            return text_to_return
+        else:
+            return self.get_label()
+
