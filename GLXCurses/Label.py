@@ -271,7 +271,6 @@ class Label(Misc):
         else:
             return
 
-
     # Justification: LEFT, RIGHT, CENTER
     def set_justify(self, justify):
         justify = str(justify).upper()
