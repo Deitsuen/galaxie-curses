@@ -42,11 +42,11 @@ class Frame(Bin):
         self.label_yalign = 0
 
         # The style of the frame's border; one of:
-        # SHADOW_NONE
-        # SHADOW_IN
-        # SHADOW_OUT
-        # SHADOW_ETCHED_IN
-        # SHADOW_ETCHED_OUT
+        # glxc.SHADOW_NONE
+        # glxc.SHADOW_IN
+        # glxc.SHADOW_OUT
+        # glxc.SHADOW_ETCHED_IN
+        # glxc.SHADOW_ETCHED_OUT
         self.shadow_type = glxc.SHADOW_NONE
 
     # GLXC Frame Functions
