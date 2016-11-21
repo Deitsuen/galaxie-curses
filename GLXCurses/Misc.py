@@ -20,6 +20,7 @@ class Misc(Widget):
     def __init__(self):
         Widget.__init__(self)
 
+        # Misc Properties
         # The horizontal alignment, from 0.0 to 1.0
         self.xalign = 0.0
 

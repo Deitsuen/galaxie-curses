@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
-from GLXCurses.Widget import Widget
+from GLXCurses import glxc
+from GLXCurses.Misc import Misc
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -22,14 +23,90 @@ def resize_text(text, max_width, separator='~'):
         return text
 
 
-class Label(Widget):
+class Label(Misc):
     def __init__(self):
-        Widget.__init__(self)
+        Misc.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('Label')
 
-        # Internal Widget Setting
-        self.text = ''
+        # Label Properties
+        # The current position of the insertion cursor in chars. Allowed values: >= 0. Default value: 0
+        self.cursor_position = 0
+
+        # justify
+        # The alignment of the lines in the text of the label relative to each other.
+        # The possible values are:
+        # glxc.JUSTIFY_LEFT,
+        # glxc.JUSTIFY_RIGHT,
+        # glxc.JUSTIFY_CENTER,
+        # glxc.JUSTIFY_FILL.
+        # This does NOT affect the alignment of the label within its allocation.
+        # Default value: glxc.JUSTIFY_LEFT
+        self.justify = glxc.JUSTIFY_CENTER
+
+        # The text of the label.
+        # Default value: None
+        self.label = None
+
+        # The desired maximum width of the label, in characters.
+        # If this property is set to -1, the width will be calculated automatically,
+        # otherwise the label will request space for no more than the requested number of characters.
+        # If the "width-chars" property is set to a positive value, then the "max-width-chars" property is ignored.
+        # Allowed values: >= -1.
+        # Default value: -1
+        self.max_width_chars = -1
+
+        # The mnemonic accelerator key for this label.
+        # Default value: 16777215
+        self.mnemonic_keyval = 16777215
+
+        # The widget to be activated when the label's mnemonic key is pressed.
+        self.mnemonic_widget = None
+
+        # A string with _ characters in positions used to identify to characters in the text to underline.
+        # Default value: None
+        self.pattern = None
+
+        # If True, the label text can be selected with the mouse.
+        # Default value: False
+        self.selectable = False
+
+        # The position of the opposite end of the selection from the cursor in chars.
+        # Allowed values: >= 0.
+        # Default value: 0.
+        self.selection_bound = 0
+
+        # If True the label is in single line mode.
+        # In single line mode, the height of the label does not depend on the actual text,
+        # it is always set to ascent + descent of the font. This can be an advantage
+        # in situations where resizing the label because of text changes would be distracting, e.g. in a statusbar.
+        # Default value: False
+        self.single_line_mode = False
+
+        # If True the label tracks which links have been clicked.
+        # It will then apply the "visited-link-color" color, instead of "link-color". False
+        self.track_visited_links = False
+
+        # If True, an underscore in the text indicates the next character should be used
+        # for the mnemonic accelerator key.
+        # Default value: False
+        self.use_underline = False
+
+        # The desired width of the label, in characters.
+        # If this property is set to -1, the width will be calculated automatically,
+        # otherwise the label will request either 3 characters or the property value, whichever is greater.
+        # Allowed values: >= -1.
+        # Default value: -1.
+        self.width_chars = -1
+
+        # If True, wrap lines if the text becomes too wide.
+        # Default value: False
+        self.wrap = False
+
+        # If line wrapping is on, this controls how the line wrapping is done.
+        # The default is glxc.WRAP_WORD, which means wrap on word boundaries.
+        self.wrap_mode = glxc.WRAP_WORD
+
         self.text_x = 0
         self.text_y = 0
         
@@ -41,14 +118,13 @@ class Label(Widget):
         if self.style.attribute:
             self.attribute = self.style.attribute
 
-        # Justification: LEFT, RIGHT, CENTER
-        self.justification = 'CENTER'
+
 
         # Orientation: HORIZONTAL, VERTICAL
         self.orientation = 'HORIZONTAL'
 
         # PositionType: CENTER, TOP, BOTTOM
-        self.position_type = 'CENTER'
+        self.position_type = glxc.JUSTIFY_CENTER
 
     def draw_widget_in_area(self):
         if self.get_text():
@@ -70,11 +146,11 @@ class Label(Widget):
 
     def check_vertical_justification(self):
         # Check Justification
-        if self.get_justify().upper() == 'CENTER':
+        if self.get_justify().upper() == glxc.JUSTIFY_CENTER:
             self.text_x = (self.get_width() / 2) - (self.get_preferred_width() / 2)
-        elif self.get_justify().upper() == 'LEFT':
+        elif self.get_justify().upper() == glxc.JUSTIFY_LEFT:
             self.text_x = 0 + self.get_spacing()
-        elif self.get_justify().upper() == 'RIGHT':
+        elif self.get_justify().upper() == glxc.JUSTIFY_RIGHT:
             self.text_x = self.get_width() - self.get_preferred_width() - self.get_spacing()
 
         return self.text_x
@@ -82,7 +158,7 @@ class Label(Widget):
     def check_vertical_position_type(self):
         # PositionType: CENTER, TOP, BOTTOM
         self.text_y = 0
-        if self.get_position_type().upper() == 'CENTER':
+        if self.get_position_type().upper() == glxc.JUSTIFY_CENTER:
             if (self.get_height() / 2) > (self.preferred_height / 2):
                 self.text_y = (self.get_height() / 2) - (self.get_preferred_height() / 2)
             else:
@@ -96,11 +172,11 @@ class Label(Widget):
     def check_horizontal_justification(self):
         # Check Justification
         self.text_x = 0
-        if self.get_justify() == 'CENTER':
+        if self.get_justify() == glxc.JUSTIFY_CENTER:
             self.text_x = (self.get_width() / 2) - (self.get_preferred_width() / 2)
-        elif self.get_justify() == 'LEFT':
+        elif self.get_justify() == glxc.JUSTIFY_LEFT:
             self.text_x = 0 + self.get_spacing()
-        elif self.get_justify() == 'RIGHT':
+        elif self.get_justify() == glxc.JUSTIFY_RIGHT:
             self.text_x = self.get_width() - self.get_preferred_width()
 
         return self.text_x
@@ -108,7 +184,7 @@ class Label(Widget):
     def check_horizontal_position_type(self):
         # PositionType: CENTER, TOP, BOTTOM
         self.text_y = 0
-        if self.get_position_type().upper() == 'CENTER':
+        if self.get_position_type().upper() == glxc.JUSTIFY_CENTER:
             if (self.get_height() / 2) > self.get_preferred_height():
                 self.text_y = (self.get_height() / 2) - self.get_preferred_height()
             else:
@@ -172,19 +248,27 @@ class Label(Widget):
 
     # Internal curses_subwin functions
     def set_text(self, text):
-        self.text = text
+        self.label = text
         self.update_preferred_sizes()
 
     def get_text(self):
-        return self.text
+        return self.label
 
     # Justification: LEFT, RIGHT, CENTER
-    def set_justify(self, justification):
-        self.justification = str(justification).upper()
+    def set_justify(self, justify):
+        justify = str(justify).upper()
+        if justify == 'LEFT':
+            self.justify = glxc.JUSTIFY_LEFT
+        elif justify == 'CENTER':
+            self.justify = glxc.JUSTIFY_CENTER
+        elif justify == 'RIGHT':
+            self.justify = glxc.JUSTIFY_RIGHT
+        else:
+            self.justify = glxc.JUSTIFY_CENTER
         self.update_preferred_sizes()
 
     def get_justify(self):
-        return self.justification
+        return self.justify
 
     # Orientation: HORIZONTAL, VERTICAL
     def set_orientation(self, orientation):
