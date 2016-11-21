@@ -118,13 +118,38 @@ class Label(Misc):
         if self.style.attribute:
             self.attribute = self.style.attribute
 
-
-
         # Orientation: HORIZONTAL, VERTICAL
         self.orientation = 'HORIZONTAL'
 
         # PositionType: CENTER, TOP, BOTTOM
         self.position_type = glxc.JUSTIFY_CENTER
+
+    ###########
+    # Methods #
+    ###########
+    # The set_text() method sets the text within the Label widget.
+    # It replaces any text that was there before and will clear any previously set mnemonic accelerators.
+    def set_text(self, text):
+        self.label = text
+        self.update_preferred_sizes()
+
+    # The get_text() method fetches the text from a label widget, as displayed on the screen.
+    # This does not include any markup or embedded underscore characters indicating mnemonics. (See get_label()).
+    def get_text(self):
+        return self.label
+
+    # The set_label() method sets the text of the label.
+    # The label is parsed for embedded underscores and markup depending on
+    # the values of the "use-underline" and "use-markup" properties.
+    def set_label(self, text):
+        self.label = text
+        self.update_preferred_sizes()
+
+    # The get_label() method returns the text from a label widget including any markup
+    # and embedded underscores indicating mnemonics. (See get_text() that just returns the text).
+    def get_label(self):
+        return self.label
+
 
     def draw_widget_in_area(self):
         if self.get_text():
@@ -246,13 +271,6 @@ class Label(Misc):
         else:
             return
 
-    # Internal curses_subwin functions
-    def set_text(self, text):
-        self.label = text
-        self.update_preferred_sizes()
-
-    def get_text(self):
-        return self.label
 
     # Justification: LEFT, RIGHT, CENTER
     def set_justify(self, justify):
@@ -262,6 +280,12 @@ class Label(Misc):
         elif justify == 'CENTER':
             self.justify = glxc.JUSTIFY_CENTER
         elif justify == 'RIGHT':
+            self.justify = glxc.JUSTIFY_RIGHT
+        elif justify == glxc.JUSTIFY_LEFT:
+            self.justify = glxc.JUSTIFY_LEFT
+        elif justify == glxc.JUSTIFY_CENTER:
+            self.justify = glxc.JUSTIFY_CENTER
+        elif justify == glxc.JUSTIFY_RIGHT:
             self.justify = glxc.JUSTIFY_RIGHT
         else:
             self.justify = glxc.JUSTIFY_CENTER
