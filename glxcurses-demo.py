@@ -44,7 +44,6 @@ if __name__ == '__main__':
 
     label2 = GLXCurses.Label()
     label2.set_justify('RIGHT')
-    label2.set_orientation('VERTICAL')
     label2.set_text('YELLOW')
     label2.override_color('YELLOW')
 

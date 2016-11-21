@@ -156,42 +156,9 @@ class Label(Misc):
             text_have_necessary_width = (self.get_preferred_width() + self.get_spacing() >= 1)
             text_have_necessary_height = (self.get_preferred_height() + self.get_spacing() >= 1)
             if text_have_necessary_width and text_have_necessary_height:
-
-                # Orientation: HORIZONTAL, VERTICAL
-                if self.get_orientation() == 'HORIZONTAL':
-                    self.text_x = self.check_horizontal_justification()
-                    self.text_y = self.check_horizontal_position_type()
-                    self.draw_horizontal_label()
-
-                elif self.get_orientation() == 'VERTICAL':
-                    self.text_x = self.check_vertical_justification()
-                    self.text_y = self.check_vertical_position_type()
-                    self.draw_vertical_label()
-
-    def check_vertical_justification(self):
-        # Check Justification
-        if self.get_justify().upper() == glxc.JUSTIFY_CENTER:
-            self.text_x = (self.get_width() / 2) - (self.get_preferred_width() / 2)
-        elif self.get_justify().upper() == glxc.JUSTIFY_LEFT:
-            self.text_x = 0 + self.get_spacing()
-        elif self.get_justify().upper() == glxc.JUSTIFY_RIGHT:
-            self.text_x = self.get_width() - self.get_preferred_width() - self.get_spacing()
-
-        return self.text_x
-
-    def check_vertical_position_type(self):
-        # PositionType: CENTER, TOP, BOTTOM
-        self.text_y = 0
-        if self.get_position_type().upper() == glxc.JUSTIFY_CENTER:
-            if (self.get_height() / 2) > (self.preferred_height / 2):
-                self.text_y = (self.get_height() / 2) - (self.get_preferred_height() / 2)
-            else:
-                self.text_y = 0
-        elif self.get_position_type().upper() == 'TOP':
-            self.text_y = 0
-        elif self.get_position_type().upper() == 'BOTTOM':
-            self.text_y = self.get_height() - self.get_preferred_height()
-        return self.text_y
+                self.text_x = self.check_horizontal_justification()
+                self.text_y = self.check_horizontal_position_type()
+                self.draw_label()
 
     def check_horizontal_justification(self):
         # Check Justification
@@ -220,27 +187,7 @@ class Label(Misc):
 
         return self.text_y
 
-    def get_attr(self, elem, state):
-        return self.attribute[elem][state]
-
-    def draw_vertical_label(self):
-        # Draw the Vertical Label with Justification and PositionType
-        message_to_display = resize_text(self.get_text(), self.get_height() - (self.get_spacing() * 2), '~')
-        if len(message_to_display) > 2:
-            increment = 0
-            for CHAR in message_to_display:
-                self.get_curses_subwin().insch(
-                    self.text_y + increment,
-                    self.text_x,
-                    CHAR,
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('text', 'STATE_NORMAL'),
-                        bg=self.get_attr('bg', 'STATE_NORMAL'))
-                    )
-                )
-                increment += 1
-
-    def draw_horizontal_label(self):
+    def draw_label(self):
         # Draw the Horizontal Label with Justification and PositionType
         message_to_display = resize_text(self.get_text(), self.get_width() - (self.get_spacing() * 2), '~')
         self.get_curses_subwin().addstr(
@@ -248,23 +195,19 @@ class Label(Misc):
             self.text_x,
             message_to_display,
             curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_attr('text', 'STATE_NORMAL'),
-                bg=self.get_attr('bg', 'STATE_NORMAL'))
+                fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
+                bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
             )
         )
 
     def update_preferred_sizes(self):
         if self.get_text():
             preferred_width = 0
-            preferred_height = 0
-            if self.get_orientation() == 'VERTICAL':
-                preferred_width = 1
-                preferred_height += len(self.get_text())
-                preferred_height += self.get_spacing() * 2
-            else:
-                preferred_height = 1
-                preferred_width += len(self.get_text())
-                preferred_width += self.get_spacing() * 2
+            preferred_height = 1
+
+            preferred_width += len(self.get_text())
+            preferred_width += self.get_spacing() * 2
+
             self.set_preferred_height(preferred_height)
             self.set_preferred_width(preferred_width)
         else:
@@ -307,3 +250,42 @@ class Label(Misc):
 
     def get_position_type(self):
         return self.position_type
+
+    # Internal
+    def _get_label_x(self):
+        xalign, _ = self.get_alignment()
+        xpadd, _ = self.get_padding()
+        value = 0
+        value += int((self.get_width() - len(self.get_label())) * xalign)
+        if value <= 0:
+            value = xpadd
+            return value
+        if 0 < xalign <= 0.5:
+            value += xpadd
+        elif 0.5 <= xalign <= 1.0:
+            value -= xpadd
+        return value
+
+    def _get_label_y(self):
+        _, yalign = self.get_alignment()
+        _, ypadd = self.get_padding()
+
+        value = int(self.get_height() * yalign)
+        if value <= 0:
+            value = ypadd
+            return value
+        if 0 < ypadd <= 0.5:
+            value += ypadd
+        elif 0.5 <= yalign <= 1.0:
+            value -= ypadd
+        return value
+
+    def _get_resided_label_text(self, separator='~'):
+        xpadd, _ = self.get_padding()
+        border_width = self.get_width() - len(self.get_label()) + (xpadd * 2)
+        max_width = self.get_width() - (xpadd * 2)
+        if border_width <= xpadd * 2 + 1:
+            text_to_return = self.get_label()[:(max_width / 2) - 1] + separator + self.get_label()[-max_width / 2:]
+            return text_to_return
+        else:
+            return self.get_label()
