@@ -65,7 +65,7 @@ class Label(Misc):
 
         # A string with _ characters in positions used to identify to characters in the text to underline.
         # Default value: None
-        self.pattern = None
+        self.pattern = '_'
 
         # If True, the label text can be selected with the mouse.
         # Default value: False
@@ -149,6 +149,63 @@ class Label(Misc):
     # and embedded underscores indicating mnemonics. (See get_text() that just returns the text).
     def get_label(self):
         return self.label
+
+    # set_markup
+    # set_use_markup
+    # get_use_markup
+
+    # The set_use_underline() method sets the "use-underline" property to the value of setting.
+    # If setting is True,
+    # an underscore in the text indicates the next character should be used for the mnemonic accelerator key.
+    def set_use_underline(self, setting):
+        if bool(setting):
+            self.use_underline = True
+        else:
+            self.use_underline = False
+
+    # The get_use_underline() method returns the value of the "use-underline" property.
+    # If True an embedded underscore in the label indicates the next character is a mnemonic. See set_use_underline().
+    def get_use_underline(self):
+        return bool(self.use_underline)
+
+    # set_markup_with_mnemonic
+
+    # The get_mnemonic_keyval() method returns the value of the "mnemonic-keyval" property that contains the keyval
+    # used for the mnemonic accelerator if one has been set on the label.
+    # If there is no mnemonic set up it returns the void symbol keyval.
+    def get_mnemonic_keyval(self):
+        if self.mnemonic_keyval:
+            return self.mnemonic_keyval
+        else:
+            return None
+
+    # The set_mnemonic_widget() method sets the "mnemonic-widget" property using the value of widget.
+    # This method associates the label mnemonic with a widget that will be activated
+    #   when the mnemonic accelerator is pressed.
+    # When the label is inside a widget (like a Button or a Notebook tab) it is automatically associated
+    #  with the correct widget, but sometimes (i.e. when the target is a gtk.Entry next to the label)
+    #  you need to set it explicitly using this function.
+    # The target widget will be activated by emitting "mnemonic_activate" on it.
+    def set_mnemonic_widget(self, widget):
+        self.mnemonic_widget = widget
+        # emitting "mnemonic_activate"
+
+    # The get_mnemonic_widget() method retrieves the value of the "mnemonic-widget" property which is the target
+    # of the mnemonic accelerator of this label.
+    # See set_mnemonic_widget().
+    def get_mnemonic_widget(self):
+        return self.mnemonic_widget
+
+    # The set_text_with_mnemonic() method sets the label's text from the string str.
+    # If characters in str are preceded by an underscore,
+    # they are underlined indicating that they represent a mnemonic accelerator.
+    # The mnemonic key can be used to activate another widget, chosen automatically,
+    # or explicitly using the set_mnemonic_widget() method.
+    def set_text_with_mnemonic(self, string):
+        mnemonic_index = str.find(self.pattern)
+        if string.find("_") > 0:
+            newstring = string.replace('_', '')
+            self.set_text(newstring)
 
     def draw_widget_in_area(self):
         if self.get_text():
