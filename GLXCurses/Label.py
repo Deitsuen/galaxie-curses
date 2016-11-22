@@ -202,10 +202,17 @@ class Label(Misc):
     # The mnemonic key can be used to activate another widget, chosen automatically,
     # or explicitly using the set_mnemonic_widget() method.
     def set_text_with_mnemonic(self, string):
-        mnemonic_index = str.find(self.pattern)
-        if string.find("_") > 0:
-            newstring = string.replace('_', '')
-            self.set_text(newstring)
+        string = str(string)
+        if self.pattern in string:
+            newstring = str(string).replace(self.pattern, '')
+            mnemonic_index = ''
+            for i in range(0, len(string)):
+                if self.pattern == string[i]:
+                    mnemonic_index = i
+            self.set_text(str(newstring) + str(mnemonic_index))
+            self.set_mnemonic_widget(self)
+        else:
+            self.set_text(string.index(self.pattern))
 
     def draw_widget_in_area(self):
         if self.get_text():
