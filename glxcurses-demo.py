@@ -26,19 +26,16 @@ if __name__ == '__main__':
     # Create a Window
     frame_for_progressbar = GLXCurses.Frame()
     frame_for_progressbar.set_label('Progress Bar Widget')
-    frame_for_progressbar.set_spacing(1)
     frame_for_progressbar.override_background_color('CYAN')
 
     # Create a Window
     frame_for_labels = GLXCurses.Frame()
     frame_for_labels.set_label('Label Widget')
-    frame_for_labels.set_spacing(1)
 
     # Create a Label
     label1 = GLXCurses.Label()
-    label1.set_text('Super thing 1')
     label1.set_justify('RIGHT')
-    label1.set_text('RED')
+    label1.set_text('RED WITH BACKGROUND GREEN')
     label1.override_color('RED')
     label1.override_background_color('GREEN')
 
@@ -49,6 +46,7 @@ if __name__ == '__main__':
 
     label3 = GLXCurses.Label()
     label3.set_justify('LEFT')
+    #label3.set_alignment(0.5, 0.5)
     #label3.set_text('CYAN')
     label3.set_text_with_mnemonic('CY_AN ')
     label3.override_color('CYAN')
@@ -250,7 +248,6 @@ if __name__ == '__main__':
     frame_for_check_button.add(vbox_check_button)
 
     hbox_buttons = GLXCurses.HBox()
-    hbox_buttons.set_spacing(1)
     hbox_buttons.pack_end(frame_for_button)
     hbox_buttons.pack_end(frame_for_radio_button)
     hbox_buttons.pack_end(frame_for_check_button)
@@ -260,13 +257,11 @@ if __name__ == '__main__':
     # VSepartor.set_position_type('center')
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
-    vbox1.subwins_spacing = 0
     vbox1.pack_end(hbox_buttons)
     vbox1.pack_end(frame_for_progressbar)
     vbox1.pack_end(frame_for_labels)
 
     hbox_label = GLXCurses.HBox()
-    hbox_label.subwins_spacing = 0
     hbox_label.pack_end(label1)
     hbox_label.pack_end(label2)
     hbox_label.pack_end(label3)

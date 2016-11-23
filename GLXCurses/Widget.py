@@ -31,7 +31,8 @@ class Widget(Object):
         # Widget
         self.curses_subwin = None
         self.spacing = 0
-        self.widget_decorated = None
+        self.imposed_spacing = 0
+        self.widget_decorated = False
 
         # Widget Parent
         self.screen = None
@@ -427,18 +428,25 @@ class Widget(Object):
         self.height, self.width = self.get_parent().get_curses_subwin().getmaxyx()
         self.y, self.x = self.get_parent().get_curses_subwin().getbegyx()
 
-        min_size_width = (self.get_spacing() * 2) + 1
-        min_size_height = (self.get_spacing() * 2) + 1
+        # Check if the Parent have decoration add and 1 to spacing in case
+        padding = self.get_spacing()
+        if self.get_parent().get_decorated():
+            padding += self.get_parent().get_border_width()
+
+        min_size_width = (padding * 2) + 1
+        min_size_height = (padding * 2) + 1
+
         height_ok = self.get_height() >= min_size_height
         width_ok = self.get_width() >= min_size_width
+
         if not height_ok or not width_ok:
             return
 
         drawing_area = self.get_parent().get_curses_subwin().subwin(
-            self.get_height() - (self.get_spacing() * 2),
-            self.get_width() - (self.get_spacing() * 2),
-            self.get_y() + self.get_spacing(),
-            self.get_x() + self.get_spacing()
+            self.get_height() - (padding * 2),
+            self.get_width() - (padding * 2),
+            self.get_y() + padding,
+            self.get_x() + padding
         )
         self.set_curses_subwin(drawing_area)
         if (self.get_height() > self.preferred_height) and (self.get_width() > self.preferred_width):
@@ -451,3 +459,10 @@ class Widget(Object):
 
     def set_application(self, application):
         self.application = application
+
+    # Internal
+    def _get_imposed_spacing(self):
+        return int(self.imposed_spacing)
+
+    def _set_imposed_spacing(self, spacing):
+        self.imposed_spacing = int(spacing)

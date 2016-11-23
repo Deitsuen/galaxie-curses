@@ -23,7 +23,8 @@ class Frame(Bin):
         self.preferred_width = 2
 
         self.set_decorated(1)
-        self.imposed_spacing = 1
+        self.set_border_width(1)
+        self._set_imposed_spacing(1)
 
         ####################
         # Frame Properties #
@@ -174,9 +175,3 @@ class Frame(Bin):
             return text_to_return
         else:
             return self.get_label()
-
-    def _get_imposed_spacing(self):
-        return int(self.imposed_spacing)
-
-    def _set_imposed_spacing(self, spacing):
-        self.imposed_spacing = int(spacing)

@@ -90,3 +90,11 @@ class Object(object):
 
     def destroy(self):
         pass
+
+    def connect(self):
+        def __init__(self, signal_id, callback, ):
+            self.signal_id = signal_id
+            self.callback = callback
+
+        def callback_print_arg(self):
+            print self.arg

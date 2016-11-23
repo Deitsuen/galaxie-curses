@@ -42,7 +42,8 @@ class Label(Misc):
         # glxc.JUSTIFY_FILL.
         # This does NOT affect the alignment of the label within its allocation.
         # Default value: glxc.JUSTIFY_LEFT
-        self.justify = glxc.JUSTIFY_CENTER
+        self.justify = glxc.JUSTIFY_LEFT
+
 
         # The text of the label.
         # Default value: None
@@ -118,12 +119,7 @@ class Label(Misc):
         if self.style.attribute:
             self.attribute = self.style.attribute
 
-        # Orientation: HORIZONTAL, VERTICAL
-        self.orientation = 'HORIZONTAL'
-
-        # PositionType: CENTER, TOP, BOTTOM
-        self.position_type = glxc.JUSTIFY_CENTER
-
+        #self.set_alignment(0.5, 0.5)
     ###########
     # Methods #
     ###########
@@ -209,7 +205,7 @@ class Label(Misc):
             for i in range(0, len(string)):
                 if self.pattern == string[i]:
                     mnemonic_index = i
-            self.set_text(str(newstring) + str(mnemonic_index))
+            self.set_text(str(newstring) + str(newstring[mnemonic_index]))
             self.set_mnemonic_widget(self)
         else:
             self.set_text(string.index(self.pattern))
@@ -220,40 +216,33 @@ class Label(Misc):
             text_have_necessary_width = (self.get_preferred_width() + self.get_spacing() >= 1)
             text_have_necessary_height = (self.get_preferred_height() + self.get_spacing() >= 1)
             if text_have_necessary_width and text_have_necessary_height:
-                self.text_x = self.check_horizontal_justification()
+                self.text_x = self.check_justification()
                 self.text_y = self.check_horizontal_position_type()
                 self.draw_label()
 
-    def check_horizontal_justification(self):
+    def check_justification(self):
         # Check Justification
         self.text_x = 0
         if self.get_justify() == glxc.JUSTIFY_CENTER:
-            self.text_x = (self.get_width() / 2) - (self.get_preferred_width() / 2)
+            self.set_alignment(0.5, self._get_label_y())
+            self.text_x = self._get_label_x()
         elif self.get_justify() == glxc.JUSTIFY_LEFT:
-            self.text_x = 0 + self.get_spacing()
+            self.set_alignment(0.0, self._get_label_y())
+            self.text_x = self._get_label_x() + self.get_spacing()
         elif self.get_justify() == glxc.JUSTIFY_RIGHT:
-            self.text_x = self.get_width() - self.get_preferred_width()
-
+            self.set_alignment(1.0, self._get_label_y())
+            self.text_x = self._get_label_x()
+        else:
+            self.set_alignment(self._get_label_x(), self._get_label_y())
         return self.text_x
 
     def check_horizontal_position_type(self):
-        # PositionType: CENTER, TOP, BOTTOM
-        self.text_y = 0
-        if self.get_position_type().upper() == glxc.JUSTIFY_CENTER:
-            if (self.get_height() / 2) > self.get_preferred_height():
-                self.text_y = (self.get_height() / 2) - self.get_preferred_height()
-            else:
-                self.text_y = 0
-        elif self.get_position_type() == 'TOP':
-            self.text_y = 0
-        elif self.get_position_type() == 'BOTTOM':
-            self.text_y = self.get_height() - self.get_preferred_height()
-
+        self.text_y = self._get_label_y()
         return self.text_y
 
     def draw_label(self):
         # Draw the Horizontal Label with Justification and PositionType
-        message_to_display = resize_text(self.get_text(), self.get_width() - (self.get_spacing() * 2), '~')
+        message_to_display = resize_text(self.get_text(), self.get_width() - ((self.get_spacing() + self._get_imposed_spacing()) * 2), '~')
         self.get_curses_subwin().addstr(
             self.text_y,
             self.text_x,
@@ -270,7 +259,7 @@ class Label(Misc):
             preferred_height = 1
 
             preferred_width += len(self.get_text())
-            preferred_width += self.get_spacing() * 2
+            preferred_width += (self.get_spacing() + self._get_imposed_spacing()) * 2
 
             self.set_preferred_height(preferred_height)
             self.set_preferred_width(preferred_width)
@@ -298,22 +287,6 @@ class Label(Misc):
 
     def get_justify(self):
         return self.justify
-
-    # Orientation: HORIZONTAL, VERTICAL
-    def set_orientation(self, orientation):
-        self.orientation = str(orientation).upper()
-        self.update_preferred_sizes()
-
-    def get_orientation(self):
-        return self.orientation
-
-    # PositionType: CENTER, TOP, BOTTOM
-    def set_position_type(self, position_type):
-        self.position_type = str(position_type).upper()
-        self.update_preferred_sizes()
-
-    def get_position_type(self):
-        return self.position_type
 
     # Internal
     def _get_label_x(self):

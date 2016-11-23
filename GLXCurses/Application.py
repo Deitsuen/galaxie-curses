@@ -76,6 +76,7 @@ class Application(object):
         # Fake Widget
         self.curses_subwin = None
         self.spacing = 0
+        self.decorated = 0
         self.screen_height = 0
         self.screen_width = 0
         self.screen_y = 0
@@ -128,6 +129,9 @@ class Application(object):
 
     def get_spacing(self):
         return self.spacing
+
+    def get_decorated(self):
+        return self.decorated
 
     def remove_parent(self):
         pass
