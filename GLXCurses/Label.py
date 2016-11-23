@@ -211,14 +211,17 @@ class Label(Misc):
             self.set_text(string.index(self.pattern))
 
     def draw_widget_in_area(self):
+        #self.check_justification()
         if self.get_text():
-            # Check if the text can be display
-            text_have_necessary_width = (self.get_preferred_width() + self.get_spacing() >= 1)
-            text_have_necessary_height = (self.get_preferred_height() + self.get_spacing() >= 1)
-            if text_have_necessary_width and text_have_necessary_height:
-                self.text_x = self.check_justification()
-                self.text_y = self.check_horizontal_position_type()
-                self.draw_label()
+            self.get_curses_subwin().addstr(
+                self._get_label_y(),
+                self._get_label_x(),
+                self._get_resided_label_text(),
+                curses.color_pair(self.get_style().get_curses_pairs(
+                    fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
+                    bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                )
+            )
 
     def check_justification(self):
         # Check Justification
@@ -239,19 +242,6 @@ class Label(Misc):
     def check_horizontal_position_type(self):
         self.text_y = self._get_label_y()
         return self.text_y
-
-    def draw_label(self):
-        # Draw the Horizontal Label with Justification and PositionType
-        message_to_display = resize_text(self.get_text(), self.get_width() - ((self.get_spacing() + self._get_imposed_spacing()) * 2), '~')
-        self.get_curses_subwin().addstr(
-            self.text_y,
-            self.text_x,
-            message_to_display,
-            curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
-            )
-        )
 
     def update_preferred_sizes(self):
         if self.get_text():
@@ -283,7 +273,18 @@ class Label(Misc):
             self.justify = glxc.JUSTIFY_RIGHT
         else:
             self.justify = glxc.JUSTIFY_CENTER
+
         self.update_preferred_sizes()
+
+        if self.get_justify() == glxc.JUSTIFY_CENTER:
+            self.set_alignment(0.5, self._get_label_y())
+            self.text_x = self._get_label_x()
+        elif self.get_justify() == glxc.JUSTIFY_LEFT:
+            self.set_alignment(0.0, self._get_label_y())
+            self.text_x = self._get_label_x() + self.get_spacing()
+        elif self.get_justify() == glxc.JUSTIFY_RIGHT:
+            self.set_alignment(1.0, self._get_label_y())
+            self.text_x = self._get_label_x()
 
     def get_justify(self):
         return self.justify
@@ -293,7 +294,11 @@ class Label(Misc):
         xalign, _ = self.get_alignment()
         xpadd, _ = self.get_padding()
         value = 0
-        value += int((self.get_width() - len(self.get_label())) * xalign)
+        if self.get_label():
+            value += int((self.get_width() - len(self.get_label())) * xalign)
+        else:
+            value += int(self.get_width() * xalign)
+
         if value <= 0:
             value = xpadd
             return value

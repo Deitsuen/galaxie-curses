@@ -41,14 +41,15 @@ if __name__ == '__main__':
 
     label2 = GLXCurses.Label()
     label2.set_justify('RIGHT')
-    label2.set_text('YELLOW')
+    label2.set_text('YELLOW WITH BACKGROUND NORMAL')
     label2.override_color('YELLOW')
 
     label3 = GLXCurses.Label()
-    label3.set_justify('LEFT')
-    #label3.set_alignment(0.5, 0.5)
+
+    label3.set_alignment(0.5, 0.5)
+    #label3.set_justify('RIGHT')
     #label3.set_text('CYAN')
-    label3.set_text_with_mnemonic('CY_AN ')
+    label3.set_text_with_mnemonic('CY_AN WITH BACKGROUND NORMAL')
     label3.override_color('CYAN')
 
     progressbar1 = GLXCurses.ProgressBar()
