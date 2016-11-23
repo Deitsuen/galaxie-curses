@@ -211,17 +211,19 @@ class Label(Misc):
             self.set_text(string.index(self.pattern))
 
     def draw_widget_in_area(self):
-        #self.check_justification()
         if self.get_text():
-            self.get_curses_subwin().addstr(
-                self._get_label_y(),
-                self._get_label_x(),
-                self._get_resided_label_text(),
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                    bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+            try:
+                self.get_curses_subwin().addstr(
+                    self._get_label_y(),
+                    self._get_label_x(),
+                    self._get_resided_label_text(),
+                    curses.color_pair(self.get_style().get_curses_pairs(
+                        fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
+                        bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                    )
                 )
-            )
+            except curses.error:
+                pass
 
     def check_justification(self):
         # Check Justification
@@ -289,15 +291,45 @@ class Label(Misc):
     def get_justify(self):
         return self.justify
 
+    # The set_width_chars() method sets the "width-chars" property to the value of n_chars.
+    # The "width-chars" property specifies the desired width of the label in characters.
+    def set_width_chars(self, n_chars):
+        self.width_chars = int(n_chars)
+
+    # The get_width_chars() method returns the value of the "width-chars"
+    # property that specifies the desired width of the label in characters.
+    def get_width_chars(self):
+        return int(self.width_chars)
+
+    # The set_single_line_mode() method sets the "single-line-mode" property to the value of single_line_mode.
+    # If single_line_mode is True the label is in single line mode where the height of the label does not
+    # depend on the actual text, it is always set to ascent + descent of the font.
+    def set_single_line_mode(self, single_line_mode):
+        self.single_line_mode = bool(single_line_mode)
+
+    # The get_single_line_mode() method returns the value of the "single-line-mode" property.
+    # See the set_single_line_mode() method for more information
+    def get_single_line_mode(self):
+        return bool(self.single_line_mode)
+
+    # The set_max_width_chars() method sets the "max-width-chars" property to the value of n_chars.
+    def set_max_width_chars(self, n_chars):
+        self.max_width_chars = int(n_chars)
+
+    # The get_max_width_chars() method returns the value of the "max-width-chars" property
+    # which is the desired maximum width of the label in characters.
+    def get_max_width_chars(self):
+        return int(self.max_width_chars)
+
     # Internal
     def _get_label_x(self):
         xalign, _ = self.get_alignment()
         xpadd, _ = self.get_padding()
         value = 0
         if self.get_label():
-            value += int((self.get_width() - len(self.get_label())) * xalign)
+            value += int((self.get_width() - len(self.get_label()) - 1) * xalign)
         else:
-            value += int(self.get_width() * xalign)
+            value += int((self.get_width() - 1) * xalign)
 
         if value <= 0:
             value = xpadd
@@ -312,7 +344,8 @@ class Label(Misc):
         _, yalign = self.get_alignment()
         _, ypadd = self.get_padding()
 
-        value = int(self.get_height() * yalign)
+        # substract 1 that because :)
+        value = int((self.get_height() - 1) * yalign)
         if value <= 0:
             value = ypadd
             return value

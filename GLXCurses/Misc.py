@@ -36,14 +36,14 @@ class Misc(Widget):
     def set_alignment(self, xalign, yalign):
         # xalign :
         xalign = float(xalign)
-        if xalign > 1.0:
+        if xalign >= 1.0:
             xalign = 1.0
         elif xalign < 0.0:
             xalign = 0.0
 
         # yalign :
         yalign = float(yalign)
-        if yalign > 1.0:
+        if yalign >= 1.0:
             yalign = 1.0
         elif yalign < 0.0:
             yalign = 0.0

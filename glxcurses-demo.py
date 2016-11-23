@@ -45,8 +45,7 @@ if __name__ == '__main__':
     label2.override_color('YELLOW')
 
     label3 = GLXCurses.Label()
-
-    label3.set_alignment(0.5, 0.5)
+    label3.set_alignment(0.5, 1.0)
     #label3.set_justify('RIGHT')
     #label3.set_text('CYAN')
     label3.set_text_with_mnemonic('CY_AN WITH BACKGROUND NORMAL')

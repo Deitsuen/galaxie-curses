@@ -56,7 +56,7 @@ class Container(Widget):
 
     def remove(self, widget):
         self.child = None
-        widget.set_visible(True)
+        widget.set_visible(False)
 
     # The set-resize_mode() method sets the "resize=mode" property of the container.
     # he resize mode of a container determines whether a resize request will be passed to the container's parent
