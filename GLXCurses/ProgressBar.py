@@ -78,19 +78,6 @@ class ProgressBar(Widget):
         return self.attribute[elem][state]
 
     def draw_widget_in_area(self):
-        height_ok = self.get_height() > self.get_preferred_height()
-        width_ok = self.get_width() > self.get_preferred_width()
-
-        if not height_ok or not width_ok:
-            return
-
-        # Many Thing's
-        # Check if the text can be display
-        text_have_necessary_width = (self.get_preferred_width() + (self.get_spacing() * 2) >= 1)
-        text_have_necessary_height = (self.get_preferred_height() + (self.get_spacing() * 2) >= 1)
-        if not text_have_necessary_height or not text_have_necessary_width:
-            return
-
         # Orientation: HORIZONTAL, VERTICAL
         if self.get_orientation() == 'HORIZONTAL':
             self.draw_horizontal()

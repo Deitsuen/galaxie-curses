@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import curses
 from GLXCurses.Box import Box
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -12,7 +11,6 @@ __author__ = 'Tuux'
 class VBox(Box):
     def __init__(self):
         Box.__init__(self)
-        # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('VBox')
 
         self.preferred_height = 2
@@ -31,22 +29,23 @@ class VBox(Box):
                 index = 0
                 total_vertical_spacing = 0
                 for glxc_widget in self.children_list:
-                    # Check if that the frist element
+
+                    # Check if that the first element
                     if index == 0:
                         sub_win = self.get_curses_subwin().subwin(
-                                devised_box_size - glxc_widget.get_spacing(),
-                                self.get_width() - glxc_widget.get_spacing() * 2,
-                                self.get_y() + glxc_widget.get_spacing(),
-                                self.get_x() + glxc_widget.get_spacing()
+                            devised_box_size - glxc_widget.get_spacing(),
+                            self.get_width() - glxc_widget.get_spacing() * 2,
+                            self.get_y() + glxc_widget.get_spacing(),
+                            self.get_x() + glxc_widget.get_spacing()
                         )
                         total_vertical_spacing += glxc_widget.get_spacing()
                     # Normal
                     elif 1 <= index <= len(self.children_list)-2:
                         sub_win = self.get_curses_subwin().subwin(
-                                devised_box_size - (glxc_widget.get_spacing() / 2),
-                                self.get_width() - glxc_widget.get_spacing() * 2,
-                                self.get_y() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2),
-                                self.get_x() + glxc_widget.get_spacing()
+                            devised_box_size - (glxc_widget.get_spacing() / 2),
+                            self.get_width() - glxc_widget.get_spacing() * 2,
+                            self.get_y() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2),
+                            self.get_x() + glxc_widget.get_spacing()
                         )
                         total_vertical_spacing += glxc_widget.get_spacing() / 2
                     # Check if that the last element
@@ -67,5 +66,3 @@ class VBox(Box):
                     # Drawing
                     glxc_widget.set_curses_subwin(sub_win)
                     glxc_widget.draw_widget_in_area()
-
-

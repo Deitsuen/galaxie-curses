@@ -66,7 +66,3 @@ class HBox(Box):
                     # Drawing
                     glxc_widget.set_curses_subwin(sub_win)
                     glxc_widget.draw_widget_in_area()
-
-
-
-

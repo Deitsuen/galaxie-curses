@@ -270,7 +270,6 @@ if __name__ == '__main__':
 
     # Creat a new Horizontal Box contener
     hbox = GLXCurses.HBox()
-    hbox.subwins_spacing = 0
     hbox.pack_end(vbox1)
     # hbox.add(vbox2)
 
