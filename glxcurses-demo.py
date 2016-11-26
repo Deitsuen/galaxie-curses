@@ -38,12 +38,25 @@ if __name__ == '__main__':
     label1.set_text('RED WITH BACKGROUND GREEN')
     label1.override_color('RED')
     label1.override_background_color('GREEN')
-    label1.set_single_line_mode(1)
+    label1.set_wrap_mode('WRAP_CHAR')
+    label1.set_text('How does it work?\n'
+                    '   Well, the reduce\n'
+                    '* A Quick Guide to GPLv3\n'
+                    '* Why Upgrade to GPLv3\n'
+                    '* Frequently Asked Questions about the GNU licenses\n'
+                    '* How to use GNU licenses for your own software\n'
+                    '* Translations of the GPL\n'
+                    '* The GPL in other formats: plain text, Texinfo, LaTeX, standalone HTML, ODF, Docbook v4 or v5, Markdown, and RTF\n'
+                    '* GPLv3 logos to use with your project\n'
+                    '* Old versions of the GNU GPL\n'
+                    '* What to do if you see a possible GPL violation\n'
+                    )
+    #label1.set_single_line_mode(1)
 
     label2 = GLXCurses.Label()
     label2.set_justify('RIGHT')
     label2.set_text('How does it work?\n'
-                    '   Well, the reduce '
+                    '   Well, the reduce\n'
                     '* A Quick Guide to GPLv3\n'
                     '* Why Upgrade to GPLv3\n'
                     '* Frequently Asked Questions about the GNU licenses\n'

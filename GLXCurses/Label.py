@@ -320,6 +320,9 @@ class Label(Misc):
         else:
             return int(self.get_width() - (self.get_spacing() * 2))
 
+    def set_wrap_mode(self, wrap_mode):
+        self.wrap_mode = wrap_mode
+
     def get_wrap_mode(self):
         return self.wrap_mode
 
@@ -407,9 +410,24 @@ class Label(Misc):
             line = []
             len_line = 0
             if self.get_wrap_mode() == glxc.WRAP_WORD_CHAR:
-                pass
+                # Wrap this text.
+                wraped = textwrap.wrap(
+                    paragraph,
+                    width=width,
+                    fix_sentence_endings=True,
+                    break_long_words=True,
+                    break_on_hyphens=True,
+                )
+
+                if len(lines) <= height:
+                    lines += wraped
             elif self.get_wrap_mode() == glxc.WRAP_CHAR:
-                pass
+                if len(paragraph) < width:
+                    if len(lines) < height:
+                        lines.append(paragraph)
+                else:
+                    if len(lines) < height:
+                        lines += [paragraph[ind:ind + width] for ind in range(0, len(paragraph), width)]
             else:
                 for word in paragraph.split(' '):
                     len_word = len(word)
@@ -420,5 +438,7 @@ class Label(Misc):
                         lines.append(' '.join(line))
                         line = [word]
                         len_line = len_word + 1
-            lines.append(' '.join(line))
+
+                if len(lines) < height:
+                    lines.append(' '.join(line))
         return lines
