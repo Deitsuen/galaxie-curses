@@ -49,24 +49,27 @@ class MenuModel(Widget):
                 )
         if self.app_info_label:
             if not self.get_height() + 1 <= len(app_info_label):
-                self.get_curses_subwin().addstr(
-                    0,
-                    (self.get_width() - 1) - len(str(app_info_label[:-1])),
-                    app_info_label[:-1],
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('dark', 'STATE_NORMAL'),
-                        bg=self.get_attr('light', 'STATE_NORMAL'))
+                try:
+                    self.get_curses_subwin().addstr(
+                        0,
+                        (self.get_width() - 1) - len(str(app_info_label[:-1])),
+                        app_info_label[:-1],
+                        curses.color_pair(self.get_style().get_curses_pairs(
+                            fg=self.get_attr('dark', 'STATE_NORMAL'),
+                            bg=self.get_attr('light', 'STATE_NORMAL'))
+                        )
                     )
-                )
-                self.get_curses_subwin().insstr(
-                    0,
-                    self.get_width() - 1,
-                    app_info_label[-1:],
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('dark', 'STATE_NORMAL'),
-                        bg=self.get_attr('light', 'STATE_NORMAL'))
+                    self.get_curses_subwin().insstr(
+                        0,
+                        self.get_width() - 1,
+                        app_info_label[-1:],
+                        curses.color_pair(self.get_style().get_curses_pairs(
+                            fg=self.get_attr('dark', 'STATE_NORMAL'),
+                            bg=self.get_attr('light', 'STATE_NORMAL'))
+                        )
                     )
-                )
+                except curses.error:
+                    pass
 
     def get_attr(self, elem, state):
         return self.attribute[elem][state]

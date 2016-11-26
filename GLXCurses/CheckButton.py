@@ -190,21 +190,28 @@ class CheckButton(Widget):
             )
 
     def draw_the_good_button(self, color):
-        # Interface management
-        self.get_curses_subwin().addstr(
-            self.label_y,
-            self.label_x,
-            self.interface,
-            color
-        )
-        # Draw the Horizontal Button with Justification and PositionType
-        message_to_display = resize_text(self.get_text(), self.get_width(), '~')
-        self.get_curses_subwin().addstr(
-            self.label_y,
-            self.label_x + len(self.interface),
-            message_to_display,
-            color
-        )
+        try:
+            # Interface management
+            self.get_curses_subwin().addstr(
+                self.label_y,
+                self.label_x,
+                self.interface,
+                color
+            )
+        except curses.error:
+            pass
+
+        try:
+            # Draw the Horizontal Button with Justification and PositionType
+            message_to_display = resize_text(self.get_text(), self.get_width(), '~')
+            self.get_curses_subwin().addstr(
+                self.label_y,
+                self.label_x + len(self.interface),
+                message_to_display,
+                color
+            )
+        except curses.error:
+            pass
 
     def enter(self):
         pass

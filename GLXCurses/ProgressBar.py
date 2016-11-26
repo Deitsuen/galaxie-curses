@@ -107,83 +107,89 @@ class ProgressBar(Widget):
         )
         # Draw the Vertical ProgressBar with Justification and PositionType
         if self.get_inverted():
-            # Draw Background
-            progress_text = progress_text[::-1]
-            increment = 0
-            for CHAR in progress_text:
-                self.get_curses_subwin().addch(
-                    self.get_height() - self.get_spacing() - 2 - increment,
+            try:
+                # Draw Background
+                progress_text = progress_text[::-1]
+                increment = 0
+                for CHAR in progress_text:
+                    self.get_curses_subwin().addch(
+                        self.get_height() - self.get_spacing() - 2 - increment,
+                        x_progress,
+                        CHAR,
+                        curses.color_pair(self.get_style().get_curses_pairs(
+                            fg=self.get_attr('base', 'STATE_NORMAL'),
+                            bg=self.get_attr('bg', 'STATE_NORMAL'))
+                        )
+                    )
+                    increment += 1
+
+                count = 0
+                for CHAR in progress_text[:int((self.get_height() - self.get_preferred_height()) * self.value / 100)]:
+                    self.get_curses_subwin().addch(
+                        self.get_height() - self.get_spacing() - 2 - count,
+                        x_progress,
+                        CHAR,
+                        curses.color_pair(self.get_style().get_curses_pairs(
+                            fg=self.get_attr('bg', 'STATE_NORMAL'),
+                            bg=self.get_attr('base', 'STATE_NORMAL'))
+                        )
+                    )
+                    count += 1
+
+                # Draw last interface_unactive Character
+                self.get_curses_subwin().insch(
+                    self.get_height() - self.get_spacing() - 1,
                     x_progress,
-                    CHAR,
+                    curses.ACS_HLINE,
                     curses.color_pair(self.get_style().get_curses_pairs(
                         fg=self.get_attr('base', 'STATE_NORMAL'),
                         bg=self.get_attr('bg', 'STATE_NORMAL'))
                     )
                 )
-                increment += 1
-
-            count = 0
-            for CHAR in progress_text[:int((self.get_height() - self.get_preferred_height()) * self.value / 100)]:
-                self.get_curses_subwin().addch(
-                    self.get_height() - self.get_spacing() - 2 - count,
-                    x_progress,
-                    CHAR,
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('bg', 'STATE_NORMAL'),
-                        bg=self.get_attr('base', 'STATE_NORMAL'))
-                    )
-                )
-                count += 1
-
-            # Draw last interface_unactive Character
-            self.get_curses_subwin().insch(
-                self.get_height() - self.get_spacing() - 1,
-                x_progress,
-                curses.ACS_HLINE,
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('base', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_NORMAL'))
-                )
-            )
+            except curses.error:
+                pass
         else:
-            # Draw the Vertical ProgressBar with Justification and PositionType
-            count = 1
-            for CHAR in progress_text:
-                self.get_curses_subwin().addstr(
-                    y_progress + count,
+            try:
+                # Draw the Vertical ProgressBar with Justification and PositionType
+                count = 1
+                for CHAR in progress_text:
+                    self.get_curses_subwin().addstr(
+                        y_progress + count,
+                        x_progress,
+                        CHAR,
+                        curses.color_pair(self.get_style().get_curses_pairs(
+                            fg=self.get_attr('base', 'STATE_NORMAL'),
+                            bg=self.get_attr('bg', 'STATE_NORMAL'))
+                        )
+                    )
+                    count += 1
+
+                # Redraw with color inverted but apply percent calculation
+                count = 1
+                for CHAR in progress_text[:int((self.get_height() - self.get_preferred_height()) * self.value / 100)]:
+                    self.get_curses_subwin().addstr(
+                        y_progress + count,
+                        x_progress,
+                        CHAR,
+                        curses.color_pair(self.get_style().get_curses_pairs(
+                            fg=self.get_attr('bg', 'STATE_NORMAL'),
+                            bg=self.get_attr('base', 'STATE_NORMAL'))
+                        )
+                    )
+                    count += 1
+
+                # Draw last interface_unactive Character
+                self.get_curses_subwin().insch(
+                    self.get_height() - self.get_spacing() - 1,
                     x_progress,
-                    CHAR,
+                    curses.ACS_HLINE,
                     curses.color_pair(self.get_style().get_curses_pairs(
                         fg=self.get_attr('base', 'STATE_NORMAL'),
                         bg=self.get_attr('bg', 'STATE_NORMAL'))
                     )
                 )
-                count += 1
-
-            # Redraw with color inverted but apply percent calculation
-            count = 1
-            for CHAR in progress_text[:int((self.get_height() - self.get_preferred_height()) * self.value / 100)]:
-                self.get_curses_subwin().addstr(
-                    y_progress + count,
-                    x_progress,
-                    CHAR,
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('bg', 'STATE_NORMAL'),
-                        bg=self.get_attr('base', 'STATE_NORMAL'))
-                    )
-                )
-                count += 1
-
-            # Draw last interface_unactive Character
-            self.get_curses_subwin().insch(
-                self.get_height() - self.get_spacing() - 1,
-                x_progress,
-                curses.ACS_HLINE,
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('base', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_NORMAL'))
-                )
-            )
+            except curses.error:
+                pass
 
     def check_vertical_justification(self):
         x_progress = 0
@@ -245,70 +251,79 @@ class ProgressBar(Widget):
         y_progress, y_text = self.check_horizontal_position_type()
 
         # DRAWING
+
         # Justify the text to center of a string it have small len as the progress bar
-        # First Pass when we draw everything in Normal color
-        self.get_curses_subwin().addstr(
-            y_text,
-            x_progress - 1,
-            self.progressbar_border[:len(self.progressbar_border) / 2],
-            curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_attr('base', 'STATE_NORMAL'),
-                bg=self.get_attr('bg', 'STATE_NORMAL'))
+        try:
+            # First Pass when we draw everything in Normal color
+            self.get_curses_subwin().addstr(
+                y_text,
+                x_progress - 1,
+                self.progressbar_border[:len(self.progressbar_border) / 2],
+                curses.color_pair(self.get_style().get_curses_pairs(
+                    fg=self.get_attr('base', 'STATE_NORMAL'),
+                    bg=self.get_attr('bg', 'STATE_NORMAL'))
+                )
             )
-        )
-        # Draw the progressbar1 background
-        # Draw Left to Right Horizontal Progress Bar
-        if self.get_inverted():
-            progress_text = progress_text[::-1]
-            increment = 0
-            for CHAR in progress_text:
-                self.get_curses_subwin().addstr(
-                    y_progress,
-                    self.get_width() - self.get_spacing() - 2 - increment,
-                    CHAR,
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('base', 'STATE_NORMAL'),
-                        bg=self.get_attr('bg', 'STATE_NORMAL'))
+            # Draw the progressbar1 background
+            # Draw Left to Right Horizontal Progress Bar
+            if self.get_inverted():
+                progress_text = progress_text[::-1]
+                increment = 0
+                for CHAR in progress_text:
+                    self.get_curses_subwin().addstr(
+                        y_progress,
+                        self.get_width() - self.get_spacing() - 2 - increment,
+                        CHAR,
+                        curses.color_pair(self.get_style().get_curses_pairs(
+                            fg=self.get_attr('base', 'STATE_NORMAL'),
+                            bg=self.get_attr('bg', 'STATE_NORMAL'))
+                        )
                     )
-                )
-                increment += 1
-            increment = 0
-            for CHAR in progress_text[:int((self.get_width() - self.get_preferred_width()) * self.get_value() / 100)]:
-                self.get_curses_subwin().addstr(
-                    y_progress,
-                    self.get_width() - self.get_spacing() - 2 - increment,
-                    CHAR,
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('bg', 'STATE_NORMAL'),
-                        bg=self.get_attr('base', 'STATE_NORMAL'))
+                    increment += 1
+                increment = 0
+                for CHAR in progress_text[:int((self.get_width() - self.get_preferred_width()) * self.get_value() / 100)]:
+                    self.get_curses_subwin().addstr(
+                        y_progress,
+                        self.get_width() - self.get_spacing() - 2 - increment,
+                        CHAR,
+                        curses.color_pair(self.get_style().get_curses_pairs(
+                            fg=self.get_attr('bg', 'STATE_NORMAL'),
+                            bg=self.get_attr('base', 'STATE_NORMAL'))
+                        )
                     )
-                )
-                increment += 1
+                    increment += 1
+        except curses.error:
+            pass
+
         else:
-            increment = 0
-            for CHAR in progress_text:
-                self.get_curses_subwin().addstr(
-                    y_progress,
-                    x_progress + increment,
-                    CHAR,
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('base', 'STATE_NORMAL'),
-                        bg=self.get_attr('bg', 'STATE_NORMAL'))
+            try:
+                increment = 0
+                for CHAR in progress_text:
+                    self.get_curses_subwin().addstr(
+                        y_progress,
+                        x_progress + increment,
+                        CHAR,
+                        curses.color_pair(self.get_style().get_curses_pairs(
+                            fg=self.get_attr('base', 'STATE_NORMAL'),
+                            bg=self.get_attr('bg', 'STATE_NORMAL'))
+                        )
                     )
-                )
-                increment += 1
-            increment = 0
-            for CHAR in progress_text[:int((self.get_width() - self.get_preferred_width()) * self.get_value() / 100)]:
-                self.get_curses_subwin().addstr(
-                    y_progress,
-                    x_progress + increment,
-                    CHAR,
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('bg', 'STATE_NORMAL'),
-                        bg=self.get_attr('base', 'STATE_NORMAL'))
+                    increment += 1
+                increment = 0
+                for CHAR in progress_text[:int((self.get_width() - self.get_preferred_width()) * self.get_value() / 100)]:
+                    self.get_curses_subwin().addstr(
+                        y_progress,
+                        x_progress + increment,
+                        CHAR,
+                        curses.color_pair(self.get_style().get_curses_pairs(
+                            fg=self.get_attr('bg', 'STATE_NORMAL'),
+                            bg=self.get_attr('base', 'STATE_NORMAL'))
+                        )
                     )
-                )
-                increment += 1
+                    increment += 1
+            except curses.error:
+                pass
+
         # Interface management
         self.get_curses_subwin().insstr(
             y_progress,

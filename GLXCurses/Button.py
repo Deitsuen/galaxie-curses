@@ -173,28 +173,37 @@ class Button(Widget):
             )
 
     def draw_the_good_button(self, color):
-        # Interface management
-        self.get_curses_subwin().addstr(
-            self.label_y,
-            self.label_x,
-            self.button_border[:len(self.button_border) / 2],
-            color
-        )
-        # Draw the Horizontal Button with Justification and PositionType
-        message_to_display = resize_text(self.get_text(), self.get_width(), '~')
-        self.get_curses_subwin().addstr(
-            self.label_y,
-            self.label_x + len(self.button_border) / 2,
-            message_to_display,
-            color
-        )
-        # Interface management
-        self.get_curses_subwin().insstr(
-            self.label_y,
-            self.label_x + (len(self.button_border) / 2) + len(message_to_display),
-            self.button_border[-len(self.button_border) / 2:],
-            color
-        )
+        try:
+            # Interface management
+            self.get_curses_subwin().addstr(
+                self.label_y,
+                self.label_x,
+                self.button_border[:len(self.button_border) / 2],
+                color
+            )
+        except curses.error:
+            pass
+        try:
+            # Draw the Horizontal Button with Justification and PositionType
+            message_to_display = resize_text(self.get_text(), self.get_width(), '~')
+            self.get_curses_subwin().addstr(
+                self.label_y,
+                self.label_x + len(self.button_border) / 2,
+                message_to_display,
+                color
+            )
+        except curses.error:
+            pass
+        try:
+            # Interface management
+            self.get_curses_subwin().insstr(
+                self.label_y,
+                self.label_x + (len(self.button_border) / 2) + len(message_to_display),
+                self.button_border[-len(self.button_border) / 2:],
+                color
+            )
+        except curses.error:
+            pass
 
     def enter(self):
         pass

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from GLXCurses.Box import Box
-
+import curses
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -53,14 +53,15 @@ class VBox(Box):
                         last_element_vertical_size = self.get_height()
                         last_element_vertical_size -= (devised_box_size * index)
                         last_element_vertical_size -= total_vertical_spacing
-                        #last_element_vertical_size -= glxc_widget.get_spacing()
-                        sub_win = self.get_curses_subwin().subwin(
-                                last_element_vertical_size,
-                                self.get_width() - glxc_widget.get_spacing() * 2,
-                                self.get_y() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2),
-                                self.get_x() + glxc_widget.get_spacing()
-                        )
-
+                        try:
+                            sub_win = self.get_curses_subwin().subwin(
+                                    last_element_vertical_size,
+                                    self.get_width() - glxc_widget.get_spacing() * 2,
+                                    self.get_y() + (devised_box_size * index),
+                                    self.get_x() + glxc_widget.get_spacing()
+                            )
+                        except curses.error:
+                            pass
                     index += 1
 
                     # Drawing
