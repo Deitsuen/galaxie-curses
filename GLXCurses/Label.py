@@ -320,6 +320,9 @@ class Label(Misc):
         else:
             return int(self.get_width() - (self.get_spacing() * 2))
 
+    def get_wrap_mode(self):
+        return self.wrap_mode
+
     # Internal
     def _get_label_x(self):
         xalign, _ = self.get_alignment()
@@ -398,19 +401,24 @@ class Label(Misc):
         except curses.error:
             pass
 
-    def _textwrap(self, text='coucou', height=24, width=80):
+    def _textwrap(self, text='Hello World!', height=24, width=80):
         lines = []
         for paragraph in text.split('\n'):
             line = []
             len_line = 0
-            for word in paragraph.split(' '):
-                len_word = len(word)
-                if len_line + len_word <= width:
-                    line.append(word)
-                    len_line += len_word + 1
-                else:
-                    lines.append(' '.join(line))
-                    line = [word]
-                    len_line = len_word + 1
+            if self.get_wrap_mode() == glxc.WRAP_WORD_CHAR:
+                pass
+            elif self.get_wrap_mode() == glxc.WRAP_CHAR:
+                pass
+            else:
+                for word in paragraph.split(' '):
+                    len_word = len(word)
+                    if len_line + len_word <= width:
+                        line.append(word)
+                        len_line += len_word + 1
+                    else:
+                        lines.append(' '.join(line))
+                        line = [word]
+                        len_line = len_word + 1
             lines.append(' '.join(line))
         return lines
