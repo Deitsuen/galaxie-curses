@@ -287,6 +287,21 @@ class Label(Misc):
     def get_justify(self):
         return self.justify
 
+    # The set_wrap() method sets the "wrap" property tot he value of wrap.
+    # If wrap is True the label text will wrap if it is wider than the widget size;
+    # otherwise, the text gets cut off at the edge of the widget.
+    # Default, False
+    def set_line_wrap(self, wrap=False):
+        if bool(wrap):
+            self.wrap = bool(wrap)
+        else:
+            self.wrap = False
+
+    # The get_line_wrap() method returns the value of the "wrap" property.
+    # If "wrap" is True the lines in the label are automatically wrapped. See set_line_wrap().
+    def get_line_wrap(self):
+        return bool(self.wrap)
+
     # The set_width_chars() method sets the "width-chars" property to the value of n_chars.
     # The "width_chars" property specifies the desired width of the label in characters.
     def set_width_chars(self, n_chars):
@@ -320,10 +335,13 @@ class Label(Misc):
         else:
             return int(self.get_width() - (self.get_spacing() * 2))
 
-    def set_wrap_mode(self, wrap_mode):
+    # The set_line_wrap_mode() method controls how line wrapping is done (if it is enabled, see refetch()).
+    # The default is glxc.WRAP_WORD which means wrap on word boundaries.
+
+    def set_line_wrap_mode(self, wrap_mode):
         self.wrap_mode = wrap_mode
 
-    def get_wrap_mode(self):
+    def get_line_wrap_mode(self):
         return self.wrap_mode
 
     # Internal
@@ -405,40 +423,51 @@ class Label(Misc):
             pass
 
     def _textwrap(self, text='Hello World!', height=24, width=80):
-        lines = []
-        for paragraph in text.split('\n'):
-            line = []
-            len_line = 0
-            if self.get_wrap_mode() == glxc.WRAP_WORD_CHAR:
-                # Wrap this text.
-                wraped = textwrap.wrap(
-                    paragraph,
-                    width=width,
-                    fix_sentence_endings=True,
-                    break_long_words=True,
-                    break_on_hyphens=True,
-                )
+        if self.get_line_wrap():
+            lines = []
+            for paragraph in text.split('\n'):
+                line = []
+                len_line = 0
+                if self.get_line_wrap_mode() == glxc.WRAP_WORD_CHAR:
+                    # Wrap this text.
+                    wraped = textwrap.wrap(
+                        paragraph,
+                        width=width,
+                        fix_sentence_endings=True,
+                        break_long_words=True,
+                        break_on_hyphens=True,
+                    )
 
-                if len(lines) <= height:
-                    lines += wraped
-            elif self.get_wrap_mode() == glxc.WRAP_CHAR:
+                    if len(lines) <= height:
+                        lines += wraped
+                elif self.get_line_wrap_mode() == glxc.WRAP_CHAR:
+                    if len(paragraph) < width:
+                        if len(lines) < height:
+                            lines.append(paragraph)
+                    else:
+                        if len(lines) < height:
+                            lines += [paragraph[ind:ind + width] for ind in range(0, len(paragraph), width)]
+                else:
+                    for word in paragraph.split(' '):
+                        len_word = len(word)
+                        if len_line + len_word <= width:
+                            line.append(word)
+                            len_line += len_word + 1
+                        else:
+                            lines.append(' '.join(line))
+                            line = [word]
+                            len_line = len_word + 1
+
+                    if len(lines) < height:
+                        lines.append(' '.join(line))
+            return lines
+        else:
+            lines = []
+            for paragraph in text.split('\n'):
                 if len(paragraph) < width:
                     if len(lines) < height:
                         lines.append(paragraph)
                 else:
                     if len(lines) < height:
-                        lines += [paragraph[ind:ind + width] for ind in range(0, len(paragraph), width)]
-            else:
-                for word in paragraph.split(' '):
-                    len_word = len(word)
-                    if len_line + len_word <= width:
-                        line.append(word)
-                        len_line += len_word + 1
-                    else:
-                        lines.append(' '.join(line))
-                        line = [word]
-                        len_line = len_word + 1
-
-                if len(lines) < height:
-                    lines.append(' '.join(line))
-        return lines
+                        lines.append(paragraph[:width])
+            return lines
