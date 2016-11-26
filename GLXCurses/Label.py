@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
+import textwrap
 from GLXCurses import glxc
 from GLXCurses.Misc import Misc
+
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -52,7 +54,7 @@ class Label(Misc):
         # The desired maximum width of the label, in characters.
         # If this property is set to -1, the width will be calculated automatically,
         # otherwise the label will request space for no more than the requested number of characters.
-        # If the "width-chars" property is set to a positive value, then the "max-width-chars" property is ignored.
+        # If the "width_chars" property is set to a positive value, then the "max_width_chars" property is ignored.
         # Allowed values: >= -1.
         # Default value: -1
         self.max_width_chars = -1
@@ -120,6 +122,8 @@ class Label(Misc):
             self.attribute = self.style.attribute
 
         #self.set_alignment(0.5, 0.5)
+
+
     ###########
     # Methods #
     ###########
@@ -212,18 +216,10 @@ class Label(Misc):
 
     def draw_widget_in_area(self):
         if self.get_text():
-            try:
-                self.get_curses_subwin().addstr(
-                    self._get_label_y(),
-                    self._get_label_x(),
-                    self._get_resided_label_text(),
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                        bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
-                    )
-                )
-            except curses.error:
-                pass
+            if self.get_single_line_mode():
+                self._draw_single_line_mode()
+            else:
+                self._draw_textwrap_mode()
 
     def check_justification(self):
         # Check Justification
@@ -241,7 +237,7 @@ class Label(Misc):
             self.set_alignment(self._get_label_x(), self._get_label_y())
         return self.text_x
 
-    def check_horizontal_position_type(self):
+    def check_position_type(self):
         self.text_y = self._get_label_y()
         return self.text_y
 
@@ -292,7 +288,7 @@ class Label(Misc):
         return self.justify
 
     # The set_width_chars() method sets the "width-chars" property to the value of n_chars.
-    # The "width-chars" property specifies the desired width of the label in characters.
+    # The "width_chars" property specifies the desired width of the label in characters.
     def set_width_chars(self, n_chars):
         self.width_chars = int(n_chars)
 
@@ -319,7 +315,10 @@ class Label(Misc):
     # The get_max_width_chars() method returns the value of the "max-width-chars" property
     # which is the desired maximum width of the label in characters.
     def get_max_width_chars(self):
-        return int(self.max_width_chars)
+        if bool(self.max_width_chars):
+            return int(self.max_width_chars)
+        else:
+            return int(self.get_width() - (self.get_spacing() * 2))
 
     # Internal
     def _get_label_x(self):
@@ -364,3 +363,54 @@ class Label(Misc):
             return text_to_return
         else:
             return self.get_label()
+
+    def _draw_single_line_mode(self):
+        try:
+            self.get_curses_subwin().addstr(
+                self._get_label_y(),
+                self._get_label_x(),
+                self._get_resided_label_text(),
+                curses.color_pair(self.get_style().get_curses_pairs(
+                    fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
+                    bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                )
+            )
+        except curses.error:
+            pass
+
+    def _draw_textwrap_mode(self):
+        xpadd, ypadd = self.get_padding()
+        max_width = self.get_width() - (xpadd * 2)
+        max_height = self.get_height() - (ypadd * 2)
+        try:
+            increment = 0
+            for i in self._textwrap(text=self.get_label(), height=max_height, width=max_width):
+                self.get_curses_subwin().addstr(
+                    self._get_label_y() + increment,
+                    self._get_label_x(),
+                    i,
+                    curses.color_pair(self.get_style().get_curses_pairs(
+                        fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
+                        bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                    )
+                )
+                increment += 1
+        except curses.error:
+            pass
+
+    def _textwrap(self, text='coucou', height=24, width=80):
+        lines = []
+        for paragraph in text.split('\n'):
+            line = []
+            len_line = 0
+            for word in paragraph.split(' '):
+                len_word = len(word)
+                if len_line + len_word <= width:
+                    line.append(word)
+                    len_line += len_word + 1
+                else:
+                    lines.append(' '.join(line))
+                    line = [word]
+                    len_line = len_word + 1
+            lines.append(' '.join(line))
+        return lines
