@@ -103,8 +103,6 @@ class RadioButton(Widget):
             self.preferred_width += self.get_spacing() * 2
 
     def draw_widget_in_area(self):
-
-        # Many Thing's
         # Check if the text can be display
         text_have_necessary_width = (self.get_preferred_width() >= 1)
         text_have_necessary_height = (self.get_preferred_height() >= 1)
@@ -112,14 +110,13 @@ class RadioButton(Widget):
             return
 
         if self.get_text():
-
             # Check if the text can be display
             text_have_necessary_width = (self.get_preferred_width() >= 1)
             text_have_necessary_height = (self.get_preferred_height() >= 1)
             if text_have_necessary_width and text_have_necessary_height:
                 self.draw_button()
 
-    def check_horizontal_justification(self):
+    def check_justification(self):
         # Check Justification
         self.label_x = 0
         if self.get_justify() == 'CENTER':
@@ -131,7 +128,7 @@ class RadioButton(Widget):
 
         return self.label_x
 
-    def check_horizontal_position_type(self):
+    def check_position_type(self):
         # PositionType: CENTER, TOP, BOTTOM
         self.label_y = 0
         if self.get_position_type() == 'CENTER':
@@ -164,8 +161,8 @@ class RadioButton(Widget):
         self.check_selected()
         self.check_active()
         self.update_preferred_sizes()
-        self.label_x = self.check_horizontal_justification()
-        self.label_y = self.check_horizontal_position_type()
+        self.label_x = self.check_justification()
+        self.label_y = self.check_position_type()
 
         if not self.get_sensitive():
             self.draw_the_good_button(
