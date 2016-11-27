@@ -254,16 +254,6 @@ class Label(Misc):
 
         self.update_preferred_sizes()
 
-        if self.get_justify() == glxc.JUSTIFY_CENTER:
-            self.set_alignment(0.5, self._get_label_y())
-            self.text_x = self._get_label_x()
-        elif self.get_justify() == glxc.JUSTIFY_LEFT:
-            self.set_alignment(0.0, self._get_label_y())
-            self.text_x = self._get_label_x() + self.get_spacing()
-        elif self.get_justify() == glxc.JUSTIFY_RIGHT:
-            self.set_alignment(1.0, self._get_label_y())
-            self.text_x = self._get_label_x()
-
     def get_justify(self):
         return self.justify
 
@@ -305,15 +295,12 @@ class Label(Misc):
 
     # The set_max_width_chars() method sets the "max-width-chars" property to the value of n_chars.
     def set_max_width_chars(self, n_chars):
-        self.max_width_chars = int(n_chars)
+        self.max_width_chars = n_chars
 
     # The get_max_width_chars() method returns the value of the "max-width-chars" property
     # which is the desired maximum width of the label in characters.
     def get_max_width_chars(self):
-        if bool(self.max_width_chars):
-            return int(self.max_width_chars)
-        else:
-            return int(self.get_width() - (self.get_spacing() * 2))
+        return self.max_width_chars
 
     # The set_line_wrap_mode() method controls how line wrapping is done (if it is enabled, see refetch()).
     # The default is glxc.WRAP_WORD which means wrap on word boundaries.
@@ -376,38 +363,63 @@ class Label(Misc):
 
     def _draw_single_line_mode(self):
         try:
-            self.get_curses_subwin().addstr(
-                self._get_label_y(),
-                self._get_label_x(),
-                self._get_single_line_resided_label_text(),
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                    bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
-                )
-            )
-        except curses.error:
-            pass
-
-    def _draw_multi_line_mode(self):
-        xpadd, ypadd = self.get_padding()
-        max_width = self.get_width() - (xpadd * 2)
-        max_height = self.get_height() - (ypadd * 2)
-        try:
-            increment = 0
-            for i in self._textwrap(text=self.get_label(), height=max_height, width=max_width):
-
+            if self.get_max_width_chars() <= -1:
                 self.get_curses_subwin().addstr(
-                    self._get_label_y() + increment,
+                    self._get_label_y(),
                     self._get_label_x(),
-                    self._check_justification(text=i, width=max_width),
+                    self._get_single_line_resided_label_text(),
                     curses.color_pair(self.get_style().get_curses_pairs(
                         fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
                         bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
                     )
                 )
-                increment += 1
+            elif self.get_max_width_chars() == 0:
+                pass
+            else:
+                self.get_curses_subwin().addstr(
+                    self._get_label_y(),
+                    self._get_label_x(),
+                    self._get_single_line_resided_label_text()[:self.get_max_width_chars()],
+                    curses.color_pair(self.get_style().get_curses_pairs(
+                        fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
+                        bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                    )
+                )
         except curses.error:
             pass
+
+    def _draw_multi_line_mode(self):
+        xpadd, ypadd = self.get_padding()
+        max_height = self.get_height() - (ypadd * 2)
+        max_width = self.get_width() - (xpadd * 2)
+        increment = 0
+        for line in self._textwrap(text=self.get_label(), height=max_height, width=max_width):
+            try:
+                if self.get_max_width_chars() <= -1:
+                    self.get_curses_subwin().addstr(
+                        self._get_label_y() + increment,
+                        self._get_label_x(),
+                        self._check_justification(text=line, width=max_width),
+                        curses.color_pair(self.get_style().get_curses_pairs(
+                            fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
+                            bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                        )
+                    )
+                elif self.get_max_width_chars() == 0:
+                    pass
+                else:
+                    self.get_curses_subwin().addstr(
+                        self._get_label_y() + increment,
+                        self._get_label_x(),
+                        self._check_justification(text=line, width=self.get_max_width_chars())[:self.get_max_width_chars()],
+                        curses.color_pair(self.get_style().get_curses_pairs(
+                            fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
+                            bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                        )
+                    )
+            except curses.error:
+                pass
+            increment += 1
 
     def _textwrap(self, text='Hello World!', height=24, width=80):
         if self.get_line_wrap():

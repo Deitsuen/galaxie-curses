@@ -34,10 +34,10 @@ if __name__ == '__main__':
 
     # Create a Label
     label1 = GLXCurses.Label()
-    label1.set_justify('CENTER')
+    #qlabel1.set_justify('RIGHT')
     label1.set_text('RED WITH BACKGROUND GREEN')
     label1.override_color('RED')
-    label1.override_background_color('GREEN')
+    #label1.override_background_color('GREEN')
     label1.set_line_wrap_mode('WRAP_CHAR')
     label1.set_text('How does it work?\n'
                     '   Well, the reduce\n'
@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
 
     label2 = GLXCurses.Label()
-    label2.set_justify('RIGHT')
+    #label2.set_justify('CENTER')
     label2.set_text('How does it work?\n'
                     '   Well, the reduce\n'
                     '* A Quick Guide to GPLv3\n'
@@ -69,6 +69,7 @@ if __name__ == '__main__':
                     )
     label2.override_color('YELLOW')
     label2.set_line_wrap(True)
+    label2.set_max_width_chars(-1)
 
     label3 = GLXCurses.Label()
     label3.set_alignment(0.5, 1.0)
@@ -77,6 +78,7 @@ if __name__ == '__main__':
     label3.set_text_with_mnemonic('CY_AN WITH BACKGROUND NORMAL')
     label3.override_color('CYAN')
     label3.set_single_line_mode(1)
+    label3.set_max_width_chars(10)
 
     progressbar1 = GLXCurses.ProgressBar()
     progressbar1.set_spacing(0)
