@@ -354,37 +354,27 @@ class Label(Misc):
         filled_text = textwrap.fill(dedented_text)
 
         border_width = self.get_width() - len(filled_text) + (xpadd * 2)
-
-        if border_width <= xpadd * 2 + 1:
-            text_to_return = filled_text[:(max_width / 2) - 1] + separator + filled_text[-max_width / 2:]
-            return text_to_return
+        if self.get_max_width_chars() <= -1:
+            if border_width <= xpadd * 2 + 1:
+                return filled_text[:(max_width / 2) - 1] + separator + filled_text[-max_width / 2:]
+            else:
+                return filled_text
+        elif self.get_max_width_chars() == 0:
+            return ''
         else:
-            return filled_text
+            return filled_text[:self.get_max_width_chars()]
 
     def _draw_single_line_mode(self):
         try:
-            if self.get_max_width_chars() <= -1:
-                self.get_curses_subwin().addstr(
-                    self._get_label_y(),
-                    self._get_label_x(),
-                    self._get_single_line_resided_label_text(),
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                        bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
-                    )
+            self.get_curses_subwin().addstr(
+                self._get_label_y(),
+                self._get_label_x(),
+                self._get_single_line_resided_label_text(),
+                curses.color_pair(self.get_style().get_curses_pairs(
+                    fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
+                    bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
                 )
-            elif self.get_max_width_chars() == 0:
-                pass
-            else:
-                self.get_curses_subwin().addstr(
-                    self._get_label_y(),
-                    self._get_label_x(),
-                    self._get_single_line_resided_label_text()[:self.get_max_width_chars()],
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                        bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
-                    )
-                )
+            )
         except curses.error:
             pass
 
