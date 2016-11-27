@@ -69,6 +69,7 @@ if __name__ == '__main__':
                     )
     label2.override_color('YELLOW')
     label2.set_line_wrap(True)
+    label2.set_single_line_mode(1)
 
     label3 = GLXCurses.Label()
     label3.set_alignment(0.5, 1.0)
@@ -76,7 +77,7 @@ if __name__ == '__main__':
     #label3.set_text('CYAN')
     label3.set_text_with_mnemonic('CY_AN WITH BACKGROUND NORMAL')
     label3.override_color('CYAN')
-    # label3.set_single_line_mode(1)
+    label3.set_single_line_mode(1)
 
     progressbar1 = GLXCurses.ProgressBar()
     progressbar1.set_spacing(0)

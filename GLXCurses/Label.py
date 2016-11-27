@@ -219,7 +219,7 @@ class Label(Misc):
             if self.get_single_line_mode():
                 self._draw_single_line_mode()
             else:
-                self._draw_textwrap_mode()
+                self._draw_multi_line_mode()
 
     def check_justification(self):
         # Check Justification
@@ -378,22 +378,28 @@ class Label(Misc):
             value -= ypadd
         return value
 
-    def _get_resided_label_text(self, separator='~'):
+    def _get_single_line_resided_label_text(self, separator='~'):
+
         xpadd, _ = self.get_padding()
-        border_width = self.get_width() - len(self.get_label()) + (xpadd * 2)
         max_width = self.get_width() - (xpadd * 2)
+
+        dedented_text = textwrap.dedent(self.get_label()).strip()
+        filled_text = textwrap.fill(dedented_text)
+
+        border_width = self.get_width() - len(filled_text) + (xpadd * 2)
+
         if border_width <= xpadd * 2 + 1:
-            text_to_return = self.get_label()[:(max_width / 2) - 1] + separator + self.get_label()[-max_width / 2:]
+            text_to_return = filled_text[:(max_width / 2) - 1] + separator + filled_text[-max_width / 2:]
             return text_to_return
         else:
-            return self.get_label()
+            return filled_text
 
     def _draw_single_line_mode(self):
         try:
             self.get_curses_subwin().addstr(
                 self._get_label_y(),
                 self._get_label_x(),
-                self._get_resided_label_text(),
+                self._get_single_line_resided_label_text(),
                 curses.color_pair(self.get_style().get_curses_pairs(
                     fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
                     bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
@@ -402,7 +408,7 @@ class Label(Misc):
         except curses.error:
             pass
 
-    def _draw_textwrap_mode(self):
+    def _draw_multi_line_mode(self):
         xpadd, ypadd = self.get_padding()
         max_width = self.get_width() - (xpadd * 2)
         max_height = self.get_height() - (ypadd * 2)
@@ -462,6 +468,7 @@ class Label(Misc):
                         lines.append(' '.join(line))
             return lines
         else:
+            # This is the default display/view
             lines = []
             for paragraph in text.split('\n'):
                 if len(paragraph) < width:
