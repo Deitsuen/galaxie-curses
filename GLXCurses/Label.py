@@ -221,26 +221,6 @@ class Label(Misc):
             else:
                 self._draw_multi_line_mode()
 
-    def check_justification(self):
-        # Check Justification
-        self.text_x = 0
-        if self.get_justify() == glxc.JUSTIFY_CENTER:
-            self.set_alignment(0.5, self._get_label_y())
-            self.text_x = self._get_label_x()
-        elif self.get_justify() == glxc.JUSTIFY_LEFT:
-            self.set_alignment(0.0, self._get_label_y())
-            self.text_x = self._get_label_x() + self.get_spacing()
-        elif self.get_justify() == glxc.JUSTIFY_RIGHT:
-            self.set_alignment(1.0, self._get_label_y())
-            self.text_x = self._get_label_x()
-        else:
-            self.set_alignment(self._get_label_x(), self._get_label_y())
-        return self.text_x
-
-    def check_position_type(self):
-        self.text_y = self._get_label_y()
-        return self.text_y
-
     def update_preferred_sizes(self):
         if self.get_text():
             preferred_width = 0
@@ -415,10 +395,11 @@ class Label(Misc):
         try:
             increment = 0
             for i in self._textwrap(text=self.get_label(), height=max_height, width=max_width):
+
                 self.get_curses_subwin().addstr(
                     self._get_label_y() + increment,
                     self._get_label_x(),
-                    i,
+                    self._check_justification(text=i, width=max_width),
                     curses.color_pair(self.get_style().get_curses_pairs(
                         fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
                         bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
@@ -478,3 +459,20 @@ class Label(Misc):
                     if len(lines) < height:
                         lines.append(paragraph[:width])
             return lines
+
+    def _check_justification(self, text="Hello World!", width=80):
+        # Check Justification
+        self.text_x = 0
+        if self.get_justify() == glxc.JUSTIFY_CENTER:
+            return text.center(width, ' ')
+        elif self.get_justify() == glxc.JUSTIFY_LEFT:
+            return "{0:<{1}}".format(text, width)
+        elif self.get_justify() == glxc.JUSTIFY_RIGHT:
+            return "{0:>{1}}".format(text, width)
+        else:
+            self.set_alignment(self._get_label_x(), self._get_label_y())
+        return self.text_x
+
+    def _check_position_type(self):
+        self.text_y = self._get_label_y()
+        return self.text_y

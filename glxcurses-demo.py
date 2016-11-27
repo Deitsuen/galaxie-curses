@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     # Create a Label
     label1 = GLXCurses.Label()
-    label1.set_justify('RIGHT')
+    label1.set_justify('CENTER')
     label1.set_text('RED WITH BACKGROUND GREEN')
     label1.override_color('RED')
     label1.override_background_color('GREEN')
@@ -69,7 +69,6 @@ if __name__ == '__main__':
                     )
     label2.override_color('YELLOW')
     label2.set_line_wrap(True)
-    label2.set_single_line_mode(1)
 
     label3 = GLXCurses.Label()
     label3.set_alignment(0.5, 1.0)
