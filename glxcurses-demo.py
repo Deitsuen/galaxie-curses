@@ -353,6 +353,11 @@ if __name__ == '__main__':
 
     # Main loop
     count = 1
+
+
+    # Event Bus
+
+    #app.get_event_bus().subscribe(ord('q'), app.close())
     app.refresh()
     while True:
         message_text = ''
@@ -458,8 +463,12 @@ if __name__ == '__main__':
             app.refresh()
         elif input_event == curses.KEY_F10:
             break
-        elif input_event == ord('q'):
-            break
+        # elif input_event == ord('q'):
+        #         try:
+        #             app.get_event_bus().publish(ord('q'))
+        #         except:
+        #             pass
+
         count += 1
 
     # App Close

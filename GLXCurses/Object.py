@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import uuid
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -12,6 +12,9 @@ class Object(object):
 
         # Object flags
         self.flags = None
+
+        # Signal
+        self.list_of_signal_handlers = {}
 
     def set_flags(self):
         flags = dict()
@@ -91,10 +94,41 @@ class Object(object):
     def destroy(self):
         pass
 
-    def connect(self):
-        def __init__(self, signal_id, callback, ):
-            self.signal_id = signal_id
-            self.callback = callback
+    # Object Signal Prototypes
+    # The connect() method adds a function or method (handler)to the end
+    # of the list of signal handlers for the named detailed_signal but before the default class signal handler.
+    # An optional set of parameters may be specified after the handler parameter.
+    # These will all be passed to the signal handler when invoked.
+    def connect(self, detailed_signal, handler):
+        # At first generate a unique uuid
+        handler_id = uuid.uuid1().int
+        if detailed_signal not in self.list_of_signal_handlers:
+            self.list_of_signal_handlers[detailed_signal] = []
 
-        def callback_print_arg(self):
-            print self.arg
+        subscription = {
+            'detailed_signal': detailed_signal,
+            'handler': handler,
+            'handler_id': handler_id
+        }
+
+        if not self._has_subscription(detailed_signal, handler, handler_id):
+            self.list_of_signal_handlers[detailed_signal].append(subscription)
+
+    def _has_subscription(self, detailed_signal, handler, handler_id):
+        """
+        This method shows whether a function has subscriptions or not.
+
+        :param key: The event key.
+        :param callback: The callback function.
+        :return: True if there is an subscription.
+        """
+        if detailed_signal not in self.list_of_signal_handlers:
+            return False
+
+        subscription = {
+            'detailed_signal': detailed_signal,
+            'handler': handler,
+            'handler_id': handler_id
+        }
+
+        return subscription in self.list_of_signal_handlers[detailed_signal]

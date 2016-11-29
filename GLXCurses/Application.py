@@ -121,9 +121,6 @@ class Application(object):
     def get_curses_subwin(self):
         return self.curses_subwin
 
-    def get_size(self):
-        return self.curses_subwin.getmaxyx()
-
     def get_origin(self):
         return self.curses_subwin.getbegyx()
 
