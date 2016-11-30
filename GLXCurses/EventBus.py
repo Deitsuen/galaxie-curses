@@ -10,7 +10,7 @@ __author__ = 'Tuux'
 
 class EventBus(object):
     def __init__(self):
-        self.subscriptions = dict()
+        self.signal_handlers = dict()
         self.blocked_handler = list()
         self.blocked_function = list()
         self.data = dict()
@@ -41,23 +41,20 @@ class EventBus(object):
     # *args: additional parameters arg1, arg2
     def connect(self, detailed_signal, handler, *args):
         # That IF preserve the handler_id
-        if detailed_signal not in self.subscriptions:
-            self.subscriptions[detailed_signal] = dict()
-            self.subscriptions[detailed_signal]['handler'] = handler
-            self.subscriptions[detailed_signal]['handler_id'] = uuid.uuid1().int
-            self.subscriptions[detailed_signal]['argvs'] = args
-        return self.subscriptions[detailed_signal]['handler_id']
-
-    def get_subscriptions(self):
-        return self.subscriptions
+        if detailed_signal not in self._get_signal_handlers_dict():
+            self._get_signal_handlers_dict()[detailed_signal] = dict()
+            self._get_signal_handlers_dict()[detailed_signal]['handler'] = handler
+            self._get_signal_handlers_dict()[detailed_signal]['handler_id'] = uuid.uuid1().int
+            self._get_signal_handlers_dict()[detailed_signal]['argvs'] = args
+        return self._get_signal_handlers_dict()[detailed_signal]['handler_id']
 
     # The disconnect() method removes the signal handler with the specified handler_id
     # from the list of signal handlers for the object.
     # handler_id: an integer handler identifier
     def disconnect(self, handler_id):
-        for subscription in self.get_subscriptions():
-            if self.get_subscriptions()[subscription]['handler_id'] == handler_id:
-                del self.get_subscriptions()[subscription]
+        for subscription in self._get_signal_handlers_dict():
+            if self._get_signal_handlers_dict()[subscription]['handler_id'] == handler_id:
+                del self._get_signal_handlers_dict()[subscription]
                 break
 
     # The handler_disconnect() method removes the signal handler with the specified handler_id
@@ -69,8 +66,8 @@ class EventBus(object):
     # The handler_is_connected() method returns True
     # if the signal handler with the specified handler_id is connected to the object.
     def handler_is_connected(self, handler_id):
-        for subscription in self.get_subscriptions():
-            if self.get_subscriptions()[subscription]['handler_id'] == handler_id:
+        for subscription in self._get_signal_handlers_dict():
+            if self._get_signal_handlers_dict()[subscription]['handler_id'] == handler_id:
                 return True
         return False
 
@@ -113,19 +110,22 @@ class EventBus(object):
     # detailed_signal: a string containing the signal name
     # *args: additional parameters arg1, arg2
     def emit(self, detailed_signal, *args):
-        for subscription in self.get_subscriptions():
+        for subscription in self._get_signal_handlers_dict():
             if subscription == detailed_signal:
-                if self.get_subscriptions()[subscription]['handler_id'] not in self._get_blocked_handler():
-                    if self.get_subscriptions()[subscription]['handler'] not in self._get_blocked_function():
-                        self.get_subscriptions()[subscription]['handler'](*args)
+                if self._get_signal_handlers_dict()[subscription]['handler_id'] not in self._get_blocked_handler():
+                    if self._get_signal_handlers_dict()[subscription]['handler'] not in self._get_blocked_function():
+                        self._get_signal_handlers_dict()[subscription]['handler'](*args)
 
     # Internal Function
     def _reset(self):
         # All subscribers will be cleared.
-        self.subscriptions = dict()
+        self.signal_handlers = dict()
         self.blocked_handler = list()
         self.blocked_function = list()
         self.data = dict()
+
+    def _get_signal_handlers_dict(self):
+        return self.signal_handlers
 
     def _get_data_dict(self):
         return self.data
@@ -158,8 +158,8 @@ if __name__ == '__main__':
     handle_2 = event.connect("coucou2", print_hello2)
     handle_3 = event.connect("coucou3", print_hello3)
     print('Before')
-    for subcription in event.get_subscriptions():
-        print(subcription + ": " + str(event.get_subscriptions()[subcription]))
+    for subcription in event.signal_handlers:
+        print(subcription + ": " + str(event.signal_handlers[subcription]))
 
     print('After')
     event.disconnect(handle_1)
@@ -173,8 +173,8 @@ if __name__ == '__main__':
     event.handler_block_by_func(print_hello2)
     event.handler_unblock_by_func(print_hello2)
 
-    for subcription in event.get_subscriptions():
-        print(subcription + ": " + str(event.get_subscriptions()[subcription]))
+    for subcription in event.signal_handlers:
+        print(subcription + ": " + str(event.signal_handlers[subcription]))
     if event.handler_is_connected(handle_1):
         event.emit('coucou1', 'comment la vie est belle')
     event.emit('coucou2', 'ben on sait pas')
