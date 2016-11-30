@@ -13,9 +13,30 @@ class EventBus(object):
         self.subscriptions = dict()
         self.blocked_handler = list()
         self.blocked_function = list()
-    # The connect_after() method is similar to the connect() method
-    # except that the handler is added to the signal handler list after the default class signal handler.
-    # Otherwise the details of handler definition and invocation are the same.
+        self.data = dict()
+
+    # The get_data() method returns the Python object associated with the specified key or
+    # None if there is no data associated with the key or if there is no key associated with the object.
+    # key : a string used as the key
+    # data : a Python object that is the value to be associated with the key
+    def get_data(self, key):
+        if key not in self._get_data_dict():
+            return None
+        elif not len(self._get_data_dict()[key]):
+            return None
+        else:
+            return self._get_data_dict()[key]
+
+    # The set_data() method associates the specified Python object (data) with key.
+    # key : a string used as the key
+    # data : a Python object that is the value to be associated with the key
+    def set_data(self, key, data):
+        self._get_data_dict()[key] = data
+
+    # The connect() method adds a function or method (handler)to the end of the list of signal handlers
+    # for the named detailed_signal but before the default class signal handler.
+    # An optional set of parameters may be specified after the handler parameter.
+    # These will all be passed to the signal handler when invoked.
     # detailed_signal: a string containing the signal name
     # *args: additional parameters arg1, arg2
     def connect(self, detailed_signal, handler, *args):
@@ -26,11 +47,6 @@ class EventBus(object):
             self.subscriptions[detailed_signal]['handler_id'] = uuid.uuid1().int
             self.subscriptions[detailed_signal]['argvs'] = args
         return self.subscriptions[detailed_signal]['handler_id']
-
-    def reset(self):
-        # All subscribers will be cleared.
-        self.subscriptions = dict()
-        self.blocked_handler = dict()
 
     def get_subscriptions(self):
         return self.subscriptions
@@ -104,6 +120,16 @@ class EventBus(object):
                         self.get_subscriptions()[subscription]['handler'](*args)
 
     # Internal Function
+    def _reset(self):
+        # All subscribers will be cleared.
+        self.subscriptions = dict()
+        self.blocked_handler = list()
+        self.blocked_function = list()
+        self.data = dict()
+
+    def _get_data_dict(self):
+        return self.data
+
     def _get_blocked_handler(self):
         return self.blocked_handler
 
@@ -138,13 +164,23 @@ if __name__ == '__main__':
     print('After')
     event.disconnect(handle_1)
     handle_1 = event.connect("coucou1", print_hello1, '1', '2', '3')
+
+    # Do Nothing but that cool
     event.handler_block(handle_1)
     event.handler_unblock(handle_1)
+
+    # Do Nothing but that cool
     event.handler_block_by_func(print_hello2)
     event.handler_unblock_by_func(print_hello2)
+
     for subcription in event.get_subscriptions():
         print(subcription + ": " + str(event.get_subscriptions()[subcription]))
     if event.handler_is_connected(handle_1):
         event.emit('coucou1', 'comment la vie est belle')
     event.emit('coucou2', 'ben on sait pas')
     event.emit('coucou3', 'mais si on sait')
+
+    # Data
+    event.set_data('coucou', 'lavieestbellemec')
+    if event.get_data('coucouc'):
+        print event.get_data('coucou')
