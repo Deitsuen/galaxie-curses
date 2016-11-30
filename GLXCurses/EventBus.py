@@ -69,7 +69,30 @@ class EventBus(object):
 
     # handler_id: an integer handler identifier
     def handler_unblock(self, handler_id):
-        self._get_blocked_handler().pop(self._get_blocked_handler().index(handler_id))
+        # noinspection PyBroadException
+        try:
+            self._get_blocked_handler().pop(self._get_blocked_handler().index(handler_id))
+        except:
+            pass
+
+    # The handler_block_by_func() method blocks
+    # the all signal handler connected to a specific callable from being invoked until the callable is unblocked.
+    # callable : a callable python object
+    def handler_block_by_func(self, callable):
+        if callable not in self.blocked_handler:
+            self._get_blocked_function().append(callable)
+        else:
+            pass
+
+    # The handler_unblock_by_func() method unblocks all signal handler connected to a specified callable there
+    # by allowing it to be invoked when the associated signals are emitted.
+    # callback : a callable python object
+    def handler_unblock_by_func(self, callback):
+        # noinspection PyBroadException
+        try:
+            self._get_blocked_function().pop(self._get_blocked_function().index(callback))
+        except:
+            pass
 
     # detailed_signal: a string containing the signal name
     # *args: additional parameters arg1, arg2
@@ -77,11 +100,15 @@ class EventBus(object):
         for subscription in self.get_subscriptions():
             if subscription == detailed_signal:
                 if self.get_subscriptions()[subscription]['handler_id'] not in self._get_blocked_handler():
-                    self.get_subscriptions()[subscription]['handler'](*args)
+                    if self.get_subscriptions()[subscription]['handler'] not in self._get_blocked_function():
+                        self.get_subscriptions()[subscription]['handler'](*args)
 
     # Internal Function
     def _get_blocked_handler(self):
         return self.blocked_handler
+
+    def _get_blocked_function(self):
+        return self.blocked_function
 
 
 def print_hello1(text=None):
@@ -113,6 +140,8 @@ if __name__ == '__main__':
     handle_1 = event.connect("coucou1", print_hello1, '1', '2', '3')
     event.handler_block(handle_1)
     event.handler_unblock(handle_1)
+    event.handler_block_by_func(print_hello2)
+    event.handler_unblock_by_func(print_hello2)
     for subcription in event.get_subscriptions():
         print(subcription + ": " + str(event.get_subscriptions()[subcription]))
     if event.handler_is_connected(handle_1):
