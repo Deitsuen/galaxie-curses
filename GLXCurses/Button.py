@@ -93,6 +93,8 @@ class Button(Widget):
         self.set_sensitive(1)
         self.states_list = None
 
+        self.connect('BUTTON1_CLICKED', self.get_application().set_is_focus, self.id)
+
     def update_preferred_sizes(self):
         if self.get_text():
             self.preferred_width = 0
@@ -241,6 +243,7 @@ class Button(Widget):
                         self.state['PRELIGHT'] = False
                     if event == curses.BUTTON1_CLICKED:
                         self.get_application().set_is_focus(self.id)
+                        self.emit('BUTTON1_CLICKED')
                     if event == curses.BUTTON1_DOUBLE_CLICKED:
                         self.get_application().set_is_focus(self.id)
                     if event == curses.BUTTON1_TRIPLE_CLICKED:
@@ -333,3 +336,13 @@ class Button(Widget):
                     self.button_border = self.interface
         else:
             pass
+
+    # Internal
+    def _set_state_prelight(self, value):
+        if bool(value):
+            self.state['PRELIGHT'] = True
+        else:
+            self.state['PRELIGHT'] = False
+
+    def _get_state_prelight(self):
+        return self.state['PRELIGHT']

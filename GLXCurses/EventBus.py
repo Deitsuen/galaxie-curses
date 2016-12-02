@@ -40,22 +40,26 @@ class EventBus(object):
     # detailed_signal: a string containing the signal name
     # *args: additional parameters arg1, arg2
     def connect(self, detailed_signal, handler, *args):
-        # That IF preserve the handler_id
         if detailed_signal not in self._get_signal_handlers_dict():
-            self._get_signal_handlers_dict()[detailed_signal] = dict()
-            self._get_signal_handlers_dict()[detailed_signal]['handler'] = handler
-            self._get_signal_handlers_dict()[detailed_signal]['handler_id'] = uuid.uuid1().int
-            self._get_signal_handlers_dict()[detailed_signal]['argvs'] = args
-        return self._get_signal_handlers_dict()[detailed_signal]['handler_id']
+            self._get_signal_handlers_dict()[detailed_signal] = {}
+
+        subscription = {
+            'handler': handler,
+            'argvs': args
+        }
+        handler_id = uuid.uuid1().int
+        self._get_signal_handlers_dict()[detailed_signal][handler_id] = subscription
+        return handler_id
 
     # The disconnect() method removes the signal handler with the specified handler_id
     # from the list of signal handlers for the object.
     # handler_id: an integer handler identifier
     def disconnect(self, handler_id):
-        for subscription in self._get_signal_handlers_dict():
-            if self._get_signal_handlers_dict()[subscription]['handler_id'] == handler_id:
-                del self._get_signal_handlers_dict()[subscription]
-                break
+        for detailed_signal, infos in self._get_signal_handlers_dict().iteritems():
+            for id, infos2 in infos.iteritems():
+                if id == handler_id:
+                    del self._get_signal_handlers_dict()[detailed_signal][handler_id]
+                    break
 
     # The handler_disconnect() method removes the signal handler with the specified handler_id
     # from the list of signal handlers for the object.
@@ -66,9 +70,10 @@ class EventBus(object):
     # The handler_is_connected() method returns True
     # if the signal handler with the specified handler_id is connected to the object.
     def handler_is_connected(self, handler_id):
-        for subscription in self._get_signal_handlers_dict():
-            if self._get_signal_handlers_dict()[subscription]['handler_id'] == handler_id:
-                return True
+        for detailed_signal, infos in self._get_signal_handlers_dict().iteritems():
+            for id, infos in infos.iteritems():
+                if id == handler_id:
+                    return True
         return False
 
     # The handler_block() method blocks the signal handler with the specified handler_id
@@ -110,11 +115,12 @@ class EventBus(object):
     # detailed_signal: a string containing the signal name
     # *args: additional parameters arg1, arg2
     def emit(self, detailed_signal, *args):
-        for subscription in self._get_signal_handlers_dict():
+        for subscription, infos in self._get_signal_handlers_dict().iteritems():
             if subscription == detailed_signal:
-                if self._get_signal_handlers_dict()[subscription]['handler_id'] not in self._get_blocked_handler():
-                    if self._get_signal_handlers_dict()[subscription]['handler'] not in self._get_blocked_function():
-                        self._get_signal_handlers_dict()[subscription]['handler'](*args)
+                for id, infos in infos.iteritems():
+                    if id not in self._get_blocked_handler():
+                        if id not in self._get_blocked_handler():
+                            self._get_signal_handlers_dict()[subscription][id]['handler'](*args)
 
     # Internal Function
     def _reset(self):
@@ -155,32 +161,45 @@ def print_hello3(text=None):
 if __name__ == '__main__':
     event = EventBus()
     handle_1 = event.connect("coucou1", print_hello1)
-    handle_2 = event.connect("coucou2", print_hello2)
-    handle_3 = event.connect("coucou3", print_hello3)
-    print('Before')
-    for subcription in event.signal_handlers:
-        print(subcription + ": " + str(event.signal_handlers[subcription]))
+    handle_2 = event.connect("coucou1", print_hello2)
+    handle_3 = event.connect("coucou1", print_hello3)
+    handle_4 = event.connect("coucou2", print_hello2)
+    handle_5 = event.connect("coucou3", print_hello3)
+    print('Before:')
+    # for subcription in event.signal_handlers:
+    #     print(subcription)
 
-    print('After')
-    event.disconnect(handle_1)
-    handle_1 = event.connect("coucou1", print_hello1, '1', '2', '3')
+    for detailed_signal, infos in event.signal_handlers.iteritems():
+        print(detailed_signal)
+        for handler_id, infos2 in infos.iteritems():
+            print(str(handler_id) + ": " + str(infos2))
 
-    # Do Nothing but that cool
+
+
+    print('After:')
+    #event.disconnect(handle_1)
+
+
+    # handle_1 = event.connect("coucou1", print_hello1, '1', '2', '3')
+    #
+    # # Do Nothing but that cool
     event.handler_block(handle_1)
-    event.handler_unblock(handle_1)
-
-    # Do Nothing but that cool
+    #event.handler_unblock(handle_1)
+    #
+    # # Do Nothing but that cool
     event.handler_block_by_func(print_hello2)
     event.handler_unblock_by_func(print_hello2)
-
-    for subcription in event.signal_handlers:
-        print(subcription + ": " + str(event.signal_handlers[subcription]))
+    #
+    for detailed_signal, infos in event.signal_handlers.iteritems():
+        print(detailed_signal)
+        for handler_id, infos2 in infos.iteritems():
+            print(str(handler_id) + ": " + str(infos2))
     if event.handler_is_connected(handle_1):
-        event.emit('coucou1', 'comment la vie est belle')
-    event.emit('coucou2', 'ben on sait pas')
-    event.emit('coucou3', 'mais si on sait')
-
-    # Data
+        event.emit('coucou1')
+    event.emit('coucou1')
+    # event.emit('coucou3', 'mais si on sait')
+    #
+    # # Data
     event.set_data('coucou', 'lavieestbellemec')
-    if event.get_data('coucouc'):
+    if event.get_data('coucou'):
         print event.get_data('coucou')

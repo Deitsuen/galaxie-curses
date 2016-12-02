@@ -216,6 +216,7 @@ if __name__ == '__main__':
     Button1.set_application(app)
     Button1.set_text('Button1')
 
+
     Button2 = GLXCurses.Button()
     Button2.set_application(app)
     Button2.set_text('Button2')
@@ -351,6 +352,11 @@ if __name__ == '__main__':
     app.add_statusbar(statusbar)
     app.add_toolbar(toolbar)
 
+    def fuck(text):
+        statusbar.push(text[0])
+
+    Button1.connect('BUTTON1_CLICKED', app.close)
+
     # Main loop
     count = 1
 
@@ -430,11 +436,12 @@ if __name__ == '__main__':
                            RadioButton2,
                            RadioButton3]:
                 if Button.mouse_event(event):
-                    message_text += Button.get_text()
-                    message_text += ':('
-                    message_text += Button.get_states()
-                    message_text += ')'
-                    statusbar.push(message_text)
+
+                    # message_text += Button.get_text()
+                    # message_text += ':('
+                    # message_text += Button.get_states()
+                    # message_text += ')'
+                    # statusbar.push(message_text)
                     app.refresh()
 
                     # if Button1.key_pressed(input_event):
