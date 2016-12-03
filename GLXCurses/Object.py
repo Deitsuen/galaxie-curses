@@ -202,7 +202,10 @@ class Object(object):
                 for id, infos in infos.iteritems():
                     if id not in self._get_blocked_handler():
                         if id not in self._get_blocked_handler():
-                            self._get_signal_handlers_dict()[subscription][id]['handler'](*args)
+                            if len(args):
+                                self._get_signal_handlers_dict()[subscription][id]['handler'](*args)
+                            else:
+                                self._get_signal_handlers_dict()[subscription][id]['handler']()
 
     # Internal Function
     def _reset(self):

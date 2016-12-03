@@ -93,7 +93,6 @@ class Button(Widget):
         self.set_sensitive(1)
         self.states_list = None
 
-        self.connect('BUTTON1_CLICKED', self.get_application().set_is_focus, self.id)
 
     def update_preferred_sizes(self):
         if self.get_text():
@@ -147,7 +146,7 @@ class Button(Widget):
         return self.label_y
 
     def draw_button(self):
-        self.check_selected()
+        self._check_selected()
         self.update_preferred_sizes()
         self.label_x = self.check_horizontal_justification()
         self.label_y = self.check_horizontal_position_type()
@@ -208,10 +207,10 @@ class Button(Widget):
             pass
 
     def enter(self):
-        pass
+        raise NotImplementedError
 
     def leave(self):
-        pass
+        raise NotImplementedError
 
     def key_pressed(self, char):
         if char > 255:
@@ -236,57 +235,53 @@ class Button(Widget):
                                                  in self.curses_mouse_states.viewitems()
                                                  if event & state)
                     if event == curses.BUTTON1_PRESSED:
-                        self.get_application().set_is_focus(self.id)
-                        self.check_selected()
-                        self.state['PRELIGHT'] = True
+                        self._check_selected()
+                        self._set_state_prelight(True)
                     elif event == curses.BUTTON1_RELEASED:
-                        self.state['PRELIGHT'] = False
+                        self._set_state_prelight(False)
                     if event == curses.BUTTON1_CLICKED:
-                        self.get_application().set_is_focus(self.id)
                         self.emit('BUTTON1_CLICKED')
                     if event == curses.BUTTON1_DOUBLE_CLICKED:
-                        self.get_application().set_is_focus(self.id)
+                        pass
                     if event == curses.BUTTON1_TRIPLE_CLICKED:
-                        self.get_application().set_is_focus(self.id)
-
+                        pass
                     if event == curses.BUTTON2_PRESSED:
-                        self.get_application().set_is_focus(self.id)
-                        self.check_selected()
-                        self.state['PRELIGHT'] = True
+                        self._check_selected()
+                        self._set_state_prelight(True)
                     elif event == curses.BUTTON2_RELEASED:
-                        self.state['PRELIGHT'] = False
+                        self._set_state_prelight(False)
                     if event == curses.BUTTON2_CLICKED:
-                        self.get_application().set_is_focus(self.id)
+                        pass
                     if event == curses.BUTTON2_DOUBLE_CLICKED:
-                        self.get_application().set_is_focus(self.id)
+                        pass
                     if event == curses.BUTTON2_TRIPLE_CLICKED:
-                        self.get_application().set_is_focus(self.id)
+                        pass
 
                     if event == curses.BUTTON3_PRESSED:
-                        self.get_application().set_is_focus(self.id)
-                        self.check_selected()
-                        self.state['PRELIGHT'] = True
+                        pass
+                        self._check_selected()
+                        self._set_state_prelight(True)
                     elif event == curses.BUTTON3_RELEASED:
-                        self.state['PRELIGHT'] = False
+                        self._set_state_prelight(False)
                     if event == curses.BUTTON3_CLICKED:
-                        self.get_application().set_is_focus(self.id)
+                        pass
                     if event == curses.BUTTON3_DOUBLE_CLICKED:
-                        self.get_application().set_is_focus(self.id)
+                        pass
                     if event == curses.BUTTON3_TRIPLE_CLICKED:
-                        self.get_application().set_is_focus(self.id)
+                        pass
 
                     if event == curses.BUTTON4_PRESSED:
-                        self.get_application().set_is_focus(self.id)
-                        self.check_selected()
-                        self.state['PRELIGHT'] = True
+                        pass
+                        self._check_selected()
+                        self._set_state_prelight(True)
                     elif event == curses.BUTTON4_RELEASED:
-                        self.state['PRELIGHT'] = False
+                        self._set_state_prelight(False)
                     if event == curses.BUTTON4_CLICKED:
-                        self.get_application().set_is_focus(self.id)
+                        pass
                     if event == curses.BUTTON4_DOUBLE_CLICKED:
-                        self.get_application().set_is_focus(self.id)
+                        pass
                     if event == curses.BUTTON4_TRIPLE_CLICKED:
-                        self.get_application().set_is_focus(self.id)
+                        pass
 
                     if event == curses.BUTTON_SHIFT:
                         pass
@@ -296,8 +291,9 @@ class Button(Widget):
                         pass
                     return 1
             else:
-                self.state['PRELIGHT'] = False
+                self._set_state_prelight(False)
                 return 0
+
 
     # Internal Widget functions
     def set_text(self, text):
@@ -325,7 +321,11 @@ class Button(Widget):
     def get_states(self):
         return self.states_list
 
-    def check_selected(self):
+    # Internal
+    def get_widget_id(self):
+        return self.id
+
+    def _check_selected(self):
         if self.get_can_focus():
             if self.get_application():
                 if self.get_application().get_is_focus() == self.id:
@@ -337,7 +337,6 @@ class Button(Widget):
         else:
             pass
 
-    # Internal
     def _set_state_prelight(self, value):
         if bool(value):
             self.state['PRELIGHT'] = True

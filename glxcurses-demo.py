@@ -352,18 +352,14 @@ if __name__ == '__main__':
     app.add_statusbar(statusbar)
     app.add_toolbar(toolbar)
 
-    def fuck(text):
-        statusbar.push(text[0])
+    def on_destroy():
+        statusbar.push('A Incredible Emiter thing')
 
-    Button1.connect('BUTTON1_CLICKED', app.close)
+    Button1.connect('BUTTON1_CLICKED', on_destroy)
 
     # Main loop
     count = 1
 
-
-    # Event Bus
-
-    #app.get_event_bus().subscribe(ord('q'), app.close())
     app.refresh()
     while True:
         message_text = ''
@@ -436,7 +432,7 @@ if __name__ == '__main__':
                            RadioButton2,
                            RadioButton3]:
                 if Button.mouse_event(event):
-
+                    app.set_is_focus(Button.get_widget_id())
                     # message_text += Button.get_text()
                     # message_text += ':('
                     # message_text += Button.get_states()
@@ -457,10 +453,10 @@ if __name__ == '__main__':
         elif input_event == curses.KEY_F4:
             app.refresh()
         elif input_event == curses.KEY_F5:
-            # Button1.set_is_focus(not Button1.get_is_focus())
+            app.set_is_focus(Button1.id)
             app.refresh()
         elif input_event == curses.KEY_F6:
-            # Button1.set_sensitive(not Button1.get_sensitive())
+            Button1.set_sensitive(not Button1.get_sensitive())
             app.refresh()
         elif input_event == curses.KEY_F7:
             app.refresh()
@@ -470,11 +466,8 @@ if __name__ == '__main__':
             app.refresh()
         elif input_event == curses.KEY_F10:
             break
-        # elif input_event == ord('q'):
-        #         try:
-        #             app.get_event_bus().publish(ord('q'))
-        #         except:
-        #             pass
+        elif input_event == ord('q'):
+            break
 
         count += 1
 
