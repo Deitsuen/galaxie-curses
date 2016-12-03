@@ -27,7 +27,7 @@ class Widget(Object):
         self.state['PRELIGHT'] = False
         self.state['SELECTED'] = False
         self.state['INSENSITIVE'] = False
-
+        self.children = []
         # Widget
         self.curses_subwin = None
         self.spacing = 0
@@ -178,10 +178,15 @@ class Widget(Object):
     def _set_parent(self, parent):
         self.parent = parent
 
+    def adopt(self, orphan):
+        self.children.append(orphan)
+
     def set_parent(self, parent):
 
         self._set_parent(parent)
         self.set_screen(self.get_parent().get_screen())
+
+        parent.adopt(self)
 
         # POUR MO
         #self.set_application(self.get_parent().get_application())
@@ -192,7 +197,11 @@ class Widget(Object):
         self.style_backup = self.get_style()
         self.set_style(self.get_parent().get_style())
 
+    def unchild(self, orphan):
+        self.children.pop(self.children.index(orphan))
+
     def unparent(self):
+        self.parent.unchild(self)
         self.parent = None
         self.set_style(self.style_backup)
 
@@ -466,3 +475,12 @@ class Widget(Object):
 
     def _set_imposed_spacing(self, spacing):
         self.imposed_spacing = int(spacing)
+
+    def handle_event(self, event_signal, *args):
+        pass
+
+    def handle_and_dispatch_event(self, event_signal, *args):
+        self.handle_event(event_signal, args)
+
+        for child in self.children:
+            child.handle_event()

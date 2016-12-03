@@ -403,6 +403,16 @@ class ProgressBar(Widget):
     def get_value(self):
         return self.value
 
+    def handle_event(self, event_signal, *args):
+
+        if event_signal == 'BUTTON1_CLICKED':
+            self.set_value("66")
+            self.set_text("WIN")
+
+        self.dispatch_event(event_signal, args)
+
+
+
     def set_show_text(self, show_text_int):
         self.show_text = show_text_int
 
