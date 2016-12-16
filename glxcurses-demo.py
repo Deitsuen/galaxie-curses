@@ -432,7 +432,7 @@ if __name__ == '__main__':
                            RadioButton2,
                            RadioButton3]:
                 if Button.mouse_event(event):
-                    app.set_is_focus(Button.get_widget_id())
+                    #qapp.set_is_focus(Button.get_widget_id())
                     # message_text += Button.get_text()
                     # message_text += ':('
                     # message_text += Button.get_states()
