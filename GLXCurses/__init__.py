@@ -15,6 +15,7 @@ from GLXCurses.Statusbar import Statusbar
 from GLXCurses.Toolbar import Toolbar
 from GLXCurses.Label import Label
 from GLXCurses.ProgressBar import ProgressBar
+from GLXCurses.ProgressBarHandler import ProgressBarHandler
 from GLXCurses.Button import Button
 from GLXCurses.RadioButton import RadioButton
 from GLXCurses.CheckButton import CheckButton

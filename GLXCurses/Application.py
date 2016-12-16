@@ -15,6 +15,7 @@ code = locale.getpreferredencoding()
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
 
+from GLXCurses.MainLoop import MainLoop
 
 class Application(object):
     def __init__(self):
@@ -23,6 +24,7 @@ class Application(object):
             os.environ["NCURSES_NO_UTF8_ACS"] = '1'
             self.screen = curses.initscr()
 
+            self.main_loop = MainLoop(self)
             # Turn off echoing of keys, and enter cbreak mode,
             # where no buffering is performed on keyboard input
             curses.noecho()
@@ -65,8 +67,8 @@ class Application(object):
         self.name = 'Application'
         self.windows_id_number = None
         self.active_window_id = None
-        self.windows = {}
-        self.attribute = self.style.get_default_style
+        self.windows = []
+        self.attribute = self.style.get_default_style()
 
         # Controller
         self.widget_it_have_default = None
@@ -181,6 +183,7 @@ class Application(object):
     def get_y(self):
         return self.y
 
+
     # GLXCApplication function
     def set_name(self, name):
         self.name = name
@@ -198,15 +201,10 @@ class Application(object):
         # set_parent is the set_parent from Widget common method
         # information's will be transmit by it method
         glxc_window.set_parent(self)
+        self.windows.append(glxc_window)
+        self.active_window_id = len(self.windows) - 1
 
-        # Display only one active window
-        id_max = len(self.windows.keys())
-        if id_max == 0:
-            self.windows[id_max] = glxc_window
-            self.active_window_id = id_max
-        else:
-            self.windows[id_max + 1] = glxc_window
-            self.active_window_id = id_max + 1
+
 
     def add_menubar(self, glxc_menu_bar):
         glxc_menu_bar.set_parent(self)
@@ -253,6 +251,15 @@ class Application(object):
 
         # After have redraw everything it's time to refresh the screen
         self.get_screen().refresh()
+
+    def adopt(self, orphan):
+        pass
+
+    def connect(self,event_signal, handler, *args):
+        self.main_loop.event_bus.connect(event_signal, handler, args)
+
+    def dispatch(self, event_signal, *args):
+        self.windows[self.active_window_id].handle_and_dispatch(event_signal, args)
 
     def draw(self):
         parent_height, parent_width = self.screen.getmaxyx()
@@ -327,3 +334,7 @@ class Application(object):
 
     def set_tooltip(self, widget_unique_id):
         self.widget_it_have_tooltip = widget_unique_id
+
+    def start(self):
+        self.main_loop.start()
+

@@ -179,8 +179,13 @@ if __name__ == '__main__':
     progressbar9.set_inverted(0)
 
     progressbar10 = GLXCurses.ProgressBar()
+    pgb_handler = GLXCurses.ProgressBarHandler(progressbar10)
+
+
+
+
     progressbar10.set_spacing(0)
-    progressbar10.set_value(randint(0, 100))
+    progressbar10.set_value(0)
     value = '{0:}{1:}'.format(progressbar10.get_value(), '%')
     progressbar10.set_text(value)
     progressbar10.set_show_text(1)
@@ -352,126 +357,105 @@ if __name__ == '__main__':
     app.add_statusbar(statusbar)
     app.add_toolbar(toolbar)
 
+    def on_mouse(event):
+        for Button in [Button1,
+                       Button2,
+                       Button3,
+                       CheckButton1,
+                       CheckButton2,
+                       CheckButton3,
+                       RadioButton1,
+                       RadioButton2,
+                       RadioButton3]:
+            if Button.mouse_event(event):
+                app.set_is_focus(Button.get_widget_id())
+                # message_text += Button.get_text()
+                # message_text += ':('
+                # message_text += Button.get_states()
+                # message_text += ')'
+                # statusbar.push(message_text)
+                app.refresh()
+
+                # if Button1.key_pressed(input_event):
+                #     pass
+
+    def on_resize():
+        message_text = ''
+        message_text += 'Screen Size:'
+        message_text += str(app.get_parent_size())
+        message_text += ' '
+
+        # Status Bar Demo
+        progressbar1.set_value(randint(0, 100))
+        value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
+        progressbar1.set_text(value)
+
+        progressbar2.set_value(randint(0, 100))
+        value = '{0:}{1:}'.format(progressbar2.get_value(), '%')
+        progressbar2.set_text(value)
+
+        progressbar3.set_value(randint(0, 100))
+        value = '{0:}{1:}'.format(progressbar3.get_value(), '%')
+        progressbar3.set_text(value)
+
+        progressbar4.set_value(randint(0, 100))
+        value = '{0:}{1:}'.format(progressbar4.get_value(), '%')
+        progressbar4.set_text(value)
+
+        progressbar5.set_value(randint(0, 100))
+        value = '{0:}{1:}'.format(progressbar5.get_value(), '%')
+        progressbar5.set_text(value)
+
+        progressbar6.set_value(randint(0, 100))
+        value = '{0:}{1:}'.format(progressbar6.get_value(), '%')
+        progressbar6.set_text(value)
+
+        progressbar7.set_value(randint(0, 100))
+        value = '{0:}{1:}'.format(progressbar7.get_value(), '%')
+        progressbar7.set_text(value)
+
+        progressbar8.set_value(randint(0, 100))
+        value = '{0:}{1:}'.format(progressbar8.get_value(), '%')
+        progressbar8.set_text(value)
+
+        progressbar9.set_value(randint(0, 100))
+        value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
+        progressbar9.set_text(value)
+
+        # progressbar10.set_value(randint(0, 100))
+        # value = '{0:}{1:}'.format(progressbar10.get_value(), '%')
+        # progressbar10.set_text(value)
+
+        progressbar11.set_value(randint(0, 100))
+        value = '{0:}{1:}'.format(progressbar11.get_value(), '%')
+        progressbar11.set_text(value)
+
+        progressbar12.set_value(randint(0, 100))
+        value = '{0:}{1:}'.format(progressbar12.get_value(), '%')
+        progressbar12.set_text(value)
+
     def on_destroy():
         statusbar.push('A Incredible Emiter thing')
 
-    Button1.connect('BUTTON1_CLICKED', on_destroy)
+    def handleUpButtonClicked():
+        current = progressbar10.get_value()
+        progressbar10.set_value(current+1)
+        value = '{0:}{1:}'.format(progressbar10.get_value(), '%')
+        progressbar10.set_text(value)
+
+    def handlekeys(input_event):
+        if input_event == curses.KEY_F5:
+            app.set_is_focus(Button1.id)
+        elif input_event == curses.KEY_F6:
+            Button1.set_sensitive(not Button1.get_sensitive())
+
+    app.connect('BUTTON1_CLICKED', handleUpButtonClicked)
+    app.connect('BUTTON1_CLICKED', on_destroy)
+    app.connect('KEY_PRESSED', handlekeys)
+    app.connect('RESIZED', on_resize)
 
     # Main loop
     count = 1
-
-    app.refresh()
-    while True:
-        message_text = ''
-        input_event = app.getch()
-        if curses.KEY_RESIZE:
-            message_text += 'Screen Size:'
-            message_text += str(app.get_parent_size())
-            message_text += ' '
-
-            # Status Bar Demo
-            progressbar1.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
-            progressbar1.set_text(value)
-
-            progressbar2.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar2.get_value(), '%')
-            progressbar2.set_text(value)
-
-            progressbar3.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar3.get_value(), '%')
-            progressbar3.set_text(value)
-
-            progressbar4.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar4.get_value(), '%')
-            progressbar4.set_text(value)
-
-            progressbar5.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar5.get_value(), '%')
-            progressbar5.set_text(value)
-
-            progressbar6.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar6.get_value(), '%')
-            progressbar6.set_text(value)
-
-            progressbar7.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar7.get_value(), '%')
-            progressbar7.set_text(value)
-
-            progressbar8.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar8.get_value(), '%')
-            progressbar8.set_text(value)
-
-            progressbar9.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
-            progressbar9.set_text(value)
-
-            progressbar10.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar10.get_value(), '%')
-            progressbar10.set_text(value)
-
-            progressbar11.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar11.get_value(), '%')
-            progressbar11.set_text(value)
-
-            progressbar12.set_value(randint(0, 100))
-            value = '{0:}{1:}'.format(progressbar12.get_value(), '%')
-            progressbar12.set_text(value)
-
-            app.refresh()
-
-        if input_event == curses.KEY_MOUSE:
-            event = curses.getmouse()
-            for Button in [Button1,
-                           Button2,
-                           Button3,
-                           CheckButton1,
-                           CheckButton2,
-                           CheckButton3,
-                           RadioButton1,
-                           RadioButton2,
-                           RadioButton3]:
-                if Button.mouse_event(event):
-                    #qapp.set_is_focus(Button.get_widget_id())
-                    # message_text += Button.get_text()
-                    # message_text += ':('
-                    # message_text += Button.get_states()
-                    # message_text += ')'
-                    # statusbar.push(message_text)
-                    app.refresh()
-
-                    # if Button1.key_pressed(input_event):
-                    #     pass
-
-        # ToolBar
-        if input_event == curses.KEY_F1:
-            app.refresh()
-        elif input_event == curses.KEY_F2:
-            app.refresh()
-        elif input_event == curses.KEY_F3:
-            app.refresh()
-        elif input_event == curses.KEY_F4:
-            app.refresh()
-        elif input_event == curses.KEY_F5:
-            app.set_is_focus(Button1.id)
-            app.refresh()
-        elif input_event == curses.KEY_F6:
-            Button1.set_sensitive(not Button1.get_sensitive())
-            app.refresh()
-        elif input_event == curses.KEY_F7:
-            app.refresh()
-        elif input_event == curses.KEY_F8:
-            app.refresh()
-        elif input_event == curses.KEY_F9:
-            app.refresh()
-        elif input_event == curses.KEY_F10:
-            break
-        elif input_event == ord('q'):
-            break
-
-        count += 1
-
-    # App Close
-    app.close()
+    app.start()
     # THE END
     sys.exit(0)

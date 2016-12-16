@@ -1,15 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import uuid
 
-# It script it publish under GNU GENERAL PUBLIC LICENSE
-# http://www.gnu.org/licenses/gpl-3.0.en.html
-# Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
-__author__ = 'Tuux'
+class MyEventBus():
 
-
-class EventBus(object):
     def __init__(self):
+        self.event_buffer = list()
+        # Signal
         self.signal_handlers = dict()
         self.blocked_handler = list()
         self.blocked_function = list()
@@ -112,16 +110,28 @@ class EventBus(object):
         except:
             pass
 
+    def pop_last_event(self):
+        try:
+            if self.event_buffer:
+                return self.event_buffer.pop()
+        except:
+            pass
+
     # detailed_signal: a string containing the signal name
     # *args: additional parameters arg1, arg2
-    def emit(self, detailed_signal, *args):
+    def emit(self, detailed_signal, args = []):
+        self.event_buffer.insert(0, [detailed_signal, args])
+
+    def dispatch(self, event_signal, event_args):
         for subscription, infos in self._get_signal_handlers_dict().iteritems():
-            if subscription == detailed_signal:
+            if subscription == event_signal:
                 for id, infos in infos.iteritems():
                     if id not in self._get_blocked_handler():
-                        if id not in self._get_blocked_handler():
-                            self._get_signal_handlers_dict()[subscription][id]['handler'](*args)
-
+                        if self._get_signal_handlers_dict()[subscription][id]['handler'] not in self._get_blocked_function():
+                            if len(event_args):
+                                self._get_signal_handlers_dict()[subscription][id]['handler'](event_args)
+                            else:
+                                self._get_signal_handlers_dict()[subscription][id]['handler']()
     # Internal Function
     def _reset(self):
         # All subscribers will be cleared.
@@ -141,65 +151,3 @@ class EventBus(object):
 
     def _get_blocked_function(self):
         return self.blocked_function
-
-
-def print_hello1(text=None):
-    if text:
-        print (text)
-
-
-def print_hello2(text=None):
-    if text:
-        print (text)
-
-
-def print_hello3(text=None):
-    if text:
-        print (text)
-
-
-if __name__ == '__main__':
-    event_bus = EventBus()
-    handle_1 = event_bus.connect("coucou1", print_hello1)
-    handle_2 = event_bus.connect("coucou1", print_hello2)
-    handle_3 = event_bus.connect("coucou1", print_hello3)
-    handle_4 = event_bus.connect("coucou2", print_hello2)
-    handle_5 = event_bus.connect("coucou3", print_hello3)
-    print('Before:')
-    # for subcription in event.signal_handlers:
-    #     print(subcription)
-
-    for detailed_signal, infos in event_bus.signal_handlers.iteritems():
-        print(detailed_signal)
-        for handler_id, infos2 in infos.iteritems():
-            print(str(handler_id) + ": " + str(infos2))
-
-
-
-    print('After:')
-    #event.disconnect(handle_1)
-
-
-    # handle_1 = event.connect("coucou1", print_hello1, '1', '2', '3')
-    #
-    # # Do Nothing but that cool
-    event_bus.handler_block(handle_1)
-    #event.handler_unblock(handle_1)
-    #
-    # # Do Nothing but that cool
-    event_bus.handler_block_by_func(print_hello2)
-    event_bus.handler_unblock_by_func(print_hello2)
-    #
-    for detailed_signal, infos in event_bus.signal_handlers.iteritems():
-        print(detailed_signal)
-        for handler_id, infos2 in infos.iteritems():
-            print(str(handler_id) + ": " + str(infos2))
-    if event_bus.handler_is_connected(handle_1):
-        event_bus.emit('coucou1')
-    event_bus.emit('coucou1')
-    # event.emit('coucou3', 'mais si on sait')
-    #
-    # # Data
-    event_bus.set_data('coucou', 'lavieestbellemec')
-    if event_bus.get_data('coucou'):
-        print event_bus.get_data('coucou')
