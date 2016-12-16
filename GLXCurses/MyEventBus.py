@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import uuid
+import logging
 
 class MyEventBus():
 
@@ -112,7 +113,7 @@ class MyEventBus():
 
     def pop_last_event(self):
         try:
-            if self.event_buffer:
+            if len(self.event_buffer) > 0:
                 return self.event_buffer.pop()
         except:
             pass
@@ -120,6 +121,7 @@ class MyEventBus():
     # detailed_signal: a string containing the signal name
     # *args: additional parameters arg1, arg2
     def emit(self, detailed_signal, args = []):
+        logging.debug('MyEventBus:emit '+str(detailed_signal)+' - '+str(args))
         self.event_buffer.insert(0, [detailed_signal, args])
 
     def dispatch(self, event_signal, event_args):

@@ -64,6 +64,9 @@ if __name__ == '__main__':
     while True:
         message_text = ''
         input_event = app.getch()
+        if input_event == -1:
+            continue
+
         if curses.KEY_RESIZE:
             message_text += 'Screen Size:'
             message_text += str(app.get_parent_size())

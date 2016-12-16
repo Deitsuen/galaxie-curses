@@ -1,15 +1,27 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from GLXCurses.MyEventBus import MyEventBus
 import curses
+import logging
+
 
 class MainLoop():
 
     def __init__(self, app):
-        self.event_bus = MyEventBus()
+        self.event_buffer = list()
         self.app = app
         self.started = False
+
+    def _pop_last_event(self):
+        try:
+            if len(self.event_buffer) > 0:
+                return self.event_buffer.pop()
+        except:
+            pass
+
+    def emit(self, detailed_signal, args = []):
+        logging.debug('>>EMIT>>'+detailed_signal+' '+str(args))
+        self.event_buffer.insert(0, [detailed_signal, args])
 
     def start(self):
         self.started = True
@@ -18,32 +30,33 @@ class MainLoop():
     def stop(self):
         self.started = False
 
-    def _handle_events(self):
+    def _handle_event(self):
         try:
-            event_signal, event_args = self.event_bus.pop_last_event()
-            self.app.dispatch(event_signal, event_args)
+            event = self._pop_last_event()
+            while event:
+                self.app.dispatch(event[0], event[1])
+                event = self._pop_last_event()
+            return True
         except:
-            pass
+            return False
 
-    def handle_resize(self):
-        self.event_bus.emit('RESIZED')
-
-    def handle_mouse(self, input_event):
+    def handle_curses_input(self, input_event):
         if input_event == curses.KEY_MOUSE:
-            self.event_bus.emit('MOUSE_EVENT', curses.getmouse())
-
-    def handle_keyboard(self, input_event):
-        self.event_bus.emit('KEY_PRESSED', input_event)
-
+            self.emit('MOUSE_EVENT', curses.getmouse())
+        elif input_event == curses.KEY_RESIZE:
+            self.emit('RESIZE')
+        else:
+            self.emit('CURSES', input_event)
 
     def _run(self):
         self.app.refresh()
         while self.started:
             input_event = self.app.getch()
-            self._handle_events()
-            self.handle_resize()
-            self.handle_keyboard(input_event)
-            self.handle_mouse(input_event)
-            self.app.refresh()
-        # App Close
+
+            if input_event != -1:
+                self.handle_curses_input(input_event)
+
+            if self._handle_event() or input_event != -1:
+                self.app.refresh()
+
         self.app.close()
