@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
+import logging
 from GLXCurses import glxc
 from GLXCurses.Widget import Widget
 
@@ -394,24 +395,17 @@ class ProgressBar(Widget):
         return self.text
 
     def set_value(self, percent=0):
-        if 0 <= percent <= 100:
-            self.value = percent
-        else:
+        if 0 > percent:
             self.value = 0
+        elif percent > 100:
+            self.value = 100
+        else:
+            self.value = percent
+
         self._update_preferred_size()
 
     def get_value(self):
         return self.value
-
-    def handle_event(self, event_signal, *args):
-
-        if event_signal == 'BUTTON1_CLICKED':
-            self.set_value("66")
-            self.set_text("WIN")
-
-        self.dispatch_event(event_signal, args)
-
-
 
     def set_show_text(self, show_text_int):
         self.show_text = show_text_int

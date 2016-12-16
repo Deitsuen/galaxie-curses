@@ -23,10 +23,9 @@ class Style(object):
         }
         self.curses_colors = list()
         self.curses_colors_pairs = list()
-        self.attribute = self.get_default_style
+        self.attribute = self.get_default_style()
         self.init_curses_pairs()
 
-    @property
     def get_default_style(self):
         style = dict()
 
@@ -125,14 +124,6 @@ class Style(object):
         return style
 
     def init_curses_pairs(self):
-        # COLOR_BLACK = 0
-        # COLOR_RED = 1
-        # COLOR_GREEN = 2
-        # COLOR_YELLOW = 3
-        # COLOR_BLUE = 4
-        # COLOR_MAGENTA = 5
-        # COLOR_CYAN = 6
-        # COLOR_WHITE = 7
         self.curses_colors = list()
         self.curses_colors.append('BLACK')
         self.curses_colors.append('RED')

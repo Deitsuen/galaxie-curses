@@ -4,6 +4,8 @@ from GLXCurses.Style import Style
 from GLXCurses.Object import Object
 import uuid
 import curses
+import logging
+
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -21,13 +23,15 @@ class Widget(Object):
         # Widget Setting
         self.set_flags()
 
+        self.event_handlers = dict()
+
         self.state = dict()
         self.state['NORMAL'] = True
         self.state['ACTIVE'] = False
         self.state['PRELIGHT'] = False
         self.state['SELECTED'] = False
         self.state['INSENSITIVE'] = False
-        self.children = []
+        self.children = list()
         # Widget
         self.curses_subwin = None
         self.spacing = 0
@@ -155,6 +159,9 @@ class Widget(Object):
 
     def get_child_visible(self):
         return self.set_visible
+
+    def get_children(self):
+        return self.children
 
     def get_parent(self):
         if self.parent:
@@ -457,6 +464,7 @@ class Widget(Object):
             self.get_y() + padding,
             self.get_x() + padding
         )
+
         self.set_curses_subwin(drawing_area)
         if (self.get_height() > self.preferred_height) and (self.get_width() > self.preferred_width):
             self.draw_widget_in_area()
@@ -476,11 +484,23 @@ class Widget(Object):
     def _set_imposed_spacing(self, spacing):
         self.imposed_spacing = int(spacing)
 
-    def handle_event(self, event_signal, *args):
-        pass
+    def subscribe(self, event_signal, event_handler):
+        if event_signal not in self.event_handlers:
+            self.event_handlers[event_signal] = list()
 
-    def handle_and_dispatch_event(self, event_signal, *args):
-        self.handle_event(event_signal, args)
+        self.event_handlers[event_signal].append(event_handler)
+
+    def unsubscribe(self, event_signal, event_handler):
+        if event_signal in self.event_handlers:
+            self.event_handlers[event_signal].remove(event_handler)
+
+    def handle_and_dispatch_event(self, event_signal, args = []):
+
+        if event_signal in self.event_handlers:
+            logging.debug("handling "+event_signal)
+            for handler in self.event_handlers[event_signal]:
+                logging.debug("found handler for "+event_signal)
+                handler(self, event_signal, args)
 
         for child in self.children:
-            child.handle_event()
+            child.handle_and_dispatch_event(event_signal, args)

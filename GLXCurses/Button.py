@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import curses
 from GLXCurses.Widget import Widget
+import logging
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -92,6 +93,15 @@ class Button(Widget):
         # Sensitive
         self.set_sensitive(1)
         self.states_list = None
+
+        self.subscribe('MOUSE_EVENT', Button._detect_click)
+
+    def _detect_click(self, event_signal, event_args):
+        logging.debug("detecting click")
+        if self.is_my_click(event_args[1], event_args[2]):
+            self.application.emit('BUTTON_CLICKED', [self.get_name()])
+        else:
+            logging.debug("NOT FOR ME: "+self.get_name())
 
 
     def update_preferred_sizes(self):
@@ -220,7 +230,33 @@ class Button(Widget):
         else:
             return 0
 
+    def is_my_click(self, coord_x = -1, coord_y = -1):
+        logging.debug('is_my_click:'+str(coord_x)+':'+str(coord_y))
+        logging.debug('is_my_click:self  '+str(self.x)+':'+str(self.y))
+        logging.debug('is_my_click:label  '+str(self.label_x)+':'+str(self.label_y))
+        logging.debug('is_my_click:height  '+str(self.preferred_height))
+
+        greater_x = self.label_x - 1 + len(self.button_border) + len(self.get_text())
+        lower_x = self.label_x - 1
+
+        lower_y = self.y - self.label_y
+        greater_y = self.y + self.label_y
+
+        x_is_in_range = greater_x >= coord_x >= lower_x
+        y_is_in_range = greater_y >= coord_y >= lower_y
+
+        logging.debug('greater_x:'+str(greater_x)+' >= x:'+str(coord_x)+' > lower_x:'+str(lower_x))
+        logging.debug('greater_y:'+str(greater_y)+' >= y:'+str(coord_y)+' > lower_y:'+str(lower_y))
+
+        return x_is_in_range and y_is_in_range
+
+    def handle_event(self, event_signal, args = []):
+        if event_signal == 'MOUSE_EVENT':
+            if self.is_my_click(args[1], args[2]):
+                self.application.emit('BUTTON1_CLICKED')
+
     def mouse_event(self, mouse_event):
+        logging.debug('Button.mouse_event:'+mouse_event)
         if self.get_sensitive():
             # Read the mouse event information's
             (mouse_event_id, x, y, z, event) = mouse_event
