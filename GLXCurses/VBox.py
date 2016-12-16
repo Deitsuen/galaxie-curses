@@ -24,11 +24,11 @@ class VBox(Box):
         is_high_enough = (self.get_height() > 2)
 
         if is_high_enough and is_large_enough:
-            if self.children_list:
-                devised_box_size = int(self.get_height() / len(self.children_list))
+            if self.get_children():
+                devised_box_size = int(self.get_height() / len(self.get_children()))
                 index = 0
                 total_vertical_spacing = 0
-                for glxc_widget in self.children_list:
+                for glxc_widget in self.get_children():
 
                     # Check if that the first element
                     if index == 0:
@@ -40,7 +40,7 @@ class VBox(Box):
                         )
                         total_vertical_spacing += glxc_widget.get_spacing()
                     # Normal
-                    elif 1 <= index <= len(self.children_list)-2:
+                    elif 1 <= index <= len(self.get_children())-2:
                         sub_win = self.get_curses_subwin().subwin(
                             devised_box_size - (glxc_widget.get_spacing() / 2),
                             self.get_width() - glxc_widget.get_spacing() * 2,

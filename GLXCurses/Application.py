@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import curses
 import sys
 import os
 from GLXCurses import glxc
 from GLXCurses.Style import Style
 import locale
+import logging
 
 locale.setlocale(locale.LC_ALL, '')
 code = locale.getpreferredencoding()
@@ -23,12 +25,14 @@ class Application(object):
             # Initialize curses
             os.environ["NCURSES_NO_UTF8_ACS"] = '1'
             self.screen = curses.initscr()
+            self.event_handlers = dict()
 
             self.main_loop = MainLoop(self)
             # Turn off echoing of keys, and enter cbreak mode,
             # where no buffering is performed on keyboard input
             curses.noecho()
             curses.cbreak()
+            self.screen.timeout(50)
 
             # In keypad mode, escape sequences for special keys
             # (like the cursor keys) will be interpreted and
@@ -183,7 +187,6 @@ class Application(object):
     def get_y(self):
         return self.y
 
-
     # GLXCApplication function
     def set_name(self, name):
         self.name = name
@@ -203,8 +206,6 @@ class Application(object):
         glxc_window.set_parent(self)
         self.windows.append(glxc_window)
         self.active_window_id = len(self.windows) - 1
-
-
 
     def add_menubar(self, glxc_menu_bar):
         glxc_menu_bar.set_parent(self)
@@ -255,11 +256,22 @@ class Application(object):
     def adopt(self, orphan):
         pass
 
-    def connect(self,event_signal, handler, *args):
-        self.main_loop.event_bus.connect(event_signal, handler, args)
+    def connect(self, event_signal, event_handler):
+        if event_signal not in self.event_handlers:
+            self.event_handlers[event_signal] = list()
 
-    def dispatch(self, event_signal, *args):
-        self.windows[self.active_window_id].handle_and_dispatch(event_signal, args)
+        self.event_handlers[event_signal].append(event_handler)
+
+    def disconnect(self, event_signal, event_handler):
+        if event_signal in self.event_handlers:
+            self.event_handlers[event_signal].remove(event_handler)
+
+    def dispatch(self, event_signal, args = []):
+        if event_signal in self.event_handlers:
+            for handler in self.event_handlers[event_signal]:
+                handler(self, event_signal, args)
+
+        self.windows[self.active_window_id].handle_and_dispatch_event(event_signal, args)
 
     def draw(self):
         parent_height, parent_width = self.screen.getmaxyx()
@@ -310,6 +322,9 @@ class Application(object):
         curses.echo()
         curses.endwin()
 
+    def emit(self, event_signal, event_args = []):
+        self.main_loop.emit(event_signal, event_args)
+
     # Focus and Selection
     def get_application(self):
         return self
@@ -337,4 +352,3 @@ class Application(object):
 
     def start(self):
         self.main_loop.start()
-

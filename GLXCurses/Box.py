@@ -38,10 +38,10 @@ class Box(Container):
         self.position = 0
 
     def pack_start(self, child, expand=True, fill=True, padding=0):
-        self.children_list.insert(0, child)
+        self.get_children().insert(0, child)
 
     def pack_end(self, child, expand=True, fill=True, padding=0):
-        self.children_list.append(child)
+        self.get_children().append(child)
 
     def pack_start_defaults(self, widget):
         pass
@@ -70,8 +70,8 @@ class Box(Container):
         return self.spacing
 
     def reorder_child(self, child, position):
-        self.children_list.remove(child)
-        self.children_list.insert(position, child)
+        self.get_children().remove(child)
+        self.get_children().insert(position, child)
 
     def query_child_packing(self, child):
         pass

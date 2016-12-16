@@ -3,6 +3,8 @@
 import GLXCurses
 import sys
 import curses
+import logging
+
 from random import randint
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -11,6 +13,9 @@ from random import randint
 __author__ = 'Tuux'
 
 if __name__ == '__main__':
+    logging.basicConfig(filename='/tmp/galaxie-curses.log',level=logging.DEBUG)
+    logging.info('Started glxcurses-demo')
+
     # Create the main Application
     app = GLXCurses.Application()
     app.set_name('Galaxie-Curse Demo')
@@ -181,9 +186,6 @@ if __name__ == '__main__':
     progressbar10 = GLXCurses.ProgressBar()
     pgb_handler = GLXCurses.ProgressBarHandler(progressbar10)
 
-
-
-
     progressbar10.set_spacing(0)
     progressbar10.set_value(0)
     value = '{0:}{1:}'.format(progressbar10.get_value(), '%')
@@ -219,12 +221,13 @@ if __name__ == '__main__':
     # Creat Button
     Button1 = GLXCurses.Button()
     Button1.set_application(app)
-    Button1.set_text('Button1')
-
+    Button1.set_text('INCREASE')
+    Button1.set_name('increase_button')
 
     Button2 = GLXCurses.Button()
     Button2.set_application(app)
-    Button2.set_text('Button2')
+    Button2.set_text('DECREASE')
+    Button2.set_name('decrease_button')
 
     Button3 = GLXCurses.Button()
     Button3.set_application(app)
@@ -357,29 +360,7 @@ if __name__ == '__main__':
     app.add_statusbar(statusbar)
     app.add_toolbar(toolbar)
 
-    def on_mouse(event):
-        for Button in [Button1,
-                       Button2,
-                       Button3,
-                       CheckButton1,
-                       CheckButton2,
-                       CheckButton3,
-                       RadioButton1,
-                       RadioButton2,
-                       RadioButton3]:
-            if Button.mouse_event(event):
-                app.set_is_focus(Button.get_widget_id())
-                # message_text += Button.get_text()
-                # message_text += ':('
-                # message_text += Button.get_states()
-                # message_text += ')'
-                # statusbar.push(message_text)
-                app.refresh()
-
-                # if Button1.key_pressed(input_event):
-                #     pass
-
-    def on_resize():
+    def on_resize(self, event_signal, event_args = []):
         message_text = ''
         message_text += 'Screen Size:'
         message_text += str(app.get_parent_size())
@@ -435,24 +416,38 @@ if __name__ == '__main__':
         progressbar12.set_text(value)
 
     def on_destroy():
+        logging.debug('==> onDestroy')
         statusbar.push('A Incredible Emiter thing')
 
     def handleUpButtonClicked():
+        logging.debug('handleUpButtonClicked')
         current = progressbar10.get_value()
         progressbar10.set_value(current+1)
         value = '{0:}{1:}'.format(progressbar10.get_value(), '%')
         progressbar10.set_text(value)
 
     def handlekeys(input_event):
+        logging.debug('handleKeys '+str(input_event))
         if input_event == curses.KEY_F5:
             app.set_is_focus(Button1.id)
         elif input_event == curses.KEY_F6:
             Button1.set_sensitive(not Button1.get_sensitive())
 
-    app.connect('BUTTON1_CLICKED', handleUpButtonClicked)
-    app.connect('BUTTON1_CLICKED', on_destroy)
-    app.connect('KEY_PRESSED', handlekeys)
-    app.connect('RESIZED', on_resize)
+    def on_click(self, event_signal, event_args = []):
+        if event_args[0] == 'increase_button':
+            current = progressbar9.get_value()
+            progressbar9.set_value(current+1)
+            value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
+            progressbar9.set_text(value)
+
+        if event_args[0] == 'decrease_button':
+            current = progressbar9.get_value()
+            progressbar9.set_value(current-1)
+            value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
+            progressbar9.set_text(value)
+
+    app.connect('RESIZE', on_resize)
+    app.connect('BUTTON_CLICKED', on_click)
 
     # Main loop
     count = 1

@@ -13,7 +13,6 @@ class Container(Widget):
         Widget.__init__(self)
 
         self.child = None
-        self.children_list = list()
 
         # Container Properties
         # Attributes
@@ -78,9 +77,6 @@ class Container(Widget):
 
     def foreach(self, callback, callback_data):
         pass
-
-    def get_children(self):
-        return self.child
 
     def propagate_expose(self, child, event):
         pass
