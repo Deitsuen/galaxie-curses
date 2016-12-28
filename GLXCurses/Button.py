@@ -108,11 +108,13 @@ class Button(Widget):
                                              in self.curses_mouse_states.viewitems()
                                              if event & state)
 
-                if event in [curses.BUTTON1_PRESSED, curses.BUTTON2_PRESSED, curses.BUTTON3_PRESSED, curses.BUTTON4_PRESSED]:
+                if event in [curses.BUTTON1_PRESSED, curses.BUTTON2_PRESSED, curses.BUTTON3_PRESSED,
+                             curses.BUTTON4_PRESSED]:
                     self._check_selected()
                     self._set_state_prelight(True)
 
-                if event in [curses.BUTTON1_RELEASED, curses.BUTTON2_RELEASED, curses.BUTTON3_RELEASED, curses.BUTTON4_RELEASED]:
+                if event in [curses.BUTTON1_RELEASED, curses.BUTTON2_RELEASED, curses.BUTTON3_RELEASED,
+                             curses.BUTTON4_RELEASED]:
                     self._set_state_prelight(False)
 
                 if event in [curses.BUTTON1_CLICKED, curses.BUTTON1_RELEASED]:
@@ -120,8 +122,7 @@ class Button(Widget):
             else:
                 self._set_state_prelight(False)
         else:
-            logging.debug('Button '+self.get_name()+' is not sensitive.')
-
+            logging.debug('Button ' + self.get_name() + ' is not sensitive.')
 
     def update_preferred_sizes(self):
         if self.get_text():
@@ -249,7 +250,7 @@ class Button(Widget):
         else:
             return 0
 
-    def is_my_click(self, coord_x = -1, coord_y = -1):
+    def is_my_click(self, coord_x=-1, coord_y=-1):
         greatest_x = self.label_x - 1 + len(self.button_border) + len(self.get_text())
         lowest_x = self.label_x - 1
 
