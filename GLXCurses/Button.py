@@ -94,14 +94,33 @@ class Button(Widget):
         self.set_sensitive(1)
         self.states_list = None
 
-        self.subscribe('MOUSE_EVENT', Button._detect_click)
+        self.subscribe('MOUSE_EVENT', Button._handle_mouse_event)
 
-    def _detect_click(self, event_signal, event_args):
-        logging.debug("detecting click")
-        if self.is_my_click(event_args[1], event_args[2]):
-            self.application.emit('BUTTON_CLICKED', [self.get_name()])
+    def _handle_mouse_event(self, event_signal, event_args):
+        if self.get_sensitive():
+            (mouse_event_id, x, y, z, event) = event_args
+            y -= self.y
+            x -= self.x
+
+            if self.is_my_click(event_args[1], event_args[2]):
+                logging.debug('_handle_mouse_event ==> click is for me')
+                self.states_list = '; '.join(state_string for state, state_string
+                                             in self.curses_mouse_states.viewitems()
+                                             if event & state)
+
+                if event in [curses.BUTTON1_PRESSED, curses.BUTTON2_PRESSED, curses.BUTTON3_PRESSED, curses.BUTTON4_PRESSED]:
+                    self._check_selected()
+                    self._set_state_prelight(True)
+
+                if event in [curses.BUTTON1_RELEASED, curses.BUTTON2_RELEASED, curses.BUTTON3_RELEASED, curses.BUTTON4_RELEASED]:
+                    self._set_state_prelight(False)
+
+                if event in [curses.BUTTON1_CLICKED, curses.BUTTON1_RELEASED]:
+                    self.application.emit('BUTTON_CLICKED', [self.get_name()])
+            else:
+                self._set_state_prelight(False)
         else:
-            logging.debug("NOT FOR ME: "+self.get_name())
+            logging.debug('Button '+self.get_name()+' is not sensitive.')
 
 
     def update_preferred_sizes(self):
@@ -231,105 +250,16 @@ class Button(Widget):
             return 0
 
     def is_my_click(self, coord_x = -1, coord_y = -1):
-        logging.debug('is_my_click:'+str(coord_x)+':'+str(coord_y))
-        logging.debug('is_my_click:self  '+str(self.x)+':'+str(self.y))
-        logging.debug('is_my_click:label  '+str(self.label_x)+':'+str(self.label_y))
-        logging.debug('is_my_click:height  '+str(self.preferred_height))
+        greatest_x = self.label_x - 1 + len(self.button_border) + len(self.get_text())
+        lowest_x = self.label_x - 1
 
-        greater_x = self.label_x - 1 + len(self.button_border) + len(self.get_text())
-        lower_x = self.label_x - 1
+        greatest_y = self.y + self.label_y
+        lowest_y = self.y - self.label_y
 
-        lower_y = self.y - self.label_y
-        greater_y = self.y + self.label_y
-
-        x_is_in_range = greater_x >= coord_x >= lower_x
-        y_is_in_range = greater_y >= coord_y >= lower_y
-
-        logging.debug('greater_x:'+str(greater_x)+' >= x:'+str(coord_x)+' > lower_x:'+str(lower_x))
-        logging.debug('greater_y:'+str(greater_y)+' >= y:'+str(coord_y)+' > lower_y:'+str(lower_y))
+        x_is_in_range = lowest_x <= coord_x <= greatest_x
+        y_is_in_range = lowest_y <= coord_y <= greatest_y
 
         return x_is_in_range and y_is_in_range
-
-    def handle_event(self, event_signal, args = []):
-        if event_signal == 'MOUSE_EVENT':
-            if self.is_my_click(args[1], args[2]):
-                self.application.emit('BUTTON1_CLICKED')
-
-    def mouse_event(self, mouse_event):
-        logging.debug('Button.mouse_event:'+mouse_event)
-        if self.get_sensitive():
-            # Read the mouse event information's
-            (mouse_event_id, x, y, z, event) = mouse_event
-            y -= self.y
-            x -= self.x
-            # Be sure we select really the Button
-            if self.label_y >= y > self.label_y - self.get_preferred_height():
-                if (self.label_x - 1) + len(self.button_border) + len(self.get_text()) >= x > (self.label_x - 1):
-                    # We are sure about the button have been clicked
-                    #
-                    self.states_list = '; '.join(state_string for state, state_string
-                                                 in self.curses_mouse_states.viewitems()
-                                                 if event & state)
-                    if event == curses.BUTTON1_PRESSED:
-                        self._check_selected()
-                        self._set_state_prelight(True)
-                    elif event == curses.BUTTON1_RELEASED:
-                        self._set_state_prelight(False)
-                    if event == curses.BUTTON1_CLICKED:
-                        self.emit('BUTTON1_CLICKED')
-                    if event == curses.BUTTON1_DOUBLE_CLICKED:
-                        pass
-                    if event == curses.BUTTON1_TRIPLE_CLICKED:
-                        pass
-                    if event == curses.BUTTON2_PRESSED:
-                        self._check_selected()
-                        self._set_state_prelight(True)
-                    elif event == curses.BUTTON2_RELEASED:
-                        self._set_state_prelight(False)
-                    if event == curses.BUTTON2_CLICKED:
-                        pass
-                    if event == curses.BUTTON2_DOUBLE_CLICKED:
-                        pass
-                    if event == curses.BUTTON2_TRIPLE_CLICKED:
-                        pass
-
-                    if event == curses.BUTTON3_PRESSED:
-                        pass
-                        self._check_selected()
-                        self._set_state_prelight(True)
-                    elif event == curses.BUTTON3_RELEASED:
-                        self._set_state_prelight(False)
-                    if event == curses.BUTTON3_CLICKED:
-                        pass
-                    if event == curses.BUTTON3_DOUBLE_CLICKED:
-                        pass
-                    if event == curses.BUTTON3_TRIPLE_CLICKED:
-                        pass
-
-                    if event == curses.BUTTON4_PRESSED:
-                        pass
-                        self._check_selected()
-                        self._set_state_prelight(True)
-                    elif event == curses.BUTTON4_RELEASED:
-                        self._set_state_prelight(False)
-                    if event == curses.BUTTON4_CLICKED:
-                        pass
-                    if event == curses.BUTTON4_DOUBLE_CLICKED:
-                        pass
-                    if event == curses.BUTTON4_TRIPLE_CLICKED:
-                        pass
-
-                    if event == curses.BUTTON_SHIFT:
-                        pass
-                    if event == curses.BUTTON_CTRL:
-                        pass
-                    if event == curses.BUTTON_ALT:
-                        pass
-                    return 1
-            else:
-                self._set_state_prelight(False)
-                return 0
-
 
     # Internal Widget functions
     def set_text(self, text):

@@ -32,7 +32,7 @@ class Application(object):
             # where no buffering is performed on keyboard input
             curses.noecho()
             curses.cbreak()
-            self.screen.timeout(50)
+            self.screen.timeout(80)
 
             # In keypad mode, escape sequences for special keys
             # (like the cursor keys) will be interpreted and
