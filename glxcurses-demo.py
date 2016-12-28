@@ -415,6 +415,8 @@ if __name__ == '__main__':
         value = '{0:}{1:}'.format(progressbar12.get_value(), '%')
         progressbar12.set_text(value)
 
+        #app.refresh()
+
     def on_destroy():
         logging.debug('==> onDestroy')
         statusbar.push('A Incredible Emiter thing')
@@ -432,6 +434,9 @@ if __name__ == '__main__':
             app.set_is_focus(Button1.id)
         elif input_event == curses.KEY_F6:
             Button1.set_sensitive(not Button1.get_sensitive())
+        elif input_event == curses.KEY_F10:
+            app.stop()
+            app.close()
 
     def on_click(self, event_signal, event_args = []):
         if event_args[0] == 'increase_button':

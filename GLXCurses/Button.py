@@ -108,12 +108,16 @@ class Button(Widget):
                                              in self.curses_mouse_states.viewitems()
                                              if event & state)
 
-                if event in [curses.BUTTON1_PRESSED, curses.BUTTON2_PRESSED, curses.BUTTON3_PRESSED,
+                if event in [curses.BUTTON1_PRESSED,
+                             curses.BUTTON2_PRESSED,
+                             curses.BUTTON3_PRESSED,
                              curses.BUTTON4_PRESSED]:
                     self._check_selected()
                     self._set_state_prelight(True)
 
-                if event in [curses.BUTTON1_RELEASED, curses.BUTTON2_RELEASED, curses.BUTTON3_RELEASED,
+                if event in [curses.BUTTON1_RELEASED,
+                             curses.BUTTON2_RELEASED,
+                             curses.BUTTON3_RELEASED,
                              curses.BUTTON4_RELEASED]:
                     self._set_state_prelight(False)
 

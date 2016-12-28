@@ -19,6 +19,7 @@ __author__ = 'Tuux'
 
 from GLXCurses.MainLoop import MainLoop
 
+
 class Application(object):
     def __init__(self):
         try:
@@ -32,7 +33,7 @@ class Application(object):
             # where no buffering is performed on keyboard input
             curses.noecho()
             curses.cbreak()
-            self.screen.timeout(80)
+            self.screen.timeout(30)
 
             # In keypad mode, escape sequences for special keys
             # (like the cursor keys) will be interpreted and
@@ -266,7 +267,7 @@ class Application(object):
         if event_signal in self.event_handlers:
             self.event_handlers[event_signal].remove(event_handler)
 
-    def dispatch(self, event_signal, args = []):
+    def dispatch(self, event_signal, args=[]):
         if event_signal in self.event_handlers:
             for handler in self.event_handlers[event_signal]:
                 handler(self, event_signal, args)
@@ -322,7 +323,7 @@ class Application(object):
         curses.echo()
         curses.endwin()
 
-    def emit(self, event_signal, event_args = []):
+    def emit(self, event_signal, event_args=[]):
         self.main_loop.emit(event_signal, event_args)
 
     # Focus and Selection
@@ -352,3 +353,6 @@ class Application(object):
 
     def start(self):
         self.main_loop.start()
+
+    def stop(self):
+        self.main_loop.stop()

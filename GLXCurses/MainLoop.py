@@ -5,7 +5,7 @@ import curses
 import logging
 
 
-class MainLoop():
+class MainLoop:
 
     def __init__(self, app):
         self.event_buffer = list()
@@ -19,7 +19,7 @@ class MainLoop():
         except:
             pass
 
-    def emit(self, detailed_signal, args = []):
+    def emit(self, detailed_signal, args=[]):
         logging.debug('>>EMIT>>'+detailed_signal+' '+str(args))
         self.event_buffer.insert(0, [detailed_signal, args])
 
@@ -56,7 +56,7 @@ class MainLoop():
             if input_event != -1:
                 self.handle_curses_input(input_event)
 
-            if self._handle_event() or input_event != -1:
+            if self._handle_event() or input_event != -1 or input_event == curses.KEY_RESIZE:
                 self.app.refresh()
 
         self.app.close()
