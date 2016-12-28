@@ -34,8 +34,10 @@ class MainLoop:
         try:
             event = self._pop_last_event()
             while event:
+                self.app.get_screen().notimeout(True)
                 self.app.dispatch(event[0], event[1])
                 event = self._pop_last_event()
+            self.app.get_screen().notimeout(False)
             return True
         except:
             return False

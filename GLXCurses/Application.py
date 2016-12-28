@@ -6,6 +6,7 @@ import sys
 import os
 from GLXCurses import glxc
 from GLXCurses.Style import Style
+from GLXCurses.MainLoop import MainLoop
 import locale
 import logging
 
@@ -17,8 +18,6 @@ code = locale.getpreferredencoding()
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
 
-from GLXCurses.MainLoop import MainLoop
-
 
 class Application(object):
     def __init__(self):
@@ -28,12 +27,14 @@ class Application(object):
             self.screen = curses.initscr()
             self.event_handlers = dict()
 
+            # Init MainLoop
             self.main_loop = MainLoop(self)
+
             # Turn off echoing of keys, and enter cbreak mode,
             # where no buffering is performed on keyboard input
             curses.noecho()
             curses.cbreak()
-            self.screen.timeout(30)
+            #self.screen.timeout(100)
 
             # In keypad mode, escape sequences for special keys
             # (like the cursor keys) will be interpreted and
@@ -254,26 +255,6 @@ class Application(object):
         # After have redraw everything it's time to refresh the screen
         self.get_screen().refresh()
 
-    def adopt(self, orphan):
-        pass
-
-    def connect(self, event_signal, event_handler):
-        if event_signal not in self.event_handlers:
-            self.event_handlers[event_signal] = list()
-
-        self.event_handlers[event_signal].append(event_handler)
-
-    def disconnect(self, event_signal, event_handler):
-        if event_signal in self.event_handlers:
-            self.event_handlers[event_signal].remove(event_handler)
-
-    def dispatch(self, event_signal, args=[]):
-        if event_signal in self.event_handlers:
-            for handler in self.event_handlers[event_signal]:
-                handler(self, event_signal, args)
-
-        self.windows[self.active_window_id].handle_and_dispatch_event(event_signal, args)
-
     def draw(self):
         parent_height, parent_width = self.screen.getmaxyx()
         if self.menubar:
@@ -323,8 +304,35 @@ class Application(object):
         curses.echo()
         curses.endwin()
 
+    # Main Loop
+    def adopt(self, orphan):
+        pass
+
+    def connect(self, event_signal, event_handler):
+        if event_signal not in self.event_handlers:
+            self.event_handlers[event_signal] = list()
+
+        self.event_handlers[event_signal].append(event_handler)
+
+    def disconnect(self, event_signal, event_handler):
+        if event_signal in self.event_handlers:
+            self.event_handlers[event_signal].remove(event_handler)
+
+    def dispatch(self, event_signal, args=[]):
+        if event_signal in self.event_handlers:
+            for handler in self.event_handlers[event_signal]:
+                handler(self, event_signal, args)
+
+        self.windows[self.active_window_id].handle_and_dispatch_event(event_signal, args)
+
     def emit(self, event_signal, event_args=[]):
         self.main_loop.emit(event_signal, event_args)
+
+    def start(self):
+        self.main_loop.start()
+
+    def stop(self):
+        self.main_loop.stop()
 
     # Focus and Selection
     def get_application(self):
@@ -351,8 +359,4 @@ class Application(object):
     def set_tooltip(self, widget_unique_id):
         self.widget_it_have_tooltip = widget_unique_id
 
-    def start(self):
-        self.main_loop.start()
 
-    def stop(self):
-        self.main_loop.stop()
