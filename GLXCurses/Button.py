@@ -119,10 +119,17 @@ class Button(Widget):
                              curses.BUTTON2_RELEASED,
                              curses.BUTTON3_RELEASED,
                              curses.BUTTON4_RELEASED]:
+                    self.get_application().emit('BUTTON_CLICKED', [self.get_name()])
                     self._set_state_prelight(False)
+                    self.get_application().set_is_focus(self.id)
 
-                if event in [curses.BUTTON1_CLICKED, curses.BUTTON1_RELEASED]:
-                    self.application.emit('BUTTON_CLICKED', [self.get_name()])
+                if event in [curses.BUTTON1_CLICKED,
+                             curses.BUTTON2_CLICKED,
+                             curses.BUTTON3_CLICKED,
+                             curses.BUTTON4_CLICKED]:
+                    self.get_application().emit('BUTTON_CLICKED', [self.get_name()])
+                    self._set_state_prelight(False)
+                    self.get_application().set_is_focus(self.id)
             else:
                 self._set_state_prelight(False)
         else:
