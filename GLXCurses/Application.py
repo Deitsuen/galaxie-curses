@@ -34,7 +34,7 @@ class Application(object):
             # where no buffering is performed on keyboard input
             curses.noecho()
             curses.cbreak()
-            #self.screen.timeout(100)
+
 
             # In keypad mode, escape sequences for special keys
             # (like the cursor keys) will be interpreted and
@@ -108,6 +108,7 @@ class Application(object):
 
     # Parent
     def set_parent(self, parent):
+        # Ignore any parent as a master parent.
         pass
 
     def get_parent(self):
@@ -322,6 +323,7 @@ class Application(object):
         if event_signal in self.event_handlers:
             for handler in self.event_handlers[event_signal]:
                 handler(self, event_signal, args)
+                self.screen.refresh()
 
         self.windows[self.active_window_id].handle_and_dispatch_event(event_signal, args)
 

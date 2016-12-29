@@ -16,7 +16,7 @@ class MainLoop:
         try:
             if len(self.event_buffer) > 0:
                 return self.event_buffer.pop()
-        except:
+        except IndexError:
             pass
 
     def emit(self, detailed_signal, args=[]):
@@ -34,10 +34,8 @@ class MainLoop:
         try:
             event = self._pop_last_event()
             while event:
-                #self.app.get_screen().notimeout(True)
                 self.app.dispatch(event[0], event[1])
                 event = self._pop_last_event()
-            #self.app.get_screen().notimeout(False)
             return True
         except:
             return False
@@ -60,5 +58,8 @@ class MainLoop:
 
             if self._handle_event() or input_event != -1 or input_event == curses.KEY_RESIZE:
                 self.app.refresh()
+
+            if input_event == curses.KEY_F10 or input_event == ord("q"):
+                break
 
         self.app.close()
