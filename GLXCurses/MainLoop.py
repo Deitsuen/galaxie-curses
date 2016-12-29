@@ -9,36 +9,37 @@ class MainLoop:
 
     def __init__(self, app):
         self.event_buffer = list()
-        self.app = app
+        self.application = app
         self.started = False
 
-    def _pop_last_event(self):
-        try:
-            if len(self.event_buffer) > 0:
-                return self.event_buffer.pop()
-        except IndexError:
-            pass
+    def set_event_buffer(self, list):
+        self.event_buffer = list
 
-    def emit(self, detailed_signal, args=[]):
-        logging.debug('>>EMIT>>'+detailed_signal+' '+str(args))
-        self.event_buffer.insert(0, [detailed_signal, args])
+    def get_event_buffer(self):
+        return self.event_buffer
+
+    def set_application(self, application):
+        self.application = application
+
+    def get_application(self):
+        return self.application
+
+    def set_started(self, boolean):
+        self.started = bool(boolean)
+
+    def get_started(self):
+        return self.started
 
     def start(self):
-        self.started = True
+        self.set_started(True)
         self._run()
 
     def stop(self):
-        self.started = False
+        self.set_started(False)
 
-    def _handle_event(self):
-        try:
-            event = self._pop_last_event()
-            while event:
-                self.app.dispatch(event[0], event[1])
-                event = self._pop_last_event()
-            return True
-        except:
-            return False
+    def emit(self, detailed_signal, args=[]):
+        logging.debug('>>EMIT>>'+detailed_signal+' '+str(args))
+        self.get_event_buffer().insert(0, [detailed_signal, args])
 
     def handle_curses_input(self, input_event):
         if input_event == curses.KEY_MOUSE:
@@ -48,18 +49,40 @@ class MainLoop:
         else:
             self.emit('CURSES', input_event)
 
+    # Internal
+    def _pop_last_event(self):
+        try:
+            if len(self.get_event_buffer()) > 0:
+                return self.get_event_buffer().pop()
+        except IndexError:
+            pass
+
+    def _handle_event(self):
+        try:
+            event = self._pop_last_event()
+            while event:
+                self.get_application().dispatch(event[0], event[1])
+                event = self._pop_last_event()
+            return True
+        except:
+            return False
+
     def _run(self):
-        self.app.refresh()
-        while self.started:
-            input_event = self.app.getch()
+        # Frist refresh
+        self.get_application().refresh()
+
+        # Main while 1
+        while self.get_started():
+            input_event = self.get_application().getch()
 
             if input_event != -1:
                 self.handle_curses_input(input_event)
 
-            if self._handle_event() or input_event != -1 or input_event == curses.KEY_RESIZE:
-                self.app.refresh()
+            if self._handle_event():
+                self.get_application().refresh()
 
-            if input_event == curses.KEY_F10 or input_event == ord("q"):
+            # Keyboard temporary thing
+            if input_event == curses.KEY_F10 or input_event == ord('q'):
                 break
 
-        self.app.close()
+        self.get_application().close()

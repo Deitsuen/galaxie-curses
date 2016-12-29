@@ -434,9 +434,6 @@ if __name__ == '__main__':
             app.set_is_focus(Button1.id)
         elif input_event == curses.KEY_F6:
             Button1.set_sensitive(not Button1.get_sensitive())
-        elif input_event == curses.KEY_F10:
-            app.stop()
-            app.close()
 
     def on_click(self, event_signal, event_args = []):
         if event_args[0] == 'increase_button':
@@ -455,7 +452,7 @@ if __name__ == '__main__':
     app.connect('BUTTON_CLICKED', on_click)
 
     # Main loop
-    count = 1
     app.start()
+
     # THE END
     sys.exit(0)
