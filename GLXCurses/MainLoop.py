@@ -32,13 +32,14 @@ class MainLoop:
 
     def start(self):
         self.set_started(True)
+        logging.info('Starting ' + self.__class__.__name__)
         self._run()
 
     def stop(self):
         self.set_started(False)
 
     def emit(self, detailed_signal, args=[]):
-        logging.debug('>>EMIT>>'+detailed_signal+' '+str(args))
+        logging.debug(self.__class__.__name__ + ': ' + detailed_signal + ' ' + str(args))
         self.get_event_buffer().insert(0, [detailed_signal, args])
 
     def handle_curses_input(self, input_event):
@@ -73,6 +74,7 @@ class MainLoop:
 
         # Main while 1
         while self.get_started():
+            logging.debug(self.__class__.__name__ + ' waiting for event ...')
             input_event = self.get_application().getch()
 
             if input_event != -1:
@@ -83,6 +85,7 @@ class MainLoop:
 
             # Keyboard temporary thing
             if input_event == curses.KEY_F10 or input_event == ord('q'):
+                logging.info(self.__class__.__name__ + ' quit')
                 break
 
         self.get_application().close()

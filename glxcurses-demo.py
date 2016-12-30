@@ -13,8 +13,11 @@ from random import randint
 __author__ = 'Tuux'
 
 if __name__ == '__main__':
-    logging.basicConfig(filename='/tmp/galaxie-curses.log',level=logging.DEBUG)
+    logging.basicConfig(filename='/tmp/galaxie-curses.log',
+                        level=logging.DEBUG,
+                        format='%(asctime)s, %(levelname)s: %(message)s')
     logging.info('Started glxcurses-demo')
+
 
     # Create the main Application
     app = GLXCurses.Application()

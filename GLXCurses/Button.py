@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
-from GLXCurses.Widget import Widget
 import logging
+from GLXCurses.Widget import Widget
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -103,7 +103,7 @@ class Button(Widget):
             x -= self.x
 
             if self.is_my_click(event_args[1], event_args[2]):
-                logging.debug('_handle_mouse_event ==> click is for me')
+                logging.debug(self.__class__.__name__ + ': ' + '_handle_mouse_event ==> click is for me')
                 self.states_list = '; '.join(state_string for state, state_string
                                              in self.curses_mouse_states.viewitems()
                                              if event & state)
@@ -133,7 +133,7 @@ class Button(Widget):
             else:
                 self._set_state_prelight(False)
         else:
-            logging.debug('Button ' + self.get_name() + ' is not sensitive.')
+            logging.debug(self.__class__.__name__ + ': ' + self.get_name() + ' is not sensitive.')
 
     def update_preferred_sizes(self):
         if self.get_text():

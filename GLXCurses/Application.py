@@ -8,8 +8,9 @@ from GLXCurses import glxc
 from GLXCurses.Style import Style
 from GLXCurses.MainLoop import MainLoop
 import locale
-import logging
 
+
+# Locales Setting
 locale.setlocale(locale.LC_ALL, '')
 code = locale.getpreferredencoding()
 
@@ -29,6 +30,8 @@ class Application(object):
 
             # Init MainLoop
             self.main_loop = MainLoop(self)
+
+            # Init Logger
 
             # Turn off echoing of keys, and enter cbreak mode,
             # where no buffering is performed on keyboard input
