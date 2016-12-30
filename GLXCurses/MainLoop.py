@@ -37,7 +37,7 @@ class MainLoop:
 
     def stop(self):
         self.set_started(False)
-        logging.debug(self.__class__.__name__ + ': Started')
+        logging.info('Stopping ' + self.__class__.__name__)
 
     def emit(self, detailed_signal, args=[]):
         logging.debug(self.__class__.__name__ + ': ' + detailed_signal + ' ' + str(args))
@@ -90,5 +90,4 @@ class MainLoop:
                 logging.info(self.__class__.__name__ + ' quit')
                 break
 
-        self.stop()
         self.get_application().close()

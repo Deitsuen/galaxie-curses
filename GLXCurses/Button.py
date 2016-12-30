@@ -119,21 +119,22 @@ class Button(Widget):
                              curses.BUTTON2_RELEASED,
                              curses.BUTTON3_RELEASED,
                              curses.BUTTON4_RELEASED]:
-                    self.get_application().emit('BUTTON_CLICKED', [self.get_name()])
+                    self.get_application().emit('BUTTON_CLICKED', [self.get_text(), self.get_widget_id()])
                     self._set_state_prelight(False)
-                    self.get_application().set_is_focus(self.id)
+                    self.get_application().set_is_focus(self.get_widget_id())
 
                 if event in [curses.BUTTON1_CLICKED,
                              curses.BUTTON2_CLICKED,
                              curses.BUTTON3_CLICKED,
                              curses.BUTTON4_CLICKED]:
-                    self.get_application().emit('BUTTON_CLICKED', [self.get_name()])
+                    self.get_application().emit('BUTTON_CLICKED', [self.get_text(), self.get_widget_id()])
                     self._set_state_prelight(False)
-                    self.get_application().set_is_focus(self.id)
+                    self.get_application().set_is_focus(self.get_widget_id())
             else:
                 self._set_state_prelight(False)
         else:
-            logging.debug(self.__class__.__name__ + ': ' + self.get_name() + ' is not sensitive.')
+            logging.debug(self.__class__.__name__ + ': ' + self.get_text() + ' ' + self.get_widget_id() + 'is not '
+                                                                                                          'sensitive.')
 
     def update_preferred_sizes(self):
         if self.get_text():

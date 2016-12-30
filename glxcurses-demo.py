@@ -234,7 +234,8 @@ if __name__ == '__main__':
 
     Button3 = GLXCurses.Button()
     Button3.set_application(app)
-    Button3.set_text('Button3')
+    Button3.set_text('Quit')
+    Button3.set_name('quit_button')
 
     vbox_button = GLXCurses.VBox()
     vbox_button.pack_end(Button1)
@@ -439,17 +440,23 @@ if __name__ == '__main__':
             Button1.set_sensitive(not Button1.get_sensitive())
 
     def on_click(self, event_signal, event_args = []):
-        if event_args[0] == 'increase_button':
+        if event_args[1] == Button1.get_widget_id():
             current = progressbar9.get_value()
             progressbar9.set_value(current+1)
             value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
             progressbar9.set_text(value)
+            statusbar.push('Increase progress bar to value: ' + value)
 
-        if event_args[0] == 'decrease_button':
+        if event_args[1] == Button2.get_widget_id():
             current = progressbar9.get_value()
             progressbar9.set_value(current-1)
             value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
             progressbar9.set_text(value)
+            statusbar.push('Decrease progress bar to value: ' + value)
+
+        if event_args[1] == Button3.get_widget_id():
+            statusbar.push('Stopping every operation\'s')
+            app.stop()
 
     app.connect('RESIZE', on_resize)
     app.connect('BUTTON_CLICKED', on_click)
