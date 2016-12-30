@@ -37,6 +37,7 @@ class MainLoop:
 
     def stop(self):
         self.set_started(False)
+        logging.debug(self.__class__.__name__ + ': Started')
 
     def emit(self, detailed_signal, args=[]):
         logging.debug(self.__class__.__name__ + ': ' + detailed_signal + ' ' + str(args))
@@ -69,12 +70,13 @@ class MainLoop:
             return False
 
     def _run(self):
-        # Frist refresh
-        self.get_application().refresh()
+        if self.get_started():
+            logging.debug(self.__class__.__name__ + ': Started')
+            self.get_application().refresh()
 
         # Main while 1
         while self.get_started():
-            logging.debug(self.__class__.__name__ + ' waiting for event ...')
+            # logging.debug(self.__class__.__name__ + ': Waiting event\'s')
             input_event = self.get_application().getch()
 
             if input_event != -1:
@@ -88,4 +90,5 @@ class MainLoop:
                 logging.info(self.__class__.__name__ + ' quit')
                 break
 
+        self.stop()
         self.get_application().close()

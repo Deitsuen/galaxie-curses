@@ -103,7 +103,7 @@ class Button(Widget):
             x -= self.x
 
             if self.is_my_click(event_args[1], event_args[2]):
-                logging.debug(self.__class__.__name__ + ': ' + '_handle_mouse_event ==> click is for me')
+                #logging.debug(self.__class__.__name__ + ': ' + '_handle_mouse_event ==> click is for me')
                 self.states_list = '; '.join(state_string for state, state_string
                                              in self.curses_mouse_states.viewitems()
                                              if event & state)

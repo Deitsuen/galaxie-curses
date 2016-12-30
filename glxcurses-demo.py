@@ -15,7 +15,7 @@ __author__ = 'Tuux'
 if __name__ == '__main__':
     logging.basicConfig(filename='/tmp/galaxie-curses.log',
                         level=logging.DEBUG,
-                        format='%(asctime)s, %(levelname)s: %(message)s')
+                        format='%(asctime)s, %(levelname)s, %(message)s')
     logging.info('Started glxcurses-demo')
 
 

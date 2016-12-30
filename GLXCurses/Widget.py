@@ -497,9 +497,9 @@ class Widget(Object):
     def handle_and_dispatch_event(self, event_signal, args = []):
 
         if event_signal in self.event_handlers:
-            logging.debug("handling "+event_signal)
+            #logging.debug(self.__class__.__name__ + ': ' + 'Handling ' + event_signal)
             for handler in self.event_handlers[event_signal]:
-                logging.debug("found handler for "+event_signal)
+                #logging.debug(self.__class__.__name__ + ': ' + 'Found handler for ' + event_signal)
                 handler(self, event_signal, args)
 
         for child in self.children:

@@ -326,7 +326,7 @@ class Application(object):
         if event_signal in self.event_handlers:
             for handler in self.event_handlers[event_signal]:
                 handler(self, event_signal, args)
-                self.screen.refresh()
+                #self.screen.refresh()
 
         self.windows[self.active_window_id].handle_and_dispatch_event(event_signal, args)
 
