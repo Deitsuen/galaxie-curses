@@ -364,7 +364,7 @@ if __name__ == '__main__':
     app.add_statusbar(statusbar)
     app.add_toolbar(toolbar)
 
-    def on_resize(self, event_signal, event_args = []):
+    def on_resize(self, event_signal, *event_args):
         message_text = ''
         message_text += 'Screen Size:'
         message_text += str(app.get_parent_size())
@@ -432,14 +432,20 @@ if __name__ == '__main__':
         value = '{0:}{1:}'.format(progressbar10.get_value(), '%')
         progressbar10.set_text(value)
 
-    def handlekeys(input_event):
-        logging.debug('handleKeys '+str(input_event))
-        if input_event == curses.KEY_F5:
-            app.set_is_focus(Button1.id)
-        elif input_event == curses.KEY_F6:
+    def handlekeys(self, event_signal, *event_args):
+        logging.debug('HANDLE KEY: '+str(event_args[0]))
+
+        if event_args[0] == curses.KEY_F5:
+            app.set_is_focus(Button1.get_widget_id())
+
+        if event_args[0] == curses.KEY_F6:
             Button1.set_sensitive(not Button1.get_sensitive())
 
-    def on_click(self, event_signal, event_args = []):
+        # Keyboard temporary thing
+        if event_args[0] == curses.KEY_F10 or event_args[0] == ord('q'):
+            app.stop()
+
+    def on_click(self, event_signal, *event_args):
         if event_args[1] == Button1.get_widget_id():
             current = progressbar9.get_value()
             progressbar9.set_value(current+1)
@@ -459,7 +465,9 @@ if __name__ == '__main__':
             app.stop()
 
     app.connect('RESIZE', on_resize)
-    app.connect('BUTTON_CLICKED', on_click)
+    app.connect('BUTTON1_CLICKED', on_click)
+    app.connect('BUTTON1_RELEASED', on_click)
+    app.connect('CURSES', handlekeys)
 
     # Main loop
     app.start()

@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import curses
+from curses import ascii
 import logging
 
 
 class MainLoop:
-
     def __init__(self, app):
         self.event_buffer = list()
         self.application = app
@@ -47,7 +47,7 @@ class MainLoop:
         if input_event == curses.KEY_MOUSE:
             self.emit('MOUSE_EVENT', curses.getmouse())
         elif input_event == curses.KEY_RESIZE:
-            self.emit('RESIZE')
+            self.emit('RESIZE', [])
         else:
             self.emit('CURSES', input_event)
 
@@ -84,10 +84,5 @@ class MainLoop:
 
             if self._handle_event():
                 self.get_application().refresh()
-
-            # Keyboard temporary thing
-            if input_event == curses.KEY_F10 or input_event == ord('q'):
-                logging.info(self.__class__.__name__ + ' quit')
-                break
 
         self.get_application().close()
