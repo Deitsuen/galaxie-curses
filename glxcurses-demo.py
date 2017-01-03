@@ -436,7 +436,7 @@ if __name__ == '__main__':
         logging.debug('HANDLE KEY: '+str(event_args[0]))
 
         if event_args[0] == curses.KEY_F5:
-            app.set_is_focus(Button1.get_widget_id())
+            app.set_is_focus(Button1)
 
         if event_args[0] == curses.KEY_F6:
             Button1.set_sensitive(not Button1.get_sensitive())

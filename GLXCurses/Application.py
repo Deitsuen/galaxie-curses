@@ -355,8 +355,8 @@ class Application(object):
     def get_is_focus(self):
         return self.widget_it_have_focus
 
-    def set_is_focus(self, widget_unique_id):
-        self.widget_it_have_focus = widget_unique_id
+    def set_is_focus(self, widget):
+        self.widget_it_have_focus = widget.get_widget_id()
 
     def get_tooltip(self):
         return self.widget_it_have_tooltip
