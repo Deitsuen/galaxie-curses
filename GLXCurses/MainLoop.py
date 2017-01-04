@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import curses
-from curses import ascii
 import logging
 
 
@@ -11,6 +10,26 @@ class MainLoop:
         self.event_buffer = list()
         self.application = app
         self.started = False
+        self.data = dict()
+
+    # The get_data() method returns the Python object associated with the specified key or
+    # None if there is no data associated with the key or if there is no key associated with the object.
+    # key : a string used as the key
+    # data : a Python object that is the value to be associated with the key
+    def get_data(self, key):
+        if key not in self._get_data_dict():
+            return None
+        elif not len(self._get_data_dict()[key]):
+            return None
+        else:
+            return self._get_data_dict()[key]
+
+    # The set_data() method associates the specified Python object (data) with key.
+    # key : a string used as the key
+    # data : a Python object that is the value to be associated with the key
+    def set_data(self, key, data):
+        self._get_data_dict()[key] = data
+
 
     def set_event_buffer(self, list):
         self.event_buffer = list
@@ -39,7 +58,7 @@ class MainLoop:
         self.set_started(False)
         logging.info('Stopping ' + self.__class__.__name__)
 
-    def emit(self, detailed_signal, args=[]):
+    def emit(self, detailed_signal, args={}):
         logging.debug(self.__class__.__name__ + ': ' + detailed_signal + ' ' + str(args))
         self.get_event_buffer().insert(0, [detailed_signal, args])
 
@@ -52,6 +71,9 @@ class MainLoop:
             self.emit('CURSES', input_event)
 
     # Internal
+    def _get_data_dict(self):
+        return self.data
+
     def _pop_last_event(self):
         try:
             if len(self.get_event_buffer()) > 0:

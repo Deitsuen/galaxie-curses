@@ -171,38 +171,10 @@ class Button(Widget):
 
                 # EVENT EMIT
                 self.get_application().emit(self.curses_mouse_states[event],
-                                            [self.__class__.__name__,
-                                             self.get_text(),
-                                             self.get_widget_id()]
+                                            {'class': self.__class__.__name__,
+                                             'label': self.get_text(),
+                                             'id': self.get_widget_id()}
                                             )
-                # if event == curses.BUTTON1_PRESSED:
-                #     self.get_application().emit('BUTTON1_PRESSED', [self.get_text(), self.get_widget_id()])
-                # if event == curses.BUTTON2_PRESSED:
-                #     self.get_application().emit('BUTTON2_PRESSED', [self.get_text(), self.get_widget_id()])
-                # if event == curses.BUTTON3_PRESSED:
-                #     self.get_application().emit('BUTTON3_PRESSED', [self.get_text(), self.get_widget_id()])
-                # if event == curses.BUTTON4_PRESSED:
-                #     self.get_application().emit('BUTTON4_PRESSED', [self.get_text(), self.get_widget_id()])
-                #
-                # # RELEASED
-                # if event == curses.BUTTON1_RELEASED:
-                #     self.get_application().emit('BUTTON1_RELEASED', [self.get_text(), self.get_widget_id()])
-                # if event == curses.BUTTON2_RELEASED:
-                #     self.get_application().emit('BUTTON2_RELEASED', [self.get_text(), self.get_widget_id()])
-                # if event == curses.BUTTON3_RELEASED:
-                #     self.get_application().emit('BUTTON3_RELEASED', [self.get_text(), self.get_widget_id()])
-                # if event == curses.BUTTON4_RELEASED:
-                #     self.get_application().emit('BUTTON4_RELEASED', [self.get_text(), self.get_widget_id()])
-                #
-                # # CLICKED
-                # if event == curses.BUTTON1_CLICKED:
-                #     self.get_application().emit('BUTTON1_CLICKED', [self.get_text(), self.get_widget_id()])
-                # elif event == curses.BUTTON2_CLICKED:
-                #     self.get_application().emit('BUTTON2_CLICKED', [self.get_text(), self.get_widget_id()])
-                # elif event == curses.BUTTON3_CLICKED:
-                #     self.get_application().emit('BUTTON3_CLICKED', [self.get_text(), self.get_widget_id()])
-                # elif event == curses.BUTTON4_CLICKED:
-                #     self.get_application().emit('BUTTON4_CLICKED', [self.get_text(), self.get_widget_id()])
 
             else:
                 # Nothing the better is to clean the prelight

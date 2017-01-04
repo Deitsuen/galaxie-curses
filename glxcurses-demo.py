@@ -445,24 +445,24 @@ if __name__ == '__main__':
         if event_args[0] == curses.KEY_F10 or event_args[0] == ord('q'):
             app.stop()
 
-    def on_click(self, event_signal, *event_args):
-        logging.debug(str(event_signal) + ' ' + str(event_args[0]))
+    def on_click(self, event_signal, event_args=dict()):
+        #logging.debug(str(event_signal) + ' ' + str(event_args))
 
-        if event_args[0][2] == Button1.get_widget_id():
+        if event_args['id'] == Button1.get_widget_id():
             current = progressbar9.get_value()
             progressbar9.set_value(current+1)
             value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
             progressbar9.set_text(value)
             statusbar.push('Increase progress bar to value: ' + value)
 
-        if event_args[0][2] == Button2.get_widget_id():
+        if event_args['id'] == Button2.get_widget_id():
             current = progressbar9.get_value()
             progressbar9.set_value(current-1)
             value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
             progressbar9.set_text(value)
             statusbar.push('Decrease progress bar to value: ' + value)
 
-        if event_args[0][2] == Button3.get_widget_id():
+        if event_args['id'] == Button3.get_widget_id():
             statusbar.push('Stopping every operation\'s')
             app.stop()
 
