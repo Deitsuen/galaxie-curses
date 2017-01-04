@@ -446,21 +446,23 @@ if __name__ == '__main__':
             app.stop()
 
     def on_click(self, event_signal, *event_args):
-        if event_args[1] == Button1.get_widget_id():
+        logging.debug(str(event_signal) + ' ' + str(event_args[0]))
+
+        if event_args[0][2] == Button1.get_widget_id():
             current = progressbar9.get_value()
             progressbar9.set_value(current+1)
             value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
             progressbar9.set_text(value)
             statusbar.push('Increase progress bar to value: ' + value)
 
-        if event_args[1] == Button2.get_widget_id():
+        if event_args[0][2] == Button2.get_widget_id():
             current = progressbar9.get_value()
             progressbar9.set_value(current-1)
             value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
             progressbar9.set_text(value)
             statusbar.push('Decrease progress bar to value: ' + value)
 
-        if event_args[1] == Button3.get_widget_id():
+        if event_args[0][2] == Button3.get_widget_id():
             statusbar.push('Stopping every operation\'s')
             app.stop()
 
