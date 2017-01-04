@@ -65,9 +65,9 @@ class MainLoop:
             while event:
                 self.get_application().dispatch(event[0], event[1])
                 event = self._pop_last_event()
-            return True
+                self.get_application().refresh()
         except:
-            return False
+            pass
 
     def _run(self):
         if self.get_started():
@@ -82,7 +82,6 @@ class MainLoop:
             if input_event != -1:
                 self.handle_curses_input(input_event)
 
-            if self._handle_event():
-                self.get_application().refresh()
+            self._handle_event()
 
         self.get_application().close()
