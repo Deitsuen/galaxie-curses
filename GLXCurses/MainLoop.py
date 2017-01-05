@@ -30,7 +30,6 @@ class MainLoop:
     def set_data(self, key, data):
         self._get_data_dict()[key] = data
 
-
     def set_event_buffer(self, list):
         self.event_buffer = list
 
@@ -58,6 +57,8 @@ class MainLoop:
         self.set_started(False)
         logging.info('Stopping ' + self.__class__.__name__)
 
+    # detailed_signal: a string containing the signal name
+    # *args: additional parameters arg1, arg2
     def emit(self, detailed_signal, args={}):
         logging.debug(self.__class__.__name__ + ': ' + detailed_signal + ' ' + str(args))
         self.get_event_buffer().insert(0, [detailed_signal, args])

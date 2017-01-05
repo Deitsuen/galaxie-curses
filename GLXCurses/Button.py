@@ -169,6 +169,13 @@ class Button(Widget):
                 if event == curses.BUTTON4_TRIPLE_CLICKED:
                     self.get_application().set_is_focus(self)
 
+                if event == curses.BUTTON_SHIFT:
+                    pass
+                if event == curses.BUTTON_CTRL:
+                    pass
+                if event == curses.BUTTON_ALT:
+                    pass
+
                 # EVENT EMIT
                 self.get_application().emit(self.curses_mouse_states[event],
                                             {'class': self.__class__.__name__,
@@ -348,9 +355,6 @@ class Button(Widget):
         return self.states_list
 
     # Internal
-    def get_widget_id(self):
-        return self.id
-
     def _check_selected(self):
         if self.get_can_focus():
             if self.get_application():

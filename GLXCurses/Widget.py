@@ -225,6 +225,9 @@ class Widget(Object):
         self.screen = screen
 
     # Widget
+    def get_widget_id(self):
+        return self.id
+
     def get_curses_subwin(self):
         return self.curses_subwin
 
