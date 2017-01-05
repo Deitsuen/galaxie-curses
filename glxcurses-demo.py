@@ -225,17 +225,14 @@ if __name__ == '__main__':
     Button1 = GLXCurses.Button()
     Button1.set_application(app)
     Button1.set_text('INCREASE')
-    Button1.set_name('increase_button')
 
     Button2 = GLXCurses.Button()
     Button2.set_application(app)
     Button2.set_text('DECREASE')
-    Button2.set_name('decrease_button')
 
     Button3 = GLXCurses.Button()
     Button3.set_application(app)
     Button3.set_text('Quit')
-    Button3.set_name('quit_button')
 
     vbox_button = GLXCurses.VBox()
     vbox_button.pack_end(Button1)
@@ -425,14 +422,14 @@ if __name__ == '__main__':
         logging.debug('==> onDestroy')
         statusbar.push('A Incredible Emiter thing')
 
-    def handleUpButtonClicked():
+    def handle_up_button_clicked():
         logging.debug('handleUpButtonClicked')
         current = progressbar10.get_value()
         progressbar10.set_value(current+1)
         value = '{0:}{1:}'.format(progressbar10.get_value(), '%')
         progressbar10.set_text(value)
 
-    def handlekeys(self, event_signal, *event_args):
+    def handle_keys(self, event_signal, *event_args):
         logging.debug('HANDLE KEY: '+str(event_args[0]))
 
         if event_args[0] == curses.KEY_F5:
@@ -469,7 +466,7 @@ if __name__ == '__main__':
     app.connect('RESIZE', on_resize)
     app.connect('BUTTON1_CLICKED', on_click)
     app.connect('BUTTON1_RELEASED', on_click)
-    app.connect('CURSES', handlekeys)
+    app.connect('CURSES', handle_keys)
 
     # Main loop
     app.start()
