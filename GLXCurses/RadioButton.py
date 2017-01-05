@@ -146,23 +146,16 @@ class RadioButton(Widget):
 
         return self.label_y
 
-    def check_active(self):
-        if self.state['ACTIVE']:
-            self.interface = self.interface_active
-        else:
-            self.interface = self.interface_unactivated
-
     def set_active(self, boolean):
         self.state['ACTIVE'] = bool(boolean)
-        self.check_active()
+        self._check_active()
 
     def get_active(self):
-        self.check_active()
+        self._check_active()
         return self.state['ACTIVE']
 
     def draw_button(self):
-        self.check_selected()
-        self.check_active()
+        self._check_active()
         self.update_preferred_sizes()
         self.label_x = self.check_justification()
         self.label_y = self.check_position_type()
@@ -243,12 +236,13 @@ class RadioButton(Widget):
                     # BUTTON1
                     if event == curses.BUTTON1_PRESSED:
                         self.get_application().set_is_focus(self)
-                        self.check_selected()
-                        self.state['PRELIGHT'] = True
+                        self._check_active()
+                        self._set_state_prelight(True)
                     elif event == curses.BUTTON1_RELEASED:
-                        self.state['PRELIGHT'] = False
-                        self.set_active(not self.get_active())
                         self.get_application().set_is_focus(self)
+                        self._check_active()
+                        self.set_active(not self.get_active())
+                        self._set_state_prelight(False)
                     if event == curses.BUTTON1_CLICKED:
                         self.set_active(not self.get_active())
                         self.get_application().set_is_focus(self)
@@ -257,48 +251,45 @@ class RadioButton(Widget):
                     if event == curses.BUTTON1_TRIPLE_CLICKED:
                         self.get_application().set_is_focus(self)
 
+                    # BUTTON2
                     if event == curses.BUTTON2_PRESSED:
                         self.get_application().set_is_focus(self)
-                        self.check_selected()
-                        self.state['PRELIGHT'] = True
+                        self._check_active()
+                        self._set_state_prelight(True)
                     elif event == curses.BUTTON2_RELEASED:
-                        self.state['PRELIGHT'] = False
-                        self.set_active(not self.get_active())
+                        self._set_state_prelight(False)
                         self.get_application().set_is_focus(self)
                     if event == curses.BUTTON2_CLICKED:
-                        self.set_active(not self.get_active())
                         self.get_application().set_is_focus(self)
                     if event == curses.BUTTON2_DOUBLE_CLICKED:
                         self.get_application().set_is_focus(self)
                     if event == curses.BUTTON2_TRIPLE_CLICKED:
                         self.get_application().set_is_focus(self)
 
+                    # BUTTON3
                     if event == curses.BUTTON3_PRESSED:
                         self.get_application().set_is_focus(self)
-                        self.check_selected()
-                        self.state['PRELIGHT'] = True
+                        self._check_active()
+                        self._set_state_prelight(True)
                     elif event == curses.BUTTON3_RELEASED:
-                        self.state['PRELIGHT'] = False
-                        self.set_active(not self.get_active())
+                        self._set_state_prelight(False)
                         self.get_application().set_is_focus(self)
                     if event == curses.BUTTON3_CLICKED:
-                        self.set_active(not self.get_active())
                         self.get_application().set_is_focus(self)
                     if event == curses.BUTTON3_DOUBLE_CLICKED:
                         self.get_application().set_is_focus(self)
                     if event == curses.BUTTON3_TRIPLE_CLICKED:
                         self.get_application().set_is_focus(self)
 
+                    # BUTTON4
                     if event == curses.BUTTON4_PRESSED:
                         self.get_application().set_is_focus(self)
-                        self.check_selected()
-                        self.state['PRELIGHT'] = True
+                        self._check_active()
+                        self._set_state_prelight(True)
                     elif event == curses.BUTTON4_RELEASED:
-                        self.state['PRELIGHT'] = False
-                        self.set_active(not self.get_active())
+                        self._set_state_prelight(False)
                         self.get_application().set_is_focus(self)
                     if event == curses.BUTTON4_CLICKED:
-                        self.set_active(not self.get_active())
                         self.get_application().set_is_focus(self)
                     if event == curses.BUTTON4_DOUBLE_CLICKED:
                         self.get_application().set_is_focus(self)
@@ -344,17 +335,19 @@ class RadioButton(Widget):
     def get_position_type(self):
         return self.position_type
 
-    # State
-    def get_states(self):
-        return self.states_list
-
-    def check_selected(self):
-        if self.get_can_focus():
-            if self.get_is_focus():
-                self.interface = self.interface_active
-            else:
-                self.interface = self.interface_unactivated
+    def _check_active(self):
+        if self.state['ACTIVE']:
+            self.interface = self.interface_active
         else:
-            pass
+            self.interface = self.interface_unactivated
+
+    def _set_state_prelight(self, value):
+        if bool(value):
+            self.state['PRELIGHT'] = True
+        else:
+            self.state['PRELIGHT'] = False
+
+    def _get_state_prelight(self):
+        return self.state['PRELIGHT']
 
 
