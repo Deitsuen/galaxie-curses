@@ -7,6 +7,7 @@ import os
 from GLXCurses import glxc
 from GLXCurses.Style import Style
 from GLXCurses.MainLoop import MainLoop
+from GLXCurses.EventBus import EventBus
 import locale
 
 
@@ -30,6 +31,9 @@ class Application(object):
 
             # Init MainLoop
             self.main_loop = MainLoop(self)
+
+            # Int EventBus
+            self.event_bus = EventBus()
 
             # Init Logger
 

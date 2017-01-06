@@ -487,6 +487,7 @@ class Widget(Object):
     def _set_imposed_spacing(self, spacing):
         self.imposed_spacing = int(spacing)
 
+    # Signal management Client part
     def subscribe(self, event_signal, event_handler):
         if event_signal not in self.event_handlers:
             self.event_handlers[event_signal] = list()
