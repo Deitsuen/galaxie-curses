@@ -106,6 +106,9 @@ class EntryBuffer(object):
         # Re assign the buffer text , it will re apply implicitly the max size contain inside self.set_text()
         self.set_text(''.join(hash_list))
 
+        # Emit a signal
+        self.emit_inserted_text()
+
         # Because we are like that we return something
         return number_of_characters_actually_inserted
 
@@ -146,6 +149,9 @@ class EntryBuffer(object):
         # Check impossible case of number of deleted thing
         if 0 > number_of_characters_actually_deleted:
             number_of_characters_actually_deleted = 0
+
+        # Emit a signal
+        self.emit_deleted_text()
 
         # Because we are like that we return something
         return number_of_characters_actually_deleted
