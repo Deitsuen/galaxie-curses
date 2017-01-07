@@ -18,7 +18,11 @@ if __name__ == '__main__':
 
     # Create the main Application
     app = GLXCurses.Application()
-    app.set_name('Galaxie-Curse Demo')
+    app.set_name('GLXCurses Buttons Demo')
+
+    # Create a Menu
+    menu = GLXCurses.MenuModel()
+    menu.app_info_label = app.get_name()
 
     # Create Buttons
     Button1 = GLXCurses.Button()
@@ -45,7 +49,9 @@ if __name__ == '__main__':
     hline = GLXCurses.HSeparator()
 
     label_press_q = GLXCurses.Label()
-    label_press_q.set_text('Press q key to exit ...')
+    label_press_q.set_text('Press "q" key to exit ...')
+    label_press_q.set_alignment(0.5, 0.3)
+    label_press_q.override_color('yellow')
 
     # Create a main Vertical Box
     vbox_main = GLXCurses.VBox()
@@ -56,17 +62,10 @@ if __name__ == '__main__':
 
     # Create the main Window
     win_main = GLXCurses.Window()
-    win_main.set_title('GLXCurses Buttons Demo.')
     win_main.add(vbox_main)
 
     # Create a Status Bar
     statusbar = GLXCurses.Statusbar()
-    # Add Everything inside the Application
-    app.add_window(win_main)
-    app.add_statusbar(statusbar)
-
-    def on_resize():
-        app.get_screen().refresh()
 
     def handle_keys(self, event_signal, *event_args):
         logging.debug('HANDLE KEY: '+str(event_args[0]))
@@ -78,21 +77,35 @@ if __name__ == '__main__':
             Button1.set_sensitive(not Button1.get_sensitive())
 
         # Keyboard temporary thing
-        if event_args[0] == curses.KEY_F10 or event_args[0] == ord('q'):
+        if event_args[0] == ord('q'):
             app.stop()
 
     def on_click(self, event_signal, event_args=dict()):
-        #logging.debug(str(event_signal) + ' ' + str(event_args))
+        statusbar.push('')
         if event_args['id'] == Button1.get_widget_id():
-            statusbar.push('Stopping every operation\'s')
-            app.stop()
+            statusbar.push(event_args['label'] + ' ' + event_signal)
+        if event_args['id'] == RadioButton1.get_widget_id():
+            if RadioButton1.get_active():
+                statusbar.push(RadioButton1.get_text() + ' ' + 'is active')
+            else:
+                statusbar.push(RadioButton1.get_text() + ' ' + 'is not active')
 
-    app.connect('RESIZE', on_resize)
+        if event_args['id'] == CheckButton1.get_widget_id():
+            if CheckButton1.get_active():
+                statusbar.push(CheckButton1.get_text() + ' ' + 'is active')
+            else:
+                statusbar.push(CheckButton1.get_text() + ' ' + 'is not active')
+
+    # Add Everything inside the Application
+    app.add_menubar(menu)
+    app.add_window(win_main)
+    app.add_statusbar(statusbar)
+    # Signal
     app.connect('BUTTON1_CLICKED', on_click)
     app.connect('BUTTON1_RELEASED', on_click)
     app.connect('CURSES', handle_keys)
-
     # Main loop
     app.start()
+
     # THE END
     sys.exit(0)
