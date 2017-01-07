@@ -193,7 +193,7 @@ class Widget(Object):
         self._set_parent(parent)
         self.set_screen(self.get_parent().get_screen())
 
-        parent.adopt(self)
+        self.get_parent().adopt(self)
 
         # POUR MO
         #self.set_application(self.get_parent().get_application())

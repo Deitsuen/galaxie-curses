@@ -316,6 +316,16 @@ class Application(object):
     def adopt(self, orphan):
         pass
 
+    def start(self):
+        self.main_loop.start()
+
+    def stop(self):
+        self.main_loop.stop()
+
+    # should be replace by a EventBus
+    def emit(self, event_signal, event_args=[]):
+        self.main_loop.emit(event_signal, event_args)
+
     def connect(self, event_signal, event_handler):
         if event_signal not in self.event_handlers:
             self.event_handlers[event_signal] = list()
@@ -330,18 +340,8 @@ class Application(object):
         if event_signal in self.event_handlers:
             for handler in self.event_handlers[event_signal]:
                 handler(self, event_signal, args)
-                #self.screen.refresh()
 
         self.windows[self.active_window_id].handle_and_dispatch_event(event_signal, args)
-
-    def emit(self, event_signal, event_args=[]):
-        self.main_loop.emit(event_signal, event_args)
-
-    def start(self):
-        self.main_loop.start()
-
-    def stop(self):
-        self.main_loop.stop()
 
     # Focus and Selection
     def get_application(self):
