@@ -59,7 +59,9 @@ class MainLoop:
 
     # detailed_signal: a string containing the signal name
     # *args: additional parameters arg1, arg2
-    def emit(self, detailed_signal, args={}):
+    def emit(self, detailed_signal, args=None):
+        if args is None:
+            args = []
         logging.debug(self.__class__.__name__ + ': ' + detailed_signal + ' ' + str(args))
         self.get_event_buffer().insert(0, [detailed_signal, args])
         self.get_application().refresh()

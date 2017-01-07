@@ -442,8 +442,10 @@ if __name__ == '__main__':
         if event_args[0] == curses.KEY_F10 or event_args[0] == ord('q'):
             app.stop()
 
-    def on_click(self, event_signal, event_args=dict()):
+    def on_click(self, event_signal, event_args=None):
         #logging.debug(str(event_signal) + ' ' + str(event_args))
+        if event_args is None:
+            event_args = dict()
 
         if event_args['id'] == Button1.get_widget_id():
             current = progressbar9.get_value()

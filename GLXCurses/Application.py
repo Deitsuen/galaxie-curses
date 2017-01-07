@@ -9,7 +9,7 @@ from GLXCurses.Style import Style
 from GLXCurses.MainLoop import MainLoop
 from GLXCurses.EventBus import EventBus
 import locale
-
+import uuid
 
 # Locales Setting
 locale.setlocale(locale.LC_ALL, '')
@@ -323,25 +323,34 @@ class Application(object):
         self.main_loop.stop()
 
     # should be replace by a EventBus
-    def emit(self, event_signal, event_args=[]):
-        self.main_loop.emit(event_signal, event_args)
+    def emit(self, detailed_signal, args=None):
+        if args is None:
+            args = []
+        self.main_loop.emit(detailed_signal, args)
 
-    def connect(self, event_signal, event_handler):
-        if event_signal not in self.event_handlers:
-            self.event_handlers[event_signal] = list()
+    def connect(self, detailed_signal, handler, args=None):
+        if args is None:
+            args = []
+        # check if it's all ready connect
+        if detailed_signal not in self._get_signal_handlers_dict():
+            self._get_signal_handlers_dict()[detailed_signal] = list()
 
-        self.event_handlers[event_signal].append(event_handler)
+        self._get_signal_handlers_dict()[detailed_signal].append(handler)
+        if args:
+            self._get_signal_handlers_dict()[detailed_signal].append(args)
 
-    def disconnect(self, event_signal, event_handler):
-        if event_signal in self.event_handlers:
-            self.event_handlers[event_signal].remove(event_handler)
+    def disconnect(self, detailed_signal, handler):
+        if detailed_signal in self._get_signal_handlers_dict():
+            self._get_signal_handlers_dict()[detailed_signal].remove(handler)
 
-    def dispatch(self, event_signal, args=[]):
-        if event_signal in self.event_handlers:
-            for handler in self.event_handlers[event_signal]:
-                handler(self, event_signal, args)
+    def dispatch(self, detailed_signal, args=None):
+        if args is None:
+            args = []
+        if detailed_signal in self._get_signal_handlers_dict():
+            for handler in self._get_signal_handlers_dict()[detailed_signal]:
+                handler(self, detailed_signal, args)
 
-        self.windows[self.active_window_id].handle_and_dispatch_event(event_signal, args)
+        self.windows[self.active_window_id].handle_and_dispatch_event(detailed_signal, args)
 
     # Focus and Selection
     def get_application(self):
@@ -369,3 +378,6 @@ class Application(object):
         self.widget_it_have_tooltip = widget_unique_id
 
 
+    # Internal
+    def _get_signal_handlers_dict(self):
+        return self.event_handlers
