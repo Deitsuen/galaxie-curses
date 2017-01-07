@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import sys
-from GLXCurses.Object import Object
+#from GLXCurses.Object import Object
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -9,11 +9,11 @@ from GLXCurses.Object import Object
 __author__ = 'Tuux'
 
 
-class EntryBuffer(Object):
+class EntryBuffer(object):
     # initial_chars: initial buffer text, or None.
     # n_initial_chars: number of characters in initial_chars, or -1.
     def __init__(self, initial_chars=None, n_initial_chars=-1):
-        Object.__init__(self)
+        #Object.__init__(self)
 
         self._min_length_hard_limit = 0
         self._max_length_hard_limit = 65536
@@ -86,7 +86,7 @@ class EntryBuffer(Object):
     # The number of characters actually inserted.
     def insert_text(self, position, chars, n_chars=-1):
         hash_list = list(self.get_text())
-        if n_chars >= 0:
+        if n_chars > self._get_min_length_hard_limit():
             hash_list.insert(position, chars[:n_chars])
             number_of_characters_actually_inserted = n_chars
         else:
@@ -110,14 +110,58 @@ class EntryBuffer(Object):
     # The number of characters deleted.
     def delete_text(self, position, n_chars=-1):
         hash_list = list(self.get_text())
-        if n_chars >= 0:
-            number_of_characters_actually_inserted = n_chars
+        # Check n_chars
+        if n_chars < 0:
+            n_chars = len(self.get_text())
         else:
-            number_of_characters_actually_inserted = len(self.get_text())
-        return number_of_characters_actually_inserted
+            n_chars = self._clamp_to_the_range(n_chars)
+        # Check max_length
+        if self.get_max_length() == 0:
+            number_of_characters_actually_deleted = n_chars
+        else:
+            number_of_characters_actually_deleted = len(self.get_text()) - position
+
+        del hash_list[position:int(position + n_chars)]
+
+        self.set_text(''.join(hash_list))
+        return number_of_characters_actually_deleted
 
     def emit_deleted_text(self):
         pass
 
     def emit_inserted_text(self):
         pass
+
+    # INTERNAL
+    def _clamp_to_the_range(self, checked_value):
+        if checked_value < self._get_min_length_hard_limit():
+            checked_value = self._get_min_length_hard_limit()
+        elif checked_value > self._get_max_length_hard_limit():
+            checked_value = self._get_max_length_hard_limit()
+        return checked_value
+
+    def _get_min_length_hard_limit(self):
+        return self._min_length_hard_limit
+
+    def _get_max_length_hard_limit(self):
+        return self._max_length_hard_limit
+
+if __name__ == '__main__':
+    entrybuffer = EntryBuffer()
+    entrybuffer.set_text('Comment la vie est belle !!!')
+
+    print entrybuffer.get_text()
+    print entrybuffer.get_length()
+    print entrybuffer.get_bytes()
+    print entrybuffer.get_max_length()
+
+    test_to_play = 'c\'est que '
+    print entrybuffer.insert_text(8, test_to_play)
+    print entrybuffer.get_text()
+
+    print entrybuffer.delete_text(8, len(test_to_play))
+    print entrybuffer.get_text()
+
+
+
+
