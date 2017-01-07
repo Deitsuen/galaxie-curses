@@ -86,12 +86,21 @@ class EntryBuffer(object):
     # The number of characters actually inserted.
     def insert_text(self, position, chars, n_chars=-1):
         hash_list = list(self.get_text())
-        if n_chars > self._get_min_length_hard_limit():
-            hash_list.insert(position, chars[:n_chars])
-            number_of_characters_actually_inserted = n_chars
+        # Check n_chars
+        if n_chars < 0:
+            n_chars = len(self.get_text())
         else:
-            hash_list.insert(position, chars[:len(chars)])
-            number_of_characters_actually_inserted = len(chars)
+            n_chars = self._clamp_to_the_range(n_chars)
+        # Check max_length
+        if self.get_max_length() == 0:
+            if 0 > n_chars:
+                number_of_characters_actually_inserted = len(chars)
+            else:
+                number_of_characters_actually_inserted = len(chars[:n_chars])
+        else:
+            number_of_characters_actually_inserted = len(chars[:n_chars]) - position
+
+        hash_list.insert(position, chars[:n_chars])
         self.set_text(''.join(hash_list))
         return number_of_characters_actually_inserted
 
@@ -121,9 +130,15 @@ class EntryBuffer(object):
         else:
             number_of_characters_actually_deleted = len(self.get_text()) - position
 
+        # Delete
         del hash_list[position:int(position + n_chars)]
-
+        # Re assign the buffer text , it will re apply
         self.set_text(''.join(hash_list))
+
+        # Check impossible case of number of deleted thing
+        if 0 > number_of_characters_actually_deleted:
+            number_of_characters_actually_deleted = 0
+
         return number_of_characters_actually_deleted
 
     def emit_deleted_text(self):
@@ -150,17 +165,26 @@ if __name__ == '__main__':
     entrybuffer = EntryBuffer()
     entrybuffer.set_text('Comment la vie est belle !!!')
 
-    print entrybuffer.get_text()
-    print entrybuffer.get_length()
-    print entrybuffer.get_bytes()
-    print entrybuffer.get_max_length()
+    print "Text       : " + str(entrybuffer.get_text())
+    print "Char(s)    : " + str(entrybuffer.get_length())
+    print "Byte(s)    : " + str(entrybuffer.get_bytes())
+    print "Max Char(s): " + str(entrybuffer.get_max_length())
+    print ""
+    #entrybuffer.set_max_length(10)
 
     test_to_play = 'c\'est que '
-    print entrybuffer.insert_text(8, test_to_play)
-    print entrybuffer.get_text()
-
-    print entrybuffer.delete_text(8, len(test_to_play))
-    print entrybuffer.get_text()
+    print "Text       : " + str(entrybuffer.get_text())
+    print "Ins Char(s): " + str(entrybuffer.insert_text(8, test_to_play))
+    print "Text       : " + str(entrybuffer.get_text())
+    print "Char(s)    : " + str(entrybuffer.get_length())
+    print "Byte(s)    : " + str(entrybuffer.get_bytes())
+    print "Max Char(s): " + str(entrybuffer.get_max_length())
+    print ""
+    print "Del Char(s): " + str(entrybuffer.delete_text(8, len(test_to_play)))
+    print "Text       : " + str(entrybuffer.get_text())
+    print "Char(s)    : " + str(entrybuffer.get_length())
+    print "Byte(s)    : " + str(entrybuffer.get_bytes())
+    print "Max Char(s): " + str(entrybuffer.get_max_length())
 
 
 
