@@ -85,23 +85,28 @@ class EntryBuffer(object):
     # Returns:
     # The number of characters actually inserted.
     def insert_text(self, position, chars, n_chars=-1):
+        # Convert the string to a list like a master ...
         hash_list = list(self.get_text())
+
         # Check n_chars
         if n_chars < 0:
             n_chars = len(self.get_text())
         else:
             n_chars = self._clamp_to_the_range(n_chars)
+
         # Check max_length
         if self.get_max_length() == 0:
-            if 0 > n_chars:
-                number_of_characters_actually_inserted = len(chars)
-            else:
-                number_of_characters_actually_inserted = len(chars[:n_chars])
+            number_of_characters_actually_inserted = len(chars[:n_chars])
         else:
             number_of_characters_actually_inserted = len(chars[:n_chars]) - position
 
+        # Insertion
         hash_list.insert(position, chars[:n_chars])
+
+        # Re assign the buffer text , it will re apply implicitly the max size contain inside self.set_text()
         self.set_text(''.join(hash_list))
+
+        # Because we are like that we return something
         return number_of_characters_actually_inserted
 
     # Deletes a sequence of characters from the buffer. n_chars characters are deleted starting at position.
@@ -118,12 +123,15 @@ class EntryBuffer(object):
     # Returns:
     # The number of characters deleted.
     def delete_text(self, position, n_chars=-1):
+        # Convert the string to a list like a master ...
         hash_list = list(self.get_text())
+
         # Check n_chars
         if n_chars < 0:
             n_chars = len(self.get_text())
         else:
             n_chars = self._clamp_to_the_range(n_chars)
+
         # Check max_length
         if self.get_max_length() == 0:
             number_of_characters_actually_deleted = n_chars
@@ -132,13 +140,14 @@ class EntryBuffer(object):
 
         # Delete
         del hash_list[position:int(position + n_chars)]
-        # Re assign the buffer text , it will re apply
+        # Re assign the buffer text , it will re apply implicitly the max size contain inside self.set_text()
         self.set_text(''.join(hash_list))
 
         # Check impossible case of number of deleted thing
         if 0 > number_of_characters_actually_deleted:
             number_of_characters_actually_deleted = 0
 
+        # Because we are like that we return something
         return number_of_characters_actually_deleted
 
     def emit_deleted_text(self):
