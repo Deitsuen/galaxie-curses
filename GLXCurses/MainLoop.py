@@ -62,6 +62,7 @@ class MainLoop:
     def emit(self, detailed_signal, args={}):
         logging.debug(self.__class__.__name__ + ': ' + detailed_signal + ' ' + str(args))
         self.get_event_buffer().insert(0, [detailed_signal, args])
+        self.get_application().refresh()
 
     def handle_curses_input(self, input_event):
         if input_event == curses.KEY_MOUSE:

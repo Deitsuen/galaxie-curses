@@ -3,6 +3,7 @@
 import GLXCurses
 import sys
 import curses
+import logging
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -10,6 +11,11 @@ import curses
 __author__ = 'Tuux'
 
 if __name__ == '__main__':
+    logging.basicConfig(filename='/tmp/galaxie-curses.log',
+                        level=logging.DEBUG,
+                        format='%(asctime)s, %(levelname)s, %(message)s')
+    logging.info('Started glxcurses-demo')
+
     # Create the main Application
     app = GLXCurses.Application()
     app.set_name('Galaxie-Curse Demo')
@@ -59,35 +65,34 @@ if __name__ == '__main__':
     app.add_window(win_main)
     app.add_statusbar(statusbar)
 
+    def on_resize():
+        app.get_screen().refresh()
+
+    def handle_keys(self, event_signal, *event_args):
+        logging.debug('HANDLE KEY: '+str(event_args[0]))
+
+        if event_args[0] == curses.KEY_F5:
+            app.set_is_focus(Button1)
+
+        if event_args[0] == curses.KEY_F6:
+            Button1.set_sensitive(not Button1.get_sensitive())
+
+        # Keyboard temporary thing
+        if event_args[0] == curses.KEY_F10 or event_args[0] == ord('q'):
+            app.stop()
+
+    def on_click(self, event_signal, event_args=dict()):
+        #logging.debug(str(event_signal) + ' ' + str(event_args))
+        if event_args['id'] == Button1.get_widget_id():
+            statusbar.push('Stopping every operation\'s')
+            app.stop()
+
+    app.connect('RESIZE', on_resize)
+    app.connect('BUTTON1_CLICKED', on_click)
+    app.connect('BUTTON1_RELEASED', on_click)
+    app.connect('CURSES', handle_keys)
+
     # Main loop
-    app.refresh()
-    while True:
-        message_text = ''
-        input_event = app.getch()
-        if curses.KEY_RESIZE:
-            message_text += 'Screen Size:'
-            message_text += str(app.get_parent_size())
-            message_text += ' '
-            statusbar.push(message_text)
-            app.refresh()
-
-        if input_event == curses.KEY_MOUSE:
-            event = curses.getmouse()
-            for Button in [Button1,
-                           CheckButton1,
-                           RadioButton1]:
-                if Button.mouse_event(event):
-                    message_text += Button.get_text()
-                    message_text += ':('
-                    message_text += Button.get_states()
-                    message_text += ')'
-                    statusbar.push(message_text)
-                    app.refresh()
-
-        if input_event == ord('q'):
-            break
-
-    # App Close
-    app.close()
+    app.start()
     # THE END
     sys.exit(0)
