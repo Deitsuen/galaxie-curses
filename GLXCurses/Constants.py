@@ -52,14 +52,17 @@ class Constants(object):
     @constant
     def PROGRESS_LEFT_TO_RIGHT():
         return 'PROGRESS_LEFT_TO_RIGHT'
+    
     # A horizontal progress bar growing from right to left.
     @constant
     def PROGRESS_RIGHT_TO_LEFT():
         return 'PROGRESS_RIGHT_TO_LEFT'
+    
     # A vertical progress bar growing from bottom to top.
     @constant
     def PROGRESS_BOTTOM_TO_TOP():
         return 'PROGRESS_BOTTOM_TO_TOP'
+    
     # A vertical progress bar growing from top to bottom.
     @constant
     def PROGRESS_TOP_TO_BOTTOM():
@@ -117,7 +120,6 @@ class Constants(object):
     @constant
     def SIZE_GROUP_BOTH():
         return 'SIZE_GROUP_BOTH'
-
 
     # Wrap Mode
     # wrap lines at word boundaries.

@@ -3,6 +3,7 @@
 import curses
 import logging
 from GLXCurses.Widget import Widget
+from GLXCurses import glxc
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -54,6 +55,11 @@ class Entry(Widget):
         # Additionan hints (beyond 'purpose') that allow input methods to fine-tune their behaviour
         self.input_hints = None
 
-        self.purpose = None
+        # The purpose of this text field.
+        # This property can be used by on-screen keyboards and other input methods to adjust their behaviour.
+        # ote that setting the purpose to GTK_INPUT_PURPOSE_PASSWORD or glxc.INPUT_PURPOSE_PIN
+        # is independent from setting “visibility”.
+        # Default value: glxc.INPUT_PURPOSE_FREE_FORM
+        self.purpose = glxc.INPUT_PURPOSE_FREE_FORM
 
 

@@ -21,12 +21,15 @@ code = locale.getpreferredencoding()
 __author__ = 'Tuux'
 
 
+# That class have the role of a Controller and a NCurses Wrapper.
+# It have particularrity to not be a Widget, then have a tonne of function for be a fake widet.
+# Everthing start by it widget compoment.
 class Application(object):
     def __init__(self):
         try:
             # Initialize curses
             os.environ["NCURSES_NO_UTF8_ACS"] = '1'
-            self.screen = curses.initscr()
+
             self.event_handlers = dict()
 
             # Init MainLoop
@@ -35,13 +38,13 @@ class Application(object):
             # Int EventBus
             self.event_bus = EventBus()
 
-            # Init Logger
+            # Initialize curses
+            self.screen = curses.initscr()
 
             # Turn off echoing of keys, and enter cbreak mode,
             # where no buffering is performed on keyboard input
             curses.noecho()
             curses.cbreak()
-
 
             # In keypad mode, escape sequences for special keys
             # (like the cursor keys) will be interpreted and
@@ -307,9 +310,10 @@ class Application(object):
         return self.screen.getch()
 
     def close(self):
-        curses.nocbreak()
+        # Set everything back to normal
         self.screen.keypad(False)
         curses.echo()
+        curses.nocbreak()
         curses.endwin()
 
     # Main Loop
@@ -376,7 +380,6 @@ class Application(object):
 
     def set_tooltip(self, widget_unique_id):
         self.widget_it_have_tooltip = widget_unique_id
-
 
     # Internal
     def _get_signal_handlers_dict(self):
