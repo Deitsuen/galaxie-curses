@@ -466,7 +466,7 @@ if __name__ == '__main__':
             app.stop()
 
     app.connect('RESIZE', on_resize)
-    app.connect('BUTTON1_CLICKED', on_click)
+    app.connect('BUTTON1_CLICKED', on_click, )
     app.connect('BUTTON1_RELEASED', on_click)
     app.connect('CURSES', handle_keys)
 
