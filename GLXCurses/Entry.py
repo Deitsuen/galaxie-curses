@@ -51,4 +51,9 @@ class Entry(Widget):
         # Sets the text area's border between the text and the frame.
         self.inner_border = 0
 
+        # Additionan hints (beyond 'purpose') that allow input methods to fine-tune their behaviour
+        self.input_hints = None
+
+        self.purpose = None
+
 

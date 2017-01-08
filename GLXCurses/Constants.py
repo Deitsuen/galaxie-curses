@@ -135,4 +135,59 @@ class Constants(object):
     def WRAP_WORD_CHAR():
         return 'WRAP_WORD_CHAR'
 
+    # InputPurpose
+    # Describes primary purpose of the input widget.
+    # This information is useful for on-screen keyboards and similar input methods
+    # to decide which keys should be presented to the user.
+
+    # Allow any character
+    @constant
+    def INPUT_PURPOSE_FREE_FORM():
+        return 'INPUT_PURPOSE_FREE_FORM'
+
+    # Allow only alphabetic characters
+    @constant
+    def INPUT_PURPOSE_ALPHA():
+        return 'INPUT_PURPOSE_ALPHA'
+
+    # Allow only digits
+    @constant
+    def INPUT_PURPOSE_DIGITS():
+        return 'INPUT_PURPOSE_DIGITS'
+
+    # Edited field expects numbers
+    @constant
+    def INPUT_PURPOSE_NUMBER():
+        return 'INPUT_PURPOSE_NUMBER'
+
+    # Edited field expects phone number
+    @constant
+    def INPUT_PURPOSE_PHONE():
+        return 'INPUT_PURPOSE_PHONE'
+
+    # Edited field expects URL
+    @constant
+    def INPUT_PURPOSE_URL():
+        return 'INPUT_PURPOSE_URL'
+
+    # Edited field expects email address
+    @constant
+    def INPUT_PURPOSE_EMAIL():
+        return 'INPUT_PURPOSE_EMAIL'
+
+    # Edited field expects the name of a person
+    @constant
+    def INPUT_PURPOSE_NAME():
+        return 'INPUT_PURPOSE_NAME'
+
+    # Like INPUT_PURPOSE_FREE_FORM , but characters are hidden
+    @constant
+    def INPUT_PURPOSE_PASSWORD():
+        return 'INPUT_PURPOSE_PASSWORD'
+
+    # Like INPUT_PURPOSE_DIGITS , but characters are hidden
+    @constant
+    def INPUT_PURPOSE_PIN():
+        return 'INPUT_PURPOSE_PIN'
+
 glxc = Constants()
