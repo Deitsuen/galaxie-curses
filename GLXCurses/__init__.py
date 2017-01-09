@@ -22,3 +22,5 @@ from GLXCurses.CheckButton import CheckButton
 from GLXCurses.HSeparator import HSeparator
 from GLXCurses.VSeparator import VSeparator
 from GLXCurses.EntryBuffer import EntryBuffer
+
+application = Application()

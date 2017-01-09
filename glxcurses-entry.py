@@ -22,16 +22,14 @@ if __name__ == '__main__':
 
     # Create a Menu
     menu = GLXCurses.MenuModel()
-    menu.app_info_label = app.get_name()
+    menu.app_info_label = GLXCurses.application.get_name()
 
     # Create a EntryBuffer thing
     EntryBuffer1 = GLXCurses.EntryBuffer()
-    EntryBuffer1.set_application(app)
     EntryBuffer1.set_text('Button')
 
     # Create Buttons
     Button1 = GLXCurses.Button()
-    Button1.set_application(app)
     Button1.set_text(EntryBuffer1.get_text())
 
     # Create a new Horizontal Box contener
@@ -66,13 +64,14 @@ if __name__ == '__main__':
         logging.debug('HANDLE KEY: '+str(event_args[0]))
 
         if event_args[0] == curses.KEY_F5:
-            app.set_is_focus(Button1)
+            GLXCurses.application.set_is_focus(Button1)
 
         if event_args[0] == curses.KEY_F6:
             Button1.set_sensitive(not Button1.get_sensitive())
 
         # Keyboard temporary thing
         if event_args[0] == ord('q'):
+            # Everything have a end, the main loop too ...
             app.stop()
 
     def on_click(self, event_signal, event_args=None):

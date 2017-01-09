@@ -3,6 +3,7 @@
 import sys
 import uuid
 import logging
+import GLXCurses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -27,7 +28,7 @@ class EntryBuffer(object):
         self.text = ""
 
         # Not very well but it should be compatible with Application Controller thing
-        self.application = None
+        self.application = GLXCurses.application
 
         # Unique ID it permit to individually identify a widget by example for get_focus get_default
         self.id = uuid.uuid1().int
@@ -164,20 +165,24 @@ class EntryBuffer(object):
         return number_of_characters_actually_deleted
 
     def emit_deleted_text(self):
+        # Create a Dict with everything
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'deleted-text',
+            'id': self.id
+        }
         # EVENT EMIT
-        self.get_application().emit('SIGNALS',
-                                    {'class': self.__class__.__name__,
-                                     'type': 'deleted-text',
-                                     'id': self.id}
-                                    )
+        GLXCurses.application.emit('SIGNALS', instance)
 
     def emit_inserted_text(self):
+        # Create a Dict with everything
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'inserted-text',
+            'id': self.id
+        }
         # EVENT EMIT
-        self.get_application().emit('SIGNALS',
-                                    {'class': self.__class__.__name__,
-                                     'type': 'inserted-text',
-                                     'id': self.id}
-                                    )
+        GLXCurses.application.emit('SIGNALS', instance)
 
     # INTERNAL
     def _clamp_to_the_range(self, checked_value):
@@ -192,13 +197,6 @@ class EntryBuffer(object):
 
     def _get_max_length_hard_limit(self):
         return self._max_length_hard_limit
-
-    # Compatibility With Application controler
-    def get_application(self):
-        return self.application
-
-    def set_application(self, application):
-        self.application = application
 
 if __name__ == '__main__':
     entrybuffer = EntryBuffer()

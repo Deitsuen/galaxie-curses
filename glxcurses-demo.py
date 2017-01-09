@@ -223,15 +223,12 @@ if __name__ == '__main__':
 
     # Creat Button
     Button1 = GLXCurses.Button()
-    Button1.set_application(app)
     Button1.set_text('INCREASE')
 
     Button2 = GLXCurses.Button()
-    Button2.set_application(app)
     Button2.set_text('DECREASE')
 
     Button3 = GLXCurses.Button()
-    Button3.set_application(app)
     Button3.set_text('Quit')
 
     vbox_button = GLXCurses.VBox()
@@ -240,15 +237,12 @@ if __name__ == '__main__':
     vbox_button.pack_end(Button3)
 
     RadioButton1 = GLXCurses.RadioButton()
-    RadioButton1.set_application(app)
     RadioButton1.set_text('RadioButton1')
 
     RadioButton2 = GLXCurses.RadioButton()
-    RadioButton2.set_application(app)
     RadioButton2.set_text('RadioButton2')
 
     RadioButton3 = GLXCurses.RadioButton()
-    RadioButton3.set_application(app)
     RadioButton3.set_text('RadioButton3')
 
     vbox_radio_button = GLXCurses.VBox()
@@ -257,15 +251,12 @@ if __name__ == '__main__':
     vbox_radio_button.pack_end(RadioButton3)
 
     CheckButton1 = GLXCurses.CheckButton()
-    CheckButton1.set_application(app)
     CheckButton1.set_text('CheckButton1')
 
     CheckButton2 = GLXCurses.CheckButton()
-    CheckButton2.set_application(app)
     CheckButton2.set_text('CheckButton2')
 
     CheckButton3 = GLXCurses.CheckButton()
-    CheckButton3.set_application(app)
     CheckButton3.set_text('CheckButton3')
 
     vbox_check_button = GLXCurses.VBox()
@@ -440,6 +431,7 @@ if __name__ == '__main__':
 
         # Keyboard temporary thing
         if event_args[0] == curses.KEY_F10 or event_args[0] == ord('q'):
+            # Everything have a end, the main loop too ...
             app.stop()
 
     def on_click(self, event_signal, event_args=None):

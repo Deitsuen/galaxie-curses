@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import GLXCurses
 from GLXCurses.Style import Style
 from GLXCurses.Object import Object
 import uuid
@@ -41,7 +42,7 @@ class Widget(Object):
         # Widget Parent
         self.screen = None
         self.attribute = None
-        self.application = None
+        self.application = GLXCurses.application
 
         # Size Management
         self.screen_height = 0
@@ -473,12 +474,6 @@ class Widget(Object):
             self.draw_widget_in_area()
 
     # Selection and Focus
-
-    def get_application(self):
-        return self.application
-
-    def set_application(self, application):
-        self.application = application
 
     # Internal
     def _get_imposed_spacing(self):

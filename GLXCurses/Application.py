@@ -21,9 +21,30 @@ code = locale.getpreferredencoding()
 __author__ = 'Tuux'
 
 
+class Singleton(object):
+    """Singleton decorator."""
+
+    def __init__(self, cls):
+        self.__dict__['cls'] = cls
+
+    instances = {}
+
+    def __call__(self):
+        if self.cls not in self.instances:
+            self.instances[self.cls] = self.cls()
+        return self.instances[self.cls]
+
+    def __getattr__(self, attr):
+        return getattr(self.__dict__['cls'], attr)
+
+    def __setattr__(self, attr, value):
+        return setattr(self.__dict__['cls'], attr, value)
+
+
 # That class have the role of a Controller and a NCurses Wrapper.
-# It have particularrity to not be a Widget, then have a tonne of function for be a fake widet.
-# Everthing start by it widget compoment.
+# It have particularity to not be a Widget, then have a tonne of function for be a fake widget.
+# Everything start by it widget component.
+@Singleton
 class Application(object):
     def __init__(self):
         try:
