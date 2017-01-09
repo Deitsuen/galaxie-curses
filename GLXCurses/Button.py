@@ -179,12 +179,14 @@ class Button(GLXCurses.Widget):
                     if event == curses.BUTTON_ALT:
                         pass
 
+                    # Create a Dict with everything
+                    instance = {
+                        'class': self.__class__.__name__,
+                        'label': self.get_text(),
+                        'id': self.get_widget_id()
+                    }
                     # EVENT EMIT
-                    GLXCurses.application.emit(self.curses_mouse_states[event],
-                                                {'class': self.__class__.__name__,
-                                                 'label': self.get_text(),
-                                                 'id': self.get_widget_id()}
-                                                )
+                    GLXCurses.application.emit(self.curses_mouse_states[event], instance)
 
             else:
                 # Nothing the better is to clean the prelight

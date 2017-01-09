@@ -94,11 +94,13 @@ if __name__ == '__main__':
     app.add_menubar(menu)
     app.add_window(win_main)
     app.add_statusbar(statusbar)
+
     # Event's and Signals
     app.connect('BUTTON1_CLICKED', on_click)   # Mouse Button
     app.connect('BUTTON1_RELEASED', on_click)  # Mouse Button
     app.connect('CURSES', handle_keys)         # Keyboard
     app.connect('SIGNALS', signal_event)       # Something it emit a signal
+
     # Main loop
     app.start()
 
