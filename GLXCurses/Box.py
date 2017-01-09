@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from GLXCurses.Container import Container
+import GLXCurses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -8,9 +8,9 @@ from GLXCurses.Container import Container
 __author__ = 'Tuux'
 
 
-class Box(Container):
+class Box(GLXCurses.Container):
     def __init__(self):
-        Container.__init__(self)
+        GLXCurses.Container.__init__(self)
 
         # Properties
         # The amount of space between children.

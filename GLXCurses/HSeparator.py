@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import GLXCurses
 import curses
-from GLXCurses.Widget import Widget
+
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
 
 
-class HSeparator(Widget):
+class HSeparator(GLXCurses.Widget):
     def __init__(self):
-        Widget.__init__(self)
+        GLXCurses.Widget.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('HSeparator')
 

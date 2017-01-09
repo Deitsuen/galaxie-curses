@@ -26,15 +26,12 @@ if __name__ == '__main__':
 
     # Create Buttons
     Button1 = GLXCurses.Button()
-    Button1.set_application(app)
     Button1.set_text('Button')
 
     RadioButton1 = GLXCurses.RadioButton()
-    RadioButton1.set_application(app)
     RadioButton1.set_text('RadioButton')
 
     CheckButton1 = GLXCurses.CheckButton()
-    CheckButton1.set_application(app)
     CheckButton1.set_text('CheckButton')
 
     # Create a new Horizontal Box contener
@@ -78,9 +75,12 @@ if __name__ == '__main__':
 
         # Keyboard temporary thing
         if event_args[0] == ord('q'):
+            # Everything have a end, the main loop too ...
             app.stop()
 
-    def on_click(self, event_signal, event_args=dict()):
+    def on_click(self, event_signal, event_args=None):
+        if event_args is None:
+            event_args = dict()
         statusbar.push('')
         if event_args['id'] == Button1.get_widget_id():
             statusbar.push(event_args['label'] + ' ' + event_signal)

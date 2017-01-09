@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import GLXCurses
 import curses
 import sys
 import os
-from GLXCurses import glxc
-from GLXCurses.Style import Style
-from GLXCurses.MainLoop import MainLoop
-from GLXCurses.EventBus import EventBus
 import locale
-import uuid
 
 # Locales Setting
 locale.setlocale(locale.LC_ALL, '')
@@ -21,9 +17,30 @@ code = locale.getpreferredencoding()
 __author__ = 'Tuux'
 
 
+class Singleton(object):
+    """Singleton decorator."""
+
+    def __init__(self, cls):
+        self.__dict__['cls'] = cls
+
+    instances = {}
+
+    def __call__(self):
+        if self.cls not in self.instances:
+            self.instances[self.cls] = self.cls()
+        return self.instances[self.cls]
+
+    def __getattr__(self, attr):
+        return getattr(self.__dict__['cls'], attr)
+
+    def __setattr__(self, attr, value):
+        return setattr(self.__dict__['cls'], attr, value)
+
+
 # That class have the role of a Controller and a NCurses Wrapper.
-# It have particularrity to not be a Widget, then have a tonne of function for be a fake widet.
-# Everthing start by it widget compoment.
+# It have particularity to not be a Widget, then have a tonne of function for be a fake widget.
+# Everything start by it widget component that is the controller.
+@Singleton
 class Application(object):
     def __init__(self):
         try:
@@ -33,10 +50,10 @@ class Application(object):
             self.event_handlers = dict()
 
             # Init MainLoop
-            self.main_loop = MainLoop(self)
+            self.main_loop = GLXCurses.MainLoop()
 
             # Int EventBus
-            self.event_bus = EventBus()
+            self.event_bus = GLXCurses.EventBus()
 
             # Initialize curses
             self.screen = curses.initscr()
@@ -66,7 +83,7 @@ class Application(object):
         else:
             curses.start_color()
             curses.use_default_colors()
-            self.style = Style()
+            self.style = GLXCurses.Style()
         self.screen.clear()
 
         curses.curs_set(0)

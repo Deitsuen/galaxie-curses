@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+import GLXCurses
 import curses
 import logging
 
 
 class MainLoop:
-    def __init__(self, app):
+    def __init__(self):
         self.event_buffer = list()
-        self.application = app
         self.started = False
         self.data = dict()
 
@@ -36,12 +35,6 @@ class MainLoop:
     def get_event_buffer(self):
         return self.event_buffer
 
-    def set_application(self, application):
-        self.application = application
-
-    def get_application(self):
-        return self.application
-
     def set_started(self, boolean):
         self.started = bool(boolean)
 
@@ -64,7 +57,7 @@ class MainLoop:
             args = dict()
         logging.debug(self.__class__.__name__ + ': ' + detailed_signal + ' ' + str(args))
         self.get_event_buffer().insert(0, [detailed_signal, args])
-        self.get_application().refresh()
+        GLXCurses.application.refresh()
 
     def handle_curses_input(self, input_event):
         if input_event == curses.KEY_MOUSE:
@@ -89,25 +82,25 @@ class MainLoop:
         try:
             event = self._pop_last_event()
             while event:
-                self.get_application().dispatch(event[0], event[1])
+                GLXCurses.application.dispatch(event[0], event[1])
                 event = self._pop_last_event()
-                self.get_application().refresh()
+                GLXCurses.application.refresh()
         except:
             pass
 
     def _run(self):
         if self.get_started():
             logging.debug(self.__class__.__name__ + ': Started')
-            self.get_application().refresh()
+            GLXCurses.application.refresh()
 
         # Main while 1
         while self.get_started():
             # logging.debug(self.__class__.__name__ + ': Waiting event\'s')
-            input_event = self.get_application().getch()
+            input_event = GLXCurses.application.getch()
 
             if input_event != -1:
                 self.handle_curses_input(input_event)
 
             self._handle_event()
 
-        self.get_application().close()
+        GLXCurses.application.close()

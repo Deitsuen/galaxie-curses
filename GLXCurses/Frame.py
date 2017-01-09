@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import GLXCurses
 import curses
 from GLXCurses import glxc
-from GLXCurses.Bin import Bin
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -10,9 +10,9 @@ from GLXCurses.Bin import Bin
 __author__ = 'Tuux'
 
 
-class Frame(Bin):
+class Frame(GLXCurses.Bin):
     def __init__(self):
-        Bin.__init__(self)
+        GLXCurses.Bin.__init__(self)
         self.set_name('Frame')
 
         # Make a Style heritage attribute
@@ -132,8 +132,10 @@ class Frame(Bin):
     def get_label_align(self):
         return self.label_xalign, self.label_yalign
 
-    def set_shadow_type(self, type):
-        type = str(type).upper()
+    def set_shadow_type(self, shadow_type=None):
+        if shadow_type is None:
+            shadow_type = glxc.SHADOW_NONE
+        shadow_type = str(shadow_type).upper()
         # The set_shadow_type() method sets the frame's shadow type to the value of type.
         # The type must be one of:
         # SHADOW_NONE

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from GLXCurses.Box import Box
+import GLXCurses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -8,9 +8,9 @@ from GLXCurses.Box import Box
 __author__ = 'Tuux'
 
 
-class HBox(Box):
+class HBox(GLXCurses.Box):
     def __init__(self):
-        Box.__init__(self)
+        GLXCurses.Box.__init__(self)
         self.set_name('HBox')
 
         self.preferred_height = 2

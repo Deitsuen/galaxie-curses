@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 import curses
 import logging
-from GLXCurses.Widget import Widget
-
+import GLXCurses
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -24,9 +23,9 @@ def resize_text(text, max_width, separator='~'):
         return text
 
 
-class CheckButton(Widget):
+class CheckButton(GLXCurses.Widget):
     def __init__(self):
-        Widget.__init__(self)
+        GLXCurses.Widget.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
 
         self.set_name('CheckButton')
@@ -239,66 +238,66 @@ class CheckButton(Widget):
                     # INTERNAL METHOD
                     # BUTTON1
                     if event == curses.BUTTON1_PRESSED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                         self._check_active()
                         self._set_state_prelight(True)
                     elif event == curses.BUTTON1_RELEASED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                         self._check_active()
                         self.set_active(not self.get_active())
                         self._set_state_prelight(False)
                     if event == curses.BUTTON1_CLICKED:
                         self.set_active(not self.get_active())
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                     if event == curses.BUTTON1_DOUBLE_CLICKED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                     if event == curses.BUTTON1_TRIPLE_CLICKED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
 
                     # BUTTON2
                     if event == curses.BUTTON2_PRESSED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                         self._check_active()
                         self._set_state_prelight(True)
                     elif event == curses.BUTTON2_RELEASED:
                         self._set_state_prelight(False)
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                     if event == curses.BUTTON2_CLICKED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                     if event == curses.BUTTON2_DOUBLE_CLICKED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                     if event == curses.BUTTON2_TRIPLE_CLICKED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
 
                     # BUTTON3
                     if event == curses.BUTTON3_PRESSED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                         self._check_active()
                         self._set_state_prelight(True)
                     elif event == curses.BUTTON3_RELEASED:
                         self._set_state_prelight(False)
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                     if event == curses.BUTTON3_CLICKED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                     if event == curses.BUTTON3_DOUBLE_CLICKED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                     if event == curses.BUTTON3_TRIPLE_CLICKED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
 
                     # BUTTON4
                     if event == curses.BUTTON4_PRESSED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                         self._check_active()
                         self._set_state_prelight(True)
                     elif event == curses.BUTTON4_RELEASED:
                         self._set_state_prelight(False)
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                     if event == curses.BUTTON4_CLICKED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                     if event == curses.BUTTON4_DOUBLE_CLICKED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
                     if event == curses.BUTTON4_TRIPLE_CLICKED:
-                        self.get_application().set_is_focus(self)
+                        GLXCurses.application.set_is_focus(self)
 
                     if event == curses.BUTTON_SHIFT:
                         pass
@@ -307,15 +306,17 @@ class CheckButton(Widget):
                     if event == curses.BUTTON_ALT:
                         pass
 
+                    # Create a Dict with everything
+                    instance = {
+                        'class': self.__class__.__name__,
+                        'label': self.get_text(),
+                        'id': self.get_widget_id()
+                    }
                     # EVENT EMIT
-                    self.get_application().emit(self.curses_mouse_states[event],
-                                                {'class': self.__class__.__name__,
-                                                 'label': self.get_text(),
-                                                 'id': self.get_widget_id()}
-                                                )
+                    GLXCurses.application.emit(self.curses_mouse_states[event], instance)
 
             else:
-                # Nothing the better is to clean the prelight
+                # Nothing the better is to clean the pre-light
                 self._set_state_prelight(False)
         else:
             logging.debug(self.__class__.__name__ + ': ' + self.get_text() + ' ' + self.get_widget_id() + 'is not '
