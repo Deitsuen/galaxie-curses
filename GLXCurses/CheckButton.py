@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import curses
 import logging
-from GLXCurses.Widget import Widget
 import GLXCurses
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -24,9 +23,9 @@ def resize_text(text, max_width, separator='~'):
         return text
 
 
-class CheckButton(Widget):
+class CheckButton(GLXCurses.Widget):
     def __init__(self):
-        Widget.__init__(self)
+        GLXCurses.Widget.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
 
         self.set_name('CheckButton')
@@ -315,7 +314,7 @@ class CheckButton(Widget):
                                                 )
 
             else:
-                # Nothing the better is to clean the prelight
+                # Nothing the better is to clean the pre-light
                 self._set_state_prelight(False)
         else:
             logging.debug(self.__class__.__name__ + ': ' + self.get_text() + ' ' + self.get_widget_id() + 'is not '

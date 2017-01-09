@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 import curses
 import logging
-from GLXCurses.Widget import Widget
+
+import GLXCurses
 from GLXCurses import glxc
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -11,10 +12,10 @@ from GLXCurses import glxc
 __author__ = 'Tuux'
 
 
-class Entry(Widget):
+class Entry(GLXCurses.Widget):
 
     def __init__(self):
-        Widget.__init__(self)
+        GLXCurses.Widget.__init__(self)
 
         # Property's
         # Whether to activate the default widget (such as the default button in a dialog) when Enter is pressed.

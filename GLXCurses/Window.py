@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import GLXCurses
 import curses
-from GLXCurses.Bin import Bin
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -16,9 +16,9 @@ def resize_text(text, max_width, separator='~'):
         return text
 
 
-class Window(Bin):
+class Window(GLXCurses.Bin):
     def __init__(self):
-        Bin.__init__(self)
+        GLXCurses.Bin.__init__(self)
         self.set_name('Window')
 
         # Make a Style heritage attribute

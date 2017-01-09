@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import GLXCurses
 import curses
 import logging
-from GLXCurses.Widget import Widget
-import GLXCurses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -25,10 +24,10 @@ def resize_text(text, max_width, separator='~'):
         return text
 
 
-class Button(Widget):
+class Button(GLXCurses.Widget):
 
     def __init__(self):
-        Widget.__init__(self)
+        GLXCurses.Widget.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
 
         self.set_name('Button')

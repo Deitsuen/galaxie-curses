@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 import curses
 import textwrap
+import GLXCurses
 from GLXCurses import glxc
-from GLXCurses.Misc import Misc
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -25,9 +25,9 @@ def resize_text(text, max_width, separator='~'):
         return text
 
 
-class Label(Misc):
+class Label(GLXCurses.Misc):
     def __init__(self):
-        Misc.__init__(self)
+        GLXCurses.Misc.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('Label')
 
@@ -45,7 +45,6 @@ class Label(Misc):
         # This does NOT affect the alignment of the label within its allocation.
         # Default value: glxc.JUSTIFY_LEFT
         self.justify = glxc.JUSTIFY_LEFT
-
 
         # The text of the label.
         # Default value: None
@@ -120,9 +119,6 @@ class Label(Misc):
         # Make a Style heritage attribute
         if self.style.attribute:
             self.attribute = self.style.attribute
-
-        #self.set_alignment(0.5, 0.5)
-
 
     ###########
     # Methods #

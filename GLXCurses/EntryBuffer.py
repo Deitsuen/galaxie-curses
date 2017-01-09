@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import GLXCurses
 import sys
 import uuid
 import logging
-import GLXCurses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -26,9 +26,6 @@ class EntryBuffer(object):
         self.max_length = 0
         # The contents of the buffer. Default value: "".
         self.text = ""
-
-        # Not very well but it should be compatible with Application Controller thing
-        self.application = GLXCurses.application
 
         # Unique ID it permit to individually identify a widget by example for get_focus get_default
         self.id = uuid.uuid1().int

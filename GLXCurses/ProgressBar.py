@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import GLXCurses
+from GLXCurses import glxc
 import curses
 import logging
-from GLXCurses import glxc
-from GLXCurses.Widget import Widget
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -25,9 +25,9 @@ def resize_text(text, max_width, separator='~'):
         return text
 
 
-class ProgressBar(Widget):
+class ProgressBar(GLXCurses.Widget):
     def __init__(self):
-        Widget.__init__(self)
+        GLXCurses.Widget.__init__(self)
         self.set_name('ProgressBar')
 
         # Make a Style heritage attribute

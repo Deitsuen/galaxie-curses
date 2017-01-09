@@ -1,11 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import GLXCurses
-from GLXCurses.Style import Style
-from GLXCurses.Object import Object
 import uuid
-import curses
-import logging
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -13,9 +9,9 @@ import logging
 __author__ = 'Tuux'
 
 
-class Widget(Object):
+class Widget(GLXCurses.Object):
     def __init__(self):
-        Object.__init__(self)
+        GLXCurses.Object.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Widget'
         # Unique ID it permit to individually identify a widget by example for get_focus get_default
@@ -42,7 +38,6 @@ class Widget(Object):
         # Widget Parent
         self.screen = None
         self.attribute = None
-        self.application = GLXCurses.application
 
         # Size Management
         self.screen_height = 0
@@ -119,7 +114,7 @@ class Widget(Object):
         # Each Widget come with it own Style by default
         # It can receive parent Style() or a new Style() during a set_parent() / un_parent() call
         # GLXCApplication is a special case where it have no parent, it role is to impose it own style to each Widget
-        self.style = Style()
+        self.style = GLXCurses.Style()
         self.style_backup = None
 
         # Sets the text of tooltip to be the given string.

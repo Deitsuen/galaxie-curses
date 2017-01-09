@@ -187,8 +187,6 @@ if __name__ == '__main__':
     progressbar9.set_inverted(0)
 
     progressbar10 = GLXCurses.ProgressBar()
-    pgb_handler = GLXCurses.ProgressBarHandler(progressbar10)
-
     progressbar10.set_spacing(0)
     progressbar10.set_value(0)
     value = '{0:}{1:}'.format(progressbar10.get_value(), '%')

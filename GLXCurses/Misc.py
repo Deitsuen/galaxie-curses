@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from GLXCurses.Widget import Widget
+import GLXCurses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -16,9 +16,9 @@ __author__ = 'Tuux'
 # Note that if the widget is added to a container in such a way that it expands automatically
 #  to fill its allocated area, the alignment settings will have no effect.
 
-class Misc(Widget):
+class Misc(GLXCurses.Widget):
     def __init__(self):
-        Widget.__init__(self)
+        GLXCurses.Widget.__init__(self)
 
         # Misc Properties
         # The horizontal alignment, from 0.0 to 1.0
