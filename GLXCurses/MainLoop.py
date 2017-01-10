@@ -3,7 +3,7 @@
 import GLXCurses
 import curses
 import logging
-
+from multiprocessing import Process
 
 class MainLoop:
     def __init__(self):
