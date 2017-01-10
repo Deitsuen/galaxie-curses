@@ -433,7 +433,7 @@ if __name__ == '__main__':
             app.stop()
 
     def on_click(self, event_signal, event_args=None):
-        #logging.debug(str(event_signal) + ' ' + str(event_args))
+
         if event_args is None:
             event_args = dict()
 

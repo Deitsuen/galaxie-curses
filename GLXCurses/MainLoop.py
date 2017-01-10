@@ -5,32 +5,17 @@ import curses
 import logging
 from multiprocessing import Process
 
-class MainLoop:
+
+class MainLoop(object):
     def __init__(self):
         self.event_buffer = list()
         self.started = False
         self.data = dict()
 
-    # The get_data() method returns the Python object associated with the specified key or
-    # None if there is no data associated with the key or if there is no key associated with the object.
-    # key : a string used as the key
-    # data : a Python object that is the value to be associated with the key
-    def get_data(self, key):
-        if key not in self._get_data_dict():
-            return None
-        elif not len(self._get_data_dict()[key]):
-            return None
-        else:
-            return self._get_data_dict()[key]
-
-    # The set_data() method associates the specified Python object (data) with key.
-    # key : a string used as the key
-    # data : a Python object that is the value to be associated with the key
-    def set_data(self, key, data):
-        self._get_data_dict()[key] = data
-
-    def set_event_buffer(self, list):
-        self.event_buffer = list
+    def set_event_buffer(self, event_buffer=None):
+        if event_buffer is None:
+            event_buffer = dict()
+        self.event_buffer = event_buffer
 
     def get_event_buffer(self):
         return self.event_buffer
@@ -75,22 +60,27 @@ class MainLoop:
         try:
             if len(self.get_event_buffer()) > 0:
                 return self.get_event_buffer().pop()
-        except IndexError:
+        except:
             pass
 
     def _handle_event(self):
         try:
             event = self._pop_last_event()
             while event:
+                # If it have event dispatch it
                 GLXCurses.application.dispatch(event[0], event[1])
+                # Delete the last event inside teh event list
                 event = self._pop_last_event()
+                # In case it was a graphic event we refresh the screen
                 GLXCurses.application.refresh()
         except:
             pass
 
     def _run(self):
         if self.get_started():
+            # A bit light for notify about we are up and runing, but we are really inside the main while(1) loop
             logging.debug(self.__class__.__name__ + ': Started')
+            # That in theory the first refresh of the application
             GLXCurses.application.refresh()
 
         # Main while 1
@@ -103,4 +93,5 @@ class MainLoop:
 
             self._handle_event()
 
+        # Here self.get_started() == False , then the GLXCurse.Mainloop() should be close
         GLXCurses.application.close()
