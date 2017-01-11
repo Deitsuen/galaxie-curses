@@ -42,7 +42,7 @@ if __name__ == '__main__':
     hline = GLXCurses.HSeparator()
 
     label_press_q = GLXCurses.Label()
-    label_press_q.set_text('Press "q" key to exit ...')
+    label_press_q.set_text('Press "q" key to exit ... What about you arrows\'s key\'s')
     label_press_q.set_single_line_mode(True)
     label_press_q.set_justify('center')
     label_press_q.set_alignment(0.5, 0.3)
