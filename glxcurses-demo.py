@@ -4,7 +4,6 @@ import GLXCurses
 import sys
 import curses
 import logging
-
 from random import randint
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -17,7 +16,6 @@ if __name__ == '__main__':
                         level=logging.DEBUG,
                         format='%(asctime)s, %(levelname)s, %(message)s')
     logging.info('Started glxcurses-demo')
-
 
     # Create the main Application
     app = GLXCurses.Application()
@@ -59,7 +57,6 @@ if __name__ == '__main__':
                     '* Old versions of the GNU GPL\n'
                     '* What to do if you see a possible GPL violation\n'
                     )
-
 
     label2 = GLXCurses.Label()
     #label2.set_justify('CENTER')
@@ -297,7 +294,6 @@ if __name__ == '__main__':
     # Creat a new Horizontal Box contener
     hbox = GLXCurses.HBox()
     hbox.pack_end(vbox1)
-    # hbox.add(vbox2)
 
     hbox_progress_widgets = GLXCurses.HBox()
     hbox_progress_widgets.set_spacing(1)
@@ -323,10 +319,6 @@ if __name__ == '__main__':
 
     frame_for_progressbar.add(hbox_progress_widgets)
 
-    # hbox.set_spacing(0)
-    # hbox.pack_end(win_for_progressbar)
-    # hbox.pack_end(win6)
-
     win1.add(hbox)
 
     # Creat a Status Bar
@@ -343,12 +335,8 @@ if __name__ == '__main__':
         'Menu',
         'Quit'
     ]
+
     statusbar = GLXCurses.Statusbar()
-    # Add Everything inside the Application
-    app.add_menubar(menu)
-    app.add_window(win1)
-    app.add_statusbar(statusbar)
-    app.add_toolbar(toolbar)
 
     def on_resize(self, event_signal, *event_args):
         message_text = ''
@@ -358,52 +346,52 @@ if __name__ == '__main__':
 
         # Status Bar Demo
         progressbar1.set_value(randint(0, 100))
-        value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
-        progressbar1.set_text(value)
+        val = '{0:}{1:}'.format(progressbar1.get_value(), '%')
+        progressbar1.set_text(val)
 
         progressbar2.set_value(randint(0, 100))
-        value = '{0:}{1:}'.format(progressbar2.get_value(), '%')
-        progressbar2.set_text(value)
+        val = '{0:}{1:}'.format(progressbar2.get_value(), '%')
+        progressbar2.set_text(val)
 
         progressbar3.set_value(randint(0, 100))
-        value = '{0:}{1:}'.format(progressbar3.get_value(), '%')
-        progressbar3.set_text(value)
+        val = '{0:}{1:}'.format(progressbar3.get_value(), '%')
+        progressbar3.set_text(val)
 
         progressbar4.set_value(randint(0, 100))
-        value = '{0:}{1:}'.format(progressbar4.get_value(), '%')
-        progressbar4.set_text(value)
+        val = '{0:}{1:}'.format(progressbar4.get_value(), '%')
+        progressbar4.set_text(val)
 
         progressbar5.set_value(randint(0, 100))
-        value = '{0:}{1:}'.format(progressbar5.get_value(), '%')
-        progressbar5.set_text(value)
+        val = '{0:}{1:}'.format(progressbar5.get_value(), '%')
+        progressbar5.set_text(val)
 
         progressbar6.set_value(randint(0, 100))
-        value = '{0:}{1:}'.format(progressbar6.get_value(), '%')
-        progressbar6.set_text(value)
+        val = '{0:}{1:}'.format(progressbar6.get_value(), '%')
+        progressbar6.set_text(val)
 
         progressbar7.set_value(randint(0, 100))
-        value = '{0:}{1:}'.format(progressbar7.get_value(), '%')
-        progressbar7.set_text(value)
+        val = '{0:}{1:}'.format(progressbar7.get_value(), '%')
+        progressbar7.set_text(val)
 
         progressbar8.set_value(randint(0, 100))
-        value = '{0:}{1:}'.format(progressbar8.get_value(), '%')
-        progressbar8.set_text(value)
+        val = '{0:}{1:}'.format(progressbar8.get_value(), '%')
+        progressbar8.set_text(val)
 
         progressbar9.set_value(randint(0, 100))
-        value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
-        progressbar9.set_text(value)
+        val = '{0:}{1:}'.format(progressbar9.get_value(), '%')
+        progressbar9.set_text(val)
 
         # progressbar10.set_value(randint(0, 100))
         # value = '{0:}{1:}'.format(progressbar10.get_value(), '%')
         # progressbar10.set_text(value)
 
         progressbar11.set_value(randint(0, 100))
-        value = '{0:}{1:}'.format(progressbar11.get_value(), '%')
-        progressbar11.set_text(value)
+        val = '{0:}{1:}'.format(progressbar11.get_value(), '%')
+        progressbar11.set_text(val)
 
         progressbar12.set_value(randint(0, 100))
-        value = '{0:}{1:}'.format(progressbar12.get_value(), '%')
-        progressbar12.set_text(value)
+        val = '{0:}{1:}'.format(progressbar12.get_value(), '%')
+        progressbar12.set_text(val)
 
         #app.refresh()
 
@@ -415,8 +403,8 @@ if __name__ == '__main__':
         logging.debug('handleUpButtonClicked')
         current = progressbar10.get_value()
         progressbar10.set_value(current+1)
-        value = '{0:}{1:}'.format(progressbar10.get_value(), '%')
-        progressbar10.set_text(value)
+        val = '{0:}{1:}'.format(progressbar10.get_value(), '%')
+        progressbar10.set_text(val)
 
     def handle_keys(self, event_signal, *event_args):
         logging.debug('HANDLE KEY: '+str(event_args[0]))
@@ -440,21 +428,29 @@ if __name__ == '__main__':
         if event_args['id'] == Button1.get_widget_id():
             current = progressbar9.get_value()
             progressbar9.set_value(current+1)
-            value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
-            progressbar9.set_text(value)
-            statusbar.push('Increase progress bar to value: ' + value)
+            val = '{0:}{1:}'.format(progressbar9.get_value(), '%')
+            progressbar9.set_text(val)
+            statusbar.push('Increase progress bar to value: ' + val)
 
         if event_args['id'] == Button2.get_widget_id():
             current = progressbar9.get_value()
             progressbar9.set_value(current-1)
-            value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
-            progressbar9.set_text(value)
-            statusbar.push('Decrease progress bar to value: ' + value)
+            val = '{0:}{1:}'.format(progressbar9.get_value(), '%')
+            progressbar9.set_text(val)
+            statusbar.push('Decrease progress bar to value: ' + val)
 
         if event_args['id'] == Button3.get_widget_id():
             statusbar.push('Stopping every operation\'s')
+            # Everything have a end, the main loop too ...
             app.stop()
 
+    # Add Everything inside the Application
+    app.add_menubar(menu)
+    app.add_window(win1)
+    app.add_statusbar(statusbar)
+    app.add_toolbar(toolbar)
+
+    # Signals
     app.connect('RESIZE', on_resize)
     app.connect('BUTTON1_CLICKED', on_click, )
     app.connect('BUTTON1_RELEASED', on_click)

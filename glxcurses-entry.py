@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     # Create a Menu
     menu = GLXCurses.MenuModel()
-    menu.app_info_label = GLXCurses.application.get_name()
+    menu.app_info_label = app.get_name()
 
     # Create a EntryBuffer thing
     EntryBuffer1 = GLXCurses.EntryBuffer()
@@ -43,6 +43,7 @@ if __name__ == '__main__':
 
     label_press_q = GLXCurses.Label()
     label_press_q.set_text('Press "q" key to exit ...')
+    label_press_q.set_single_line_mode(True)
     label_press_q.set_justify('center')
     label_press_q.set_alignment(0.5, 0.3)
     label_press_q.override_color('yellow')

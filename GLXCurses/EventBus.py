@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import uuid
+import logging
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -49,6 +50,7 @@ class EventBus(object):
         }
         handler_id = uuid.uuid1().int
         self._get_signal_handlers_dict()[detailed_signal][handler_id] = subscription
+        logging.info(self.__class__.__name__ + ': ' + str(self._get_signal_handlers_dict()[detailed_signal][handler_id]))
         return handler_id
 
     # The disconnect() method removes the signal handler with the specified handler_id
@@ -121,6 +123,8 @@ class EventBus(object):
                     if id not in self._get_blocked_handler():
                         if id not in self._get_blocked_handler():
                             self._get_signal_handlers_dict()[subscription][id]['handler'](*args)
+                        logging.info(self.__class__.__name__ + ': ' + str(
+                            self._get_signal_handlers_dict()[subscription][id]))
 
     # Internal Function
     def _reset(self):

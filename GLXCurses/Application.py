@@ -50,7 +50,7 @@ class Application(object):
             self.event_handlers = dict()
 
             # Init MainLoop
-            self.main_loop = GLXCurses.MainLoop()
+            self.main_loop = None
 
             # Int EventBus
             self.event_bus = GLXCurses.EventBus()
@@ -338,29 +338,40 @@ class Application(object):
         pass
 
     def start(self):
-        self.main_loop.start()
+        try:
+            GLXCurses.mainloop.start()
+        except KeyboardInterrupt:
+            GLXCurses.mainloop.stop()
+            self.stop()
 
     def stop(self):
-        self.main_loop.stop()
+        GLXCurses.mainloop.stop()
 
     # should be replace by a EventBus
     def emit(self, detailed_signal, args=None):
         if args is None:
-            args = []
-        self.main_loop.emit(detailed_signal, args)
+            args = list()
+        GLXCurses.mainloop.emit(detailed_signal, args)
+        GLXCurses.signal.emit(detailed_signal, args)
 
     def connect(self, detailed_signal, handler, args=None):
         if args is None:
-            args = []
-        # check if it's all ready connect
+            args = list()
+
+        # check if it's all ready connect if not create it
         if detailed_signal not in self._get_signal_handlers_dict():
             self._get_signal_handlers_dict()[detailed_signal] = list()
 
         self._get_signal_handlers_dict()[detailed_signal].append(handler)
+
         if args:
             self._get_signal_handlers_dict()[detailed_signal].append(args)
 
+        # Test about EventBus
+        #GLXCurses.signal.connect(detailed_signal, handler, args)
+
     def disconnect(self, detailed_signal, handler):
+
         if detailed_signal in self._get_signal_handlers_dict():
             self._get_signal_handlers_dict()[detailed_signal].remove(handler)
 
@@ -374,12 +385,6 @@ class Application(object):
         self.windows[self.active_window_id].handle_and_dispatch_event(detailed_signal, args)
 
     # Focus and Selection
-    def get_application(self):
-        return self
-
-    def set_application(self, application):
-        pass
-
     def get_default(self):
         return self.widget_it_have_default
 

@@ -3,9 +3,29 @@
 import GLXCurses
 import curses
 import logging
-from multiprocessing import Process
 
 
+class Singleton(object):
+    """Singleton decorator."""
+
+    def __init__(self, cls):
+        self.__dict__['cls'] = cls
+
+    instances = {}
+
+    def __call__(self):
+        if self.cls not in self.instances:
+            self.instances[self.cls] = self.cls()
+        return self.instances[self.cls]
+
+    def __getattr__(self, attr):
+        return getattr(self.__dict__['cls'], attr)
+
+    def __setattr__(self, attr, value):
+        return setattr(self.__dict__['cls'], attr, value)
+
+
+@Singleton
 class MainLoop(object):
     def __init__(self):
         self.event_buffer = list()
@@ -64,6 +84,7 @@ class MainLoop(object):
             pass
 
     def _handle_event(self):
+        # Check Event on MainLoop (That Bad :) )
         try:
             event = self._pop_last_event()
             while event:
@@ -92,6 +113,7 @@ class MainLoop(object):
                 self.handle_curses_input(input_event)
 
             self._handle_event()
+
 
         # Here self.get_started() == False , then the GLXCurse.Mainloop() should be close
         GLXCurses.application.close()
