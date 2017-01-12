@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import curses
-import logging
-
 import GLXCurses
 from GLXCurses import glxc
+import curses
+import logging
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -13,11 +12,11 @@ __author__ = 'Tuux'
 
 
 class Entry(GLXCurses.Widget):
-
     def __init__(self):
         GLXCurses.Widget.__init__(self)
-
-        # Property's
+        ##############
+        # Property's #
+        ##############
         # Whether to activate the default widget (such as the default button in a dialog) when Enter is pressed.
         # Default value: False
         self.activates_default = False
@@ -26,7 +25,7 @@ class Entry(GLXCurses.Widget):
         self.attributes = None
 
         # Text buffer object which actually stores entry text.
-        self.buffer = None
+        self.buffer = GLXCurses.EntryBuffer()
 
         # Whether password entries will show a warning when Caps Lock is on.
         # Note that the warning is shown using a secondary icon,
@@ -150,4 +149,320 @@ class Entry(GLXCurses.Widget):
         # Default Value: 0
         self.xalign = 0
 
+        ############
+        # Internal #
+        ############
+        # Widget
+        # Make a Style heritage attribute
+        if self.style.attribute:
+            self.attribute = self.style.attribute
 
+        # Size management
+        self.set_preferred_height(1)
+
+        ############
+        # Internal #
+        ############
+
+    def new(self):
+        """
+        Creates a new entry.
+
+        :return: A new GLXCurse Entry Widget
+        :rtype: GLXCurse.Widget
+        """
+        self.__init__()
+        return self
+
+    def new_with_buffer(self, buffer):
+        """
+        Creates a new entry with the specified text buffer.
+
+        :param buffer: The buffer to use for the new GLXCurses.Entry.
+        :return: A Entry Buffer object.
+        :rtype: GLXCurse.Widget
+        """
+        self.__init__()
+        self.set_buffer(buffer)
+        return self
+
+    def get_buffer(self):
+        """
+        Get the GLXCurses.EntryBuffer object which holds the text for this widget.
+
+        :return: A EntryBuffer object.
+        :rtype: GLXCurse.Widget
+        """
+        return self.buffer
+
+    def set_buffer(self, buffer):
+        """
+        Set the EntryBuffer object which holds the text for this widget.
+
+        :param buffer: The buffer to use for the GLXCurses.Entry.
+        """
+        self.buffer = buffer
+
+    def set_text(self, text):
+        """
+        Sets the text in the widget to the given value, replacing the current contents.
+
+        :param text: The new text
+        :type text: String
+
+        .. seealso:: GLXCurses.EntryBuffer().set_text()
+        """
+        self.get_buffer().set_text(text)
+
+    def get_text(self):
+        """
+        Retrieves the contents of the entry widget. See also gtk_editable_get_chars().
+
+        This is equivalent to:
+        ``
+        self.buffer = GLXCurses.EntryBuffer()
+        self.buffer.get_text()
+        ``
+        :return: A pointer to the contents of the widget as a string.
+        This string points to internally allocated storage in the widget and must not be freed,
+        modified or stored.
+        :rtype: String
+        """
+        return self.get_buffer().get_text()
+
+    def get_text_length(self):
+        """
+        Retrieves the current length of the text in entry .
+
+        This is equivalent to:
+        ``
+        self.buffer = GLXCurses.EntryBuffer()
+        self.buffer.get_length()
+        ``
+
+        :return: The current number of characters in GtkEntry, or 0 if there are none.
+        :rtype: Int in range of (0, 65535)
+        """
+        return self.get_buffer().get_length()
+
+    def get_text_area(self):
+        """
+        Gets the area where the entry’s text is drawn.
+        This function is useful when drawing something to the entry in a draw callback.
+
+        If the entry is not realized, text_area is filled with zeros.
+
+        :return: A list of information X, Y and Size Width, Height . returned information are the complet allowed area,
+        :rtype: List(X, Y , Width, Height)
+        """
+        padding = self.get_spacing()
+        self.get_height() - (padding * 2),
+        self.get_width() - (padding * 2),
+        self.get_y() + padding,
+        self.get_x() + padding
+
+        raise NotImplementedError
+
+    def set_visibility(self):
+        pass
+
+    def set_invisible_char(self):
+        pass
+
+    def unset_invisible_char(self):
+        pass
+
+    def set_max_length(self):
+        pass
+
+    def get_activates_default(self):
+        pass
+
+    def get_has_frame(self):
+        pass
+
+    def get_inner_border(self):
+        pass
+
+    def get_width_chars(self):
+        pass
+
+    def get_max_width_chars(self):
+        pass
+
+    def set_activates_default(self):
+        pass
+
+    def set_has_frame(self):
+        pass
+
+    def set_inner_border(self):
+        pass
+
+    def set_width_chars(self):
+        pass
+
+    def set_max_width_chars(self):
+        pass
+
+    def get_invisible_char(self):
+        pass
+
+    def set_alignment(self):
+        pass
+
+    def get_alignment(self):
+        pass
+
+    def set_placeholder_text(self):
+        pass
+
+    def get_placeholder_text(self):
+        pass
+
+    def set_overwrite_mode(self):
+        pass
+
+    def get_overwrite_mode(self):
+        pass
+
+    def get_layout(self):
+        pass
+
+    def get_layout_offsets(self):
+        pass
+
+    def layout_index_to_text_index(self):
+        pass
+
+    def text_index_to_layout_index(self):
+        pass
+
+    def set_attributes(self):
+        pass
+
+    def get_attributes(self):
+        pass
+
+    def get_max_length(self):
+        pass
+
+    def get_visibility(self):
+        pass
+
+    def set_completion(self):
+        pass
+
+    def get_completion(self):
+        pass
+
+    def set_cursor_hadjustment(self):
+        pass
+
+    def get_cursor_hadjustment(self):
+        pass
+
+    def set_progress_fraction(self):
+        pass
+
+    def get_progress_fraction(self):
+        pass
+
+    def set_progress_pulse_step(self):
+        pass
+
+    def get_progress_pulse_step(self):
+        pass
+
+    def progress_pulse(self):
+        pass
+
+    def im_context_filter_keypress(self):
+        pass
+
+    def reset_im_context(self):
+        pass
+
+    def get_tabs(self):
+        pass
+
+    def set_tabs(self):
+        pass
+
+    def set_icon_from_pixbuf(self):
+        pass
+
+    def set_icon_from_stock(self):
+        pass
+
+    def set_icon_from_icon_name(self):
+        pass
+
+    def set_icon_from_gicon(self):
+        pass
+
+    def get_icon_storage_type(self):
+        pass
+
+    def get_icon_pixbuf(self):
+        pass
+
+    def get_icon_stock(self):
+        pass
+
+    def get_icon_name(self):
+        pass
+
+    def get_icon_gicon(self):
+        pass
+
+    def set_icon_activatable(self):
+        pass
+
+    def get_icon_activatable(self):
+        pass
+
+    def set_icon_sensitive(self):
+        pass
+
+    def get_icon_sensitive(self):
+        pass
+
+    def get_icon_at_pos(self):
+        pass
+
+    def set_icon_tooltip_text(self):
+        pass
+
+    def get_icon_tooltip_text(self):
+        pass
+
+    def set_icon_tooltip_markup(self):
+        pass
+
+    def get_icon_tooltip_markup(self):
+        pass
+
+    def set_icon_drag_source(self):
+        pass
+
+    def get_current_icon_drag_source(self):
+        pass
+
+    def get_icon_area(self):
+        pass
+
+    def set_input_purpose(self):
+        pass
+
+    def get_input_purpose(self):
+        pass
+
+    def set_input_hints(self):
+        pass
+
+    def get_input_hints(self):
+        pass
+
+    def grab_focus_without_selecting(self):
+        pass
