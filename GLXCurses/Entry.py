@@ -3,6 +3,8 @@
 from GLXCurses import Widget
 from GLXCurses import EntryBuffer
 from GLXCurses import glxc
+from GLXCurses import application as signal
+import curses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -149,6 +151,22 @@ class Entry(Widget):
         # Allowed values: [0,1]
         # Default Value: 0
         self.xalign = 0
+
+        # Subscibtions
+        self.subscribe('active', Entry._emit_activate_signal(self))
+        self.subscribe('backspace', Entry._emit_backspace_signal(self))
+        self.subscribe('copy-clipboard', Entry._emit_copy_clipboard_signal(self))
+        self.subscribe('cut-clipboard', Entry._emit_cut_clipboard_signal(self))
+        self.subscribe('delete-from-cursor', Entry._emit_delete_from_cursor_signal(self))
+        self.subscribe('icon-press', Entry._emit_icon_press_signal(self))
+        self.subscribe('icon-release', Entry._emit_icon_release_signal(self))
+        self.subscribe('insert-at-cursor', Entry._emit_insert_at_cursor_signal(self))
+        self.subscribe('move-cursor', Entry._emit_move_cursor_signal(self))
+        self.subscribe('paste-clipboard', Entry._emit_paste_clipboard_signal(self))
+        self.subscribe('populate-popup', Entry._emit_populate_popup_signal(self))
+        self.subscribe('preedit-changed', Entry._emit_preedit_changed_signal(self))
+        self.subscribe('toggle-overwrite', Entry._emit_toggle_overwrite_signal(self))
+
 
         ############
         # Internal #
@@ -461,14 +479,34 @@ class Entry(Widget):
         else:
             self.inner_border = None
 
-    def set_width_chars(self):
-        pass
+    def set_width_chars(self, n_chars):
+        """
+        Changes the size request of the entry to be about the right size for n_chars characters. Note that it changes
+        the size request, the size can still be affected by how you pack the widget into containers.
 
-    def set_max_width_chars(self):
-        pass
+        If n_chars is -1, the size reverts to the default entry size.
+
+        :param n_chars: width in chars
+        """
+        self.width_chars = n_chars
+
+    def set_max_width_chars(self, n_chars):
+        """
+        Sets the desired maximum width in characters of entry
+
+        :param n_chars: the new desired maximum width, in characters
+        """
+        self.max_width_chars = n_chars
 
     def get_invisible_char(self):
-        pass
+        """
+        Retrieves the character displayed in place of the real characters for entries with visibility set to false.
+
+        .. seealso:: set_invisible_char().
+
+        :return: the current invisible char, or 0, if the entry does not show invisible text at all.
+        """
+        return self.invisible_char
 
     def set_alignment(self):
         pass
@@ -627,4 +665,157 @@ class Entry(Widget):
         pass
 
     def grab_focus_without_selecting(self):
+        pass
+
+    # Signals
+    def _emit_activate_signal(self, user_data=None):
+        """
+        The ::activate signal is emitted when the user hits the Enter key.
+
+        While this signal is used as a keybinding signal, it is also commonly used by applications to intercept activation of entries.
+
+        The default bindings for this signal are all forms of the Enter key.
+
+        :param self: the object which received the signal
+        :param user_data: user data set when the signal handler was connected.
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_backspace_signal(self, user_data=None):
+        """
+        The ::backspace signal is a keybinding signal which gets emitted when the user asks for it.
+
+        The default bindings for this signal are Backspace and Shift-Backspace
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_copy_clipboard_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_cut_clipboard_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_delete_from_cursor_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_icon_press_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_icon_release_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_insert_at_cursor_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_move_cursor_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_paste_clipboard_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_populate_popup_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_preedit_changed_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_toggle_overwrite_signal(self, user_data=None):
+        """
+        The “toggle-overwrite” signal
+
+        The ::toggle-overwrite signal is a keybinding signal which gets emitted to toggle the overwrite mode of the
+        entry.
+
+        The default bindings for this signal is Insert.
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+
+        # Create a Dict with everything
+        instance = {
+            'class': self.__class__.__name__,
+            'id': self.get_widget_id()
+        }
+        # EVENT EMIT
+        signal.emit('toggle-overwrite', instance)
         pass

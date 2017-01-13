@@ -187,7 +187,6 @@ class Button(GLXCurses.Widget):
                     }
                     # EVENT EMIT
                     GLXCurses.application.emit(self.curses_mouse_states[event], instance)
-                    GLXCurses.signal.emit(self.curses_mouse_states[event], instance)
 
             else:
                 # Nothing the better is to clean the prelight
