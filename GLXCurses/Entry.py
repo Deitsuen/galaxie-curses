@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
+from GLXCurses import Widget
+from GLXCurses import EntryBuffer
 from GLXCurses import glxc
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -9,10 +10,10 @@ from GLXCurses import glxc
 __author__ = 'Tuux'
 
 
-class Entry(GLXCurses.Widget):
+class Entry(Widget):
 
     def __init__(self):
-        GLXCurses.Widget.__init__(self)
+        Widget.__init__(self)
         ##############
         # Property's #
         ##############
@@ -25,7 +26,7 @@ class Entry(GLXCurses.Widget):
         self.attributes = None
 
         # Text buffer object which actually stores entry text.
-        self.buffer = GLXCurses.EntryBuffer()
+        self.buffer = EntryBuffer()
 
         # Whether password entries will show a warning when Caps Lock is on.
         # Note that the warning is shown using a secondary icon,
@@ -244,7 +245,7 @@ class Entry(GLXCurses.Widget):
         ``
 
         :return: The current number of characters in GtkEntry, or 0 if there are none.
-        :rtype: Int in range of (0, 65535)
+        :rtype: Int in range 0-65536
         """
         return self.get_buffer().get_length()
 
@@ -307,32 +308,158 @@ class Entry(GLXCurses.Widget):
         """
         self.invisible_char = unicode('*')
 
-    def set_max_length(self):
-        pass
+    def set_max_length(self, max):
+        """
+        Sets the maximum allowed length of the contents of the widget.
+        If the current contents are longer than the given length, then they will be truncated to fit.
+
+        This is equivalent to:
+        ``
+        self.buffer = GLXCurses.EntryBuffer()
+        self.buffer.set_max_length()
+        ``
+        :param max: The maximum length of the entry, or 0 for no maximum. (other than the maximum length of entries.)
+        The value passed in will be clamped to the range 0-65536.
+        """
+        self.get_buffer().set_max_length(max)
 
     def get_activates_default(self):
-        pass
+        """
+        Retrieves the value set by set_activates_default().
+
+        :return: TRUE if the entry will activate the default widget
+        :rtype: Boolean
+        """
+        return bool(self.activates_default)
 
     def get_has_frame(self):
-        pass
+        """
+        Gets the value set by set_has_frame().
 
-    def get_inner_border(self):
-        pass
+        :return: whether the entry has a beveled frame
+        """
+        return self.has_frame
+
+    def get_inner_border(self, border):
+        """
+        This function returns the entry’s “inner-border” property. See set_inner_border() for more information.
+
+        BorderStyle Members:
+        glxc.BORDER_STYLE_NONE      No visible border
+        glxc.BORDER_STYLE_SOLID     A single line segment
+        glxc.BORDER_STYLE_INSET     Looks as if the content is sunken into the canvas
+        glxc.BORDER_STYLE_OUTSET    Looks as if the content is coming out of the canvas
+        glxc.BORDER_STYLE_HIDDEN    Same as glxc.BORDER_STYLE_NONE
+        glxc.BORDER_STYLE_DOTTED    A series of round dots
+        glxc.BORDER_STYLE_DASHED    A series of square-ended dashes
+        glxc.BORDER_STYLE_DOUBLE    Two parallel lines with some space between them
+        glxc.BORDER_STYLE_GROOVE    Looks as if it were carved in the canvas
+        glxc.BORDER_STYLE_RIDGE     Looks as if it were coming out of the canvas
+
+        :return: a BorderStyle Constant or None if none was set
+        """
+        available_border_style = [
+            glxc.BORDER_STYLE_NONE,
+            glxc.BORDER_STYLE_SOLID,
+            glxc.BORDER_STYLE_INSET,
+            glxc.BORDER_STYLE_OUTSET,
+            glxc.BORDER_STYLE_HIDDEN,
+            glxc.BORDER_STYLE_DOTTED,
+            glxc.BORDER_STYLE_DASHED,
+            glxc.BORDER_STYLE_DOUBLE,
+            glxc.BORDER_STYLE_GROOVE,
+            glxc.BORDER_STYLE_RIDGE,
+        ]
+        if border in available_border_style:
+            return self.inner_border
+        elif border is None:
+            return None
+        else:
+            self.set_inner_border(None)
 
     def get_width_chars(self):
-        pass
+        """
+        Gets the value set by set_width_chars()
+
+        :return: number of chars to request space for, or negative if unset
+        """
+        return self.width_chars
 
     def get_max_width_chars(self):
-        pass
+        """
+        Retrieves the desired maximum width of entry , in characters.
 
-    def set_activates_default(self):
-        pass
+        set_max_width_chars().
 
-    def set_has_frame(self):
-        pass
+        :return: the maximum width of the entry, in characters
+        """
+        return self.max_width_chars
 
-    def set_inner_border(self):
-        pass
+    def set_activates_default(self, setting):
+        """
+        If setting is TRUE, pressing Enter in the entry will activate the default widget for the window containing
+        the entry.
+
+        This usually means that the dialog box containing the entry will be closed, since the default
+        widget is usually one of the dialog buttons.
+
+        (For experts: if setting is TRUE, the entry calls activate_default() on the window containing the entry,
+        in the default handler for the “activate” signal.)
+
+        :param setting: TRUE to activate window’s default widget on Enter keypress
+        :type setting: Boolean
+        """
+        self.activates_default = bool(setting)
+
+    def set_has_frame(self, setting):
+        """
+        Sets whether the entry has a beveled frame around it.
+
+        :param setting:
+        :type setting: object
+        """
+        self.has_frame = setting
+
+    def set_inner_border(self, border):
+        """
+        Sets entry’s inner-border property to border , or clears it if None is passed.
+        The inner-border is the area around the entry’s text, but inside its frame.
+
+        If set, this property overrides the inner-border style property. Overriding the style-provided border is
+        useful when you want to do in-place editing of some text in a canvas or list widget, where pixel-exact
+        positioning of the entry is important.
+
+        :param border: a BorderStyle
+        :type border: a BorderStyle Constant
+
+        BorderStyle Members:
+        glxc.BORDER_STYLE_NONE      No visible border
+        glxc.BORDER_STYLE_SOLID     A single line segment
+        glxc.BORDER_STYLE_INSET     Looks as if the content is sunken into the canvas
+        glxc.BORDER_STYLE_OUTSET    Looks as if the content is coming out of the canvas
+        glxc.BORDER_STYLE_HIDDEN    Same as glxc.BORDER_STYLE_NONE
+        glxc.BORDER_STYLE_DOTTED    A series of round dots
+        glxc.BORDER_STYLE_DASHED    A series of square-ended dashes
+        glxc.BORDER_STYLE_DOUBLE    Two parallel lines with some space between them
+        glxc.BORDER_STYLE_GROOVE    Looks as if it were carved in the canvas
+        glxc.BORDER_STYLE_RIDGE     Looks as if it were coming out of the canvas
+        """
+        available_border_style = [
+            glxc.BORDER_STYLE_NONE,
+            glxc.BORDER_STYLE_SOLID,
+            glxc.BORDER_STYLE_INSET,
+            glxc.BORDER_STYLE_OUTSET,
+            glxc.BORDER_STYLE_HIDDEN,
+            glxc.BORDER_STYLE_DOTTED,
+            glxc.BORDER_STYLE_DASHED,
+            glxc.BORDER_STYLE_DOUBLE,
+            glxc.BORDER_STYLE_GROOVE,
+            glxc.BORDER_STYLE_RIDGE,
+        ]
+        if border in available_border_style:
+            self.inner_border = border
+        else:
+            self.inner_border = None
 
     def set_width_chars(self):
         pass

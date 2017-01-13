@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
+from GLXCurses import Container
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -8,9 +8,12 @@ import GLXCurses
 __author__ = 'Tuux'
 
 
-class Bin(GLXCurses.Container):
+class Bin(Container):
+    def destroy(self):
+        raise NotImplementedError
+
     def __init__(self):
-        GLXCurses.Container.__init__(self)
+        Container.__init__(self)
         self.child = None
 
     def get_child(self):
