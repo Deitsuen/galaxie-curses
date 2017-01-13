@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 import GLXCurses
 from GLXCurses import glxc
-import curses
-import logging
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -12,11 +10,13 @@ __author__ = 'Tuux'
 
 
 class Entry(GLXCurses.Widget):
+
     def __init__(self):
         GLXCurses.Widget.__init__(self)
         ##############
         # Property's #
         ##############
+
         # Whether to activate the default widget (such as the default button in a dialog) when Enter is pressed.
         # Default value: False
         self.activates_default = False
@@ -67,7 +67,7 @@ class Entry(GLXCurses.Widget):
         # to use from a list of possible candidates, depending on availability in the current font.
         # This style property allows the theme to prepend a character to the list of candidates.
         # Default value: *
-        self.invisible_char = '*'
+        self.invisible_char = unicode('*')
 
         # Whether the invisible char has been set for the GLXCurses.Entry
         # Default value: False
@@ -163,6 +163,9 @@ class Entry(GLXCurses.Widget):
         ############
         # Internal #
         ############
+
+    def destroy(self):
+        raise NotImplementedError
 
     def new(self):
         """
@@ -263,14 +266,46 @@ class Entry(GLXCurses.Widget):
 
         raise NotImplementedError
 
-    def set_visibility(self):
-        pass
+    def set_visibility(self, visible):
+        """
+        Sets whether the contents of the entry are visible or not.
 
-    def set_invisible_char(self):
-        pass
+        When visibility is set to FALSE, characters are displayed as the invisible char, and will also appear that
+        way when the text in the entry widget is copied elsewhere.
+
+        By default, GLXCurse picks the best invisible character available in the current font,
+        but it can be changed with set_invisible_char().
+
+        .. note:: You probably want to set “input_purpose” to glx.INPUT_PURPOSE_PASSWORD or glx.INPUT_PURPOSE_PIN to
+        inform input methods about the purpose of this entry, in addition to setting visibility to FALSE.
+        """
+        if bool(visible):
+            self.visibility = True
+        else:
+            self.visibility = False
+
+    def set_invisible_char(self, ch=u'*'):
+        """
+        Sets the character to use in place of the actual text when set_visibility() has been called to set text
+        visibility to FALSE.
+
+        .. note:: this is the character used in “password mode” to show the user how many characters have been typed.
+
+        By default, GLXCurse picks the best invisible char available in the current font.
+
+        .. note:: If you set the invisible char to 0, then the user will get no feedback at all;
+        there will be no text on the screen as they type
+
+        :param ch: a Unicode chracter
+        """
+        self.invisible_char = unicode(ch)
 
     def unset_invisible_char(self):
-        pass
+        """"
+        Unsets the invisible char previously set with set_invisible_char().
+        So that the default invisible char is used again.
+        """
+        self.invisible_char = unicode('*')
 
     def set_max_length(self):
         pass
