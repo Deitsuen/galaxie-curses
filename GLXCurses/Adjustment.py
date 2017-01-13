@@ -11,6 +11,8 @@ class Adjustment(object):
         self.value = 1.0
         self.lower = 1.0
         self.upper = 110.0
+        self.step_increment=1
+        self.page_size=10
 
     def get_value(self):
         return int(self.value)
