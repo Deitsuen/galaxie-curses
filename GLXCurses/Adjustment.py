@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#import GLXCurses
-
+import GLXCurses
+import uuid
 
 
 class Adjustment(object):
