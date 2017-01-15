@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     # Create a Menu
     menu = GLXCurses.MenuModel()
-    menu.app_info_label = GLXCurses.application.get_name()
+    menu.app_info_label = app.get_name()
 
     # Create a EntryBuffer thing
     EntryBuffer1 = GLXCurses.EntryBuffer()
@@ -42,7 +42,9 @@ if __name__ == '__main__':
     hline = GLXCurses.HSeparator()
 
     label_press_q = GLXCurses.Label()
-    label_press_q.set_text('Press "q" key to exit ...')
+    label_press_q.set_text('Press "q" key to exit ... What about you arrows\'s key\'s')
+    label_press_q.set_single_line_mode(True)
+    label_press_q.set_justify('center')
     label_press_q.set_alignment(0.5, 0.3)
     label_press_q.override_color('yellow')
 
@@ -68,6 +70,23 @@ if __name__ == '__main__':
 
         if event_args[0] == curses.KEY_F6:
             Button1.set_sensitive(not Button1.get_sensitive())
+
+        if event_args[0] == curses.KEY_UP:
+            x, y = label_press_q.get_alignment()
+            y -= 0.1
+            label_press_q.set_alignment(x, y)
+        if event_args[0] == curses.KEY_DOWN:
+            x, y = label_press_q.get_alignment()
+            y += 0.1
+            label_press_q.set_alignment(x, y)
+        if event_args[0] == curses.KEY_RIGHT:
+            x, y = label_press_q.get_alignment()
+            x += 0.1
+            label_press_q.set_alignment(x, y)
+        if event_args[0] == curses.KEY_LEFT:
+            x, y = label_press_q.get_alignment()
+            x -= 0.1
+            label_press_q.set_alignment(x, y)
 
         # Keyboard temporary thing
         if event_args[0] == ord('q'):

@@ -24,24 +24,24 @@ class Constants(object):
     ###########################
     # Justification Constants #
     ###########################
-    # The text is placed at the left edge of the label.
     @constant
     def JUSTIFY_LEFT():
+        """The text is placed at the left edge of the label."""
         return 'JUSTIFY_LEFT'
 
-    # The text is placed at the right edge of the label.
     @constant
     def JUSTIFY_RIGHT():
+        """The text is placed at the right edge of the label."""
         return 'JUSTIFY_RIGHT'
 
-    # The text is placed in the center of the label.
     @constant
     def JUSTIFY_CENTER():
+        """The text is placed in the center of the label."""
         return 'JUSTIFY_CENTER'
 
-    # The text is placed is distributed across the label.
     @constant
     def JUSTIFY_FILL():
+        """The text is placed is distributed across the label."""
         return 'JUSTIFY_FILL'
 
     #####################################
@@ -162,34 +162,88 @@ class Constants(object):
     def INPUT_PURPOSE_NUMBER():
         return 'INPUT_PURPOSE_NUMBER'
 
-    # Edited field expects phone number
     @constant
     def INPUT_PURPOSE_PHONE():
+        """Edited field expects phone number"""
         return 'INPUT_PURPOSE_PHONE'
 
-    # Edited field expects URL
     @constant
     def INPUT_PURPOSE_URL():
+        """Edited field expects URL"""
         return 'INPUT_PURPOSE_URL'
 
-    # Edited field expects email address
     @constant
     def INPUT_PURPOSE_EMAIL():
+        """Edited field expects email address"""
         return 'INPUT_PURPOSE_EMAIL'
 
-    # Edited field expects the name of a person
     @constant
     def INPUT_PURPOSE_NAME():
+        """Edited field expects the name of a person"""
         return 'INPUT_PURPOSE_NAME'
 
-    # Like INPUT_PURPOSE_FREE_FORM , but characters are hidden
     @constant
     def INPUT_PURPOSE_PASSWORD():
+        """Like INPUT_PURPOSE_FREE_FORM , but characters are hidden"""
         return 'INPUT_PURPOSE_PASSWORD'
 
-    # Like INPUT_PURPOSE_DIGITS , but characters are hidden
     @constant
     def INPUT_PURPOSE_PIN():
+        """Like INPUT_PURPOSE_DIGITS , but characters are hidden"""
         return 'INPUT_PURPOSE_PIN'
+
+    ################
+    # Border Style #
+    ################
+    # Describes how the border of a UI element should be rendered.
+    @constant
+    def BORDER_STYLE_NONE():
+        """No visible border"""
+        return 'BORDER_STYLE_NONE'
+
+    @constant
+    def BORDER_STYLE_SOLID():
+        """A single line segment"""
+        return 'BORDER_STYLE_SOLID'
+
+    @constant
+    def BORDER_STYLE_INSET():
+        """Looks as if the content is sunken into the canvas"""
+        return 'BORDER_STYLE_INSET'
+
+    @constant
+    def BORDER_STYLE_OUTSET():
+        """Looks as if the content is coming out of the canvas"""
+        return 'BORDER_STYLE_OUTSET'
+
+    @constant
+    def BORDER_STYLE_HIDDEN():
+        """Same as BORDER_STYLE_NONE"""
+        return 'BORDER_STYLE_HIDDEN'
+
+    @constant
+    def BORDER_STYLE_DOTTED():
+        """A series of round dots"""
+        return 'BORDER_STYLE_DOTTED'
+
+    @constant
+    def BORDER_STYLE_DASHED():
+        """A series of square-ended dashes"""
+        return 'BORDER_STYLE_DASHED'
+
+    @constant
+    def BORDER_STYLE_DOUBLE():
+        """Two parallel lines with some space between them"""
+        return 'BORDER_STYLE_DOUBLE'
+
+    @constant
+    def BORDER_STYLE_GROOVE():
+        """Looks as if it were carved in the canvas"""
+        return 'BORDER_STYLE_GROOVE'
+
+    @constant
+    def BORDER_STYLE_RIDGE():
+        """Looks as if it were coming out of the canvas"""
+        return 'BORDER_STYLE_RIDGE'
 
 glxc = Constants()

@@ -26,3 +26,5 @@ from GLXCurses.VSeparator import VSeparator
 from GLXCurses.EntryBuffer import EntryBuffer
 
 application = Application()
+mainloop = MainLoop()
+signal = EventBus()

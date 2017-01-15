@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 import uuid
 import logging
 
-class MyEventBus():
+
+class MyEventBus(object):
 
     def __init__(self):
         self.event_buffer = list()
