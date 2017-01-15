@@ -130,6 +130,8 @@ class Widget(GLXCurses.Object):
         self.window = None
 
     # Common Widget mandatory
+    def destroy(self):
+        self.unparent()
 
     # Screen
     def get_screen_height(self):

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
 from GLXCurses import Widget
 from GLXCurses import glxc
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -12,9 +11,38 @@ __author__ = 'Tuux'
 # Reference Document: https://developer.gnome.org/gtk3/stable/GtkContainer.html
 class Container(Widget):
     """
-    GtkContainer — Base class for widgets which contain other widgets
+    GLXCurses.Container — Base class for widgets which contain other widgets
 
+    Description:
+
+    A GLXCurse user interface is constructed by nesting widgets inside widgets. Container widgets are the
+    inner nodes in the resulting tree of widgets: they contain other widgets. So, for example, you might have a
+    GLXCurse.Window containing a GLXCurse.Frame containing a GLXCurse.Label. If you wanted an image instead of a
+    textual label inside the frame, you might replace the GLXCurse.Label widget with a GLXCurse.Image widget.
+
+    There are two major kinds of container widgets in GLXCurses. Both are subclasses of the abstract GLXCurse.Container
+    base class.
+
+    The first type of container widget has a single child widget and derives from GLXCurses.Bin. These containers are
+    decorators, which add some kind of functionality to the child. For example, a GLXCurses.Button makes its child
+    into a clickable button; a GLXCurses.Frame draws a frame around its child and a GLXCurses.Window places its child
+    widget inside a top-level window.
+
+    The second type of container can have more than one child; its purpose is to manage layout. This means that these
+    containers assign sizes and positions to their children. For example, a GLXCurses.HBox arranges its children in a
+    horizontal row, and a GLXCurses.Grid arranges the widgets it contains in a two-dimensional grid.
+
+    For implementations of GLXCurses.Container the virtual method GLXCurses.Container.forall() is always required,
+    since it's used for drawing and other internal operations on the children. If the GLXCurses.Container
+    implementation expect to have non internal children it's needed to implement both GLXCurses.Container.add() and
+    GLXCurses.Container.remove(). If the GLXCurses.Container implementation has internal children, they should be
+    added widget.set_parent() on __init__() and removed with widget.unparent() in the GLXCurses.Widget.destroy()
+    implementation. See more about implementing custom widgets at https://wiki.gnome.org/HowDoI/CustomWidgets
     """
+
+    def destroy(self):
+        raise NotImplementedError
+
     def __init__(self):
         Widget.__init__(self)
 
@@ -92,6 +120,22 @@ class Container(Widget):
             else:
                 pass
 
+    def add_with_properties(self, widget, first_prop_name, null_terminated_list=None):
+        """
+        Adds widget to container , setting child properties at the same time. See GLXCurses.Container.add() and
+        GLXCurses.Container.child_set() for more details.
+
+        :param widget: a widget to be placed inside container
+        :type widget: GLXCurses.Widget
+        :param first_prop_name: the name of the first child property to set
+        :type first_prop_name: Corresponds to the standard C unsigned char type.
+        :param null_terminated_list: a NULL-terminated list of property names and values, starting with first_prop_name
+        :type null_terminated_list: list()
+        """
+        if null_terminated_list is None:
+            null_terminated_list = list()
+        self.add(widget)
+        self.child_set()
 
     # The set-resize_mode() method sets the "resize=mode" property of the container.
     # he resize mode of a container determines whether a resize request will be passed to the container's parent
