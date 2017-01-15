@@ -27,4 +27,31 @@ class Adjustment(object):
         else:
             self.value = self.value
 
+                def clamp_page(self):
+        if self.value <= self.lower <= self.upper:
+            self.value = self.value + self.page_size
+        if self.upper and self.lower <= self.page_size:
+            self.page_size = self.lower
+
+            self.value_changed()
+
+
+    def changed(self):
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'changed',
+            'id': self.id
+        }
+        # EVENT EMIT
+        GLXCurses.application.emit('SIGNALS', instance)
+
+    def value_changed(self):
+            instance = {
+                'class': self.__class__.__name__,
+                'type': 'value-changed',
+                'id': self.id
+            }
+            # EVENT EMIT
+            GLXCurses.application.emit('SIGNALS', instance)
+
 
