@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
+from GLXCurses import Box
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -8,15 +8,18 @@ import GLXCurses
 __author__ = 'Tuux'
 
 
-class HBox(GLXCurses.Box):
+class HBox(Box):
+    def destroy(self):
+        raise NotImplementedError
+
     def __init__(self):
-        GLXCurses.Box.__init__(self)
+        Box.__init__(self)
         self.set_name('HBox')
 
         self.preferred_height = 2
         self.preferred_width = 2
 
-    # GLXC HBox Functions
+    # GLXC HBox Functions called by GLXCurse.Widget.draw()
     def draw_widget_in_area(self):
 
         # Check widgets to display

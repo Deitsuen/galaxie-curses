@@ -1,39 +1,47 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import GLXCurses
-
+from GLXCurses import Widget
+from GLXCurses import glxc
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
 
 
-class Container(GLXCurses.Widget):
+# Reference Document: https://developer.gnome.org/gtk3/stable/GtkContainer.html
+class Container(Widget):
+    """
+    GtkContainer — Base class for widgets which contain other widgets
+
+    """
     def __init__(self):
-        GLXCurses.Widget.__init__(self)
+        Widget.__init__(self)
 
+        # Properties
+        # Can be used to add a new child to the container.
         self.child = None
-
-        # Container Properties
-        # Attributes
-
+        # Specify how resize events are handled.
+        # One of: glxc.RESIZE_PARENT, glxc.RESIZE_QUEUE or glxc.RESIZE_IMMEDIATE
+        self.resize_mode = glxc.RESIZE_PARENT
         # The width of the empty border outside the containers children.
         self.border_width = 0
 
-        # Specify how resize events are handled. One of: RESIZE_PARENT, RESIZE_QUEUE or RESIZE_IMMEDIATE
-        self.resize_mode = 'RESIZE_PARENT'
-
+        # Internal Properties
         # The child widget that has the focus
         self.focus_child = None
-
         # If True the container needs resizing
         self.need_resize = False
-
         # if True redraw the container when a child gets reallocated
         self.reallocate_redraws = True
-
         # If True the container had its focus chain explicitly set
         self.has_focus_chain = False
+
+        # Subscibtions
+        self.subscribe('active', Container._emit_add_signal(self))
+        self.subscribe('check-resize', Container._emit_check_resize_signal(self))
+        self.subscribe('remove', Container._emit_remove_signal(self))
+        self.subscribe('set-focus-child', Container._emit_set_focus_child_signal(self))
 
     # The amount of blank space to leave outside the container.
     def set_border_width(self, border_width):
@@ -43,19 +51,47 @@ class Container(GLXCurses.Widget):
     def get_border_width(self):
         return self.border_width
 
-    # The add() method adds widget to the container.
-    # This method is typically used for simple containers such as Window, Frame, or Button
-    # that hold a single child widget.
-    # Containers that handle multiple children usually have additional methods
-    # such as Box.pack_start() and Table.attach() as an alternative to add().
-    # Adding a widget to a container usually results in the resizing and redrawing of the container contents.
     def add(self, widget):
+        """
+        Adds widget to container .
+
+        Typically used for simple containers such as Window, Frame, or Button;
+
+        For more complicated layout containers such as Box or Grid, this function will pick default packing
+        parameters that may not be correct.
+
+        So consider functions such as Box.pack_start() and Grid.attach() as an alternative to
+        Container.add() in those cases.
+
+        A widget may be added to only one container at a time;
+        you can’t (should not) place the same widget inside two different containers.
+
+        :param widget: a current child of container
+        """
         widget.set_parent(self)
         self.child = widget
 
     def remove(self, widget):
-        self.child = None
-        widget.set_visible(False)
+        """
+        Removes widget from container .
+
+        Widget must be inside container .
+
+        Note that container will own a reference to widget , and that this may be the last reference held; so
+        removing a widget from its container can destroy that widget. If you want to use widget again, you need to
+        add a reference to it before removing it from a container, using g_object_ref(). If you don’t want to use
+        widget again it’s usually more efficient to simply destroy it directly using Widget.destroy() since this
+        will remove it from the container and help break any circular reference count cycles.
+
+        :param widget: a current child of container
+        """
+        if self.child:
+            if self.child.id == widget.id:
+                self.child = None
+                widget.set_visible(False)
+            else:
+                pass
+
 
     # The set-resize_mode() method sets the "resize=mode" property of the container.
     # he resize mode of a container determines whether a resize request will be passed to the container's parent
@@ -130,4 +166,45 @@ class Container(GLXCurses.Widget):
         pass
 
     def child_get_property(self, child, property_name):
+        pass
+
+    # Internal
+    def _emit_add_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_check_resize_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_remove_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
+        pass
+
+    def _emit_set_focus_child_signal(self, user_data=None):
+        """
+
+        :param user_data: the object which received the signal
+        """
+        if user_data is None:
+            user_data = list()
+        # TODO: Everything cher's
         pass

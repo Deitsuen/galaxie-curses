@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import GLXCurses
 import curses
+from GLXCurses import Bin
+
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -16,9 +18,9 @@ def resize_text(text, max_width, separator='~'):
         return text
 
 
-class Window(GLXCurses.Bin):
+class Window(Bin):
     def __init__(self):
-        GLXCurses.Bin.__init__(self)
+        Bin.__init__(self)
         self.set_name('Window')
 
         # Make a Style heritage attribute
@@ -157,7 +159,7 @@ class Window(GLXCurses.Bin):
             )
         )
 
-        # Check widgets to display
+        # Check widgets to display in side the GLXCuses.Bin
         if bool(self.get_child()):
             self.get_child().set_style(self.get_style())
             self.get_child().draw()

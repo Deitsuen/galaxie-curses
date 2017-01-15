@@ -21,6 +21,25 @@ class Constants(object):
     ############################
     # Selection Mode Constants #
     ############################
+
+    ###########################
+    # ResizeMode Constants #
+    ###########################
+    @constant
+    def RESIZE_PARENT():
+        """Pass resize request to the parent."""
+        return 'RESIZE_PARENT'
+
+    @constant
+    def RESIZE_QUEUE():
+        """Queue resizes on this widget."""
+        return 'RESIZE_QUEUE'
+
+    @constant
+    def RESIZE_IMMEDIATE():
+        """Resize immediately. (Deprecated in GTK3)."""
+        return 'RESIZE_IMMEDIATE'
+
     ###########################
     # Justification Constants #
     ###########################
