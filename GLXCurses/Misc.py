@@ -8,15 +8,20 @@ import GLXCurses
 __author__ = 'Tuux'
 
 
-# The Misc widget is an abstract widget used to derive subclasses which have alignment and padding attributes.
-# The horizontal and vertical padding attributes allow extra space to be added around the widget.
-# The horizontal and vertical alignment attributes enable the widget to be positioned within its allocated area.
-# The alignment values represent the fraction of available free space (allocation minus the widget size)
-#  to place to the left or above the widget for x and y alignment respectively.
-# Note that if the widget is added to a container in such a way that it expands automatically
-#  to fill its allocated area, the alignment settings will have no effect.
-
 class Misc(GLXCurses.Widget):
+    """
+    The Misc widget is an abstract widget used to derive subclasses which have alignment and padding attributes.
+
+    The horizontal and vertical padding attributes allow extra space to be added around the widget.
+
+    The horizontal and vertical alignment attributes enable the widget to be positioned within its allocated area.
+
+    The alignment values represent the fraction of available free space (allocation minus the widget size)
+    to place to the left or above the widget for x and y alignment respectively.
+
+    .. note: that if the widget is added to a container in such a way that it expands automatically
+    to fill its allocated area, the alignment settings will have no effect.
+    """
     def __init__(self):
         GLXCurses.Widget.__init__(self)
 
