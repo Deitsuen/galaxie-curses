@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
+from GLXCurses import Widget
+from GLXCurses import Application
 import curses
 import logging
 
@@ -24,10 +25,10 @@ def resize_text(text, max_width, separator='~'):
         return text
 
 
-class Button(GLXCurses.Widget):
+class Button(Widget):
 
     def __init__(self):
-        GLXCurses.Widget.__init__(self)
+        Widget.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
 
         self.set_name('Button')
@@ -113,64 +114,64 @@ class Button(GLXCurses.Widget):
                     # INTERNAL METHOD
                     # BUTTON1
                     if event == curses.BUTTON1_PRESSED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                         self._check_selected()
                         self._set_state_prelight(True)
                     elif event == curses.BUTTON1_RELEASED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                         self._check_selected()
                         self._set_state_prelight(False)
                     if event == curses.BUTTON1_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                     if event == curses.BUTTON1_DOUBLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                     if event == curses.BUTTON1_TRIPLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
 
                     # BUTTON2
                     if event == curses.BUTTON2_PRESSED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                         self._check_selected()
                         self._set_state_prelight(True)
                     elif event == curses.BUTTON2_RELEASED:
                         self._set_state_prelight(False)
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                     if event == curses.BUTTON2_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                     if event == curses.BUTTON2_DOUBLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                     if event == curses.BUTTON2_TRIPLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
 
                     # BUTTON3
                     if event == curses.BUTTON3_PRESSED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                         self._check_selected()
                         self._set_state_prelight(True)
                     elif event == curses.BUTTON3_RELEASED:
                         self._set_state_prelight(False)
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                     if event == curses.BUTTON3_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                     if event == curses.BUTTON3_DOUBLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                     if event == curses.BUTTON3_TRIPLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
 
                     # BUTTON4
                     if event == curses.BUTTON4_PRESSED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                         self._check_selected()
                         self._set_state_prelight(True)
                     elif event == curses.BUTTON4_RELEASED:
                         self._set_state_prelight(False)
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                     if event == curses.BUTTON4_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                     if event == curses.BUTTON4_DOUBLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
                     if event == curses.BUTTON4_TRIPLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
+                        Application().set_is_focus(self)
 
                     if event == curses.BUTTON_SHIFT:
                         pass
@@ -186,7 +187,7 @@ class Button(GLXCurses.Widget):
                         'id': self.get_widget_id()
                     }
                     # EVENT EMIT
-                    GLXCurses.application.emit(self.curses_mouse_states[event], instance)
+                    Application().emit(self.curses_mouse_states[event], instance)
 
             else:
                 # Nothing the better is to clean the prelight
@@ -321,18 +322,6 @@ class Button(GLXCurses.Widget):
         else:
             return 0
 
-    def is_my_click(self, coord_x=-1, coord_y=-1):
-        greatest_x = self.label_x - 1 + len(self.button_border) + len(self.get_text())
-        lowest_x = self.label_x - 1
-
-        greatest_y = self.y + self.label_y
-        lowest_y = self.y - self.label_y
-
-        x_is_in_range = lowest_x <= coord_x <= greatest_x
-        y_is_in_range = lowest_y <= coord_y <= greatest_y
-
-        return x_is_in_range and y_is_in_range
-
     # Internal Widget functions
     def set_text(self, text):
         self.text = text
@@ -362,13 +351,12 @@ class Button(GLXCurses.Widget):
     # Internal
     def _check_selected(self):
         if self.get_can_focus():
-            if GLXCurses.application:
-                if GLXCurses.application.get_is_focus() == self.get_widget_id():
-                    self.set_is_focus(True)
-                    self.button_border = self.interface_selected
-                else:
-                    self.set_is_focus(False)
-                    self.button_border = self.interface
+            if Application().get_is_focus() == self.get_widget_id():
+                self.set_is_focus(True)
+                self.button_border = self.interface_selected
+            else:
+                self.set_is_focus(False)
+                self.button_border = self.interface
         else:
             pass
 

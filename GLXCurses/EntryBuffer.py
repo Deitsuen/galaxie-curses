@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
+from GLXCurses import Application
 import sys
 import uuid
 import logging
@@ -9,49 +9,105 @@ import logging
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
+__docformat__ = 'reStructuredText'
 
 
 class EntryBuffer(object):
-    # initial_chars: initial buffer text, or None.
-    # n_initial_chars: number of characters in initial_chars, or -1.
+    """
+    EntryBuffer — Text buffer for GLXCurses.Entry
+    """
     def __init__(self, initial_chars=None, n_initial_chars=-1):
-        #Object.__init__(self)
+        """
+        Create a new EntryBuffer object.
 
-        self._min_length_hard_limit = 0
-        self._max_length_hard_limit = 65536
+        Optionally, specify initial text to set in the buffer.
 
-        # The length (in characters) of the text in buffer. Allowed values: <=65535. Default value: 0.
+        ***Properties***:
+        length - The length (in characters) of the text in buffer. Allowed values: <=65535. Default value: 0.
+        max_length - The maximum length (in characters) of the text in the buffer. Allowed values: <=65535. Default value: 0.
+        text - The contents of the buffer. Default value: "".
+
+        :param initial_chars: initial buffer text, or None
+        :param n_initial_chars: number of characters in initial_chars , or -1
+        :return: A new EntryBuffer object.
+        :rtype: EntryBuffer object
+        """
+        # Properties
         self.length = 0
-        # The maximum length (in characters) of the text in the buffer. Allowed values: <=65535. Default value: 0.
         self.max_length = 0
-        # The contents of the buffer. Default value: "".
         self.text = ""
 
+        # Internal Properties
+        self._min_length_hard_limit = 0
+        self._max_length_hard_limit = 65536
         # Unique ID it permit to individually identify a widget by example for get_focus get_default
         self.id = uuid.uuid1().int
 
     def get_text(self):
-        return str(self.text)
+        """
+        Retrieves the contents of the buffer.
 
-    def set_text(self, text):
+        The memory pointer returned by this call will not change unless this object emits a signal, or is finalized.
+
+        :return: a pointer to the contents of the widget as a string. This string points to internally allocated storage
+         in the buffer and must not be freed, modified or stored.
+        :rtype: standard C char type.
+        """
+        return self.text
+
+    def set_text(self, chars, n_chars=-1):
+        """
+        Sets the text in the buffer.
+
+        This is roughly equivalent to calling EntryBuffer.delete_text() and EntryBuffer.insert_text().
+
+        .. note:: n_chars is in characters, not in bytes.
+
+        :param chars: the new text
+        :param n_chars: the number of characters in text , or -1
+        :type chars: standard C char type
+        :type n_chars: standard C int type
+        """
         if self.get_max_length() <= 0:
-            self.text = text
+            if n_chars <= 0:
+                self.text = chars
+            else:
+                self.text = chars[n_chars]
         else:
-            self.text = text[:self.get_max_length()]
+            if n_chars <= 0:
+                self.text = chars[:self.get_max_length()]
+            else:
+                self.text = chars[:self.get_max_length()][:n_chars]
 
-    # Retrieves the length in bytes of the buffer
-    # Returns: The byte length of the buffer.
     def get_bytes(self):
+        """
+        Retrieves the length in bytes of the buffer.
+
+        .. seealso:: EntryBuffer.get_length().
+
+        :return: The byte length of the buffer.
+        :rtype: standard C int type
+        """
         return sys.getsizeof(self.get_text())
 
-    # Retrieves the length in characters of the buffer.
-    # Returns: The number of characters in the buffer.
     def get_length(self):
+        """
+        Retrieves the length in characters of the buffer.
+
+        :return: The number of characters in the buffer.
+        :rtype: standard C int type
+        """
         return len(self.get_text())
 
-    # Retrieves the maximum allowed length of the text in buffer . see set_max_length().
-    # Returns: the maximum allowed number of characters in EntryBuffer, or 0 if there is no maximum.
     def get_max_length(self):
+        """
+        Retrieves the maximum allowed length of the text in buffer .
+
+        .. seealso:: EntryBuffer.set_max_length().
+
+        :return: the maximum allowed number of characters in EntryBuffer, or 0 if there is no maximum.
+        :rtype: standard C int type
+        """
         if 0 >= self.max_length:
             return 0
         else:
@@ -169,7 +225,7 @@ class EntryBuffer(object):
             'id': self.id
         }
         # EVENT EMIT
-        GLXCurses.application.emit('SIGNALS', instance)
+        Application().emit('SIGNALS', instance)
 
     def emit_inserted_text(self):
         # Create a Dict with everything
@@ -179,7 +235,7 @@ class EntryBuffer(object):
             'id': self.id
         }
         # EVENT EMIT
-        GLXCurses.application.emit('SIGNALS', instance)
+        Application().emit('SIGNALS', instance)
 
     # INTERNAL
     def _clamp_to_the_range(self, checked_value):
@@ -195,31 +251,31 @@ class EntryBuffer(object):
     def _get_max_length_hard_limit(self):
         return self._max_length_hard_limit
 
+
 if __name__ == '__main__':
-    entrybuffer = EntryBuffer()
-    entrybuffer.set_text('Comment la vie est belle !!!')
+    import doctest
 
-    print "Text       : " + str(entrybuffer.get_text())
-    print "Char(s)    : " + str(entrybuffer.get_length())
-    print "Byte(s)    : " + str(entrybuffer.get_bytes())
-    print "Max Char(s): " + str(entrybuffer.get_max_length())
-    print ""
-    #entrybuffer.set_max_length(10)
-
-    test_to_play = 'c\'est que '
-    print "Text       : " + str(entrybuffer.get_text())
-    print "Ins Char(s): " + str(entrybuffer.insert_text(8, test_to_play))
-    print "Text       : " + str(entrybuffer.get_text())
-    print "Char(s)    : " + str(entrybuffer.get_length())
-    print "Byte(s)    : " + str(entrybuffer.get_bytes())
-    print "Max Char(s): " + str(entrybuffer.get_max_length())
-    print ""
-    print "Del Char(s): " + str(entrybuffer.delete_text(8, len(test_to_play)))
-    print "Text       : " + str(entrybuffer.get_text())
-    print "Char(s)    : " + str(entrybuffer.get_length())
-    print "Byte(s)    : " + str(entrybuffer.get_bytes())
-    print "Max Char(s): " + str(entrybuffer.get_max_length())
-
-
-
-
+    doctest.testmod()
+    # entrybuffer = EntryBuffer()
+    # entrybuffer.set_text('Comment la vie est belle !!!')
+    #
+    # print "Text       : " + str(entrybuffer.get_text())
+    # print "Char(s)    : " + str(entrybuffer.get_length())
+    # print "Byte(s)    : " + str(entrybuffer.get_bytes())
+    # print "Max Char(s): " + str(entrybuffer.get_max_length())
+    # print ""
+    # # entrybuffer.set_max_length(10)
+    #
+    # test_to_play = 'c\'est que '
+    # print "Text       : " + str(entrybuffer.get_text())
+    # print "Ins Char(s): " + str(entrybuffer.insert_text(8, test_to_play))
+    # print "Text       : " + str(entrybuffer.get_text())
+    # print "Char(s)    : " + str(entrybuffer.get_length())
+    # print "Byte(s)    : " + str(entrybuffer.get_bytes())
+    # print "Max Char(s): " + str(entrybuffer.get_max_length())
+    # print ""
+    # print "Del Char(s): " + str(entrybuffer.delete_text(8, len(test_to_play)))
+    # print "Text       : " + str(entrybuffer.get_text())
+    # print "Char(s)    : " + str(entrybuffer.get_length())
+    # print "Byte(s)    : " + str(entrybuffer.get_bytes())
+    # print "Max Char(s): " + str(entrybuffer.get_max_length())

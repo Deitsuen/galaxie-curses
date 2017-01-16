@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import GLXCurses
+
 import curses
 import sys
 import os
@@ -14,6 +15,7 @@ code = locale.getpreferredencoding()
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
+
 __author__ = 'Tuux'
 
 
@@ -48,12 +50,6 @@ class Application(object):
             os.environ["NCURSES_NO_UTF8_ACS"] = '1'
 
             self.event_handlers = dict()
-
-            # Init MainLoop
-            self.main_loop = None
-
-            # Int EventBus
-            self.event_bus = GLXCurses.EventBus()
 
             # Initialize curses
             self.screen = curses.initscr()

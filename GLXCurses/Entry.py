@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from GLXCurses import Application
 from GLXCurses import Widget
 from GLXCurses import EntryBuffer
 from GLXCurses import glxc
-from GLXCurses import application as signal
-import curses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -817,5 +816,5 @@ class Entry(Widget):
             'id': self.get_widget_id()
         }
         # EVENT EMIT
-        signal.emit('toggle-overwrite', instance)
+        Application().emit('toggle-overwrite', instance)
         pass

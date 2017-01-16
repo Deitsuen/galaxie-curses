@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
+from GLXCurses import Application
 import curses
 import logging
 
@@ -62,7 +62,7 @@ class MainLoop(object):
             args = dict()
         logging.debug(detailed_signal + ' ' + str(args))
         self.get_event_buffer().insert(0, [detailed_signal, args])
-        GLXCurses.application.refresh()
+        Application().refresh()
 
     def handle_curses_input(self, input_event):
         if input_event == curses.KEY_MOUSE:
@@ -89,11 +89,11 @@ class MainLoop(object):
             event = self._pop_last_event()
             while event:
                 # If it have event dispatch it
-                GLXCurses.application.dispatch(event[0], event[1])
+                Application().dispatch(event[0], event[1])
                 # Delete the last event inside teh event list
                 event = self._pop_last_event()
                 # In case it was a graphic event we refresh the screen
-                GLXCurses.application.refresh()
+                Application().refresh()
         except:
             pass
 
@@ -103,12 +103,12 @@ class MainLoop(object):
             logging.debug(self.__class__.__name__ + ': Started')
             # That in theory the first refresh of the application
 
-            GLXCurses.application.refresh()
+            Application().refresh()
 
         # Main while 1
         while self.get_started():
             # logging.debug(self.__class__.__name__ + ': Waiting event\'s')
-            input_event = GLXCurses.application.getch()
+            input_event = Application().getch()
 
             if input_event != -1:
                 self.handle_curses_input(input_event)
@@ -117,4 +117,4 @@ class MainLoop(object):
 
 
         # Here self.get_started() == False , then the GLXCurse.Mainloop() should be close
-        GLXCurses.application.close()
+        Application().close()
