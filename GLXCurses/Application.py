@@ -133,6 +133,7 @@ class Application(object):
         self.parent_spacing = 0
         self.parent_style = self.style
 
+
     # Parent
     def set_parent(self, parent):
         # Ignore any parent as a master parent.
@@ -337,22 +338,11 @@ class Application(object):
     def adopt(self, orphan):
         pass
 
-    def start(self):
-        try:
-            GLXCurses.mainloop.start()
-        except KeyboardInterrupt:
-            GLXCurses.mainloop.stop()
-            self.stop()
-
-    def stop(self):
-        GLXCurses.mainloop.stop()
-
     # should be replace by a EventBus
     def emit(self, detailed_signal, args=None):
         if args is None:
             args = list()
         GLXCurses.mainloop.emit(detailed_signal, args)
-        GLXCurses.signal.emit(detailed_signal, args)
 
     def connect(self, detailed_signal, handler, args=None):
         if args is None:

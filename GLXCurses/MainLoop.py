@@ -60,7 +60,7 @@ class MainLoop(object):
     def emit(self, detailed_signal, args=None):
         if args is None:
             args = dict()
-        logging.debug(self.__class__.__name__ + ': ' + detailed_signal + ' ' + str(args))
+        logging.debug(detailed_signal + ' ' + str(args))
         self.get_event_buffer().insert(0, [detailed_signal, args])
         GLXCurses.application.refresh()
 
@@ -102,6 +102,7 @@ class MainLoop(object):
             # A bit light for notify about we are up and runing, but we are really inside the main while(1) loop
             logging.debug(self.__class__.__name__ + ': Started')
             # That in theory the first refresh of the application
+
             GLXCurses.application.refresh()
 
         # Main while 1

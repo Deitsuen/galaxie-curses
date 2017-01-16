@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from GLXCurses import Container
+from GLXCurses import Application
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -39,9 +40,17 @@ class Box(Container):
 
     def pack_start(self, child, expand=True, fill=True, padding=0):
         self.get_children().insert(0, child)
+        try:
+            self._emit_pack_start_signal()
+        except:
+            pass
 
     def pack_end(self, child, expand=True, fill=True, padding=0):
         self.get_children().append(child)
+        try:
+            self._emit_pack_end_signal()
+        except:
+            pass
 
     def pack_start_defaults(self, widget):
         pass
@@ -78,3 +87,24 @@ class Box(Container):
 
     def set_child_packing(self, child, expand, fill, padding, pack_type):
         pass
+
+    # Internal
+    def _emit_pack_end_signal(self):
+        # Create a Dict with everything
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'pack-end',
+            'id': self.id
+        }
+        # EVENT EMIT
+        Application().emit('SIGNALS', instance)
+
+    def _emit_pack_start_signal(self):
+        # Create a Dict with everything
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'pack-start',
+            'id': self.id
+        }
+        # EVENT EMIT
+        Application().emit('SIGNALS', instance)

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from GLXCurses import Widget
 from GLXCurses import glxc
+from GLXCurses import Application
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -66,10 +67,10 @@ class Container(Widget):
         self.has_focus_chain = False
 
         # Subscibtions
-        self.subscribe('active', Container._emit_add_signal(self))
-        self.subscribe('check-resize', Container._emit_check_resize_signal(self))
-        self.subscribe('remove', Container._emit_remove_signal(self))
-        self.subscribe('set-focus-child', Container._emit_set_focus_child_signal(self))
+        #self.subscribe('add', self._emit_add_signal())
+        # self.subscribe('check-resize', Container._emit_check_resize_signal(self))
+        # self.subscribe('remove', Container._emit_remove_signal(self))
+        # self.subscribe('set-focus-child', Container._emit_set_focus_child_signal(self))
 
     # The amount of blank space to leave outside the container.
     def set_border_width(self, border_width):
@@ -95,9 +96,14 @@ class Container(Widget):
         you can’t (should not) place the same widget inside two different containers.
 
         :param widget: a current child of container
+        :type widget: Widget
         """
         widget.set_parent(self)
         self.child = widget
+        try:
+            self._emit_add_signal()
+        except:
+            pass
 
     def remove(self, widget):
         """
@@ -135,27 +141,74 @@ class Container(Widget):
         if null_terminated_list is None:
             null_terminated_list = list()
         self.add(widget)
-        self.child_set()
+        self.child_set(widget, first_prop_name, null_terminated_list)
+
+    def get_resize_mode(self):
+        """
+        Returns the resize mode for the container.
+
+        Allowed value:
+            glxc.RESIZE_PARENT,
+            glxc.RESIZE_QUEUE,
+            glxc.RESIZE_IMMEDIATE
+
+        .. seealso:: GLXCurses.Container.set_resize_mode().
+
+        :return: the current resize mode
+        :rtype: GLXCurses Constant
+        """
+        return self.resize_mode
 
     # The set-resize_mode() method sets the "resize=mode" property of the container.
     # he resize mode of a container determines whether a resize request will be passed to the container's parent
     # (RESIZE_PARENT), queued for later execution (RESIZE_QUEUE) or executed immediately (RESIZE_IMMEDIATE).
     def set_resize_mode(self, resize_mode):
-        self.resize_mode = str(resize_mode).upper
+        """
+        Sets the resize mode for the container.
 
-    # The get_resize_mode() method returns the value of the "resize-mode" property for of the container.
-    # See set_resize_mode().
-    def get_resize_mode(self):
-        return self.resize_mode
+        The resize mode of a container determines whether a resize request will be passed to the container’s parent,
+        queued for later execution or executed immediately.
 
-    # The check_resize() method emits the "check-resize" signal on the container.
+        Allowed value:
+            glxc.RESIZE_PARENT,
+            glxc.RESIZE_QUEUE,
+            glxc.RESIZE_IMMEDIATE
+
+        .. seealso:: GLXCurses.Container.get_resize_mode().
+
+        :param resize_mode: the new resize mode
+        """
+        available_resize_mode = [
+            glxc.RESIZE_PARENT,
+            glxc.RESIZE_QUEUE,
+            glxc.RESIZE_IMMEDIATE
+        ]
+        if resize_mode in available_resize_mode:
+            self.resize_mode = resize_mode
+        else:
+            pass
+
     def check_resize(self):
-        pass
-
-    def forall(self, callback, callback_data):
+        """
+        The check_resize() method emits the "check-resize" signal on the container.
+        """
         pass
 
     def foreach(self, callback, callback_data):
+        """
+        Invokes callback on each non-internal child of container . See GLXCurses.Container.forall() for details on
+        what constitutes an “internal” child. For all practical purposes, this function should iterate over precisely
+        those child widgets that were added to the container by the application with explicit add() calls.
+
+        Most applications should use GLXCurses.Container.foreach(), rather than GLXCurses.Container.forall().
+
+        :param callback: a callback.
+        :param callback_data: callback user data
+        """
+        for widget in self.child:
+            widget.refresh()
+
+    def forall(self, callback, callback_data):
         pass
 
     def propagate_expose(self, child, event):
@@ -213,15 +266,15 @@ class Container(Widget):
         pass
 
     # Internal
-    def _emit_add_signal(self, user_data=None):
-        """
-
-        :param user_data: the object which received the signal
-        """
-        if user_data is None:
-            user_data = list()
-        # TODO: Everything cher's
-        pass
+    def _emit_add_signal(self):
+        # Create a Dict with everything
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'add',
+            'id': self.id
+        }
+        # EVENT EMIT
+        Application().emit('SIGNALS', instance)
 
     def _emit_check_resize_signal(self, user_data=None):
         """

@@ -30,7 +30,7 @@ if __name__ == '__main__':
     def handle_keys(self, event_signal, *event_args):
         if event_args[0] == ord('q'):
             # Everything have a end, the main loop too ...
-            app.stop()
+            GLXCurses.mainloop.stop()
 
     # Add Everything inside the Application
     app.add_window(win_main)
@@ -39,7 +39,7 @@ if __name__ == '__main__':
     app.connect('CURSES', handle_keys)
 
     # Main loop start
-    app.start()
+    GLXCurses.mainloop.start()
 
     # THE END
     sys.exit(0)

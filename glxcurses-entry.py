@@ -91,7 +91,7 @@ if __name__ == '__main__':
         # Keyboard temporary thing
         if event_args[0] == ord('q'):
             # Everything have a end, the main loop too ...
-            app.stop()
+            GLXCurses.mainloop.stop()
 
     def on_click(self, event_signal, event_args=None):
         if event_args is None:
@@ -107,7 +107,7 @@ if __name__ == '__main__':
         if event_args is None:
             event_args = dict()
         statusbar.push('')
-        statusbar.push(event_args['label'] + ' ' + event_signal)
+        statusbar.push("{0}: {1}".format(event_signal, event_args))
 
     # Add Everything inside the Application
     app.add_menubar(menu)
@@ -120,8 +120,10 @@ if __name__ == '__main__':
     app.connect('CURSES', handle_keys)         # Keyboard
     app.connect('SIGNALS', signal_event)       # Something it emit a signal
 
+
     # Main loop
-    app.start()
+    GLXCurses.mainloop.start()
+
 
     # THE END
     sys.exit(0)

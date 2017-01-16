@@ -418,7 +418,7 @@ if __name__ == '__main__':
         # Keyboard temporary thing
         if event_args[0] == curses.KEY_F10 or event_args[0] == ord('q'):
             # Everything have a end, the main loop too ...
-            app.stop()
+            GLXCurses.mainloop.stop()
 
     def on_click(self, event_signal, event_args=None):
 
@@ -442,7 +442,7 @@ if __name__ == '__main__':
         if event_args['id'] == Button3.get_widget_id():
             statusbar.push('Stopping every operation\'s')
             # Everything have a end, the main loop too ...
-            app.stop()
+            GLXCurses.mainloop.stop()
 
     # Add Everything inside the Application
     app.add_menubar(menu)
@@ -457,7 +457,7 @@ if __name__ == '__main__':
     app.connect('CURSES', handle_keys)
 
     # Main loop
-    app.start()
+    GLXCurses.mainloop.start()
 
     # THE END
     sys.exit(0)
