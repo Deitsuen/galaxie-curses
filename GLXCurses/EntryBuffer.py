@@ -253,29 +253,26 @@ class EntryBuffer(object):
 
 
 if __name__ == '__main__':
-    import doctest
+    entrybuffer = EntryBuffer()
+    entrybuffer.set_text('Comment la vie est belle !!!')
 
-    doctest.testmod()
-    # entrybuffer = EntryBuffer()
-    # entrybuffer.set_text('Comment la vie est belle !!!')
-    #
-    # print "Text       : " + str(entrybuffer.get_text())
-    # print "Char(s)    : " + str(entrybuffer.get_length())
-    # print "Byte(s)    : " + str(entrybuffer.get_bytes())
-    # print "Max Char(s): " + str(entrybuffer.get_max_length())
-    # print ""
-    # # entrybuffer.set_max_length(10)
-    #
-    # test_to_play = 'c\'est que '
-    # print "Text       : " + str(entrybuffer.get_text())
-    # print "Ins Char(s): " + str(entrybuffer.insert_text(8, test_to_play))
-    # print "Text       : " + str(entrybuffer.get_text())
-    # print "Char(s)    : " + str(entrybuffer.get_length())
-    # print "Byte(s)    : " + str(entrybuffer.get_bytes())
-    # print "Max Char(s): " + str(entrybuffer.get_max_length())
-    # print ""
-    # print "Del Char(s): " + str(entrybuffer.delete_text(8, len(test_to_play)))
-    # print "Text       : " + str(entrybuffer.get_text())
-    # print "Char(s)    : " + str(entrybuffer.get_length())
-    # print "Byte(s)    : " + str(entrybuffer.get_bytes())
-    # print "Max Char(s): " + str(entrybuffer.get_max_length())
+    print "Text       : " + str(entrybuffer.get_text())
+    print "Char(s)    : " + str(entrybuffer.get_length())
+    print "Byte(s)    : " + str(entrybuffer.get_bytes())
+    print "Max Char(s): " + str(entrybuffer.get_max_length())
+    print ""
+    # entrybuffer.set_max_length(10)
+
+    test_to_play = 'c\'est que '
+    print "Text       : " + str(entrybuffer.get_text())
+    print "Ins Char(s): " + str(entrybuffer.insert_text(8, test_to_play))
+    print "Text       : " + str(entrybuffer.get_text())
+    print "Char(s)    : " + str(entrybuffer.get_length())
+    print "Byte(s)    : " + str(entrybuffer.get_bytes())
+    print "Max Char(s): " + str(entrybuffer.get_max_length())
+    print ""
+    print "Del Char(s): " + str(entrybuffer.delete_text(8, len(test_to_play)))
+    print "Text       : " + str(entrybuffer.get_text())
+    print "Char(s)    : " + str(entrybuffer.get_length())
+    print "Byte(s)    : " + str(entrybuffer.get_bytes())
+    print "Max Char(s): " + str(entrybuffer.get_max_length())
