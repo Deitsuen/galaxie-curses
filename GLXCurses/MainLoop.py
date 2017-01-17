@@ -27,44 +27,115 @@ class Singleton(object):
 
 @Singleton
 class MainLoop(object):
+    """
+    ********
+    MainLoop
+    ********
+
+    The MainLoop is something close to a infinity loop with a start() and stop() method
+     #. Refresh the Application
+     #. Start the Loop
+     #. Wait for a Curses events then dispatch events and signals over Application Children's
+     #. If MainLoop is stop the Application will close and should be follow by a sys.exit()
+
+    Attributes:
+        event_buffer       -- A List, Default Value: list()
+        started            -- A Boolean, Default Value: False
+
+    Methods:
+        get_event_buffer() -- get the event_buffer attribute
+        get_started()      -- get the started attribute
+        start()            -- start the mainloop
+        stop()             -- stop the mainloop
+        emit()             -- emit a signal
+
+    """
     def __init__(self):
+
         self.event_buffer = list()
         self.started = False
-        self.data = dict()
-
-    def set_event_buffer(self, event_buffer=None):
-        if event_buffer is None:
-            event_buffer = dict()
-        self.event_buffer = event_buffer
 
     def get_event_buffer(self):
+        """
+        Return the event_buffer list attribute, it lis can be edited or modify as you need
+
+        :return: event buffer
+        :rtype: list()
+        """
         return self.event_buffer
 
-    def set_started(self, boolean):
-        self.started = bool(boolean)
-
     def get_started(self):
+        """
+        Return the started pointer it contain a boolean value
+
+        :return: started value
+        :rtype: Boolean
+        """
         return self.started
 
     def start(self):
-        self.set_started(True)
+        """
+        Start the main loop
+
+        That method have role to update the started status and run the mainloop
+        """
+        self._set_started(True)
         logging.info('Starting ' + self.__class__.__name__)
         self._run()
 
     def stop(self):
-        self.set_started(False)
+        """
+        Stop the main loop
+
+        That method have role to update the started status and stop the mainloop.
+        If the MainLoop is stop a Application().close() will case the end of you programme
+        """
+        self._set_started(False)
         logging.info('Stopping ' + self.__class__.__name__)
 
-    # detailed_signal: a string containing the signal name
-    # *args: additional parameters arg1, arg2
     def emit(self, detailed_signal, args=None):
+        """
+        Emit a signal, it consist to add the signal structure inside a global event list
+
+        .. code-block:: python
+        args = dict(
+            'uuid': Widget().get_widget_id()
+            'key1': value1
+            'key2': value2
+        )
+        structure = list(
+            detailed_signal,
+            args
+        )
+
+        :param detailed_signal: a string containing the signal name
+        :param args: additional parameters arg1, arg2
+        """
         if args is None:
             args = dict()
         logging.debug(detailed_signal + ' ' + str(args))
         self.get_event_buffer().insert(0, [detailed_signal, args])
         Application().refresh()
 
-    def handle_curses_input(self, input_event):
+    # Internal Method's
+    def _set_started(self, boolean):
+        """
+        Set the started status
+
+        :param boolean: 0 or True
+        :type boolean: Boolean
+        """
+        self.started = bool(boolean)
+
+    def _pop_last_event(self):
+        # noinspection PyBroadException
+        try:
+            if len(self.get_event_buffer()) > 0:
+                return self.get_event_buffer().pop()
+        except:
+            pass
+
+    def _handle_curses_input(self, input_event):
         if input_event == curses.KEY_MOUSE:
             self.emit('MOUSE_EVENT', curses.getmouse())
         elif input_event == curses.KEY_RESIZE:
@@ -72,19 +143,8 @@ class MainLoop(object):
         else:
             self.emit('CURSES', input_event)
 
-    # Internal
-    def _get_data_dict(self):
-        return self.data
-
-    def _pop_last_event(self):
-        try:
-            if len(self.get_event_buffer()) > 0:
-                return self.get_event_buffer().pop()
-        except:
-            pass
-
     def _handle_event(self):
-        # Check Event on MainLoop (That Bad :) )
+        # noinspection PyBroadException
         try:
             event = self._pop_last_event()
             while event:
@@ -92,8 +152,6 @@ class MainLoop(object):
                 Application().dispatch(event[0], event[1])
                 # Delete the last event inside teh event list
                 event = self._pop_last_event()
-                # In case it was a graphic event we refresh the screen
-                Application().refresh()
         except:
             pass
 
@@ -107,14 +165,15 @@ class MainLoop(object):
 
         # Main while 1
         while self.get_started():
-            # logging.debug(self.__class__.__name__ + ': Waiting event\'s')
             input_event = Application().getch()
 
             if input_event != -1:
-                self.handle_curses_input(input_event)
+                self._handle_curses_input(input_event)
 
             self._handle_event()
 
+            # In case it was a graphic event we refresh the screen
+            Application().refresh()
 
         # Here self.get_started() == False , then the GLXCurse.Mainloop() should be close
         Application().close()
