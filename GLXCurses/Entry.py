@@ -813,8 +813,10 @@ class Entry(Widget):
         # Create a Dict with everything
         instance = {
             'class': self.__class__.__name__,
-            'id': self.get_widget_id()
+            'type': 'toggle-overwrite',
+            'id': self.id,
+            'user_data': user_data
         }
         # EVENT EMIT
-        Application().emit('toggle-overwrite', instance)
-        pass
+        Application().emit('SIGNALS', instance)
+
