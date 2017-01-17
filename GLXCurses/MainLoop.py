@@ -33,9 +33,10 @@ class MainLoop(object):
     ********
 
     The MainLoop is something close to a infinity loop with a start() and stop() method
-     #. Refresh the Application
+     #. Refresh the Application for the frist time
      #. Start the Loop
      #. Wait for a Curses events then dispatch events and signals over Application Children's
+     #. Refresh the Application if a event or a signal have been detect
      #. If MainLoop is stop the Application will close and should be follow by a sys.exit()
 
     Attributes:
