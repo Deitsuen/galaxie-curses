@@ -17,10 +17,10 @@ class Binding(object):
         self.binding_set = None  # a GtkBindingSet to add a signal to
         self.keyval = None       # key value
         self.modifiers = None    # key modifier
-        self.signal_name = None  # signale name to be bound
+        self.signal_name = None  # signal name to be bound
         self.binding_args = None # lis of BindingArg signal arguments.
 
-    def add_signall(self, binding_set, keyval, modifiers, signal_name, binding_args=None):
+    def add_signal(self, binding_set, keyval, modifiers, signal_name, binding_args=None):
         """
         Override or install a new key binding for keyval with modifiers on binding_set .
 
