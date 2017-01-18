@@ -189,3 +189,6 @@ tags
 # Rope project settings
 Supprimerait .idea/
 Supprimerait '/
+Supprimerait .gitignore
+Supprimerait source/_static/
+Supprimerait source/_templates/
