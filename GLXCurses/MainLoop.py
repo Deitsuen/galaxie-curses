@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+# It script it publish under GNU GENERAL PUBLIC LICENSE
+# http://www.gnu.org/licenses/gpl-3.0.en.html
+# Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
+
 from GLXCurses import Application
 import curses
 import logging
@@ -50,9 +55,10 @@ class MainLoop(object):
         stop()             -- stop the mainloop
         emit()             -- emit a signal
 
+    .. warning:: you have to start the mainloop from you application via MainLoop().start()
     """
-    def __init__(self):
 
+    def __init__(self):
         self.event_buffer = list()
         self.started = False
 
