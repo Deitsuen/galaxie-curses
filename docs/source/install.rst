@@ -13,7 +13,7 @@ For a Debian system:
 
     apt-get install python python-pip git
 
-Then clone Neural Monkey from GitHub::
+Then clone Glaxie Curses project from GitHub::
 
 
 	git clone https://github.com/Tuuux/galaxie-curses.git
