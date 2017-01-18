@@ -39,11 +39,16 @@ class Singleton(object):
         return setattr(self.__dict__['cls'], attr, value)
 
 
-# That class have the role of a Controller and a NCurses Wrapper.
-# It have particularity to not be a Widget, then have a tonne of function for be a fake widget.
-# Everything start by it widget component that is the controller.
+
 @Singleton
 class Application(object):
+    """
+    That class have the role of a Controller and a NCurses Wrapper.
+
+    It have particularity to not be a Widget, then have a tonne of function for be a fake widget.
+
+    Everything start by it widget component that is the controller.
+    """
     def __init__(self):
         try:
             # Initialize curses

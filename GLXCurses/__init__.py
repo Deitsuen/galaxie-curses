@@ -33,7 +33,7 @@ from GLXCurses.VSeparator import VSeparator
 from GLXCurses.EntryBuffer import EntryBuffer
 
 __author__ = "Jerome Ornech"
-__copyright__ = "Copyright 2007, The Cogent Project"
+__copyright__ = "Copyright 2016-2017, The Galaxie Curses Project"
 __credits__ = ["Jerome Ornech alias Tuux", "Aurelien Maury alias Mo"]
 __license__ = "GNU GENERAL PUBLIC LICENSE 3.0"
 __version__ = "0.1"
@@ -43,4 +43,3 @@ __status__ = "Development"
 
 application = Application()
 mainloop = MainLoop()
-signal = EventBus()
