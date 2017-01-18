@@ -7,6 +7,7 @@ import curses
 import sys
 import os
 import locale
+import functools
 
 # Locales Setting
 locale.setlocale(locale.LC_ALL, '')
@@ -24,6 +25,7 @@ class Singleton(object):
 
     def __init__(self, cls):
         self.__dict__['cls'] = cls
+        functools.wraps(cls)
 
     instances = {}
 
@@ -37,7 +39,6 @@ class Singleton(object):
 
     def __setattr__(self, attr, value):
         return setattr(self.__dict__['cls'], attr, value)
-
 
 
 @Singleton

@@ -20,7 +20,18 @@ class Bin(Container):
     GLXCurses.HandleBox,
     GLXCurses.ScrolledWindow.
     """
+
     def destroy(self):
+        """
+        Destroys a widget.
+
+        When a widget is destroyed all references it holds on other objects will be released:
+
+        * if the widget is inside a container, it will be removed from its parent
+        * if the widget is a container, all its children will be destroyed, recursively
+        * if the widget is a top level, it will be removed from the list of top level widgets
+        that GLXCurses.Application() maintains internally
+        """
         raise NotImplementedError
 
     def __init__(self):
@@ -33,5 +44,6 @@ class Bin(Container):
         The returned widget does not have a reference added, so you do not need to unref it.
 
         :return: pointer to child of the GLXCurses.Bin
+        :rtype:
         """
         return self.child
