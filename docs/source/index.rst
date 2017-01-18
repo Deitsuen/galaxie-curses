@@ -14,4 +14,4 @@ Content:
    :maxdepth: 1
    
    install
-   Misc
+   GLXCurses
