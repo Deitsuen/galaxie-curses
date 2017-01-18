@@ -12,6 +12,9 @@ class Binding(object):
     **Bindings**
 
     Bindings — Key bindings for individual widgets
+
+    **Description**:
+
     """
     def __init__(self):
         self.binding_set = None  # a GtkBindingSet to add a signal to
