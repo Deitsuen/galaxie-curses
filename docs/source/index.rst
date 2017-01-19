@@ -32,10 +32,10 @@ Contribute
 .. toctree::
    :caption: Table of Contents
    :maxdepth: 2
+   :includehidden:
 
    install
    GLXCurses
-
 
 License
 -------

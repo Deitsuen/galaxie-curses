@@ -194,9 +194,5 @@ def run_apidoc(_):
 def setup(app):
     app.connect('builder-inited', run_apidoc)
 
-numfig = True
-
 
 os.environ['TERM'] = "linux"
-
-autosummary_generate = True
