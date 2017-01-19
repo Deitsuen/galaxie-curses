@@ -35,11 +35,6 @@ Contribute
    :maxdepth: 2
 
    install
-
-.. toctree::
-   :caption: API
-   :maxdepth: 2
-
    GLXCurses
 
 
