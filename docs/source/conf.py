@@ -18,8 +18,8 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../..'))
 
+sys.path.insert(0, os.path.abspath('../..'))
 
 # -- General configuration ------------------------------------------------
 
@@ -53,8 +53,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Galaxie Curses'
-copyright = u'2017, Jérôme Ornech <tuux@rtnp.org>'
-author = u'Jérôme Ornech <tuux@rtnp.org>'
+copyright = u'2017, Jérôme Ornech alias Tuux<tuux@rtnp.org>'
+author = u'Jérôme Ornech alias Tuux <tuux@rtnp.org>'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -83,14 +83,14 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
 
-
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-#html_theme = 'alabaster'
+# html_theme = 'alabaster'
 import sphinx_rtd_theme
+
 html_theme = "sphinx_rtd_theme"
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -100,19 +100,20 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-# html_theme_options = {}
-
+# html_theme_options = {
+#     'collapse_navigation': False,
+#     'display_version': False,
+#     'navigation_depth': 3,
+# }
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
 
-
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'GalaxieCursesdoc'
-
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -142,7 +143,6 @@ latex_documents = [
      u'Jérôme Ornech \\textless{}tuux@rtnp.org\\textgreater{}', 'manual'),
 ]
 
-
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
@@ -152,7 +152,6 @@ man_pages = [
      [author], 1)
 ]
 
-
 # -- Options for Texinfo output -------------------------------------------
 
 # Grouping the document tree into Texinfo files. List of tuples
@@ -160,12 +159,12 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'GalaxieCurses', u'Galaxie Curses Documentation',
-     author, 'GalaxieCurses', 'One line description of project.',
+     author, 'Jerome Ornech alias Tuux', 'Galaxie Curses Tool Kit',
      'Miscellaneous'),
 ]
 
-def run_apidoc(_):
 
+def run_apidoc(_):
     cur_dir = os.path.abspath(os.path.dirname(__file__))
     print(cur_dir)
     module = os.path.abspath(os.path.join(cur_dir, "..", "..", "GLXCurses"))
@@ -174,7 +173,6 @@ def run_apidoc(_):
     from sphinx.apidoc import main
     main(['-e', '-o', cur_dir, module, '--force'])
 
+
 def setup(app):
     app.connect('builder-inited', run_apidoc)
-
-

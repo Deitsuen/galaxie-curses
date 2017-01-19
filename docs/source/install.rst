@@ -16,33 +16,36 @@ For a Debian system:
 Then clone Glaxie Curses project from GitHub::
 
 
-	git clone https://github.com/Tuuux/galaxie-curses.git
+    git clone https://github.com/Tuuux/galaxie-curses.git
 
 It will create a folder name ``galaxie-curses`` it contain the ``GLXCurses`` module:
 
 Creat a Directory for you program:
 
+.. code:: bash
 
-	mkdir SuperApplication
+   mkdir SuperApplication
+
 
 Enter inside ``SuperApplication`` :
 
+.. code:: bash
 
-    cd ./SuperApplication
+   cd ./SuperApplication
+
 
 Move the GLXCurses diretcory inside thz SuperApplication folder:
 
+.. code:: bash
 
-    mv ../galaxie-curses/GLXCurses ./
+   mv ../galaxie-curses/GLXCurses ./
 
-Creat a MainApp file:
+Creat a MainApp file and import the GLXCurses package
 
+.. code:: python
 
-    touch main.py
-
-Import the Module
-
-    
-    import GLXCurses
+   #!/usr/bin/env python
+   # -*- coding: utf-8 -*-
+   import GLXCurses
 
 

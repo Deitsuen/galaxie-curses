@@ -20,29 +20,19 @@ code = locale.getpreferredencoding()
 __author__ = 'Tuux'
 
 
-class Singleton(object):
-    """Singleton decorator."""
+class Singleton(type):
+    def __init__(cls, name, bases, dict):
+        super(Singleton, cls).__init__(name, bases, dict)
+        cls.instance = None
 
-    def __init__(self, cls):
-        self.__dict__['cls'] = cls
-        functools.wraps(cls)
-
-    instances = {}
-
-    def __call__(self):
-        if self.cls not in self.instances:
-            self.instances[self.cls] = self.cls()
-        return self.instances[self.cls]
-
-    def __getattr__(self, attr):
-        return getattr(self.__dict__['cls'], attr)
-
-    def __setattr__(self, attr, value):
-        return setattr(self.__dict__['cls'], attr, value)
+    def __call__(cls,*args,**kw):
+        if cls.instance is None:
+            cls.instance = super(Singleton, cls).__call__(*args, **kw)
+        return cls.instance
 
 
-@Singleton
 class Application(object):
+    __metaclass__ = Singleton
     """
     That class have the role of a Controller and a NCurses Wrapper.
 
@@ -51,6 +41,7 @@ class Application(object):
     Everything start by it widget component that is the controller.
     """
     def __init__(self):
+
         try:
             # Initialize curses
             os.environ["NCURSES_NO_UTF8_ACS"] = '1'

@@ -10,27 +10,17 @@ import curses
 import logging
 
 
-class Singleton(object):
-    """Singleton decorator."""
+class Singleton(type):
+    def __init__(cls, name, bases, dict):
+        super(Singleton, cls).__init__(name, bases, dict)
+        cls.instance = None
 
-    def __init__(self, cls):
-        self.__dict__['cls'] = cls
-
-    instances = {}
-
-    def __call__(self):
-        if self.cls not in self.instances:
-            self.instances[self.cls] = self.cls()
-        return self.instances[self.cls]
-
-    def __getattr__(self, attr):
-        return getattr(self.__dict__['cls'], attr)
-
-    def __setattr__(self, attr, value):
-        return setattr(self.__dict__['cls'], attr, value)
+    def __call__(cls,*args,**kw):
+        if cls.instance is None:
+            cls.instance = super(Singleton, cls).__call__(*args, **kw)
+        return cls.instance
 
 
-@Singleton
 class MainLoop(object):
     """
     ********
@@ -57,6 +47,7 @@ class MainLoop(object):
 
     .. warning:: you have to start the mainloop from you application via MainLoop().start()
     """
+    __metaclass__ = Singleton
 
     def __init__(self):
         self.event_buffer = list()

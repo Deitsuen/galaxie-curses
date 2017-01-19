@@ -1,17 +1,26 @@
-.. Galaxie Curses documentation master file, created by
-   sphinx-quickstart on Wed Jan 18 13:41:39 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-Galaxie Curses documentation
-============================
+Welcome to the Galaxie Curses documentation
+===========================================
 
-Galaxie Curses is a open-source GPL3 toolkit. It permit to use NCurses , like GTK+ it consite to a big ToolKit.
-
-Content:
+Galaxie Curses is a open-source GPL3 toolkit. NCurses is use on background, **GLXCurses** provide hight level API it clone GTK+ , but for console/terminal usage.
 
 .. toctree::
-   :maxdepth: 1
-   
+   :caption: Table of Contents
+   :maxdepth: 2
+
    install
    GLXCurses
+
+
+License
+-------
+
+See LICENCE_
+
+.. _LICENCE: https://github.com/Tuuux/galaxie-curses/blob/master/LICENSE
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`search`
