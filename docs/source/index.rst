@@ -5,10 +5,20 @@ Welcome to the Galaxie Curses documentation
 The Project:
 ------------
 
-Galaxie Curses is a open-source GPL3 toolkit for NCurses.
-It can be consider as a text based implementation of GTK, write in pure phyton.
+Galaxie Curses is a Free Software toolkit for the NCurses API.
+It can be consider as a text based implementation of the famous GTK+ Library.
 
-Originaly the project have start that because the author have start to learn python after more of ten years of perl usage.
+Originally the project have start in 2016 when the author Jérôme.O have start to learn python.
+
+Our Mission:
+------------
+
+Provide a Text Based ToolKit with powerfull high level widget write with Python language.
+
+The GTK+ documentation is our model: https://developer.gnome.org/gtk3/stable/
+
+The goal of the version 1.0 is to create a application like Midnight-Commander (https://midnight-commander.org/) with
+GLXCurses
 
 
 Features
@@ -28,6 +38,7 @@ Contribute
 
 - Issue Tracker: https://github.com/Tuuux/galaxie-curses/issues
 - Source Code: https://github.com/Tuuux/galaxie-curses
+
 
 
 .. toctree::
