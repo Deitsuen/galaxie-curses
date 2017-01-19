@@ -6,20 +6,9 @@ Installation
 You can found the Galaxie Curses Repository here:
 https://github.com/Tuuux/galaxie-curses
 
-In any case it consist to copy the package GLXCurses inside you developing application project directory/
+In any case it consist to copy the package GLXCurses inside you developing project directory.
 
-Before you start, make sure that you already have installed **Python**, **pip**
-and **git**.
-
-For a Debian system:
---------------------
-
-* Install packages
-
-.. code:: bash
-
-    apt-get install python python-pip git
-
+Before you start, make sure that you already have installed **Python**, **pip** and **git**.
 
 * Then clone Galaxie Curses project from GitHub:
 
