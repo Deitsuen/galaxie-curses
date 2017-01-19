@@ -19,6 +19,7 @@ def constant(f):
 
 
 class Constants(object):
+    """Contant declaration"""
     ############################
     # Selection Mode Constants #
     ############################
@@ -33,6 +34,7 @@ class Constants(object):
 
     @constant
     def RESIZE_QUEUE():
+        #: Doc
         """Queue resizes on this widget."""
         return 'RESIZE_QUEUE'
 

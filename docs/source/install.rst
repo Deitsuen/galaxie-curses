@@ -5,42 +5,46 @@ Installation
 ============
 
 
-Before you start, make sure that you already have installed Python, pip 
-and git.
+Before you start, make sure that you already have installed **Python**, **pip**
+and **git**.
 
 For a Debian system:
+--------------------
 
+* Install packages
+
+.. code:: bash
 
     apt-get install python python-pip git
 
-Then clone Glaxie Curses project from GitHub::
 
+* Then clone Galaxie Curses project from GitHub::
 
     git clone https://github.com/Tuuux/galaxie-curses.git
 
 It will create a folder name ``galaxie-curses`` it contain the ``GLXCurses`` module:
 
-Creat a Directory for you program:
+* Create a directory for you program:
 
 .. code:: bash
 
-   mkdir SuperApplication
+   mkdir ./SuperApplication
 
 
-Enter inside ``SuperApplication`` :
+* Enter inside ``SuperApplication`` :
 
 .. code:: bash
 
    cd ./SuperApplication
 
 
-Move the GLXCurses diretcory inside thz SuperApplication folder:
+* Move the GLXCurses directory inside the ``SuperApplication`` folder:
 
 .. code:: bash
 
    mv ../galaxie-curses/GLXCurses ./
 
-Creat a MainApp file and import the GLXCurses package
+* Create a MainApp file and import the GLXCurses package
 
 .. code:: python
 
@@ -48,4 +52,8 @@ Creat a MainApp file and import the GLXCurses package
    # -*- coding: utf-8 -*-
    import GLXCurses
 
+Next Step:
+----------
 
+* Take a look on our example's files
+* Enjoy ;-)
