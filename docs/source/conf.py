@@ -197,6 +197,6 @@ def setup(app):
 numfig = True
 
 
-
+os.environ['TERM'] = "linux"
 
 autosummary_generate = True
