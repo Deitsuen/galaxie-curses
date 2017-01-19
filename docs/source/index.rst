@@ -44,6 +44,7 @@ Documentations:
 .. toctree::
    :caption: Table of Contents
    :maxdepth: 2
+   :titlesonly:
 
    install
    GLXCurses
