@@ -3,7 +3,10 @@
 ============
 Installation
 ============
+You can found the Galaxie Curses Repository here:
+https://github.com/Tuuux/galaxie-curses
 
+In any case it consist to copy the package GLXCurses inside you developing application project directory/
 
 Before you start, make sure that you already have installed **Python**, **pip**
 and **git**.
@@ -25,9 +28,9 @@ For a Debian system:
     git clone https://github.com/Tuuux/galaxie-curses.git
 
 
-It will create a folder name ``galaxie-curses`` it contain the ``GLXCurses`` module:
+It will create a folder name ``galaxie-curses`` it contain the ``GLXCurses`` package:
 
-* Create a directory for you program:
+* Create a directory for you application project:
 
 .. code:: bash
 
@@ -47,7 +50,8 @@ It will create a folder name ``galaxie-curses`` it contain the ``GLXCurses`` mod
 
    mv ../galaxie-curses/GLXCurses ./
 
-* Create a MainApp file and import the GLXCurses package
+
+Now you can import the GLXCuses package
 
 .. code:: python
 
