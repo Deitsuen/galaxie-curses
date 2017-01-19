@@ -2,7 +2,32 @@
 Welcome to the Galaxie Curses documentation
 ===========================================
 
-Galaxie Curses is a open-source GPL3 toolkit. NCurses is use on background, **GLXCurses** provide hight level API it clone GTK+ , but for console/terminal usage.
+The Project:
+------------
+
+Galaxie Curses is a open-source GPL3 toolkit for NCurses.
+It can be consider as a text based implementation of GTK, write in pure phyton.
+
+Originaly the project have start that because the author have start to learn python after more of ten years of perl usage.
+
+
+Features
+--------
+
+* MainLoop
+* Signal
+* Application Class
+* Component like Button, Container, ProgressBar
+* Have GTK+ design as roadmap
+* Auto Rezize
+* Minimize NCurses crash
+* Common thing for a text based graphic interface tool kit :)
+
+Contribute
+----------
+
+- Issue Tracker: https://github.com/Tuuux/galaxie-curses/issues
+- Source Code: https://github.com/Tuuux/galaxie-curses
 
 .. toctree::
    :caption: Table of Contents

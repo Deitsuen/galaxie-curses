@@ -18,9 +18,12 @@ For a Debian system:
     apt-get install python python-pip git
 
 
-* Then clone Galaxie Curses project from GitHub::
+* Then clone Galaxie Curses project from GitHub:
+
+.. code:: bash
 
     git clone https://github.com/Tuuux/galaxie-curses.git
+
 
 It will create a folder name ``galaxie-curses`` it contain the ``GLXCurses`` module:
 
