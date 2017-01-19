@@ -32,14 +32,17 @@ class Singleton(type):
 
 
 class Application(object):
-    __metaclass__ = Singleton
     """
+    Create a Application instance.
+
     That class have the role of a Controller and a NCurses Wrapper.
 
     It have particularity to not be a Widget, then have a tonne of function for be a fake widget.
 
     Everything start by it widget component that is the controller.
     """
+    __metaclass__ = Singleton
+
     def __init__(self):
 
         try:
@@ -126,10 +129,14 @@ class Application(object):
         self.parent_spacing = 0
         self.parent_style = self.style
 
-
     # Parent
-    def set_parent(self, parent):
-        # Ignore any parent as a master parent.
+    def set_parent(self, parent=None):
+        """
+        Suppose to set the parent, but Application haven't any parent, and don't need.
+        That method exist for be compatible with a normal Widget.
+
+        :param parent: what you want it will be ignore
+        """
         pass
 
     def get_parent(self):
@@ -224,11 +231,20 @@ class Application(object):
     def get_style(self):
         return self.style
 
-    def add_window(self, glxc_window):
-        # set_parent is the set_parent from Widget common method
-        # information's will be transmit by it method
-        glxc_window.set_parent(self)
-        self.windows.append(glxc_window)
+    def add_window(self, window):
+        """
+        Adds a Window to Application .
+
+        This call can only happen after the application has started; typically, you should add new application windows
+        in response to the emission of the “activate” signal.
+
+        This call is equivalent to setting the “application” attribute of window to application .
+
+        :param window:
+        :return:
+        """
+        window.set_parent(self)
+        self.windows.append(window)
         self.active_window_id = len(self.windows) - 1
 
     def add_menubar(self, glxc_menu_bar):

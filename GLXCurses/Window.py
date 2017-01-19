@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
 import curses
 from GLXCurses import Bin
-
+from GLXCurses import Application
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -33,6 +32,9 @@ class Window(Bin):
         #####################
         # Window Properties #
         #####################
+
+        # Set the Application
+        self.application = Application()
 
         # If True, the window should receive the input focus. Default value: True.
         self.accept_focus = True
@@ -264,3 +266,12 @@ class Window(Bin):
 
     def get_attr(self, elem, state):
         return self.attribute[elem][state]
+
+    def get_application(self):
+        """
+        Gets the Application associated with the window (if any).
+
+        :param self: a Window
+        :return: a GLXCurses.Application, or None
+        """
+        return self.application
