@@ -206,4 +206,4 @@ if __name__ == '__main__':
     # # Data
     event_bus.set_data('coucou', 'lavieestbellemec')
     if event_bus.get_data('coucou'):
-        print event_bus.get_data('coucou')
+        print(event_bus.get_data('coucou'))

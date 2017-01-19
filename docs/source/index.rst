@@ -29,10 +29,10 @@ Contribute
 - Issue Tracker: https://github.com/Tuuux/galaxie-curses/issues
 - Source Code: https://github.com/Tuuux/galaxie-curses
 
+
 .. toctree::
    :caption: Table of Contents
-   :maxdepth: 2
-   :includehidden:
+   :maxdepth: 4
 
    install
    GLXCurses
