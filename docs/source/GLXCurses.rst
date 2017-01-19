@@ -20,14 +20,6 @@ GLXCurses.Bin module
     :undoc-members:
     :show-inheritance:
 
-GLXCurses.Binding module
-------------------------
-
-.. automodule:: GLXCurses.Binding
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 GLXCurses.Bindings module
 -------------------------
 

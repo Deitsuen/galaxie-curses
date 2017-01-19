@@ -32,10 +32,17 @@ Contribute
 
 .. toctree::
    :caption: Table of Contents
-   :maxdepth: 4
+   :maxdepth: 2
 
    install
+
+.. toctree::
+   :caption: GLXCurses
+   :maxdepth: 2
+
+   Application
    GLXCurses
+
 
 License
 -------

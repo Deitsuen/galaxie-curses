@@ -159,9 +159,6 @@ class Container(Widget):
         """
         return self.resize_mode
 
-    # The set-resize_mode() method sets the "resize=mode" property of the container.
-    # he resize mode of a container determines whether a resize request will be passed to the container's parent
-    # (RESIZE_PARENT), queued for later execution (RESIZE_QUEUE) or executed immediately (RESIZE_IMMEDIATE).
     def set_resize_mode(self, resize_mode):
         """
         Sets the resize mode for the container.
@@ -250,9 +247,6 @@ class Container(Widget):
     def child_type(self):
         pass
 
-    def add_with_properties(self, widget, first_prop_name, first_prop_value, additional_property):
-        pass
-
     def child_set(self, child, first_prop_name, first_prop_value, additional_property):
         pass
 
@@ -283,7 +277,6 @@ class Container(Widget):
         """
         if user_data is None:
             user_data = list()
-        # TODO: Everything cher's
         pass
 
     def _emit_remove_signal(self, user_data=None):
@@ -293,7 +286,6 @@ class Container(Widget):
         """
         if user_data is None:
             user_data = list()
-        # TODO: Everything cher's
         pass
 
     def _emit_set_focus_child_signal(self, user_data=None):
@@ -303,5 +295,4 @@ class Container(Widget):
         """
         if user_data is None:
             user_data = list()
-        # TODO: Everything cher's
         pass
