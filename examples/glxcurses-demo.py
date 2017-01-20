@@ -341,6 +341,7 @@ if __name__ == '__main__':
     ]
 
     statusbar = GLXCurses.Statusbar()
+    context_id = statusbar.get_context_id("example")
 
     def on_resize(self, event_signal, *event_args):
         message_text = ''
@@ -401,7 +402,7 @@ if __name__ == '__main__':
 
     def on_destroy():
         logging.debug('==> onDestroy')
-        statusbar.push('A Incredible Emiter thing')
+        statusbar.push(context_id, 'A Incredible Emiter thing')
 
     def handle_up_button_clicked():
         logging.debug('handleUpButtonClicked')
@@ -434,17 +435,17 @@ if __name__ == '__main__':
             progressbar9.set_value(current+1)
             val = '{0:}{1:}'.format(progressbar9.get_value(), '%')
             progressbar9.set_text(val)
-            statusbar.push('Increase progress bar to value: ' + val)
+            statusbar.push(context_id, 'Increase progress bar to value: ' + val)
 
         if event_args['id'] == Button2.get_widget_id():
             current = progressbar9.get_value()
             progressbar9.set_value(current-1)
             val = '{0:}{1:}'.format(progressbar9.get_value(), '%')
             progressbar9.set_text(val)
-            statusbar.push('Decrease progress bar to value: ' + val)
+            statusbar.push(context_id, 'Decrease progress bar to value: ' + val)
 
         if event_args['id'] == Button3.get_widget_id():
-            statusbar.push('Stopping every operation\'s')
+            statusbar.push(context_id, 'Stopping every operation\'s')
             # Everything have a end, the main loop too ...
             GLXCurses.mainloop.quit()
 

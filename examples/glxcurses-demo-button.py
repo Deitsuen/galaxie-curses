@@ -67,6 +67,7 @@ if __name__ == '__main__':
 
     # Create a Status Bar
     statusbar = GLXCurses.Statusbar()
+    context_id = statusbar.get_context_id("example")
 
     def handle_keys(self, event_signal, *event_args):
         logging.debug('HANDLE KEY: '+str(event_args[0]))
@@ -85,20 +86,20 @@ if __name__ == '__main__':
     def on_click(self, event_signal, event_args=None):
         if event_args is None:
             event_args = dict()
-        statusbar.push('')
+        statusbar.push(context_id, '')
         if event_args['id'] == Button1.get_widget_id():
-            statusbar.push(event_args['label'] + ' ' + event_signal)
+            statusbar.push(context_id, event_args['label'] + ' ' + event_signal)
         if event_args['id'] == RadioButton1.get_widget_id():
             if RadioButton1.get_active():
-                statusbar.push(RadioButton1.get_text() + ' ' + 'is active')
+                statusbar.push(context_id, RadioButton1.get_text() + ' ' + 'is active')
             else:
-                statusbar.push(RadioButton1.get_text() + ' ' + 'is not active')
+                statusbar.push(context_id, RadioButton1.get_text() + ' ' + 'is not active')
 
         if event_args['id'] == CheckButton1.get_widget_id():
             if CheckButton1.get_active():
-                statusbar.push(CheckButton1.get_text() + ' ' + 'is active')
+                statusbar.push(context_id, CheckButton1.get_text() + ' ' + 'is active')
             else:
-                statusbar.push(CheckButton1.get_text() + ' ' + 'is not active')
+                statusbar.push(context_id, CheckButton1.get_text() + ' ' + 'is not active')
 
     # Add Everything inside the Application
     app.add_menubar(menu)
