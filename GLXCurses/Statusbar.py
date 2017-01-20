@@ -60,7 +60,7 @@ class Statusbar(Widget):
 
     def new(self):
         """
-        Creates a new GtkStatusbar ready for messages.
+        Creates a new GLXCurses.Statusbar ready for messages.
 
         :return: the new Statusbar
         :rtype: GLXCurses.Statusbar
