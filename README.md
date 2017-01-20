@@ -1,5 +1,5 @@
-Welcome to the Galaxie Curses documentation
-===========================================
+Welcome to the Galaxie Curses Project
+=====================================
 
 The Project:
 ------------
