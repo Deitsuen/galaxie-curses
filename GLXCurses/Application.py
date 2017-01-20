@@ -39,7 +39,7 @@ class Application(object):
 
     It have particularity to not be a Widget, then have a tonne of function for be a fake widget.
 
-    Everything start by it widget component that is the controller.
+    Everything start by it component that is the controller.
     """
     __metaclass__ = Singleton
 

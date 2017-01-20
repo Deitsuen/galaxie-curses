@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 import sys
-
+# Require when you haven't GLXCurses as default Package
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(current_dir))
 import GLXCurses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
