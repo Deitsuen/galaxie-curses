@@ -78,6 +78,44 @@ class Statusbar(Widget):
 
         return self._get_context_id_dict()[context_description]
 
+    def push(self, context_id, text):
+        """
+        Push a new message onto the statusbar's stack.
+
+        :param context_id: the message’s context id, as returned by get_context_id()
+        :type context_id: int
+        :param text: the message to add to the statusbar
+        :type text: str
+        :return: a message id that can be used with remove().
+        :rtype: context_id, message_id
+        """
+        self.statusbar_stack.append([context_id, text])
+        return context_id, text
+
+    def pop(self, context_id):
+        """
+        Removes the first message in the Statusbar’s stack with the given context id.
+
+        Note that this may not change the displayed message, if the message at the top of the stack has a different
+        context id.
+
+        :param context_id: a context identifier
+        """
+        count = 0
+        last_found = None
+        last_element = None
+        for element in self.statusbar_stack:
+            if context_id == element[0]:
+                last_found = count
+                last_element = element
+            count += 1
+        logging.debug(
+            "STATUSBAR POP: index={0} context_id={1} text={2}".format(str(last_found), str(last_element[0]),
+                                                                      str(last_element[1]))
+        )
+        self.statusbar_stack.pop(count - 1)
+        self.draw()
+
     def draw(self):
         # Place the status bar from the end of the screen by look if it have a tool bar before
         if self.parent.toolbar:
@@ -100,15 +138,15 @@ class Statusbar(Widget):
                 0,
                 str(' ' * (self.get_width() - 1)),
                 curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('white', 'STATE_NORMAL'),
-                    bg=self.get_attr('black', 'STATE_NORMAL'))
+                    fg=self.get_style().get_attr('white', 'STATE_NORMAL'),
+                    bg=self.get_style().get_attr('black', 'STATE_NORMAL'))
                 )
             )
             self.curses_subwin.insstr(
                 str(' '),
                 curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('white', 'STATE_NORMAL'),
-                    bg=self.get_attr('black', 'STATE_NORMAL'))
+                    fg=self.get_style().get_attr('white', 'STATE_NORMAL'),
+                    bg=self.get_style().get_attr('black', 'STATE_NORMAL'))
                 )
             )
 
@@ -134,34 +172,7 @@ class Statusbar(Widget):
                     str(message_to_display)
                 )
 
-    def get_attr(self, elem, state):
-        return self.attribute[elem][state]
-
-    def push(self, context_id, text):
-        """
-        Push a new message onto the statusbar's stack.
-
-        :param context_id: the message’s context id, as returned by get_context_id()
-        :type context_id: int
-        :param text: the message to add to the statusbar
-        :type text: str
-        :return: a message id that can be used with remove().
-        :rtype: context_id, message_id
-        """
-        self.statusbar_stack.append([context_id, text])
-        return context_id, text
-
-    def pop(self, context_id):
-        """
-        Removes the first message in the Statusbar’s stack with the given context id.
-
-        Note that this may not change the displayed message, if the message at the top of the stack has a different
-        context id.
-
-        :param context_id: a context identifier
-        """
-        self.statusbar_stack.pop()
-
     # Internal Method's
     def _get_context_id_dict(self):
         return self.context_id_dict
+

@@ -103,9 +103,7 @@ if __name__ == '__main__':
     def on_click(self, event_signal, event_args=None):
         if event_args is None:
             event_args = dict()
-        statusbar.push(
-            context_id, ""
-        )
+        statusbar.pop(context_id)
         if event_args['id'] == Button1.get_widget_id():
             statusbar.push(
                 context_id, event_args['label'] + ' ' + event_signal
