@@ -72,12 +72,14 @@ if __name__ == '__main__':
     arrow_pressed_context_id = statusbar.get_context_id("ARROW_PRESSED")
 
     def handle_keys(self, event_signal, *event_args):
-        logging.debug('HANDLE KEY: ' + str(event_args[0]))
         statusbar.remove_all(arrow_pressed_context_id)
         statusbar.push(arrow_pressed_context_id, 'HANDLE KEY: ' + str(event_args[0]))
 
         if event_args[0] == curses.KEY_F5:
-            GLXCurses.application.set_is_focus(Button1)
+            if app.get_is_focus() == Button1.id:
+                app.set_is_focus(None)
+            else:
+                app.set_is_focus(Button1)
 
         if event_args[0] == curses.KEY_F6:
             Button1.set_sensitive(not Button1.get_sensitive())

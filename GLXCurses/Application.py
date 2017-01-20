@@ -394,7 +394,10 @@ class Application(object):
         return self.widget_it_have_focus
 
     def set_is_focus(self, widget):
-        self.widget_it_have_focus = widget.get_widget_id()
+        if widget is None:
+            self.widget_it_have_focus = None
+        else:
+            self.widget_it_have_focus = widget.get_widget_id()
 
     def get_tooltip(self):
         return self.widget_it_have_tooltip
