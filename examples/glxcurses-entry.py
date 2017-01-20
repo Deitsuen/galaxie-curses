@@ -69,9 +69,12 @@ if __name__ == '__main__':
     context_id = statusbar.get_context_id("example")
     signal_context_id = statusbar.get_context_id("SIGNAL")
     button1_context_id = statusbar.get_context_id("BUTTON1")
+    arrow_pressed_context_id = statusbar.get_context_id("ARROW_PRESSED")
 
     def handle_keys(self, event_signal, *event_args):
         logging.debug('HANDLE KEY: ' + str(event_args[0]))
+        statusbar.remove_all(arrow_pressed_context_id)
+        statusbar.push(arrow_pressed_context_id, 'HANDLE KEY: ' + str(event_args[0]))
 
         if event_args[0] == curses.KEY_F5:
             GLXCurses.application.set_is_focus(Button1)
@@ -83,6 +86,7 @@ if __name__ == '__main__':
             x, y = label_press_q.get_alignment()
             y -= 0.1
             label_press_q.set_alignment(x, y)
+
         if event_args[0] == curses.KEY_DOWN:
             x, y = label_press_q.get_alignment()
             y += 0.1
@@ -106,17 +110,8 @@ if __name__ == '__main__':
         if event_args is None:
             event_args = dict()
         if event_args['id'] == Button1.get_widget_id():
-
-            statusbar.pop(button1_context_id)
-            statusbar.push(
-               button1_context_id, event_args['label'] + ' ' + event_signal
-            )
-            # statusbar.remove(
-            #     button1_context_id, message_id
-            # )
-            # statusbar.remove_all(
-            #     signal_context_id
-            # )
+            statusbar.remove_all(button1_context_id)
+            statusbar.push(button1_context_id, event_args['label'] + ' ' + event_signal)
             EntryBuffer1.delete_text(0, 1)
             Button1.set_text(EntryBuffer1.get_text())
 

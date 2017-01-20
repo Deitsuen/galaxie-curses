@@ -186,17 +186,19 @@ class Statusbar(Widget):
 
     def draw(self):
         # Place the status bar from the end of the screen by look if it have a tool bar before
-        if self.parent.toolbar:
+        if self.get_parent().toolbar:
             line_from_max_screen_height = 2
         else:
             line_from_max_screen_height = 1
 
+        # Prepare a drawing area
         drawing_area = self.get_screen().subwin(
             0,
             0,
             self.get_screen_height() - line_from_max_screen_height,
             self.get_screen_x()
         )
+        # Set the drawing area on the windget subwin
         self.set_curses_subwin(drawing_area)
 
         # Clean the entire line
