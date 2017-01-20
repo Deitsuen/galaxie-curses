@@ -67,6 +67,8 @@ if __name__ == '__main__':
     # Create a Status Bar
     statusbar = GLXCurses.Statusbar()
     context_id = statusbar.get_context_id("example")
+    signal_context_id = statusbar.get_context_id("SIGNAL")
+    button1_context_id = statusbar.get_context_id("BUTTON1")
 
     def handle_keys(self, event_signal, *event_args):
         logging.debug('HANDLE KEY: ' + str(event_args[0]))
@@ -103,11 +105,18 @@ if __name__ == '__main__':
     def on_click(self, event_signal, event_args=None):
         if event_args is None:
             event_args = dict()
-        statusbar.pop(context_id)
         if event_args['id'] == Button1.get_widget_id():
+
+            statusbar.pop(button1_context_id)
             statusbar.push(
-                context_id, event_args['label'] + ' ' + event_signal
+               button1_context_id, event_args['label'] + ' ' + event_signal
             )
+            # statusbar.remove(
+            #     button1_context_id, message_id
+            # )
+            # statusbar.remove_all(
+            #     signal_context_id
+            # )
             EntryBuffer1.delete_text(0, 1)
             Button1.set_text(EntryBuffer1.get_text())
 
@@ -115,12 +124,11 @@ if __name__ == '__main__':
     def signal_event(self, event_signal, event_args=None):
         if event_args is None:
             event_args = dict()
-        statusbar.push(
-            context_id, ""
-        )
-        statusbar.push(
-            context_id, "{0}: {1}".format(event_signal, event_args)
-        )
+
+        # Crash AUTO
+        #statusbar.push(
+        #    signal_context_id, "{0}: {1}".format(event_signal, event_args)
+        #)
 
 
     # Add Everything inside the Application
