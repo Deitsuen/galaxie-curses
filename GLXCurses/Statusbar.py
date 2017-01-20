@@ -175,7 +175,7 @@ class Statusbar(Widget):
 
     def get_message_area(self):
         """
-        **NOT IMPLEMENTED: raise NotImplementedError**
+        .. warning:: NOT IMPLEMENTED: **raise NotImplementedError**
 
         Retrieves the box containing the label widget.
 
