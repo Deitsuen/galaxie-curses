@@ -76,7 +76,7 @@ if __name__ == '__main__':
         # Keyboard temporary thing
         if event_args[0] == ord('q'):
             # Everything have a end, the main loop too ...
-            GLXCurses.mainloop.stop()
+            GLXCurses.mainloop.quit()
 
     def on_click(self, event_signal, event_args=None):
         if event_args is None:
@@ -106,7 +106,7 @@ if __name__ == '__main__':
     app.connect('CURSES', handle_keys)
 
     # Main loop
-    GLXCurses.mainloop.start()
+    GLXCurses.mainloop.run()
 
     # THE END
     sys.exit(0)

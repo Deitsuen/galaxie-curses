@@ -15,12 +15,13 @@ class Singleton(type):
         super(Singleton, cls).__init__(name, bases, dict)
         cls.instance = None
 
-    def __call__(cls,*args,**kw):
+    def __call__(cls, *args, **kw):
         if cls.instance is None:
             cls.instance = super(Singleton, cls).__call__(*args, **kw)
         return cls.instance
 
 
+# https://developer.gnome.org/glib/stable/glib-The-Main-Event-Loop.html
 class MainLoop(object):
     """
     ********
@@ -50,8 +51,16 @@ class MainLoop(object):
     __metaclass__ = Singleton
 
     def __init__(self):
+        """
+        Creates a new MainLoop structure.
+        """
         self.event_buffer = list()
-        self.started = False
+        self._is_running = False
+
+        # Merdouille
+        # context_list
+        self.context_list = list()
+        self.default_context = None
 
     def get_event_buffer(self):
         """
@@ -62,33 +71,102 @@ class MainLoop(object):
         """
         return self.event_buffer
 
-    def get_started(self):
+    def is_running(self):
         """
-        Return the started pointer it contain a boolean value
+        Checks to see if the MainLoop is currently being run via run().
 
-        :return: started value
+        :return: TRUE if the mainloop is currently being run.
         :rtype: Boolean
         """
-        return self.started
+        return self._is_running
 
-    def start(self):
+    def get_context(self):
         """
-        Start the main loop
+        Returns the MainContext of loop .
 
-        That method have role to update the started status and run the mainloop
+        :return: the MainContext of loop .
         """
-        self._set_started(True)
+        raise NotImplementedError
+
+    def context_new(self):
+        """
+        Creates a new MainContext structure.
+
+        :return: the new MainContext
+        """
+        raise NotImplementedError
+
+    def context_ref(self):
+        """
+        Increases the reference count on a MainContext object by one.
+
+        :return: the context that was passed in
+        """
+        raise NotImplementedError
+
+    def context_unref(self):
+        """
+        Decreases the reference count on a MainContext object by one.
+        If the result is zero, free the context and free all associated memory.
+        """
+        raise NotImplementedError
+
+    def context_default(self):
+        """
+        Returns the global default main context. This is the main context used for main loop functions when a main loop
+        is not explicitly specified, and corresponds to the "main" main loop.
+
+        .. seealso:: context_get_thread_default().
+
+        :return: the global default main context.
+        :rtype: Context
+        """
+        raise NotImplementedError
+
+    def context_iteration(self, may_block):
+        """
+        Runs a single iteration for the given main loop. This involves checking to see if any event sources are ready
+        to be processed, then if no events sources are ready and **may_block** is TRUE, waiting for a source to become
+        ready, then dispatching the highest priority events sources that are ready. Otherwise, if **may_block** is FALSE
+        sources are not waited to become ready, only those highest priority events sources will be dispatched (if any),
+        that are ready at this given moment without further waiting.
+
+        Note that even when **may_block** is TRUE, it is still possible for context_iteration() to return FALSE,
+        since the wait may be interrupted for other reasons than an event source becoming ready.
+
+        :param may_block: whether the call may block.
+        :return: TRUE if events were dispatched.
+        :rtype: bool
+        """
+        raise NotImplementedError
+
+    def context_pending(self, context=None):
+        if context is None:
+            context = self.get_default_context()
+        """
+
+        :return:
+        """
+        raise NotImplementedError
+
+    def run(self):
+        """
+        Runs a MainLoop until quit() is called on the loop. If this is called for the thread of the loop's
+        , it will process events from the loop, otherwise it will simply wait.
+        """
+        self._set_is_running(True)
         logging.info('Starting ' + self.__class__.__name__)
         self._run()
 
-    def stop(self):
+    def quit(self):
         """
-        Stop the main loop
+        Stops a MainLoop from running. Any calls to run() for the loop will return.
 
-        That method have role to update the started status and stop the mainloop.
-        If the MainLoop is stop a Application().close() will case the end of you programme
+        Note that sources that have already been dispatched when quit() is called will still be executed.
+
+        .. :warning: A MainLoop quit() call will certainly cause the end of you programme
         """
-        self._set_started(False)
+        self._set_is_running(False)
         logging.info('Stopping ' + self.__class__.__name__)
 
     def emit(self, detailed_signal, args=None):
@@ -116,14 +194,14 @@ class MainLoop(object):
         Application().refresh()
 
     # Internal Method's
-    def _set_started(self, boolean):
+    def _set_is_running(self, boolean):
         """
-        Set the started status
+        Set the is_running attribute
 
         :param boolean: 0 or True
         :type boolean: Boolean
         """
-        self.started = bool(boolean)
+        self._is_running = bool(boolean)
 
     def _pop_last_event(self):
         # noinspection PyBroadException
@@ -154,7 +232,7 @@ class MainLoop(object):
             pass
 
     def _run(self):
-        if self.get_started():
+        if self.is_running():
             # A bit light for notify about we are up and runing, but we are really inside the main while(1) loop
             logging.debug(self.__class__.__name__ + ': Started')
             # That in theory the first refresh of the application
@@ -162,8 +240,9 @@ class MainLoop(object):
             Application().refresh()
 
         # Main while 1
-        while self.get_started():
+        while self.is_running():
             input_event = Application().getch()
+            logging.debug(self.event_buffer)
 
             if input_event != -1:
                 self._handle_curses_input(input_event)

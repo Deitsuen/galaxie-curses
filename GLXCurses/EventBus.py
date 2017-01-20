@@ -21,6 +21,14 @@ class EventBus(object):
     # key : a string used as the key
     # data : a Python object that is the value to be associated with the key
     def get_data(self, key):
+        """
+        The get_data() method returns the Python object associated with the specified key or
+        None if there is no data associated with the key or if there is no key associated with the object.
+
+
+        :param key:
+        :return:
+        """
         if key not in self._get_data_dict():
             return None
         elif not len(self._get_data_dict()[key]):
