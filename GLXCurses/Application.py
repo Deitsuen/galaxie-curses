@@ -33,7 +33,7 @@ class Singleton(type):
 
 class Application(object):
     """
-    Create a Application instance.
+    Create a Application single instance.
 
     That class have the role of a Controller and a NCurses Wrapper.
 
