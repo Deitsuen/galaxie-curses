@@ -3,7 +3,6 @@
 ============================
 Galaxie Curses Documentation
 ============================
-
 .. figure::  images/logo_galaxie.png
    :align:   center
 
@@ -22,11 +21,13 @@ During lot of years the main stream was to provide big computer with big GUI Too
 unfortunately almost nobody have care about ultra low profile computer and we are now in a situation where no mature
 ToolKit is ready to use on **pen computer**. Time's change then it's time to change the world ...
 
-The goal of the version 1.0 is to create a application like Midnight-Commander (https://midnight-commander.org/) with
-**GLXCurses**.
+The goal of the version 1.0 will be to create a application like Midnight-Commander_ with **GLXCurses**.
 
-A Small Exemple
----------------
+.. _Midnight-Commander: https://midnight-commander.org
+
+Example
+-------
+
 .. code-block:: python
 
     #!/usr/bin/env python
@@ -62,6 +63,8 @@ A Small Exemple
     # Main loop start
     GLXCurses.mainloop.run()
 
+More examples can be found here: https://github.com/Tuuux/galaxie-curses/tree/master/examples
+
 Features
 --------
 * MainLoop
@@ -83,13 +86,13 @@ The GTK+ documentation is our model: https://developer.gnome.org/gtk3/stable/
 Documentations
 --------------
 .. toctree::
-   :titlesonly:
+   :maxdepth: 2
 
    install
    GLXCurses
 
-Notes for GTK Developer
------------------------
+Note for GTK+ Project Developer's
+---------------------------------
 I'm really confuse about the big copy/past i making from the GTK+ documentation during the creation of
 the Galaxie-Curses documentation, that because english is not my primary language and i'm a bit limited for make a
 ToolKit documentation without that ...
@@ -100,12 +103,13 @@ As you probably see **Galaxie-Curses** is a Text Based **GTK+** like, then the G
 
 License
 -------
-See LICENCE_
+GNU GENERAL PUBLIC LICENSE Version 3
+
+See the LICENCE_
 
 .. _LICENCE: https://github.com/Tuuux/galaxie-curses/blob/master/LICENSE
 
 Indices and tables
 ------------------
-
 * :ref:`genindex`
 * :ref:`search`
