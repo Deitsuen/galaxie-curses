@@ -18,6 +18,9 @@
 #
 import os
 import sys
+import subprocess
+
+from sphinx.highlighting import lexers
 
 sys.path.insert(0, os.path.abspath('../..'))
 
@@ -32,7 +35,8 @@ sys.path.insert(0, os.path.abspath('../..'))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode'
+    'sphinx.ext.viewcode',
+    'guzzle_sphinx_theme'
 ]
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -91,19 +95,29 @@ todo_include_todos = True
 # html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Guzzle theme
+# -- HTML theme settings ------------------------------------------------
+html_show_sourcelink = False
+html_sidebars = {
+    '**': ['logo-text.html',
+           'globaltoc.html',
+           'localtoc.html',
+           'searchbox.html']
+}
+# -- End HTML theme settings --------------------------------------------
+
 import guzzle_sphinx_theme
 
+extensions.append("guzzle_sphinx_theme")
+html_translator_class = 'guzzle_sphinx_theme.HTMLTranslator'
 html_theme_path = guzzle_sphinx_theme.html_theme_path()
 html_theme = 'guzzle_sphinx_theme'
-
-# Register the theme as an extension to generate a sitemap.xml
-extensions.append("guzzle_sphinx_theme")
 
 # Guzzle theme options (see theme.conf for more information)
 html_theme_options = {
     # Set the name of the project to appear in the sidebar
     "project_nav_name": "Galaxie Curses",
 }
+
 # Add any paths that contain custom themes here, relative to this directory.
 # html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 

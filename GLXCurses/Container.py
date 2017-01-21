@@ -89,17 +89,24 @@ class Container(Widget):
         For more complicated layout containers such as Box or Grid, this function will pick default packing
         parameters that may not be correct.
 
-        So consider functions such as Box.pack_start() and Grid.attach() as an alternative to
-        Container.add() in those cases.
+        So consider functions such as
+        :func:`GLXCurses.Box.pack_start() <GLXCurses.Box.Box.pack_start>` and
+        :func:`GLXCurses.Grid.attach() <GLXCurses.Grid.Grid.attach>` as an alternative to
+        :func:`GLXCurses.Container.add() <GLXCurses.Container.Container.add>` in those cases.
 
         A widget may be added to only one container at a time;
-        you can’t (should not) place the same widget inside two different containers.
+        you (should not) place the same widget inside two different containers.
 
         :param widget: a current child of container
         :type widget: GLXCurses.Widget
         """
+        # The added widget recive a parent
         widget.set_parent(self)
+        # The parent recive a new child
         self.child = widget
+
+        # Try to emit add signal
+        # noinspection PyBroadException
         try:
             self._emit_add_signal()
         except:
@@ -118,6 +125,7 @@ class Container(Widget):
         will remove it from the container and help break any circular reference count cycles.
 
         :param widget: a current child of container
+        :type widget: GLXCurses.Widget
         """
         if self.child:
             if self.child.id == widget.id:
@@ -132,10 +140,10 @@ class Container(Widget):
         GLXCurses.Container.child_set() for more details.
 
         :param widget: a widget to be placed inside container
-        :type widget: GLXCurses.Widget
         :param first_prop_name: the name of the first child property to set
-        :type first_prop_name: Corresponds to the standard C unsigned char type.
         :param null_terminated_list: a NULL-terminated list of property names and values, starting with first_prop_name
+        :type widget: GLXCurses.Widget
+        :type first_prop_name: str
         :type null_terminated_list: list()
         """
         if null_terminated_list is None:
@@ -148,14 +156,17 @@ class Container(Widget):
         Returns the resize mode for the container.
 
         Allowed value:
-            glxc.RESIZE_PARENT,
-            glxc.RESIZE_QUEUE,
-            glxc.RESIZE_IMMEDIATE
+            * :func:`glxc.RESIZE_PARENT <GLXCurses.Constants.Constants.RESIZE_PARENT>`
+            * :func:`glxc.RESIZE_QUEUE <GLXCurses.Constants.Constants.RESIZE_QUEUE>`
+            * :func:`glxc.RESIZE_IMMEDIATE <GLXCurses.Constants.Constants.RESIZE_IMMEDIATE>`
 
-        .. seealso:: GLXCurses.Container.set_resize_mode().
+        .. seealso:: :func:`GLXCurses.Container.set_resize_mode() <GLXCurses.Constants.Constants.set_resize_mode>`.
+
+        .. warning:: :func:`GLXCurses.Container.get_resize_mode() <GLXCurses.Container.Container.get_resize_mode>`\
+        has been deprecated since version 3.12 of GTK+, if will be remove as soon of possible.
 
         :return: the current resize mode
-        :rtype: GLXCurses Constant
+        :rtype: GLXCurses.Constants
         """
         return self.resize_mode
 
@@ -167,13 +178,17 @@ class Container(Widget):
         queued for later execution or executed immediately.
 
         Allowed value:
-            * glxc.RESIZE_PARENT,
-            * glxc.RESIZE_QUEUE,
-            * glxc.RESIZE_IMMEDIATE
+            * :func:`glxc.RESIZE_PARENT <GLXCurses.Constants.Constants.RESIZE_PARENT>`
+            * :func:`glxc.RESIZE_QUEUE <GLXCurses.Constants.Constants.RESIZE_QUEUE>`
+            * :func:`glxc.RESIZE_IMMEDIATE <GLXCurses.Constants.Constants.RESIZE_IMMEDIATE>`
 
-        .. seealso:: GLXCurses.Container.get_resize_mode().
+        .. seealso:: :func:`GLXCurses.Container.get_resize_mode() <GLXCurses.Container.Container.get_resize_mode>`.
+
+        .. warning:: :func:`GLXCurses.Container.set_resize_mode() <GLXCurses.Container.Container.set_resize_mode>`\
+        has been deprecated since version 3.12 of GTK+, if will be remove as soon of possible.
 
         :param resize_mode: the new resize mode
+        :type resize_mode: GLXCurses.Constants
         """
         available_resize_mode = [
             glxc.RESIZE_PARENT,
@@ -189,7 +204,7 @@ class Container(Widget):
         """
         The check_resize() method emits the "check-resize" signal on the container.
         """
-        pass
+        raise NotImplementedError
 
     def foreach(self, callback, callback_data):
         """
