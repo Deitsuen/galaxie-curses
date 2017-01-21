@@ -1,7 +1,9 @@
 Galaxie Curses, ToolKit
 =======================
+<p align="center">
 ![alt text][logo]
-[logo]: https://raw.githubusercontent.com/Tuuux/galaxie-curses/master/docs/source/images/logo_galaxie.png "Logo Title Text 2"
+[logo]: https://raw.githubusercontent.com/Tuuux/galaxie-curses/master/docs/source/images/logo_galaxie.png "Galaxie Logo Image"
+</p>
 
 The Project
 -----------
