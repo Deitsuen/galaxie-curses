@@ -83,6 +83,8 @@ The GTK+ documentation is our model: https://developer.gnome.org/gtk3/stable/
 - Issue Tracker: https://github.com/Tuuux/galaxie-curses/issues
 - Source Code: https://github.com/Tuuux/galaxie-curses
 
+Our collaboration model is the Collective Code Construction Contract (C4): https://rfc.zeromq.org/spec:22/C4/
+
 Documentations
 --------------
 .. toctree::
@@ -90,6 +92,7 @@ Documentations
 
    install
    GLXCurses
+   contributors
 
 Note for GTK+ Project Developer's
 ---------------------------------
@@ -105,9 +108,12 @@ License
 -------
 GNU GENERAL PUBLIC LICENSE Version 3
 
+
 See the LICENCE_
 
 .. _LICENCE: https://github.com/Tuuux/galaxie-curses/blob/master/LICENSE
+
+All contributions to the project source code ("patches") SHALL use the same license as the project.
 
 Indices and tables
 ------------------
