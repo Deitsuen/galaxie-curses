@@ -1,6 +1,6 @@
-Galaxie Curses, NCurses ToolKit
-===============================
-![alt tag](https://raw.githubusercontent.com/Tuuux/galaxie-curses/master/docs/source/images/logo_galaxie.png)
+Galaxie Curses, ToolKit
+=======================
+[logo]: https://raw.githubusercontent.com/Tuuux/galaxie-curses/master/docs/source/images/logo_galaxie.png "Logo Title Text 2"
 
 The Project
 -----------
@@ -24,8 +24,7 @@ Midnight-Commander: https://midnight-commander.org
 Example
 -------
 
-.. code-block:: python
-
+```python
     #!/usr/bin/env python
     # -*- coding: utf-8 -*-
     import GLXCurses
@@ -58,7 +57,7 @@ Example
 
     # Main loop start
     GLXCurses.mainloop.run()
-
+```
 More examples can be found here: https://github.com/Tuuux/galaxie-curses/tree/master/examples
 
 Features
