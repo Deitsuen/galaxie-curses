@@ -96,7 +96,7 @@ class Container(Widget):
         you can’t (should not) place the same widget inside two different containers.
 
         :param widget: a current child of container
-        :type widget: Widget
+        :type widget: GLXCurses.Widget
         """
         widget.set_parent(self)
         self.child = widget
@@ -167,9 +167,9 @@ class Container(Widget):
         queued for later execution or executed immediately.
 
         Allowed value:
-            glxc.RESIZE_PARENT,
-            glxc.RESIZE_QUEUE,
-            glxc.RESIZE_IMMEDIATE
+            * glxc.RESIZE_PARENT,
+            * glxc.RESIZE_QUEUE,
+            * glxc.RESIZE_IMMEDIATE
 
         .. seealso:: GLXCurses.Container.get_resize_mode().
 
