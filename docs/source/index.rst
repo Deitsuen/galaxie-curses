@@ -29,6 +29,8 @@ A Small Exemple
 ---------------
 .. code-block:: python
 
+    #!/usr/bin/env python
+    # -*- coding: utf-8 -*-
     import GLXCurses
 
     # Create the main Application
