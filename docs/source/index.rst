@@ -83,7 +83,7 @@ The GTK+ documentation is our model: https://developer.gnome.org/gtk3/stable/
 Documentations
 --------------
 .. toctree::
-   :maxdepth: 2
+   :titlesonly:
 
    install
    GLXCurses

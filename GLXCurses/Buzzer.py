@@ -25,9 +25,9 @@ except ImportError:
         Play a sound via the Buzzer of the computer
 
         :param frequency: frequence in Hertz (HZ) of the note to play
-        :type frequency: int
+        :type frequency: :py:obj:`int`
         :param duration: how many time we play the note in Millisecond (ms)
-        :type duration: int
+        :type duration: :py:obj:`int`
         """
         # apt-get install beep
         os.system('beep -f %s -l %s' % (frequency, duration))
@@ -206,7 +206,7 @@ class Buzzer(object):
         Get the tempo attribute
 
         :return: tempo attribute value is in BPM
-        :rtype: float
+        :rtype: :py:obj:`float`
         """
         return self.tempo
 
@@ -215,7 +215,7 @@ class Buzzer(object):
         Set the tempo attribute
 
         :param tempo: tempo value in BPM
-        :type tempo: float
+        :type tempo: :py:obj:`float`
         """
         self.tempo = float(tempo)
 
@@ -224,7 +224,7 @@ class Buzzer(object):
         Get actual tempo value in Millisecond (ms)
 
         :return: tempo value in ms
-        :rtype: int
+        :rtype: :py:obj:`int`
         """
         return int(60000 / self.get_tempo())
 
@@ -233,7 +233,7 @@ class Buzzer(object):
         Get the **Croche** it consist to devise the tempo by 2
 
         :return: tempo value div by 2 in Millisecond (ms)
-        :rtype: int
+        :rtype: :py:obj:`int`
         """
         return int(self.get_tempo_to_ms() / 2)
 
@@ -242,7 +242,7 @@ class Buzzer(object):
         Get the **Double Croche** it consist to devise the tempo by 4
 
         :return: tempo value div by 4 in Millisecond (ms)
-        :rtype: int
+        :rtype: :py:obj:`int`
         """
         return int(self.get_tempo_to_ms() / 4)
 
@@ -251,7 +251,7 @@ class Buzzer(object):
         Get the **Triple Croche** it consist to devise the tempo by 8
 
         :return: tempo value div by 8 in Millisecond (ms)
-        :rtype: int
+        :rtype: :py:obj:`int`
         """
         return self.get_tempo_to_ms() / 8
 
@@ -260,7 +260,7 @@ class Buzzer(object):
         Get the **Blanche** it consist to multiply the tempo by 2
 
         :return: tempo value div by 2 in Millisecond (ms)
-        :rtype: int
+        :rtype: :py:obj:`int`
         """
         return int(self.get_tempo_to_ms() * 2)
 
@@ -269,7 +269,7 @@ class Buzzer(object):
         Get the **Triolet** it consist to multiply the tempo by 3
 
         :return: tempo value div by 3 in Millisecond (ms)
-        :rtype: int
+        :rtype: :py:obj:`int`
         """
         return int(self.get_tempo_to_ms() / 3)
 
@@ -286,7 +286,7 @@ class Buzzer(object):
            self.midi_notes.append([1,  72, 'C',      523.2511306012, -5.700])
 
         :return: the entrie midi note list
-        :rtype: Notes Structure
+        :rtype: :py:obj:`list(list(),list(),list())`
         """
         return self.midi_notes
 
@@ -295,23 +295,29 @@ class Buzzer(object):
         Get the conversion of a ms value to a tempo value
 
         :param ms: tempo value in Millisecond (ms)
-        :type ms: int
+        :type ms: :py:obj:`int`
         :return: 60000 divised by Millisecond (ms) value
-        :rtype: float
+        :rtype: :py:obj:`float`
         """
         return float(60000 / ms)
 
     def get_tempo_to_hertz(self):
-        return self.get_tempo() / 60
+        """
+        Get the conversion of the tempo in BPM to the frequency in Hz
+
+        :return: tempo divised by 60
+        :rtype: :py:obj:`int`
+        """
+        return int(self.get_tempo() / 60)
 
     def get_hertz_to_ms(self, hz):
         """
         Get the conversion of a **HZ** value to a **ms** value
 
         :param hz: frequence in Hertz (**HZ**)
-        :type hz: int
+        :type hz: :py:obj:`int`
         :return: the duration of the frequence periode in ms (**ms**)
-        :rtype: int
+        :rtype: :py:obj:`int`
         """
         return int((1 / hz) * 1000)
 

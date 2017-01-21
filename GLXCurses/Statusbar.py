@@ -75,9 +75,9 @@ class Statusbar(Widget):
         .. note: the description is not shown in the UI.
 
         :param context_description: textual description of what context the new message is being used in
-        :type context_description: str
+        :type context_description: :py:obj:`str`
         :return: an context_id
-        :rtype: int
+        :rtype: :py:obj:`int`
         """
         if context_description not in self._get_context_id_list():
             self._get_context_id_list()[context_description] = uuid.uuid1().int
@@ -95,11 +95,11 @@ class Statusbar(Widget):
         Push a new message onto the statusbar's stack.
 
         :param context_id: the message’s context id, as returned by get_context_id()
-        :type context_id: int
+        :type context_id: :py:obj:`int`
         :param text: the message to add to the statusbar
-        :type text: str
+        :type text: :py:obj:`str`
         :return: a message id that can be used with remove().
-        :rtype: int
+        :rtype: :py:obj:`int`
         """
         message_id = uuid.uuid1().int
         self.statusbar_stack.append([context_id, text, message_id])
@@ -114,7 +114,7 @@ class Statusbar(Widget):
         context id.
 
         :param context_id: a context identifier
-        :type context_id: int
+        :type context_id: :py:obj:`int`
         """
         count = 0
         last_found = None
@@ -137,9 +137,9 @@ class Statusbar(Widget):
         The exact **context_id** and **message_id** must be specified.
 
         :param context_id: a context identifier
-        :type context_id: int
+        :type context_id: :py:obj:`int`
         :param message_id: a message identifier, as returned by Statusbar.push()
-        :type message_id: int
+        :type message_id: :py:obj:`int`
         """
         count = 0
         last_found = None
@@ -167,7 +167,7 @@ class Statusbar(Widget):
         Forces the removal of all messages from a statusbar's stack with the exact context_id .
 
         :param context_id: a context identifier
-        :type context_id: int
+        :type context_id: :py:obj:`int`
         """
         for element in self.statusbar_stack:
             if context_id == element[0]:
@@ -248,11 +248,11 @@ class Statusbar(Widget):
         Is emitted whenever a new message is popped off a statusbar's stack.
 
         :param context_id: the context id of the relevant message/statusbar
-        :type context_id: int
+        :type context_id: :py:obj:`int`
         :param text: the message that was just popped
-        :type text: str
+        :type text: :py:obj:`str`
         :param user_data: user data set when the signal handler was connected.
-        :type user_data: list
+        :type user_data: :py:obj:`list`
         """
         if user_data is None:
             user_data = list()
@@ -273,11 +273,11 @@ class Statusbar(Widget):
         Is emitted whenever a new message is popped off a statusbar's stack.
 
         :param context_id: the context id of the relevant message/statusbar
-        :type context_id: int
+        :type context_id: :py:obj:`int`
         :param text: the message that was just popped
-        :type text: str
+        :type text: :py:obj:`str`
         :param user_data: user data set when the signal handler was connected.
-        :type user_data: list
+        :type user_data: :py:obj:`list`
         """
         if user_data is None:
             user_data = list()

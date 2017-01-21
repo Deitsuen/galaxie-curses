@@ -18,9 +18,13 @@
 #
 import os
 import sys
+from mock import MagicMock
 import subprocess
-
+import re
 from sphinx.highlighting import lexers
+from sphinx.ext.autodoc import cut_lines
+from sphinx.util.docfields import GroupedField
+from sphinx import addnodes
 
 sys.path.insert(0, os.path.abspath('../..'))
 
@@ -188,6 +192,7 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
+event_sig_re = re.compile(r'([a-zA-Z-]+)\s*\((.*)\)')
 
 def run_apidoc(_):
     cur_dir = os.path.abspath(os.path.dirname(__file__))
@@ -198,15 +203,25 @@ def run_apidoc(_):
     from sphinx.apidoc import main
     main(['-e', '-o', cur_dir, module, '--force'])
 
+def parse_event(env, sig, signode):
+    m = event_sig_re.match(sig)
+    if not m:
+        signode += addnodes.desc_name(sig, sig)
+        return sig
+    name, args = m.groups()
+    signode += addnodes.desc_name(name, name)
+    plist = addnodes.desc_parameterlist()
+    for arg in args.split(','):
+        arg = arg.strip()
+        plist += addnodes.desc_parameter(arg, arg)
+    signode += plist
+    return name
+
 
 def setup(app):
     app.connect('builder-inited', run_apidoc)
 
-
 os.environ['TERM'] = "linux"
-
-import sys
-from mock import MagicMock
 
 class Mock(MagicMock):
     @classmethod
