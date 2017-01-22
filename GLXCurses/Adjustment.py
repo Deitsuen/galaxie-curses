@@ -18,7 +18,7 @@ class Adjustment(object):
     together with step and page increments,and a page size.It is used within several  widgets,
     including SpinButton, Viewport, and Range (which is a base class for Scrollbar and Scale).
     The Adjustment object does not update the value itself.
-    Instead it is left up to the owner of the GtkAdjustment to control the value.
+    Instead it is left up to the owner of the Adjustment to control the value.
     """
 
     def __init__(self):
@@ -157,10 +157,7 @@ class Adjustment(object):
         :return: Retrieves the page size of the adjustment.
         :rtype: GLXCurses.Adjustment().page_size
         """
-        # truc = Adjustment()
-        # print truc.get_lower()
-        # tesst = ["%g" % x for x in truc.clamp_page()]   #Sa test la fonction#
-        # print tesst
+        
         raise NotImplementedError
 
     def get_step_increment(self):
