@@ -44,9 +44,9 @@ class Misc(Widget):
         Sets the alignment of the widget.
 
         :param xalign: the horizontal alignment, from 0 (left) to 1 (right).
-        :param yalign:the vertical alignment, from 0 (top) to 1 (bottom).
-        :type xalign: Float
-        :type yalign: Float
+        :param yalign: the vertical alignment, from 0 (top) to 1 (bottom).
+        :type xalign: :py:obj:`float`
+        :type yalign: :py:obj:`float`
         """
         # xalign :
         xalign = float(xalign)

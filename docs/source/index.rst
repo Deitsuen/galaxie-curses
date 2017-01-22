@@ -92,6 +92,7 @@ Documentations
 
    install
    GLXCurses
+   Basic-Types
    contributors
 
 Note for GTK+ Project Developer's

@@ -20,6 +20,7 @@ import os
 import sys
 from mock import MagicMock
 import re
+import types
 
 sys.path.insert(0, os.path.abspath('../..'))
 
@@ -213,3 +214,6 @@ class Mock(MagicMock):
 
 MOCK_MODULES = ['curses', 'argparse', 'numpy']
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
+
+autoclass_content = 'both'
+autodoc_member_order = 'bysource'

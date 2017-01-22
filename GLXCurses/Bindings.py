@@ -32,7 +32,7 @@ class Binding(object):
         :param modifiers: key modifier
         :param signal_name: signal name to be bound
         :param binding_args: list of BindingArg signal arguments.
-        :type binding_args: list()
+        :type binding_args: list
         """
         if binding_args is None:
             binding_args = list()

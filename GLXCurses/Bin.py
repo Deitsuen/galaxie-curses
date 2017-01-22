@@ -1,10 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from GLXCurses import Container
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
+
+from GLXCurses import Container
+
 __author__ = 'Tuux'
 
 

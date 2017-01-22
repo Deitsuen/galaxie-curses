@@ -143,10 +143,6 @@ class MainLoop(object):
     def context_pending(self, context=None):
         if context is None:
             context = self.get_default_context()
-        """
-
-        :return:
-        """
         raise NotImplementedError
 
     def run(self):
@@ -174,15 +170,15 @@ class MainLoop(object):
         Emit a signal, it consist to add the signal structure inside a global event list
 
         .. code-block:: python
-        args = dict(
-            'uuid': Widget().get_widget_id()
-            'key1': value1
-            'key2': value2
-        )
-        structure = list(
-            detailed_signal,
-            args
-        )
+           args = dict(
+               'uuid': Widget().get_widget_id()
+               'key1': value1
+               'key2': value2
+           )
+           structure = list(
+               detailed_signal,
+               args
+           )
 
         :param detailed_signal: a string containing the signal name
         :param args: additional parameters arg1, arg2
