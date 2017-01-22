@@ -131,7 +131,9 @@ if __name__ == '__main__':
     # Add Everything inside the Application
     app.add_menubar(menu)
     app.add_window(win_main)
+    #app.remove_window(win_main)
     app.add_statusbar(statusbar)
+
 
     # Event's and Signals
     app.connect('BUTTON1_CLICKED', on_click)  # Mouse Button

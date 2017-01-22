@@ -31,20 +31,43 @@ class Singleton(type):
         return cls.instance
 
 
+# https://developer.gnome.org/gtk3/stable/GtkApplication.html
 class Application(object):
     """
     Create a Application singleton instance.
 
     That class have the role of a Controller and a NCurses Wrapper.
 
-    It have particularity to not be a Widget, then have a tonne of function for be a fake widget.
+    It have particularity to not be a GLXCurses.Widget, then have a tonne of function for be a fake widget.
 
     Everything start by it component that is the controller.
+
+    Attributes:
+        **active_window** --
+        The window which most recently had focus.\n
+        Default value: :py:obj:`None`
+
+
+        **app_menu** --
+        The GMenuModel for the application menu.\n
+        Default value: :py:obj:`None`
+
+
+        **menubar** --
+        The GMenuModel for the menubar.\n
+        Default value: :py:obj:`None`
+
+
+        **register_session** --
+        Set this property to :py:obj:`True` to register with the session manager.\n
+        Default value: :py:obj:`False`
     """
     __metaclass__ = Singleton
 
     def __init__(self):
-
+        """
+        Initialize the Curses Screen and all attribute
+        """
         try:
             # Initialize curses
             os.environ["NCURSES_NO_UTF8_ACS"] = '1'
@@ -240,12 +263,44 @@ class Application(object):
 
         This call is equivalent to setting the “application” attribute of window to application .
 
-        :param window:
-        :return:
+        :param window: a window to add
+        :type window: GLXCurses.Window
         """
         window.set_parent(self)
         self.windows.append(window)
         self.active_window_id = len(self.windows) - 1
+
+    def remove_window(self, window):
+        """
+        Remove a window from application .
+
+        If window belongs to application then this call is equivalent to setting the
+        “application” attribute of :func:`GLXCurses.Window <GLXCurses.Window.Window>` to :py:obj:`None`.
+
+        The application may stop running as a result of a call to this function.
+
+        :param window: a window to add
+        :type window: GLXCurses.Window
+        """
+        # Detach the children
+        window.set_parent(None)
+        window.application = None
+
+        # Search for the good window id and delete it from the window list
+        count = 0
+        last_found = None
+        for children_window in self.windows:
+            if children_window.id == window.id:
+                last_found = count
+            count += 1
+        if last_found is None:
+            pass
+        else:
+            self.windows.pop(last_found)
+
+        # Update the active_window_id
+        self.active_window_id = len(self.windows) - 1
+
 
     def add_menubar(self, glxc_menu_bar):
         glxc_menu_bar.set_parent(self)
@@ -279,7 +334,8 @@ class Application(object):
 
         # Check main curses_subwin to display
         if self.curses_subwin:
-            self.windows[self.active_window_id].draw()
+            if self.windows:
+                self.windows[self.active_window_id].draw()
 
         if self.menubar:
             self.menubar.draw()

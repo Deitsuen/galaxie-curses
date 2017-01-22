@@ -32,14 +32,14 @@ from GLXCurses.HSeparator import HSeparator
 from GLXCurses.VSeparator import VSeparator
 from GLXCurses.EntryBuffer import EntryBuffer
 
-__author__ = "Jerome Ornech"
-__copyright__ = "Copyright 2016-2017, The Galaxie Curses Project"
-__credits__ = ["Jerome Ornech alias Tuux", "Aurelien Maury alias Mo"]
-__license__ = "GNU GENERAL PUBLIC LICENSE 3.0"
-__version__ = "0.1"
-__maintainer__ = "Jerome Ornech"
-__email__ = "tuux@rtnp.org"
-__status__ = "Development"
+__author__ = u"Jérôme Ornech"
+__copyright__ = u"Copyright 2016-2017, The Galaxie Curses Project"
+__credits__ = [u"Jérôme Ornech alias Tuux", u"Aurélien Maury alias Mo"]
+__license__ = u"GNU GENERAL PUBLIC LICENSE 3.0"
+__version__ = u"0.2"
+__maintainer__ = u"Jerome Ornech"
+__email__ = u"tuux at rtnp dot org"
+__status__ = u"Development"
 
 application = Application()
 mainloop = MainLoop()
