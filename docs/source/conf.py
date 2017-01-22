@@ -51,8 +51,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Galaxie Curses'
-copyright = u'2017, Jérôme Ornech alias Tuux<tuux@rtnp.org>'
-author = u'Jérôme Ornech alias Tuux <tuux@rtnp.org>'
+copyright = u'2017, Jérôme Ornech alias Tuux <tuux at rtnp dot org>'
+author = u'Jérôme Ornech alias Tuux <tuux at rtnp dot org>'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -164,7 +164,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'GalaxieCurses.tex', u'Galaxie Curses Documentation',
-     u'Jérôme Ornech \\textless{}tuux@rtnp.org\\textgreater{}', 'manual'),
+     u'Jérôme Ornech \\textless{}tuux at rtnp dot org\\textgreater{}', 'manual'),
 ]
 
 # -- Options for manual page output ---------------------------------------
@@ -183,7 +183,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'GalaxieCurses', u'Galaxie Curses Documentation',
-     author, 'Jerome Ornech alias Tuux', 'Galaxie Curses Tool Kit',
+     author, u'Jérôme Ornech alias Tuux', 'Galaxie Curses Tool Kit',
      'Miscellaneous'),
 ]
 
