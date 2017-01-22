@@ -58,20 +58,35 @@ class Box(Container):
     def pack_end_defaults(self, widget):
         pass
 
-    # Sets the “homogeneous” property of box ,
-    # controlling whether or not all children of box are given equal space in the box.
-    # homogeneous a boolean value, TRUE to create equal allotments, FALSE for variable allotments
     def set_homogeneous(self, homogeneous):
+        """
+        Sets the “homogeneous” attribute of box, controlling whether or not all children of box are given equal
+        space in the box.
+
+        :param homogeneous: :py:obj:`True` to create equal allotments, :py:obj:`False` for variable allotments
+        :type homogeneous: :py:obj:`bool`
+        """
         self.homogeneous = bool(homogeneous)
 
-    # Returns whether the box is homogeneous (all children are the same size). See gtk_box_set_homogeneous().
-    # TRUE if the box is homogeneous.
     def get_homogeneous(self):
+        """
+        Returns whether the :class:`Box <GLXCurses.Box.Box>` is homogeneous (all children's have the same size).
+
+        .. seealso:: :func:`Box.set_homogeneous() <GLXCurses.Box.Box.set_homogeneous>`
+
+        :return: :py:obj:`True` if the :class:`Box <GLXCurses.Box.Box>` is homogeneous.
+        :rtype: :py:obj:`bool`
+        """
         return self.homogeneous
 
-    # Sets the "spacing" property of box , which is the number of character to place between children of box .
-    # spacing the number of pixels to put between children
     def set_spacing(self, spacing):
+        """
+        Sets the "spacing" property of :class:`Box <GLXCurses.Box.Box>`, which is the number of character to place
+        between children of :class:`Box <GLXCurses.Box.Box>`.
+
+        :param spacing: the number of char to put between children
+        :type spacing: :py:obj:`int`
+        """
         self.spacing = int(spacing)
 
     # Gets the value set by set_spacing().

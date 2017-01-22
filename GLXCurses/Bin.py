@@ -10,15 +10,15 @@ __author__ = 'Tuux'
 
 class Bin(Container):
     """
-    The GtkBin widget is a container with just one child. It is not very useful itself, but it is useful for deriving
-    subclasses, since it provides common code needed for handling a single child widget.
+    The :class:`Bin <GLXCurses.Bin.Bin>` widget is a container with just one child. It is not very useful itself,
+    but it is useful for deriving subclasses, since it provides common code needed for handling a single child widget.
 
-    Many GTK+ widgets are subclasses of GtkBin, including
-    GLXCurses.Window,
-    GLXCurses.Button,
-    GLXCurses.Frame,
-    GLXCurses.HandleBox,
-    GLXCurses.ScrolledWindow.
+    Many GLXCurses widgets are subclasses of :class:`Bin <GLXCurses.Bin.Bin>`, including
+     * :class:`Window <GLXCurses.Window.Window>`
+     * :class:`Button <GLXCurses.Button.Button>`
+     * :class:`Frame <GLXCurses.Frame.Frame>`
+     * :class:`HandleBox <GLXCurses.HandleBox.HandleBox>`
+     * :class:`ScrolledWindow <GLXCurses.ScrolledWindow.ScrolledWindow>`
     """
 
     def destroy(self):
@@ -30,7 +30,9 @@ class Bin(Container):
         * if the widget is inside a container, it will be removed from its parent
         * if the widget is a container, all its children will be destroyed, recursively
         * if the widget is a top level, it will be removed from the list of top level widgets
-        that GLXCurses.Application() maintains internally
+        that :class:`Application <GLXCurses.Application.Application>` maintains internally
+
+        :raise NotImplementedError: Method or function hasn't been implemented yet.
         """
         raise NotImplementedError
 
@@ -40,10 +42,12 @@ class Bin(Container):
 
     def get_child(self):
         """
-        Gets the child of the GtkBin, or None if the bin contains no child widget.
+        Get the child of the :class:`Bin <GLXCurses.Bin.Bin>`, or :py:obj:`None` if the
+        :class:`Bin <GLXCurses.Bin.Bin>` contains no child widget.
+
         The returned widget does not have a reference added, so you do not need to unref it.
 
-        :return: pointer to child of the GLXCurses.Bin
-        :rtype:
+        :return: child widget of the :class:`Bin <GLXCurses.Bin.Bin>`
+        :rtype: :class:`Box <GLXCurses.Box.Box>` or :py:obj:`None`
         """
         return self.child
