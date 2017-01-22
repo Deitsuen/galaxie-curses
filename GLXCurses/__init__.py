@@ -31,6 +31,7 @@ from GLXCurses.CheckButton import CheckButton
 from GLXCurses.HSeparator import HSeparator
 from GLXCurses.VSeparator import VSeparator
 from GLXCurses.EntryBuffer import EntryBuffer
+from GLXCurses.Adjustment import Adjustment
 
 __author__ = u"Jérôme Ornech"
 __copyright__ = u"Copyright 2016-2017, The Galaxie Curses Project"
