@@ -1,177 +1,182 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
-import uuid
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Adam Bouadil alias "Deitsuen" <adamb27750@orange.fr> all rights reserved
+
+from GLXCurses import Application
+import uuid
+
 __author__ = 'Deitsuen'
 
-if __name__ == '__main__':
-    class Adjustment(object):
-        # The Adjustment
-        # object represents a value which has an associated lower and upper bound,
-        # together with step and page increments,and a page size.It is used within several  widgets,
-        # including SpinButton, Viewport, and Range (which is a base class for Scrollbar and Scale).
-        # The Adjustment object does not update the value itself.
-        # Instead it is left up to the owner of the GtkAdjustment to control the value.
 
-        def __init__(self):
-            # Creates a new Adjustment
-            self.value = 2.0
-            self.lower = 1.0
-            self.upper = 15.0
-            self.step_increment = 1.0
-            self.page_increment = 10.0
-            self.page_size = 20.0
-            self.id = uuid.uuid1().int
+class Adjustment(object):
+    """
+    The Adjustment
+    object represents a value which has an associated lower and upper bound,
+    together with step and page increments,and a page size.It is used within several  widgets,
+    including SpinButton, Viewport, and Range (which is a base class for Scrollbar and Scale).
+    The Adjustment object does not update the value itself.
+    Instead it is left up to the owner of the GtkAdjustment to control the value.
+    """
 
-        def get_value(self):
+    def __init__(self):
+        # Creates a new Adjustment
+        self.value = 2.0
+        self.lower = 1.0
+        self.upper = 15.0
+        self.step_increment = 1.0
+        self.page_increment = 10.0
+        self.page_size = 20.0
+        self.id = uuid.uuid1().int
 
-            # Gets the current value of the adjustment. See set_value()
-            """
-            :return: A current value Adjustment :rtype: GLXCurses.Adjustment.set_value()
-            """
+        self.two = None
+        self.average = None
 
-        def set_value(self):
+    def get_value(self):
+        """
+        Gets the current value of the adjustment. See set_value()
 
-            # Sets the Adjustment value.The value is clamped to lie between “lower” and “upper”.
-            # Note that for adjustments which are used in a Scrollbar,
-            # the effective range of allowed values goes from “lower” to “upper” - “page-size”.
+        :return: A current value Adjustment
+        :rtype: GLXCurses.Adjustment.set_value()
+        """
+        return float(self.value)
 
-            if self.value > self.upper:
-                self.value = self.upper
+    def set_value(self):
+        """
+        Sets the Adjustment value.The value is clamped to lie between “lower” and “upper”.
+        Note that for adjustments which are used in a Scrollbar,
+        the effective range of allowed values goes from “lower” to “upper” - “page-size”.
 
-            elif self.value < self.lower:
-                self.value = self.lower
+        """
+        if self.value > self.upper:
+            self.value = self.upper
 
-            else:
-                self.value = self.value
+        elif self.value < self.lower:
+            self.value = self.lower
 
-            print self.value
+        else:
+            self.value = self.value
 
-        def clamp_page(self):
-            # Updates the “value” property to ensure that the range between lower and upper is in the current page
-            # (i.e. between “value” and “value” + “page-size”).
-            # If the range is larger than the page size, then only the start of it will be in the current page.
-            # A “value-changed” signal will be emitted if the value is changed.
+    def clamp_page(self):
+        """
+        Updates the “value” property to ensure that the range between lower and upper is in the current page
+        (i.e. between “value” and “value” + “page-size”).
+        If the range is larger than the page size, then only the start of it will be in the current page.
+        A “value-changed” signal will be emitted if the value is changed.
+        """
+        self.two = self.lower and self.upper
+        self.average = self.two + self.page_size
 
+        step = 0.1
 
-            self.two = self.lower and self.upper
-            self.average = self.two + self.page_size
+        if self.two >= self.page_size:
+            self.upper = self.lower
+            self.lower = self.upper
 
-            step = 0.1
+        while self.lower <= self.upper:
+            yield self.lower
 
-            if self.two >= self.page_size:
-                self.upper = self.lower
-                self.lower = self.upper
+            self.lower += step
 
-            while self.lower <= self.upper:
-                yield self.lower
+        self.value_changed()
 
-                self.lower += step
+    def changed(self):
+        """
+        Emits a “changed” signal from the Adjustment.
+        This is typically called by the owner of the Adjustment,
+        after it has changed any of the Adjustment properties other than the value.
+        """
 
-            print self.two
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'changed',
+            'id': self.id
+        }
+        # EVENT EMIT
+        Application.emit('SIGNALS', instance)
 
-            self.value_changed()
+    def value_changed(self):
+        """
+        Emits a “value-changed” signal from the Adjustment.
+        This is typically called by the owner of the Adjustment
+        after it has changed the “value” property.
+        """
 
-        def changed(self):
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'value-changed',
+            'id': self.id
+        }
+        # EVENT EMIT
 
-            # Emits a “changed” signal from the Adjustment.
-            # This is typically called by the owner of the Adjustment,
-            # after it has changed any of the Adjustment properties other than the value.
+        Application.emit('SIGNALS', instance)
 
-            instance = {
-                'class': self.__class__.__name__,
-                'type': 'changed',
-                'id': self.id
-            }
-            # EVENT EMIT
-            GLXCurses.application.emit('SIGNALS', instance)
+    def configure(self):
+        """
+        Sets all properties of the adjustment at once.
+        Use this function to avoid multiple emissions of the “changed” signal.
+        """
+        default_value = 10
 
-        def value_changed(self):
+        d = default_value
 
-            # Emits a “value-changed” signal from the Adjustment.
-            # This is typically called by the owner of the Adjustment
-            # after it has changed the “value” property.
+        self.value = d
+        self.lower = d
+        self.upper = d
+        self.page_size = d
+        self.step_increment = d
+        self.page_increment = d
 
-            instance = {
-                'class': self.__class__.__name__,
-                'type': 'value-changed',
-                'id': self.id
-            }
-            # EVENT EMIT
+        self.changed()
+        self.value_changed()
 
-            GLXCurses.application.emit('SIGNALS', instance)
+    def get_lower(self):
+        """
+        Get the lower value.
 
+        :return: The minimum value of the adjustment.
+        :rtype: GLXCurses.Adjustment().lower
+        """
+        raise NotImplementedError
 
+    def get_page_increment(self):
+        """
+        Get the page_increment value.
 
-        def configure(self):
+        :return: Retrieves the page increment of the adjustment.
+        :rtype: GLXCurses.Adjustment().page_increment
+        """
+        raise NotImplementedError
 
-            # Sets all properties of the adjustment at once.
-            # Use this function to avoid multiple emissions of the “changed” signal.
+    def get_page_size(self):
+        """
+        Get the page_size value.
 
-            default_value = 10
+        :return: Retrieves the page size of the adjustment.
+        :rtype: GLXCurses.Adjustment().page_size
+        """
+        # truc = Adjustment()
+        # print truc.get_lower()
+        # tesst = ["%g" % x for x in truc.clamp_page()]   #Sa test la fonction#
+        # print tesst
+        raise NotImplementedError
 
-            d = default_value
+    def get_step_increment(self):
+        """
+        Get the step_increment value.
 
-            self.value = d
-            self.lower = d
-            self.upper = d
-            self.page_size = d
-            self.step_increment = d
-            self.page_increment = d
+        :return: Retrieves the step increment of the adjustment.
+        :rtype: GLXCurses.Adjustment().step_increment
+        """
+        raise NotImplementedError
 
-            self.changed()
-            self.value_changed()
+    def get_upper(self):
+        """
+        Get upper value
 
-        def get_lower(self):
-
-            # Get the lower value.
-
-            """
-                :return: The minimum value of the adjustment. :rtype: GLXCurses.Adjustment().lower
-            """
-
-        def get_page_increment(self):
-
-            # Get the page_increment value.
-
-            """
-                :return: Retrieves the page increment of the adjustment. :rtype: GLXCurses.Adjustment().page_increment
-            """
-
-        def get_page_size(self):
-
-            # Get the page_size value.
-
-            """
-                :return: Retrieves the page size of the adjustment. :rtype: GLXCurses.Adjustment().page_size
-            """
-
-            # truc = Adjustment()
-            # print truc.get_lower()
-            # tesst = ["%g" % x for x in truc.clamp_page()]   #Sa test la fonction#
-            ## print tesst
-
-        def get_step_increment(self):
-
-            # Get the step_increment value.
-
-            """
-                :return: Retrieves the step increment of the adjustment. :rtype: GLXCurses.Adjustment().step_increment
-
-            """
-
-        def get_upper(self):
-
-            # Get the upper value
-
-
-            """
-                :return: Retrieves the maximum value of the adjustment. :rtype: GLXCurses.Adjustment().upper
-
-            """
-
-# W.I.P (WORK IN PROGRESS)
+        :return: Retrieves the maximum value of the adjustment.
+        :rtype: GLXCurses.Adjustment().upper
+        """
+        raise NotImplementedError

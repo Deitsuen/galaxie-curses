@@ -20,7 +20,6 @@ import os
 import sys
 from mock import MagicMock
 import re
-import types
 
 sys.path.insert(0, os.path.abspath('../..'))
 

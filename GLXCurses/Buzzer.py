@@ -35,8 +35,7 @@ except ImportError:
 
 class Buzzer(object):
     """
-    Description
-    -----------
+    :Description:
 
     The famous buzzer class, why not implement a wireless protocol with the buzzer ?
 

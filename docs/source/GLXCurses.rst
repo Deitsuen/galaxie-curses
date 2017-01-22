@@ -4,6 +4,14 @@ GLXCurses package
 Submodules
 ----------
 
+GLXCurses.Adjustment module
+---------------------------
+
+.. automodule:: GLXCurses.Adjustment
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 GLXCurses.Application module
 ----------------------------
 
