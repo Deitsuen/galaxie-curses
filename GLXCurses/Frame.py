@@ -178,7 +178,7 @@ class Frame(Bin):
         Sets the text of the label. If label is :py:data:`None`, the current label is removed.
 
         :param label: the text to use as the label of the frame.
-        :type label: str or None
+        :type label: :py:data:`str` or :py:data:`None`
         """
         if bool(label):
             self.label = label
@@ -247,7 +247,7 @@ class Frame(Bin):
 
         :return: the text in the label, or :py:data:`None` if there was no label widget or the label widget was not a \
         :class:`Label <GLXCurses.Label.Label>` . This string is owned by GLXCurses and must not be modified or freed.
-        :rtype: str or None
+        :rtype: :py:data:`str` or :py:data:`None`
         """
         if self.get_label_widget():
             return None
@@ -266,7 +266,7 @@ class Frame(Bin):
 
 
         :return: xalign, yalign
-        :rtype: float, float
+        :rtype: :py:data:`float`, :py:data:`float`
         """
         return self.label_xalign, self.label_yalign
 
