@@ -17,7 +17,7 @@ def constant(f):
 
     return property(fget, fset)
 
-
+# https://developer.gnome.org/gtk3/stable/gtk3-Standard-Enumerations.html
 class Constants(object):
     """Contant declaration"""
     ############################
