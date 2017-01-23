@@ -3,7 +3,7 @@
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
-# Author: Adam Bouadil alias "Deitsuen" <adamb27750@orange.fr> all rights reserved
+# Author: the Galaxie Curses Team, all rights reserved
 
 from GLXCurses import Application
 import uuid
