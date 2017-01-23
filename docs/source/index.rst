@@ -93,6 +93,7 @@ Documentations
    install
    GLXCurses
    Basic-Types
+   Standard-Enumerations
    contributors
 
 Note for GTK+ Project Developer's

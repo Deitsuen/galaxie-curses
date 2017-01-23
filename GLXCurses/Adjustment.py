@@ -141,7 +141,7 @@ class Adjustment(object):
         :return: A current value Adjustment
         :rtype: float
         """
-        return float(self.value)
+        return self.value
 
     def set_value(self, value):
         """
@@ -167,7 +167,7 @@ class Adjustment(object):
 
     def clamp_page(self):
         """
-        Updates the “value” property to ensure that the range between lower and upper is in the current page
+        Updates the “value” attribute to ensure that the range between lower and upper is in the current page
         (i.e. between “value” and “value” + “page-size”).
         If the range is larger than the page size, then only the start of it will be in the current page.
         A “value-changed” signal will be emitted if the value is changed.

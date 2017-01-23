@@ -61,22 +61,4 @@ Reference document: https://docs.python.org/2/library/types.html
    DictType
       The type of dictionaries (e.g. ``{'Bacon': 1, 'Ham': 0}``)
 
-Constant Value
-==============
 
-.. py:data:: ShadowType
-
-   glxc.SHADOW_NONE
-      The Shadow Type constants specify the appearance of an outline typically provided by a Frame.
-
-   glxc.SHADOW_IN
-      The outline is beveled inward.
-
-   glxc.SHADOW_OUT
-      The outline is beveled outward like a button.
-
-   glxc.SHADOW_ETCHED_IN
-      The outline itself is an inward bevel, but the frame bevels outward
-
-   glxc.SHADOW_ETCHED_OUT
-      The outline itself is an outward bevel, but the frame bevels inward
