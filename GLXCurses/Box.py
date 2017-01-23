@@ -124,10 +124,10 @@ class Box(Container):
 
         :param child: the widget to be added to :class:`Box <GLXCurses.Box.Box>`
         :type child: :class:`Widget <GLXCurses.Widget.Widget>`
-        :param expand: :py:obj:`True` if the new child is to be given extra space allocated to \
+        :param expand: ``True`` if the new child is to be given extra space allocated to \
         `Box <GLXCurses.Box.Box>`. The extra space will be divided evenly between all children that use this option
         :type expand: bool
-        :param fill: :py:obj:`True` if space given to :py:obj:`child` by the :py:attr:`expend` option is actually \
+        :param fill: ``True`` if space given to :py:obj:`child` by the :py:attr:`expend` option is actually \
         allocated to :py:obj:`child`, rather than just padding it. This parameter has no effect if :py:attr:`expend` \
         is set to :py:obj:`False`. A child is always allocated the full height of a horizontal \
         :class:`Box <GLXCurses.Box.Box>` and the full width of a vertical :class:`Box <GLXCurses.Box.Box>`. \
