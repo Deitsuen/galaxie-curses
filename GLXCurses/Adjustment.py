@@ -11,6 +11,7 @@ import uuid
 __author__ = u'the Galaxie Curses Project'
 
 
+# Reference Document: https://developer.gnome.org/gtk3/stable/GtkAdjustment.html
 class Adjustment(object):
     """
     :Description:
@@ -133,6 +134,155 @@ class Adjustment(object):
         self.two = None
         self.average = None
 
+    def get_value(self):
+        """
+        Gets the current value of the adjustment. See set_value()
+
+        :return: A current value Adjustment
+        :rtype: float
+        """
+        return float(self.value)
+
+    def set_value(self, value):
+        """
+        Set the :class:`Adjustment <GLXCurses.Adjustment.Adjustment>` :py:attr:`value` attribute.
+
+        The ``value`` passed as argument is clamped to lie between :py:attr:`lower` and :py:attr:`lower` attributes.
+
+        .. note:: For adjustments which are used in a :class:`Scrollbar <GLXCurses.Scrollbar.Scrollbar>`, \
+        the effective range of allowed values goes from \
+        :py:attr:`lower` to :py:attr:`upper` - :py:attr:`page_size`.
+
+        :raise TypeError: when ``value`` passed as argument is not a :py:data:`float`
+        """
+        if type(value) == float:
+            if value < self.get_lower():
+                self.value = self.get_lower()
+            elif value > self.get_upper():
+                self.value = self.get_upper()
+            else:
+                self.value = value
+        else:
+            raise TypeError(u'>value< argument must be a float')
+
+    def clamp_page(self):
+        """
+        Updates the “value” property to ensure that the range between lower and upper is in the current page
+        (i.e. between “value” and “value” + “page-size”).
+        If the range is larger than the page size, then only the start of it will be in the current page.
+        A “value-changed” signal will be emitted if the value is changed.
+        """
+        self.two = self.lower and self.upper
+        self.average = self.two + self.page_size
+
+        step = 0.1
+
+        if self.two >= self.page_size:
+            self.upper = self.lower
+            self.lower = self.upper
+
+        while self.lower <= self.upper:
+            yield self.lower
+
+            self.lower += step
+
+        self.value_changed()
+
+    def changed(self):
+        """
+        Emits a “changed” signal from the :class:`Adjustment <GLXCurses.Adjustment.Adjustment>`.
+
+        This is typically called by the owner of the :class:`Adjustment <GLXCurses.Adjustment.Adjustment>`,
+        after it has changed any of the :class:`Adjustment <GLXCurses.Adjustment.Adjustment>`
+        attributes other than the value.
+        """
+
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'changed',
+            'id': self.id
+        }
+        # EVENT EMIT
+        Application.emit('SIGNALS', instance)
+
+    def value_changed(self):
+        """
+        Emits a “value-changed” signal from the :class:`Adjustment <GLXCurses.Adjustment.Adjustment>`.
+        This is typically called by the owner of the Adjustment
+        after it has changed the “value” property.
+        """
+
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'value-changed',
+            'id': self.id
+        }
+        # EVENT EMIT
+        Application.emit('SIGNALS', instance)
+
+    def configure(self, value, lower, upper, step_increment, page_increment, page_size):
+        """
+        Sets all properties of the adjustment at once.
+
+        Use this function to avoid multiple emissions of the “changed” signal.
+
+        See :func:`Adjustment.set_lower() <GLXCurses.Adjustment.Adjustment.set_lower()>` for
+        an alternative way of compressing multiple emissions of “changed” into one.
+
+        :param value: the new value
+        :param lower: the new minimum value
+        :param upper: the new maximum value
+        :param step_increment: the new step increment
+        :param page_increment: the new page increment
+        :param page_size: the new page size
+        :type value: float
+        :type lower: float
+        :type upper: float
+        :type step_increment: float
+        :type page_increment: float
+        :type page_size: float
+        """
+
+        # Check if the lower value is a float or raise a error
+        if type(lower) == float:
+            self.lower = lower
+        else:
+            raise TypeError(u'>lower argument< must be a float')
+
+        # Check if the page_increment value is a float or raise a error
+        if type(page_increment) == float:
+            self.page_increment = page_increment
+        else:
+            raise TypeError(u'>page_increment< argument must be a float')
+
+        # Check if the page_size value is a float or raise a error
+        if type(page_size) == float:
+            self.page_size = page_size
+        else:
+            raise TypeError(u'>page_size< argument must be a float')
+
+        # Check if the step_increment value is a float or raise a error
+        if type(step_increment) == float:
+            self.step_increment = step_increment
+        else:
+            raise TypeError(u'>step_increment< argument must be a float')
+
+        # Check if the upper value is a float or raise a error
+        if type(upper) == float:
+            self.upper = upper
+        else:
+            raise TypeError(u'>upper< argument must be a float')
+
+        # Check if the value value is a float or raise a error
+        if type(value) == float:
+            self.value = value
+        else:
+            raise TypeError(u'>value< argument must be a float')
+
+        # emit only on changed signal for all they allocation's
+        self.changed()
+        self.value_changed()
+
     def get_lower(self):
         """
         Retrieves the minimum value of the adjustment.
@@ -178,15 +328,6 @@ class Adjustment(object):
         """
         return float(self.minimum_increment)
 
-    def get_value(self):
-        """
-        Gets the current value of the adjustment. See set_value()
-
-        :return: A current value Adjustment
-        :rtype: float
-        """
-        return float(self.value)
-
     def get_upper(self):
         """
         Retrieves the maximum value of the adjustment.
@@ -199,114 +340,131 @@ class Adjustment(object):
     def set_lower(self, lower):
         """
         Sets the minimum value of the adjustment.
-        """
-        self.lower = lower
 
-    def set_value(self, value):
-        """
-        Sets the Adjustment value. The value is clamped to lie between “lower” and “upper”.
+        When setting multiple adjustment properties via their individual setters, multiple
+        :func:`Adjustment.changed() <GLXCurses.Adjustment.Adjustment.changed()>` signals will be emitted. However,
+        since the emission of the :func:`Adjustment.changed() <GLXCurses.Adjustment.Adjustment.changed()>` signal
+        is tied to the emission of the ``notify`` signals of the changed properties, it’s possible to compress
+        the :func:`Adjustment.changed() <GLXCurses.Adjustment.Adjustment.changed()>` signals into one by calling
+        ``object_freeze_notify()`` and ``object_thaw_notify()`` around the calls to the individual setters.
 
-        Note that for adjustments which are used in a :class:`Scrollbar <GLXCurses.Scrollbar.Scrollbar>`,
-        the effective range of allowed values goes from
-        :py:attr:`lower` to :py:attr:`upper` - :py:attr:`page_size`.
+        Alternatively, using :func:`Adjustment.configure() <GLXCurses.Adjustment.Adjustment.configure()>`
+        has the same effect of compressing :func:`Adjustment.changed() <GLXCurses.Adjustment.Adjustment.changed()>`
+        emissions.
 
-        """
-        if value < self.get_lower():
-            self.value = self.get_lower()
-        elif value > self.get_upper():
-            self.value = self.get_upper()
-        else:
-            self.value = value
+        .. warning:: Unfortunately ``object_freeze_notify()`` and ``object_thaw_notify()`` don't exist yet. \
+        then only :func:`Adjustment.configure() <GLXCurses.Adjustment.Adjustment.configure()>` will make the work.
 
-    def clamp_page(self):
-        """
-        Updates the “value” property to ensure that the range between lower and upper is in the current page
-        (i.e. between “value” and “value” + “page-size”).
-        If the range is larger than the page size, then only the start of it will be in the current page.
-        A “value-changed” signal will be emitted if the value is changed.
-        """
-        self.two = self.lower and self.upper
-        self.average = self.two + self.page_size
-
-        step = 0.1
-
-        if self.two >= self.page_size:
-            self.upper = self.lower
-            self.lower = self.upper
-
-        while self.lower <= self.upper:
-            yield self.lower
-
-            self.lower += step
-
-        self.value_changed()
-
-    def changed(self):
-        """
-        Emits a “changed” signal from the Adjustment.
-        This is typically called by the owner of the Adjustment,
-        after it has changed any of the Adjustment properties other than the value.
-        """
-
-        instance = {
-            'class': self.__class__.__name__,
-            'type': 'changed',
-            'id': self.id
-        }
-        # EVENT EMIT
-        Application.emit('SIGNALS', instance)
-
-    def value_changed(self):
-        """
-        Emits a “value-changed” signal from the Adjustment.
-        This is typically called by the owner of the Adjustment
-        after it has changed the “value” property.
-        """
-
-        instance = {
-            'class': self.__class__.__name__,
-            'type': 'value-changed',
-            'id': self.id
-        }
-        # EVENT EMIT
-
-        Application.emit('SIGNALS', instance)
-
-    def configure(self, value, lower, upper, step_increment, page_increment, page_size):
-        """
-        Sets all properties of the adjustment at once.
-
-        Use this function to avoid multiple emissions of the “changed” signal.
-        See :func:`Adjustment.set_lower() <GLXCurses.Adjustment.Adjustment.set_lower()>` for
-        an alternative way of compressing multiple emissions of “changed” into one.
-
-        :param value: the new value
         :param lower: the new minimum value
-        :param upper: the new maximum value
-        :param step_increment: the new step increment
-        :param page_increment: the new page increment
-        :param page_size: the new page size
-        :type value: float
         :type lower: float
-        :type upper: float
-        :type step_increment: float
-        :type page_increment: float
-        :type page_size: float
+        :raise TypeError: when "lower" argument is not a :py:data:`float`
         """
-        self.set_value(value)
-        self.set_lower(lower)
-        # self.set_upper(upper)
-        default_value = 10
-
-        d = default_value
-
-        self.value = d
-        self.lower = d
-        self.upper = d
-        self.page_size = d
-        self.step_increment = d
-        self.page_increment = d
-
+        # Check if lower is a float before assign it or raise an error
+        if type(lower) == float:
+            self.lower = lower
+        else:
+            raise TypeError(u'>lower< argument must be a float')
+        # Emit a changed signal
         self.changed()
-        self.value_changed()
 
+    def set_page_increment(self, page_increment):
+        """
+        Sets the page increment of the adjustment.
+
+        .. seealso:: :func:`Adjustment.set_lower() <GLXCurses.Adjustment.Adjustment.set_lower()>` about how to \
+        compress multiple emissions of the :func:`Adjustment.changed() <GLXCurses.Adjustment.Adjustment.changed()>` \
+        signal when setting multiple adjustment attributes.
+
+        :param page_increment: the new page increment
+        :type page_increment: float
+        :raise TypeError: when "page_increment" argument is not a :py:data:`float`
+        """
+        # Check if page_increment is a float before assign it or raise an error
+        if type(page_increment) == float:
+            self.page_increment = page_increment
+        else:
+            raise TypeError(u'>page_increment< argument must be a float')
+        # Emit a changed signal
+        self.changed()
+
+    def set_page_size(self, page_size):
+        """
+        Sets the page size of the adjustment.
+
+        .. seealso:: :func:`Adjustment.set_lower() <GLXCurses.Adjustment.Adjustment.set_lower()>` about how to \
+        compress multiple emissions of the :func:`Adjustment.changed() <GLXCurses.Adjustment.Adjustment.changed()>` \
+        signal when setting multiple adjustment attributes.
+
+        :param page_size: the new page size
+        :type page_size: float
+        :raise TypeError: when "page_size" argument is not a :py:data:`float`
+        """
+        # Check if page_size is a float before assign it or raise an error
+        if type(page_size) == float:
+            self.page_size = page_size
+        else:
+            raise TypeError(u'Value of >page_size< argument must be a float')
+        # Emit a changed signal
+        self.changed()
+
+    def set_step_increment(self, step_increment):
+        """
+        Sets the step increment of the adjustment.
+
+        .. seealso:: :func:`Adjustment.set_lower() <GLXCurses.Adjustment.Adjustment.set_lower()>` about how to \
+        compress multiple emissions of the :func:`Adjustment.changed() <GLXCurses.Adjustment.Adjustment.changed()>` \
+        signal when setting multiple adjustment attributes.
+
+        :param step_increment: the new step increment
+        :type step_increment: float
+        :raise TypeError: when "step_increment" argument is not a :py:data:`float`
+        """
+        # Check if step_increment is a float before assign it or raise an error
+        if type(step_increment) == float:
+            self.step_increment = step_increment
+        else:
+            raise TypeError(u'>step_increment< argument must be a float')
+        # Emit a changed signal
+        self.changed()
+
+    def set_minimum_increment(self, minimum_increment):
+        """
+        Sets the minimum_increment attribute value of the adjustment.
+
+        .. note:: That methode don't exist inside GTK3 doc, when get_minimum_increment() exist ... \
+        It's more logic to have the capability to set the minimum_increment attribute.
+
+        .. warning:: That attribute is not use by the \
+        :func:`Adjustment.configure() <GLXCurses.Adjustment.Adjustment.configure()>` method
+
+        :param minimum_increment: the new minimum value
+        :type minimum_increment: float
+        :raise TypeError: when ``minimum_increment`` passed as argument is not a :py:data:`float`
+        """
+        # Check if minimum_increment is a float before assign it or raise an error
+        if type(minimum_increment) == float:
+            self.minimum_increment = minimum_increment
+        else:
+            raise TypeError(u'>minimum_increment< argument must be a float')
+        # Emit a changed signal
+        self.changed()
+
+    def set_upper(self, upper):
+        """
+        Sets the maximum value of the adjustment.
+
+        .. seealso:: :func:`Adjustment.set_lower() <GLXCurses.Adjustment.Adjustment.set_lower()>` about how to \
+        compress multiple emissions of the :func:`Adjustment.changed() <GLXCurses.Adjustment.Adjustment.changed()>` \
+        signal when setting multiple adjustment attributes.
+
+        :param upper: the new maximum value
+        :type upper: float
+        :raise TypeError: when "upper" argument is not a :py:data:`float`
+        """
+        # Check if upper is a float before assign it or raise an error
+        if type(upper) == float:
+            self.upper = upper
+        else:
+            raise TypeError(u'>upper< argument must be a float')
+        # Emit a changed signal
+        self.changed()
