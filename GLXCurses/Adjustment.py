@@ -8,56 +8,215 @@
 from GLXCurses import Application
 import uuid
 
-__author__ = 'Deitsuen'
+__author__ = u'the Galaxie Curses Project'
 
 
 class Adjustment(object):
     """
-    The Adjustment
-    object represents a value which has an associated lower and upper bound,
-    together with step and page increments,and a page size.It is used within several  widgets,
-    including SpinButton, Viewport, and Range (which is a base class for Scrollbar and Scale).
-    The Adjustment object does not update the value itself.
-    Instead it is left up to the owner of the GtkAdjustment to control the value.
-    """
+    :Description:
 
+    The :class:`Adjustment <GLXCurses.Adjustment.Adjustment>` object represents a value which has an associated
+    lower and upper bound, together with step and page increments,and a page size.It is used within several widgets,
+    including :class:`SpinButton <GLXCurses.SpinButton.SpinButton>`, :class:`Viewport <GLXCurses.Viewport.Viewport>`,
+    and :class:`Range <GLXCurses.Range.Range>` (which is a base class for
+    :class:`Scrollbar <GLXCurses.Scrollbar.Scrollbar>` and :class:`Scale <GLXCurses.Scale.Scale>`).
+
+    The Adjustment object does not update the value itself.
+    Instead it is left up to the owner of the :class:`Adjustment <GLXCurses.Adjustment.Adjustment>`
+    to control the value.
+    """
     def __init__(self):
-        # Creates a new Adjustment
-        self.value = 2.0
-        self.lower = 1.0
-        self.upper = 15.0
-        self.step_increment = 1.0
-        self.page_increment = 10.0
-        self.page_size = 20.0
+        """
+        :Attributes Details:
+
+        .. py:attribute:: lower
+
+           The minimum value of the adjustment.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`float`              |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0.0                           |
+              +---------------+-------------------------------+
+
+        .. py:attribute:: page_increment
+
+           The page increment of the adjustment.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`float`              |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0.0                           |
+              +---------------+-------------------------------+
+
+        .. py:attribute:: page_size
+
+           The page size of the adjustment. Note that the page-size is irrelevant and should be set to zero if the
+           adjustment is used for a simple scalar value, e.g. in a
+           :class:`SpinButton <GLXCurses.SpinButton.SpinButton>`.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`float`              |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0.0                           |
+              +---------------+-------------------------------+
+
+        .. py:attribute:: step_increment
+
+           The step increment of the adjustment.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`float`              |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0.0                           |
+              +---------------+-------------------------------+
+
+        .. py:attribute:: minimum_increment
+
+           The smaller of step increment and page increment.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`float`              |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0.0                           |
+              +---------------+-------------------------------+
+
+        .. py:attribute:: upper
+
+           The maximum value of the adjustment.
+
+           Note that values will be restricted by ``upper - page-size`` if the page-size property is nonzero.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`float`              |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0.0                           |
+              +---------------+-------------------------------+
+
+        .. py:attribute:: value
+
+           The value of the adjustment.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`float`              |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0.0                           |
+              +---------------+-------------------------------+
+
+        :Methods:
+        """
+        self.lower = float(0.0)
+        self.page_increment = float(0.0)
+        self.page_size = float(0.0)
+        self.step_increment = float(0.0)
+        self.minimum_increment = float(0.0)
+        self.upper = float(0.0)
+        self.value = float(0.0)
+
+        # Internal
         self.id = uuid.uuid1().int
 
         self.two = None
         self.average = None
+
+    def get_lower(self):
+        """
+        Retrieves the minimum value of the adjustment.
+
+        :return: The current minimum value of the adjustment
+        :rtype: float
+        """
+        return float(self.lower)
+
+    def get_page_increment(self):
+        """
+        Retrieves the page increment of the adjustment.
+
+        :return: The current page increment of the adjustment
+        :rtype: float
+        """
+        return float(self.page_increment)
+
+    def get_page_size(self):
+        """
+        Retrieves the page size of the adjustment.
+
+        :return: The current page size of the adjustment
+        :rtype: float
+        """
+        return float(self.page_size)
+
+    def get_step_increment(self):
+        """
+        Retrieves the step increment of the adjustment.
+
+        :return: The current step increment of the adjustment.
+        :rtype: float
+        """
+        return float(self.step_increment)
+
+    def get_minimum_increment(self):
+        """
+        Gets the smaller of step increment and page increment.
+
+        :return: the minimum increment of adjustment
+        :rtype: float
+        """
+        return float(self.minimum_increment)
 
     def get_value(self):
         """
         Gets the current value of the adjustment. See set_value()
 
         :return: A current value Adjustment
-        :rtype: GLXCurses.Adjustment.set_value()
+        :rtype: float
         """
         return float(self.value)
 
-    def set_value(self):
+    def get_upper(self):
         """
-        Sets the Adjustment value.The value is clamped to lie between “lower” and “upper”.
-        Note that for adjustments which are used in a Scrollbar,
-        the effective range of allowed values goes from “lower” to “upper” - “page-size”.
+        Retrieves the maximum value of the adjustment.
+
+        :return: The current maximum value of the adjustment
+        :rtype: float
+        """
+        return float(self.upper)
+
+    def set_lower(self, lower):
+        """
+        Sets the minimum value of the adjustment.
+        """
+        self.lower = lower
+
+    def set_value(self, value):
+        """
+        Sets the Adjustment value. The value is clamped to lie between “lower” and “upper”.
+
+        Note that for adjustments which are used in a :class:`Scrollbar <GLXCurses.Scrollbar.Scrollbar>`,
+        the effective range of allowed values goes from
+        :py:attr:`lower` to :py:attr:`upper` - :py:attr:`page_size`.
 
         """
-        if self.value > self.upper:
-            self.value = self.upper
-
-        elif self.value < self.lower:
-            self.value = self.lower
-
+        if value < self.get_lower():
+            self.value = self.get_lower()
+        elif value > self.get_upper():
+            self.value = self.get_upper()
         else:
-            self.value = self.value
+            self.value = value
 
     def clamp_page(self):
         """
@@ -113,11 +272,30 @@ class Adjustment(object):
 
         Application.emit('SIGNALS', instance)
 
-    def configure(self):
+    def configure(self, value, lower, upper, step_increment, page_increment, page_size):
         """
         Sets all properties of the adjustment at once.
+
         Use this function to avoid multiple emissions of the “changed” signal.
+        See :func:`Adjustment.set_lower() <GLXCurses.Adjustment.Adjustment.set_lower()>` for
+        an alternative way of compressing multiple emissions of “changed” into one.
+
+        :param value: the new value
+        :param lower: the new minimum value
+        :param upper: the new maximum value
+        :param step_increment: the new step increment
+        :param page_increment: the new page increment
+        :param page_size: the new page size
+        :type value: float
+        :type lower: float
+        :type upper: float
+        :type step_increment: float
+        :type page_increment: float
+        :type page_size: float
         """
+        self.set_value(value)
+        self.set_lower(lower)
+        # self.set_upper(upper)
         default_value = 10
 
         d = default_value
@@ -132,51 +310,3 @@ class Adjustment(object):
         self.changed()
         self.value_changed()
 
-    def get_lower(self):
-        """
-        Get the lower value.
-
-        :return: The minimum value of the adjustment.
-        :rtype: GLXCurses.Adjustment().lower
-        """
-        raise NotImplementedError
-
-    def get_page_increment(self):
-        """
-        Get the page_increment value.
-
-        :return: Retrieves the page increment of the adjustment.
-        :rtype: GLXCurses.Adjustment().page_increment
-        """
-        raise NotImplementedError
-
-    def get_page_size(self):
-        """
-        Get the page_size value.
-
-        :return: Retrieves the page size of the adjustment.
-        :rtype: GLXCurses.Adjustment().page_size
-        """
-        # truc = Adjustment()
-        # print truc.get_lower()
-        # tesst = ["%g" % x for x in truc.clamp_page()]   #Sa test la fonction#
-        # print tesst
-        raise NotImplementedError
-
-    def get_step_increment(self):
-        """
-        Get the step_increment value.
-
-        :return: Retrieves the step increment of the adjustment.
-        :rtype: GLXCurses.Adjustment().step_increment
-        """
-        raise NotImplementedError
-
-    def get_upper(self):
-        """
-        Get upper value
-
-        :return: Retrieves the maximum value of the adjustment.
-        :rtype: GLXCurses.Adjustment().upper
-        """
-        raise NotImplementedError
