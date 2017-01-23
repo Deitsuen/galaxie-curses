@@ -23,9 +23,43 @@ class Constants(object):
     ############################
     # Selection Mode Constants #
     ############################
+    ###########################
+    # BaselinePosition        #
+    ###########################
+    # Whenever a container has some form of natural row it may align children in that row along a common typographical
+    # baseline. If the amount of verical space in the row is taller than the total requested height of the
+    # baseline-aligned children then it can use a GtkBaselinePosition to select where to put the baseline inside the
+    # extra availible space.
+    @constant
+    def BASELINE_POSITION_TOP():
+        """Align the baseline at the top"""
+        return 'BASELINE_POSITION_TOP'
+
+    @constant
+    def BASELINE_POSITION_CENTER():
+        """Center the baseline"""
+        return 'BASELINE_POSITION_CENTER'
+
+    @constant
+    def BASELINE_POSITION_BOTTOM():
+        """Align the baseline at the bottom"""
+        return 'BASELINE_POSITION_BOTTOM'
+    ###########################
+    # Container  PackType     #
+    ###########################
+    # Represents the packing location Box children. (See: VBox, HBox, and ButtonBox).
+    @constant
+    def PACK_START():
+        """The child is packed into the start of the box"""
+        return 'PACK_START'
+
+    @constant
+    def PACK_END():
+        """The child is packed into the end of the box"""
+        return 'PACK_END'
 
     ###########################
-    # ResizeMode Constants #
+    # ResizeMode Constants    #
     ###########################
     @constant
     def RESIZE_PARENT():

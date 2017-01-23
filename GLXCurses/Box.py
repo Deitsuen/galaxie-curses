@@ -107,6 +107,7 @@ class Box(Container):
 
         # Attributes
         self.base_position = glxc.BASELINE_POSITION_CENTER
+        self.base_position = None
         self.homogeneous = False
         self.spacing = 0
 
