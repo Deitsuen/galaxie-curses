@@ -263,15 +263,15 @@ class Adjustment(object):
 
         # Check if we execute the code or raise a error
         if (
-                                                type(lower) == float and
-                                                type(page_increment) == float and
-                                            type(value) == float and
-                                        type(lower) == float and
-                                    type(upper) == float and
-                                type(step_increment) == float and
-                            type(page_increment) == float and
-                        type(page_size) == float
-        ):
+            type(lower) == float and
+            type(page_increment) == float and
+            type(value) == float and
+            type(lower) == float and
+            type(upper) == float and
+            type(step_increment) == float and
+            type(page_increment) == float and
+            type(page_size) == float
+           ):
             # A small control
             value_changed = False
 
