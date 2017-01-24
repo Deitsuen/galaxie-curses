@@ -42,6 +42,28 @@ class Bin(Container):
         Container.__init__(self)
         self.child = None
 
+    def add(self, child):
+        """
+        Add a widget as child, only if the :class:`Bin <GLXCurses.Bin.Bin>` haven't any child
+        :param child: :class:`Widget <GLXCurses.Widget.Widget>`
+        """
+        if self.get_child() is not None:
+            import logging
+            logging.debug('Bin subclass can only contain one widget at a time')
+            pass
+        else:
+            # The added widget recive a parent
+            child.set_parent(self)
+            # The parent recive a new child
+            self.child = child
+
+            # Try to emit add signal
+            # noinspection PyBroadException
+            try:
+                self._emit_add_signal()
+            except:
+                pass
+
     def get_child(self):
         """
         Get the child of the :class:`Bin <GLXCurses.Bin.Bin>`, or :py:obj:`None` if the

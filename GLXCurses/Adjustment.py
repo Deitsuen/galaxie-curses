@@ -179,6 +179,7 @@ class Adjustment(object):
         :param upper: the upper value
         :type lower: float
         :type upper: float
+        :raise TypeError: when every parameters are not :py:data:`float` type
         """
         # https://github.com/GNOME/gtk/blob/master/gtk/gtkadjustment.c line 880
         # Try to not execute the code
@@ -232,7 +233,17 @@ class Adjustment(object):
             'type': 'value-changed',
             'id': self.id
         }
+
+        # Example from Gtk Source
+        # instance = [I_("value-changed"),
+        #             G_OBJECT_CLASS_TYPE(class ),
+        #             G_SIGNAL_RUN_FIRST | G_SIGNAL_NO_RECURSE,
+        #             G_STRUCT_OFFSET (GtkAdjustmentClass, value_changed),
+        #             NULL, NULL,
+        #             NULL,
+        #             G_TYPE_NONE, 0]
         # EVENT EMIT
+
         Application.emit('SIGNALS', instance)
 
     def configure(self, value, lower, upper, step_increment, page_increment, page_size):
@@ -279,7 +290,7 @@ class Adjustment(object):
             self.step_increment = step_increment
             self.upper = upper
 
-            # we don't end up below lower if upper - page_size is smaller than lower
+            # don't use CLAMP() so we don't end up below lower if upper - page_size
             value = min(value, upper - page_size)
             value = max(value, lower)
 
@@ -338,7 +349,7 @@ class Adjustment(object):
         :rtype: float
         """
 
-        # Srouce: https://github.com/GNOME/gtk/blob/master/gtk/gtkadjustment.c line
+        # Source: https://github.com/GNOME/gtk/blob/master/gtk/gtkadjustment.c line 931
         if self.get_step_increment() != 0 and self.page_increment != 0:
             if abs(self.get_step_increment()) < abs(self.get_page_increment()):
                 minimum_increment = self.get_step_increment()
@@ -432,8 +443,6 @@ class Adjustment(object):
                 self.page_size = page_size
         else:
             raise TypeError(u'Value of >page_size< argument must be a float')
-        # Emit a changed signal
-        self.changed()
 
     def set_step_increment(self, step_increment):
         """
@@ -453,8 +462,6 @@ class Adjustment(object):
                 self.step_increment = step_increment
         else:
             raise TypeError(u'>step_increment< argument must be a float')
-        # Emit a changed signal
-        self.changed()
 
     def set_upper(self, upper):
         """
@@ -474,5 +481,3 @@ class Adjustment(object):
                 self.upper = upper
         else:
             raise TypeError(u'>upper< argument must be a float')
-        # Emit a changed signal
-        self.changed()
