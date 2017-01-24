@@ -163,6 +163,10 @@ class Application(object):
         pass
 
     def get_parent(self):
+        """
+        Return the area
+        :return:
+        """
         return self.curses_subwin
 
     def get_parent_size(self):
@@ -301,10 +305,18 @@ class Application(object):
         # Update the active_window_id
         self.active_window_id = len(self.windows) - 1
 
+    def add_menubar(self, menu_bar):
+        """
+        Sets or unsets the menubar of application .
 
-    def add_menubar(self, glxc_menu_bar):
-        glxc_menu_bar.set_parent(self)
-        self.menubar = glxc_menu_bar
+        This can only be done in the primary instance of the application, after it has been registered.
+        “startup” is a good place to call this.
+
+        :param menu_bar: a MenuModel or None
+        :type menu_bar: a MenuModel or None
+        """
+        menu_bar.set_parent(self)
+        self.menubar = menu_bar
 
     def remove_menubar(self):
         self.menubar = None
@@ -326,6 +338,11 @@ class Application(object):
         self.toolbar = None
 
     def refresh(self):
+        """
+        Refresh the NCurses Screen, and redraw each contain widget's
+
+        It's a central refresh point.
+        """
         # Clean the screen
         self.screen.clear()
 
@@ -350,6 +367,9 @@ class Application(object):
         self.get_screen().refresh()
 
     def draw(self):
+        """
+        Special code for rendering to the screen
+        """
         parent_height, parent_width = self.screen.getmaxyx()
         if self.menubar:
             menu_bar_height = 1
@@ -390,9 +410,43 @@ class Application(object):
         self.y = begin_y
 
     def getch(self):
+        """
+        Use by the Mainloop for interact with teh keyboard and the mouse.
+
+        getch() returns an integer corresponding to the key pressed. If it is a normal character, the integer value
+        will be equivalent to the character. Otherwise it returns a number which can be matched with the constants
+        defined in curses.h.
+
+        For example if the user presses F1, the integer returned is 265.
+
+        This can be checked using the macro KEY_F() defined in curses.h. This makes reading keys portable and easy
+        to manage.
+
+        .. code-block:: python
+
+           ch = Application.getch()
+
+        getch() will wait for the user to press a key, (unless you specified a timeout) and when user presses a key,
+        the corresponding integer is returned. Then you can check the value returned with the constants defined in
+        curses.h to match against the keys you want.
+
+        .. code-block:: python
+
+           if ch == curses.KEY_LEFT
+               print("Left arrow is pressed")
+
+
+        :return: an integer corresponding to the key pressed.
+        :rtype: int
+        """
         return self.screen.getch()
 
     def close(self):
+        """
+        A Application must be close for permit to Curses to clean up everything and get back the tty in good condition
+
+        Generaly that is follow  by a sys.exit(0)
+        """
         # Set everything back to normal
         self.screen.keypad(False)
         curses.echo()
@@ -401,6 +455,10 @@ class Application(object):
 
     # Main Loop
     def adopt(self, orphan):
+        """
+        not implemented yesr
+        :param orphan: a poor widget orphan
+        """
         pass
 
     # should be replace by a EventBus
