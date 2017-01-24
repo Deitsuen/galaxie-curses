@@ -118,7 +118,6 @@ class Adjustment(object):
               | Default value | 0.0                           |
               +---------------+-------------------------------+
 
-        :Methods:
         """
         self.lower = float(0.0)
         self.page_increment = float(0.0)
@@ -136,6 +135,8 @@ class Adjustment(object):
 
     def get_value(self):
         """
+        :Methods:
+
         Gets the current value of the adjustment. See set_value()
 
         :return: A current value Adjustment
@@ -156,37 +157,54 @@ class Adjustment(object):
         :raise TypeError: when ``value`` passed as argument is not a :py:data:`float`
         """
         if type(value) == float:
+            # Clamp Value
             if value < self.get_lower():
-                self.value = self.get_lower()
+                value = self.get_lower()
             elif value > self.get_upper():
-                self.value = self.get_upper()
-            else:
+                value = self.get_upper()
+
+            if value != self.get_value():
                 self.value = value
+                self.value_changed()
         else:
             raise TypeError(u'>value< argument must be a float')
 
-    def clamp_page(self):
+    def clamp_page(self, lower, upper):
         """
-        Updates the “value” attribute to ensure that the range between lower and upper is in the current page
-        (i.e. between “value” and “value” + “page-size”).
+        Updates the :py:attr:`value` attribute to ensure that the range between ``lower`` and ``upper`` parameters
+        is in the current page
+        (i.e. between :py:attr:`value` and :py:attr:`value` + :py:attr:`page_size`).
+
         If the range is larger than the page size, then only the start of it will be in the current page.
-        A “value-changed” signal will be emitted if the value is changed.
+        A **value-changed** signal will be emitted if the value is changed.
+
+        :param lower: the lower value
+        :param upper: the upper value
+        :type lower: float
+        :type upper: float
         """
-        self.two = self.lower and self.upper
-        self.average = self.two + self.page_size
+        # https://github.com/GNOME/gtk/blob/master/gtk/gtkadjustment.c line 880
+        # Try to not execute the code
+        if type(upper) == float and type(lower) == float:
 
-        step = 0.1
+            # control
+            need_emission = False
 
-        if self.two >= self.page_size:
-            self.upper = self.lower
-            self.lower = self.upper
+            # Clamp
+            lower = max(min(self.get_upper(), lower), self.get_lower())
+            upper = max(min(self.get_upper(), upper), self.get_lower())
 
-        while self.lower <= self.upper:
-            yield self.lower
+            if self.get_value() + self.get_page_size() < upper:
+                self.value = upper - self.get_page_size()
+                need_emission = True
+            if self.get_value() > lower:
+                self.value = lower
+                need_emission = True
 
-            self.lower += step
-
-        self.value_changed()
+            if need_emission:
+                self.value_changed()
+        else:
+            raise TypeError(u'both parameters >lower< and >upper< must be a float type')
 
     def changed(self):
         """
@@ -243,45 +261,41 @@ class Adjustment(object):
         :type page_size: float
         """
 
-        # Check if the lower value is a float or raise a error
-        if type(lower) == float:
+        # Check if we execute the code or raise a error
+        if (
+                                                type(lower) == float and
+                                                type(page_increment) == float and
+                                            type(value) == float and
+                                        type(lower) == float and
+                                    type(upper) == float and
+                                type(step_increment) == float and
+                            type(page_increment) == float and
+                        type(page_size) == float
+        ):
+            # A small control
+            value_changed = False
+
+            # Set attributes
             self.lower = lower
-        else:
-            raise TypeError(u'>lower argument< must be a float')
-
-        # Check if the page_increment value is a float or raise a error
-        if type(page_increment) == float:
             self.page_increment = page_increment
-        else:
-            raise TypeError(u'>page_increment< argument must be a float')
-
-        # Check if the page_size value is a float or raise a error
-        if type(page_size) == float:
             self.page_size = page_size
-        else:
-            raise TypeError(u'>page_size< argument must be a float')
-
-        # Check if the step_increment value is a float or raise a error
-        if type(step_increment) == float:
             self.step_increment = step_increment
-        else:
-            raise TypeError(u'>step_increment< argument must be a float')
-
-        # Check if the upper value is a float or raise a error
-        if type(upper) == float:
             self.upper = upper
-        else:
-            raise TypeError(u'>upper< argument must be a float')
 
-        # Check if the value value is a float or raise a error
-        if type(value) == float:
-            self.value = value
-        else:
-            raise TypeError(u'>value< argument must be a float')
+            # we don't end up below lower if upper - page_size is smaller than lower
+            value = min(value, upper - page_size)
+            value = max(value, lower)
 
-        # emit only on changed signal for all they allocation's
-        self.changed()
-        self.value_changed()
+            if value != self.get_value():
+                # set value manually to make sure "changed" is emitted with the
+                # new value in place and is emitted before "value-changed"
+                self.value = value
+                value_changed = True
+
+            if value_changed:
+                self.value_changed()
+        else:
+            raise TypeError(u'parameters must be float type')
 
     def get_lower(self):
         """
@@ -326,7 +340,21 @@ class Adjustment(object):
         :return: the minimum increment of adjustment
         :rtype: float
         """
-        return float(self.minimum_increment)
+
+        # Srouce: https://github.com/GNOME/gtk/blob/master/gtk/gtkadjustment.c line
+        if self.get_step_increment() != 0 and self.page_increment != 0:
+            if abs(self.get_step_increment()) < abs(self.get_page_increment()):
+                minimum_increment = self.get_step_increment()
+            else:
+                minimum_increment = self.get_page_increment()
+        elif self.get_step_increment() == 0 and self.get_page_increment() == 0:
+            minimum_increment = 0
+        elif self.get_step_increment() == 0:
+            minimum_increment = self.get_page_increment()
+        else:
+            minimum_increment = self.get_step_increment()
+
+        return minimum_increment
 
     def get_upper(self):
         """
@@ -361,7 +389,8 @@ class Adjustment(object):
         """
         # Check if lower is a float before assign it or raise an error
         if type(lower) == float:
-            self.lower = lower
+            if lower != self.get_lower():
+                self.lower = lower
         else:
             raise TypeError(u'>lower< argument must be a float')
         # Emit a changed signal
@@ -381,7 +410,8 @@ class Adjustment(object):
         """
         # Check if page_increment is a float before assign it or raise an error
         if type(page_increment) == float:
-            self.page_increment = page_increment
+            if page_increment != self.get_page_increment():
+                self.page_increment = page_increment
         else:
             raise TypeError(u'>page_increment< argument must be a float')
         # Emit a changed signal
@@ -401,7 +431,8 @@ class Adjustment(object):
         """
         # Check if page_size is a float before assign it or raise an error
         if type(page_size) == float:
-            self.page_size = page_size
+            if page_size != self.get_page_size():
+                self.page_size = page_size
         else:
             raise TypeError(u'Value of >page_size< argument must be a float')
         # Emit a changed signal
@@ -421,31 +452,10 @@ class Adjustment(object):
         """
         # Check if step_increment is a float before assign it or raise an error
         if type(step_increment) == float:
-            self.step_increment = step_increment
+            if step_increment != self.get_step_increment():
+                self.step_increment = step_increment
         else:
             raise TypeError(u'>step_increment< argument must be a float')
-        # Emit a changed signal
-        self.changed()
-
-    def set_minimum_increment(self, minimum_increment):
-        """
-        Sets the minimum_increment attribute value of the adjustment.
-
-        .. note:: That methode don't exist inside GTK3 doc, when get_minimum_increment() exist ... \
-        It's more logic to have the capability to set the minimum_increment attribute.
-
-        .. warning:: That attribute is not use by the \
-        :func:`Adjustment.configure() <GLXCurses.Adjustment.Adjustment.configure()>` method
-
-        :param minimum_increment: the new minimum value
-        :type minimum_increment: float
-        :raise TypeError: when ``minimum_increment`` passed as argument is not a :py:data:`float`
-        """
-        # Check if minimum_increment is a float before assign it or raise an error
-        if type(minimum_increment) == float:
-            self.minimum_increment = minimum_increment
-        else:
-            raise TypeError(u'>minimum_increment< argument must be a float')
         # Emit a changed signal
         self.changed()
 
@@ -463,7 +473,8 @@ class Adjustment(object):
         """
         # Check if upper is a float before assign it or raise an error
         if type(upper) == float:
-            self.upper = upper
+            if upper != self.get_upper():
+                self.upper = upper
         else:
             raise TypeError(u'>upper< argument must be a float')
         # Emit a changed signal
