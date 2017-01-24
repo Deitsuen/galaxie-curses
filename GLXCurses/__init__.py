@@ -45,4 +45,3 @@ __status__ = u"Development"
 application = Application()
 mainloop = MainLoop()
 
-

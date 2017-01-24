@@ -218,6 +218,17 @@ class Adjustment(object):
             'type': 'changed',
             'id': self.id
         }
+
+        #adjustment_signals[VALUE_CHANGED] =
+        # g_signal_new(I_("value-changed"),
+        #              G_OBJECT_CLASS_TYPE(class ),
+        #             G_SIGNAL_RUN_FIRST | G_SIGNAL_NO_RECURSE,
+        #             G_STRUCT_OFFSET (GtkAdjustmentClass, value_changed),
+        #             NULL, NULL,
+        #             NULL,
+        #             G_TYPE_NONE, 0);
+        #             }
+
         # EVENT EMIT
         Application.emit('SIGNALS', instance)
 
@@ -242,8 +253,8 @@ class Adjustment(object):
         #             NULL, NULL,
         #             NULL,
         #             G_TYPE_NONE, 0]
-        # EVENT EMIT
 
+        # EVENT EMIT
         Application.emit('SIGNALS', instance)
 
     def configure(self, value, lower, upper, step_increment, page_increment, page_size):
