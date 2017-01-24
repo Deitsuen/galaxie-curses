@@ -158,10 +158,7 @@ class Adjustment(object):
         """
         if type(value) == float:
             # Clamp Value
-            if value < self.get_lower():
-                value = self.get_lower()
-            elif value > self.get_upper():
-                value = self.get_upper()
+            value = max(min(self.get_upper(), value), self.get_lower())
 
             if value != self.get_value():
                 self.value = value
