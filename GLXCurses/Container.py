@@ -128,7 +128,7 @@ class Container(Widget):
         :type widget: GLXCurses.Widget
         """
         if self.child:
-            if self.child.id == widget.id:
+            if self.child.id == widget.get_widget_id():
                 self.child = None
                 widget.set_visible(False)
             else:
