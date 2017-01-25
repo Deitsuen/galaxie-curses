@@ -158,11 +158,11 @@ class Adjustment(object):
         """
         if type(value) == float:
             # Clamp Value
-            value = max(min(self.get_upper(), value), self.get_lower())
+            # value = max(min(self.get_upper(), value), self.get_lower())
 
             if value != self.get_value():
                 self.value = value
-                self.value_changed()
+                self.emit_value_changed()
         else:
             raise TypeError(u'>value< argument must be a float')
 
@@ -200,11 +200,11 @@ class Adjustment(object):
                 need_emission = True
 
             if need_emission:
-                self.value_changed()
+                self.emit_value_changed()
         else:
             raise TypeError(u'both parameters >lower< and >upper< must be a float type')
 
-    def changed(self):
+    def emit_changed(self):
         """
         Emits a “changed” signal from the :class:`Adjustment <GLXCurses.Adjustment.Adjustment>`.
 
@@ -232,7 +232,7 @@ class Adjustment(object):
         # EVENT EMIT
         Application.emit('SIGNALS', instance)
 
-    def value_changed(self):
+    def emit_value_changed(self):
         """
         Emits a “value-changed” signal from the :class:`Adjustment <GLXCurses.Adjustment.Adjustment>`.
         This is typically called by the owner of the Adjustment
@@ -291,16 +291,29 @@ class Adjustment(object):
             type(page_increment) == float and
             type(page_size) == float
            ):
-            # A small control
+
+            # Controls
             value_changed = False
+            attribute_changed = False
 
-            # Set attributes
-            self.lower = lower
-            self.page_increment = page_increment
-            self.page_size = page_size
-            self.step_increment = step_increment
-            self.upper = upper
+            # Check if something will change except for value attribute
+            if lower != self.get_lower():
+                self.set_lower(lower)
+                attribute_changed = True
+            if upper != self.get_upper():
+                self.set_upper(upper)
+                attribute_changed = True
+            if step_increment != self.get_step_increment():
+                self.set_step_increment(step_increment)
+                attribute_changed = True
+            if page_increment != self.get_page_increment():
+                self.set_page_increment(page_increment)
+                attribute_changed = True
+            if page_size != self.get_page_size():
+                self.set_page_size(page_size)
+                attribute_changed = True
 
+            # Check for value attribute
             # don't use CLAMP() so we don't end up below lower if upper - page_size
             value = min(value, upper - page_size)
             value = max(value, lower)
@@ -311,8 +324,12 @@ class Adjustment(object):
                 self.value = value
                 value_changed = True
 
+            # Signal emission
+            if attribute_changed:
+                self.emit_changed()
+
             if value_changed:
-                self.value_changed()
+                self.emit_value_changed()
         else:
             raise TypeError(u'parameters must be float type')
 
@@ -323,7 +340,7 @@ class Adjustment(object):
         :return: The current minimum value of the adjustment
         :rtype: float
         """
-        return float(self.lower)
+        return self.lower
 
     def get_page_increment(self):
         """
@@ -332,7 +349,7 @@ class Adjustment(object):
         :return: The current page increment of the adjustment
         :rtype: float
         """
-        return float(self.page_increment)
+        return self.page_increment
 
     def get_page_size(self):
         """
@@ -341,7 +358,7 @@ class Adjustment(object):
         :return: The current page size of the adjustment
         :rtype: float
         """
-        return float(self.page_size)
+        return self.page_size
 
     def get_step_increment(self):
         """
@@ -350,11 +367,12 @@ class Adjustment(object):
         :return: The current step increment of the adjustment.
         :rtype: float
         """
-        return float(self.step_increment)
+        return self.step_increment
 
     def get_minimum_increment(self):
         """
-        Gets the smaller of step increment and page increment.
+        Get the smaller of step increment and page increment. Note that value is compute, then it have no need of a
+        set_minimum_increment() method.
 
         :return: the minimum increment of adjustment
         :rtype: float
@@ -412,8 +430,6 @@ class Adjustment(object):
                 self.lower = lower
         else:
             raise TypeError(u'>lower< argument must be a float')
-        # Emit a changed signal
-        self.changed()
 
     def set_page_increment(self, page_increment):
         """
@@ -434,7 +450,7 @@ class Adjustment(object):
         else:
             raise TypeError(u'>page_increment< argument must be a float')
         # Emit a changed signal
-        self.changed()
+        self.emit_changed()
 
     def set_page_size(self, page_size):
         """
@@ -492,3 +508,5 @@ class Adjustment(object):
                 self.upper = upper
         else:
             raise TypeError(u'>upper< argument must be a float')
+
+

@@ -86,20 +86,20 @@ if __name__ == '__main__':
 
         if event_args[0] == curses.KEY_UP:
             x, y = label_press_q.get_alignment()
-            y -= 0.1
+            y -= 0.033
             label_press_q.set_alignment(x, y)
 
         if event_args[0] == curses.KEY_DOWN:
             x, y = label_press_q.get_alignment()
-            y += 0.1
+            y += 0.033
             label_press_q.set_alignment(x, y)
         if event_args[0] == curses.KEY_RIGHT:
             x, y = label_press_q.get_alignment()
-            x += 0.1
+            x += 0.033
             label_press_q.set_alignment(x, y)
         if event_args[0] == curses.KEY_LEFT:
             x, y = label_press_q.get_alignment()
-            x -= 0.1
+            x -= 0.033
             label_press_q.set_alignment(x, y)
 
         # Keyboard temporary thing
