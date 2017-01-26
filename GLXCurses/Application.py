@@ -495,7 +495,7 @@ class Application(object):
             for handler in self._get_signal_handlers_dict()[detailed_signal]:
                 handler(self, detailed_signal, args)
 
-        self.windows[self.active_window_id].handle_and_dispatch_event(detailed_signal, args)
+        self.windows[self.active_window_id]['WIDGET'].handle_and_dispatch_event(detailed_signal, args)
 
     # Focus and Selection
     def get_default(self):

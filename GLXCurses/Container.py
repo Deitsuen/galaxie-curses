@@ -323,3 +323,5 @@ class Container(Widget):
 
         for children_info in self.get_children():
             children_info['WIDGET'].handle_and_dispatch_event(event_signal, args)
+
+

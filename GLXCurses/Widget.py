@@ -468,6 +468,7 @@ class Widget(GLXCurses.Object):
 
         self.set_curses_subwin(drawing_area)
         if (self.get_height() > self.preferred_height) and (self.get_width() > self.preferred_width):
+            # Pcharm have trouble for resolv it
             self.draw_widget_in_area()
 
     # Selection and Focus
