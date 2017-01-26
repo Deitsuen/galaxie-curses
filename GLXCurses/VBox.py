@@ -29,26 +29,26 @@ class VBox(GLXCurses.Box):
                 devised_box_size = int(self.get_height() / len(self.get_children()))
                 index = 0
                 total_vertical_spacing = 0
-                for glxc_widget in self.get_children():
+                for children_info in self.get_children():
 
                     # Check if that the first element
                     if index == 0:
                         sub_win = self.get_curses_subwin().subwin(
-                            devised_box_size - glxc_widget.get_spacing(),
-                            self.get_width() - glxc_widget.get_spacing() * 2,
-                            self.get_y() + glxc_widget.get_spacing(),
-                            self.get_x() + glxc_widget.get_spacing()
+                            devised_box_size - children_info['WIDGET'].get_spacing(),
+                            self.get_width() - children_info['WIDGET'].get_spacing() * 2,
+                            self.get_y() + children_info['WIDGET'].get_spacing(),
+                            self.get_x() + children_info['WIDGET'].get_spacing()
                         )
-                        total_vertical_spacing += glxc_widget.get_spacing()
+                        total_vertical_spacing += children_info['WIDGET'].get_spacing()
                     # Normal
                     elif 1 <= index <= len(self.get_children())-2:
                         sub_win = self.get_curses_subwin().subwin(
-                            devised_box_size - (glxc_widget.get_spacing() / 2),
-                            self.get_width() - glxc_widget.get_spacing() * 2,
-                            self.get_y() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2),
-                            self.get_x() + glxc_widget.get_spacing()
+                            devised_box_size - (children_info['WIDGET'].get_spacing() / 2),
+                            self.get_width() - children_info['WIDGET'].get_spacing() * 2,
+                            self.get_y() + (devised_box_size * index) + (children_info['WIDGET'].get_spacing() / 2),
+                            self.get_x() + children_info['WIDGET'].get_spacing()
                         )
-                        total_vertical_spacing += glxc_widget.get_spacing() / 2
+                        total_vertical_spacing += children_info['WIDGET'].get_spacing() / 2
                     # Check if that the last element
                     else:
                         last_element_vertical_size = self.get_height()
@@ -57,14 +57,14 @@ class VBox(GLXCurses.Box):
                         try:
                             sub_win = self.get_curses_subwin().subwin(
                                     last_element_vertical_size,
-                                    self.get_width() - glxc_widget.get_spacing() * 2,
+                                    self.get_width() - children_info['WIDGET'].get_spacing() * 2,
                                     self.get_y() + (devised_box_size * index),
-                                    self.get_x() + glxc_widget.get_spacing()
+                                    self.get_x() + children_info['WIDGET'].get_spacing()
                             )
                         except curses.error:
                             pass
                     index += 1
 
                     # Drawing
-                    glxc_widget.set_curses_subwin(sub_win)
-                    glxc_widget.draw_widget_in_area()
+                    children_info['WIDGET'].set_curses_subwin(sub_win)
+                    children_info['WIDGET'].draw_widget_in_area()

@@ -138,19 +138,52 @@ class Box(Container):
         the global amount specified by :py:attr:`spacing` attribute. If child is a widget at one of the reference ends of box , then padding pixels are also put between child and the reference edge of box
         :type padding: bool
         """
+        # Try to exit as soon of possible
+        if type(expand) != bool:
+            raise TypeError(u'>expand< argument must be a bool')
+        elif type(fill) != bool:
+            raise TypeError(u'>fill< argument must be a bool')
+        elif type(padding) != int and padding < 0:
+            raise TypeError(u'>fill< padding must be a positive int')
+        else:
 
-        self.get_children().insert(0, child)
-        try:
-            self._emit_pack_start_signal()
-        except:
-            pass
+            # Packing information's
+            child_info = dict()
+            child_info['WIDGET'] = child
+            child_info['EXPAND'] = expand
+            child_info['FILL'] = fill
+            child_info['PADDING'] = padding
+
+            self.get_children().insert(0, child_info)
+
+            try:
+                self._emit_pack_start_signal()
+            except:
+                pass
 
     def pack_end(self, child, expand=True, fill=True, padding=0):
-        self.get_children().append(child)
-        try:
-            self._emit_pack_end_signal()
-        except:
-            pass
+        # Try to exit as soon of possible
+        if type(expand) != bool:
+            raise TypeError(u'>expand< argument must be a bool')
+        elif type(fill) != bool:
+            raise TypeError(u'>fill< argument must be a bool')
+        elif type(padding) != int and padding < 0:
+            raise TypeError(u'>fill< padding must be a positive int')
+        else:
+            # Packing information's
+            child_info = dict()
+            child_info['WIDGET'] = child
+            child_info['EXPAND'] = expand
+            child_info['FILL'] = fill
+            child_info['PADDING'] = padding
+
+            # Append the the Box child list
+            self.get_children().append(child_info)
+
+            try:
+                self._emit_pack_end_signal()
+            except:
+                pass
 
     def pack_start_defaults(self, widget):
         pass
@@ -256,7 +289,8 @@ class Box(Container):
         instance = {
             'class': self.__class__.__name__,
             'type': 'pack-end',
-            'id': self.id
+            'id': self.id,
+            'user_data': self.get_children()[-1]
         }
         # EVENT EMIT
         Application().emit('SIGNALS', instance)
@@ -266,7 +300,9 @@ class Box(Container):
         instance = {
             'class': self.__class__.__name__,
             'type': 'pack-start',
-            'id': self.id
+            'id': self.id,
+            'user_data': self.get_children()[0]
         }
         # EVENT EMIT
         Application().emit('SIGNALS', instance)
+
