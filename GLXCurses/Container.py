@@ -275,11 +275,15 @@ class Container(Widget):
 
     # Internal
     def _emit_add_signal(self):
+        """
+        Emit the **add** signal, all widget it have subcribe to it signal will be in touch
+        """
         # Create a Dict with everything
         instance = {
             'class': self.__class__.__name__,
             'type': 'add',
-            'id': self.id
+            'id': self.id,
+            'user_data': self.get_children()[0]
         }
         # EVENT EMIT
         Application().emit('SIGNALS', instance)

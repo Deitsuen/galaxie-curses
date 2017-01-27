@@ -285,7 +285,8 @@ class Box(Container):
         instance = {
             'class': self.__class__.__name__,
             'type': 'pack-end',
-            'id': self.id
+            'id': self.id,
+            'user_data': self.get_children()[-1]
         }
         # EVENT EMIT
         Application().emit('SIGNALS', instance)
@@ -295,7 +296,8 @@ class Box(Container):
         instance = {
             'class': self.__class__.__name__,
             'type': 'pack-start',
-            'id': self.id
+            'id': self.id,
+            'user_data': self.get_children()[0]
         }
         # EVENT EMIT
         Application().emit('SIGNALS', instance)

@@ -238,7 +238,7 @@ class MainLoop(object):
         # Main while 1
         while self.is_running():
             input_event = Application().getch()
-            logging.debug(self.event_buffer)
+            # logging.debug(self.event_buffer)
 
             if input_event != -1:
                 self._handle_curses_input(input_event)
