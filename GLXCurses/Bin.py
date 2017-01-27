@@ -54,15 +54,15 @@ class Bin(Container):
         else:
             # The added widget recive a parent
             child.set_parent(self)
+
+            child_info = dict()
+            child_info['WIDGET'] = child
+
             # The parent recive a new child
-            self.child = child
+            self.child = child_info
 
             # Try to emit add signal
-            # noinspection PyBroadException
-            try:
-                self._emit_add_signal()
-            except:
-                pass
+            self._emit_add_signal()
 
     def get_child(self):
         """

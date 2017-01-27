@@ -138,9 +138,6 @@ class Box(Container):
         the global amount specified by :py:attr:`spacing` attribute. If child is a widget at one of the reference ends of box , then padding pixels are also put between child and the reference edge of box
         :type padding: bool
         """
-
-
-
         # Try to exit as soon of possible
         if type(expand) != bool:
             raise TypeError(u'>expand< argument must be a bool')
@@ -160,11 +157,7 @@ class Box(Container):
 
             self.get_children().insert(0, child_info)
 
-        # self.get_children().insert(0, child)
-        try:
             self._emit_pack_start_signal()
-        except:
-            pass
 
     def pack_end(self, child, expand=True, fill=True, padding=0):
         # Try to exit as soon of possible
@@ -185,8 +178,6 @@ class Box(Container):
             child_info['PADDING'] = padding
 
             self.get_children().append(child_info)
-
-            #self.get_children().append(child)
 
             self._emit_pack_end_signal()
 

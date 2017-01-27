@@ -102,15 +102,14 @@ class Container(Widget):
         """
         # The added widget recive a parent
         widget.set_parent(self)
+        child_info = dict()
+        child_info['WIDGET'] = widget
+
         # The parent recive a new child
-        self.child = widget
+        self.child = child_info
 
         # Try to emit add signal
-        # noinspection PyBroadException
-        try:
-            self._emit_add_signal()
-        except:
-            pass
+        self._emit_add_signal()
 
     def remove(self, widget):
         """
