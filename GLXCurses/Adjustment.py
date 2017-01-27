@@ -400,7 +400,7 @@ class Adjustment(object):
         :return: The current maximum value of the adjustment
         :rtype: float
         """
-        return float(self.upper)
+        return self.upper
 
     def set_lower(self, lower):
         """

@@ -40,6 +40,7 @@ class Bin(Container):
 
     def __init__(self):
         Container.__init__(self)
+        self.child = None
 
     def add(self, child):
         """
@@ -53,10 +54,8 @@ class Bin(Container):
         else:
             # The added widget recive a parent
             child.set_parent(self)
-            child_info = dict()
-            child_info['WIDGET'] = child
             # The parent recive a new child
-            self.child = child_info
+            self.child = child
 
             # Try to emit add signal
             # noinspection PyBroadException

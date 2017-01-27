@@ -102,10 +102,8 @@ class Container(Widget):
         """
         # The added widget recive a parent
         widget.set_parent(self)
-        child_info = dict()
-        child_info['WIDGET'] = widget
         # The parent recive a new child
-        self.child = child_info
+        self.child = widget
 
         # Try to emit add signal
         # noinspection PyBroadException
@@ -313,15 +311,3 @@ class Container(Widget):
         if user_data is None:
             user_data = list()
         pass
-
-    def handle_and_dispatch_event(self, event_signal, args=None):
-        if args is None:
-            args = []
-        if event_signal in self.event_handlers:
-            for handler in self.event_handlers[event_signal]:
-                handler(self, event_signal, args)
-
-        for children_info in self.get_children():
-            children_info['WIDGET'].handle_and_dispatch_event(event_signal, args)
-
-
