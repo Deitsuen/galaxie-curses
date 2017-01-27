@@ -119,7 +119,7 @@ class Application(object):
         self.name = 'Application'
         self.windows_id_number = None
         self.active_window_id = None
-        self.windows = []
+        self.windows = list()
         self.attribute = self.style.get_default_style()
 
         # Controller
@@ -271,7 +271,9 @@ class Application(object):
         :type window: GLXCurses.Window
         """
         window.set_parent(self)
-        self.windows.append(window)
+        child_info = dict()
+        child_info['WIDGET'] = window
+        self.windows.append(child_info)
         self.active_window_id = len(self.windows) - 1
 
     def remove_window(self, window):
@@ -351,8 +353,10 @@ class Application(object):
 
         # Check main curses_subwin to display
         if self.curses_subwin:
-            if self.windows:
-                self.windows[self.active_window_id].draw()
+            try:
+                self.windows[self.active_window_id]['WIDGET'].draw()
+            except TypeError:
+                pass
 
         if self.menubar:
             self.menubar.draw()
@@ -495,7 +499,7 @@ class Application(object):
             for handler in self._get_signal_handlers_dict()[detailed_signal]:
                 handler(self, detailed_signal, args)
 
-        self.windows[self.active_window_id].handle_and_dispatch_event(detailed_signal, args)
+        self.windows[self.active_window_id]['WIDGET'].handle_and_dispatch_event(detailed_signal, args)
 
     # Focus and Selection
     def get_default(self):

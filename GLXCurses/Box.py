@@ -139,18 +139,56 @@ class Box(Container):
         :type padding: bool
         """
 
-        self.get_children().insert(0, child)
+
+
+        # Try to exit as soon of possible
+        if type(expand) != bool:
+            raise TypeError(u'>expand< argument must be a bool')
+        elif type(fill) != bool:
+            raise TypeError(u'>fill< argument must be a bool')
+        elif type(padding) != int and padding < 0:
+            raise TypeError(u'>fill< padding must be a positive int')
+        else:
+            # Except the child everything look OK , then
+            # Create a dict for store information's about packing
+            # We'll store it as a list elment later
+            child_info = dict()
+            child_info['WIDGET'] = child
+            child_info['EXPAND'] = expand
+            child_info['FILL'] = fill
+            child_info['PADDING'] = padding
+
+            self.get_children().insert(0, child_info)
+
+        # self.get_children().insert(0, child)
         try:
             self._emit_pack_start_signal()
         except:
             pass
 
     def pack_end(self, child, expand=True, fill=True, padding=0):
-        self.get_children().append(child)
-        try:
+        # Try to exit as soon of possible
+        if type(expand) != bool:
+            raise TypeError(u'>expand< argument must be a bool')
+        elif type(fill) != bool:
+            raise TypeError(u'>fill< argument must be a bool')
+        elif type(padding) != int and padding < 0:
+            raise TypeError(u'>fill< padding must be a positive int')
+        else:
+            # Except the child everything look OK , then
+            # Create a dict for store information's about packing
+            # We'll store it as a list elment later
+            child_info = dict()
+            child_info['WIDGET'] = child
+            child_info['EXPAND'] = expand
+            child_info['FILL'] = fill
+            child_info['PADDING'] = padding
+
+            self.get_children().append(child_info)
+
+            #self.get_children().append(child)
+
             self._emit_pack_end_signal()
-        except:
-            pass
 
     def pack_start_defaults(self, widget):
         pass

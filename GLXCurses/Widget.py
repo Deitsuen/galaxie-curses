@@ -184,7 +184,9 @@ class Widget(GLXCurses.Object):
         self.parent = parent
 
     def adopt(self, orphan):
-        self.children.append(orphan)
+        child_info = dict()
+        child_info['WIDGET'] = orphan
+        self.children.append(child_info)
 
     def set_parent(self, parent):
 
@@ -497,5 +499,5 @@ class Widget(GLXCurses.Object):
             for handler in self.event_handlers[event_signal]:
                 handler(self, event_signal, args)
 
-        for child in self.children:
-            child.handle_and_dispatch_event(event_signal, args)
+        for children in self.children:
+            children['WIDGET'].handle_and_dispatch_event(event_signal, args)

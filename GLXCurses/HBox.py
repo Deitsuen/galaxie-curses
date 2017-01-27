@@ -31,41 +31,41 @@ class HBox(Box):
                 devised_box_size = int(self.get_width() / len(self.get_children()))
                 index = 0
                 total_horizontal_spacing = 0
-                for glxc_widget in self.get_children():
+                for children in self.get_children():
 
                     # Check if that the first element
                     if index == 0:
                         sub_win = self.get_curses_subwin().subwin(
-                            self.get_height() - glxc_widget.get_spacing() * 2,
-                            devised_box_size - glxc_widget.get_spacing(),
-                            self.get_y() + glxc_widget.get_spacing(),
-                            self.get_x() + glxc_widget.get_spacing()
+                            self.get_height() - children['WIDGET'].get_spacing() * 2,
+                            devised_box_size - children['WIDGET'].get_spacing(),
+                            self.get_y() + children['WIDGET'].get_spacing(),
+                            self.get_x() + children['WIDGET'].get_spacing()
                         )
-                        total_horizontal_spacing += glxc_widget.get_spacing()
+                        total_horizontal_spacing += children['WIDGET'].get_spacing()
                     # Normal
                     elif 1 <= index <= len(self.get_children()) - 2:
                         sub_win = self.get_curses_subwin().subwin(
-                            self.get_height() - glxc_widget.get_spacing() * 2,
-                            devised_box_size - (glxc_widget.get_spacing() / 2),
-                            self.get_y() + glxc_widget.get_spacing(),
-                            self.get_x() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2)
+                            self.get_height() - children['WIDGET'].get_spacing() * 2,
+                            devised_box_size - (children['WIDGET'].get_spacing() / 2),
+                            self.get_y() + children['WIDGET'].get_spacing(),
+                            self.get_x() + (devised_box_size * index) + (children['WIDGET'].get_spacing() / 2)
                         )
-                        total_horizontal_spacing += glxc_widget.get_spacing() / 2
+                        total_horizontal_spacing += children['WIDGET'].get_spacing() / 2
                     else:
                         # Check if that the last element
                         last_element_horizontal_size = self.get_width()
                         last_element_horizontal_size -= (devised_box_size * index)
                         last_element_horizontal_size -= total_horizontal_spacing
-                        last_element_horizontal_size -= glxc_widget.get_spacing()
+                        last_element_horizontal_size -= children['WIDGET'].get_spacing()
                         sub_win = self.get_curses_subwin().subwin(
-                            self.get_height() - glxc_widget.get_spacing() * 2,
+                            self.get_height() - children['WIDGET'].get_spacing() * 2,
                             last_element_horizontal_size,
-                            self.get_y() + glxc_widget.get_spacing(),
-                            self.get_x() + (devised_box_size * index) + (glxc_widget.get_spacing() / 2)
+                            self.get_y() + children['WIDGET'].get_spacing(),
+                            self.get_x() + (devised_box_size * index) + (children['WIDGET'].get_spacing() / 2)
                         )
 
                     index += 1
 
                     # Drawing
-                    glxc_widget.set_curses_subwin(sub_win)
-                    glxc_widget.draw_widget_in_area()
+                    children['WIDGET'].set_curses_subwin(sub_win)
+                    children['WIDGET'].draw_widget_in_area()
