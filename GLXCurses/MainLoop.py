@@ -8,7 +8,7 @@
 from GLXCurses import Application
 import curses
 import logging
-
+import multiprocessing
 
 class Singleton(type):
     def __init__(cls, name, bases, dict):
@@ -237,16 +237,26 @@ class MainLoop(object):
 
         # Main while 1
         while self.is_running():
-            input_event = Application().getch()
-            logging.debug(self.event_buffer)
+            try:
+                input_event = Application().getch()
+                logging.debug(self.event_buffer)
 
-            if input_event != -1:
-                self._handle_curses_input(input_event)
+                if input_event != -1:
+                    self._handle_curses_input(input_event)
 
-            self._handle_event()
+                self._handle_event()
 
-            # In case it was a graphic event we refresh the screen
-            Application().refresh()
+                # In case it was a graphic event we refresh the screen
+                # Application().refresh()
+
+            except KeyboardInterrupt:
+                self._set_is_running(False)
+                logging.info(self.__class__.__name__ + ': Stopping ...')
+                break
+            except MemoryError:
+                self._set_is_running(False)
+                logging.info(self.__class__.__name__ + ': MemoryError Stopping ...')
+                break
 
         # Here self.get_started() == False , then the GLXCurse.Mainloop() should be close
         Application().close()
