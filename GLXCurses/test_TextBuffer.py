@@ -1,31 +1,29 @@
 import unittest
 from TextBuffer import TextBuffer
 
-class text_functions(unittest.TestCase):
+
+class test_functions(unittest.TestCase):
+    def setUp(self):
+        # Before the test start
+        self.text_buffer = TextBuffer
 
     def test_buffer(self):
-        buffer = TextBuffer.__doc__
-        assert buffer
+        assert self.text_buffer.__doc__
 
     def test_buffer_new(self):
-        buffer_new = TextBuffer.text_buffer_new.__doc__
-        assert buffer_new
+        assert self.text_buffer.text_buffer_new.__doc__
 
     def test_buffer_get_line_count(self):
-        buffer_get_line_count = TextBuffer.text_buffer_get_line_count.__doc__
-        assert buffer_get_line_count
+        assert self.text_buffer.text_buffer_get_line_count.__doc__
 
     def test_buffer_get_char_count(self):
-        buffer_get_char_count = TextBuffer.text_buffer_get_char_count.__doc__
-        assert buffer_get_char_count
+        assert self.text_buffer.text_buffer_get_char_count.__doc__
 
     def text_buffer_tag_table(self):
-        buffer_get_tag_table = TextBuffer.text_buffer_get_tag_table.__doc__
-        assert buffer_get_tag_table
+        assert self.text_buffer.text_buffer_get_tag_table.__doc__
 
     def test_buffer_insert(self):
-        buffer_insert= TextBuffer.text_buffer_insert.__doc__
-        assert buffer_insert
+        assert self.text_buffer.text_buffer_insert.__doc__
 
 
 if __name__ == '__main__':
