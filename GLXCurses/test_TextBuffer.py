@@ -9,10 +9,7 @@ class test_functions(unittest.TestCase):
 
     def test_buffer(self):
         assert self.text_buffer.__doc__
-
-    def test_buffer_new(self):
-        assert self.text_buffer.text_buffer_new.__doc__
-
+        
     def test_buffer_get_line_count(self):
         assert self.text_buffer.text_buffer_get_line_count.__doc__
 
