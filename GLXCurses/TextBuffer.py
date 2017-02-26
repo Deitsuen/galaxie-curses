@@ -4,33 +4,35 @@
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Deitsuen
 
-class TextBuffer():
-    """
-    :Description:
+class TextBuffer(object):
 
-    You may wish to begin by reading the text widget conceptual overview which gives an overview of all the objects
-    and data types related to the text widget and how they work together.
-
-    """
-    pass
-
-    def text_buffer_new(self):
+    def __init__(self, table=None):
         """
-         Creates a new :class:`TextBuffer <GLXCurses.TextBuffer.TextBuffer>`
+        Create the new textBuffer object
+        ***Properties***
+        line_count - the number of
 
-         Returns a new :class:`TextBuffer <GLXCurses.TextBuffer.TextBuffer>`
 
+        text - The contents of the buffer. Default value: "".
         """
-        pass
+
+        self.table = table
+        self.tag_table = ""
+        self.text = """"""
+        self.slice = ""
 
     def text_buffer_get_line_count(self):
         """
         Obtains the number of lines in the buffer.
         This value is cached, so the function is very fast.
+
+        :param line
         """
-        pass
+        return len(self.text.split('\n'))
+
 
     def text_buffer_get_char_count(self):
+
         """
         Gets the number of characters in the buffer;
         :Note:
@@ -38,8 +40,8 @@ class TextBuffer():
         you can’t e.g. expect the contents of the buffer in string form to be this many bytes long.
         The character count is cached, so this function is very fast.
         """
-        pass
-
+        return len(self.text)
+    
     def text_buffer_get_tag_table(self):
         """
         Get the :class:`TextTagTable <GLXCurses.TextTagTable.TextTagTable>` associated with this buffer.
