@@ -3,17 +3,22 @@
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Deitsuen
+import sys
+import uuid
+from GLXCurses import Application
 
 class TextBuffer(object):
+
+
+
+
 
     def __init__(self, table=None):
         """
         Create the new textBuffer object
-        ***Properties***
-        line_count - the number of
 
-
-        text - The contents of the buffer. Default value: "".
+        :param line_count - count the number of line and return the result
+        :param text - The contents of the buffer. Default value: "".
         """
 
         self.table = table
@@ -21,18 +26,17 @@ class TextBuffer(object):
         self.text = """"""
         self.slice = ""
 
-    def text_buffer_get_line_count(self):
+        # internal
+        self.id = uuid.uuid1().int
+
+    def get_line_count(self):
         """
         Obtains the number of lines in the buffer.
         This value is cached, so the function is very fast.
-
-        :param line
         """
         return len(self.text.split('\n'))
 
-
-    def text_buffer_get_char_count(self):
-
+    def get_char_count(self):
         """
         Gets the number of characters in the buffer;
         :Note:
@@ -41,36 +45,37 @@ class TextBuffer(object):
         The character count is cached, so this function is very fast.
         """
         return len(self.text)
-    
-    def text_buffer_get_tag_table(self):
+
+    def get_tag_table(self):
         """
         Get the :class:`TextTagTable <GLXCurses.TextTagTable.TextTagTable>` associated with this buffer.
         """
-        pass
+        if None:
+            return None
 
-    def text_buffer_insert(self):
-        """
-        Inserts :class:`len <GLXCurses.len.len>` of :class:`text <GLXCurses.text.text>` at position :class:`iter <GLXCurses.iter.iter>`.
-        If :class:`len <GLXCurses.len.len>` is -1,
-        :class:`text <GLXCurses.text.text>` must be nul-terminated and will be inserted in its entirety.
-        Emits the “insert-text” signal;
-        insertion actually occurs in the default handler for the signal.
-        :class:`iter <GLXCurses.iter.iter>` is invalidated when insertion occurs (because the buffer contents change),
-        but the default signal handler revalidates it to point to the end of the inserted text.
+    def insert(self, text):
+        lenght_byte = sys.getsizeof(text)  # <- Len byte
+        for line in iter(text):
 
-        :Parameter:
+            if lenght_byte <= -1:
+                line = None
+                self.text = line
+                return self.emit_insert()
 
-        +---------------+-------------------------------+
-        | Buffer        | :py:data:`TextBuffer`         |
-        +---------------+-------------------------------+
-        | Iter          | a position in the buffer      |
-        +---------------+-------------------------------+
-        | Text          | text in UTF-8 format          |
-        +---------------+-------------------------------+
-        | Len           | length of text in bytes, or -1|
-        +---------------+-------------------------------+
+    def emit_insert(self):
 
-        """
-        pass
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'value-changed',
+            'id': self.id
+        }
 
-# W.I.P (Work In Progress)
+        Application().emit('SIGNALS', instance)
+
+
+if __name__ == '__main__':
+    textbuffer = TextBuffer()
+    textbuffer.insert("ttttttt")
+    textbuffer.emit_insert()
+
+    # W.I.P (Work In Progress)
