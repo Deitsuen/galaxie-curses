@@ -74,12 +74,13 @@ class TextBuffer(object):
         }
         # event emit
         Application.emit('SIGNALS', instance)
-        return instance
-
 
 if __name__ == '__main__':
     textbuffer = TextBuffer()
-    textbuffer.insert("ttttttt")
-    textbuffer.emit_insert()
+    print ("Text:      :"+str(textbuffer.get_char_count()))
+    print ("Text:      :"+str(textbuffer.get_line_count()))
+    print textbuffer.insert("This is a test")
+
+
 
     # W.I.P (Work In Progress)
