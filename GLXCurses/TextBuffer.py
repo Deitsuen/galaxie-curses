@@ -9,10 +9,6 @@ from GLXCurses import Application
 
 class TextBuffer(object):
 
-
-
-
-
     def __init__(self, table=None):
         """
         Create the new textBuffer object
@@ -23,10 +19,11 @@ class TextBuffer(object):
 
         self.table = table
         self.tag_table = ""
-        self.text = """"""
+        self.text = """bonzour"""
         self.slice = ""
-
+        
         # internal
+        # Unique ID it permit to individually identify a widget by example for get_focus get_default
         self.id = uuid.uuid1().int
 
     def get_line_count(self):
@@ -53,24 +50,31 @@ class TextBuffer(object):
         if None:
             return None
 
-    def insert(self, text):
-        lenght_byte = sys.getsizeof(text)  # <- Len byte
-        for line in iter(text):
+        def insert(self, text):
+        len_bytes = sys.getsizeof(text)
+        iter = list(self.text)
 
-            if lenght_byte <= -1:
-                line = None
-                self.text = line
-                return self.emit_insert()
+        if len_bytes <= -1:
+            text = None
+            iter.insert(0, text)
+            self.emit_insert()
+            if iter != list(self.text):
+                iter.remove(None)
+                iter.insert(-1, text)
+                return iter
+        else:
+            text = text
+            return str(text)
 
     def emit_insert(self):
-
         instance = {
             'class': self.__class__.__name__,
-            'type': 'value-changed',
+            'type': 'insert-text',
             'id': self.id
         }
-
-        Application().emit('SIGNALS', instance)
+        # event emit
+        Application.emit('SIGNALS', instance)
+        return instance
 
 
 if __name__ == '__main__':
