@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
-import curses
+from GLXCurses import Box
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -9,9 +8,12 @@ import curses
 __author__ = 'Tuux'
 
 
-class VBox(GLXCurses.Box):
+class VBox(Box):
+    def destroy(self):
+        raise NotImplementedError
+
     def __init__(self):
-        GLXCurses.Box.__init__(self)
+        Box.__init__(self)
         self.set_name('VBox')
 
         self.preferred_height = 2
