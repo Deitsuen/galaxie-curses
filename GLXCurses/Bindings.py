@@ -17,7 +17,7 @@ class Binding(object):
 
     """
     def __init__(self):
-        self.binding_set = None  # a GtkBindingSet to add a signal to
+        self.binding_set = None  # a BindingSet to add a signal to
         self.keyval = None       # key value
         self.modifiers = None    # key modifier
         self.signal_name = None  # signal name to be bound

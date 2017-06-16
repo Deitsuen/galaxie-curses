@@ -116,20 +116,23 @@ class Statusbar(Widget):
         :param context_id: a context identifier
         :type context_id: :py:obj:`int`
         """
-        count = 0
-        last_found = None
-        last_element = None
-        for element in self.statusbar_stack:
-            if context_id == element[0]:
-                last_found = count
-                last_element = element
-            count += 1
+        if type(context_id) == int:
+            count = 0
+            last_found = None
+            last_element = None
+            for element in self.statusbar_stack:
+                if context_id == element[0]:
+                    last_found = count
+                    last_element = element
+                count += 1
 
-        if last_found is None:
-            pass
+            if last_found is None:
+                pass
+            else:
+                self.statusbar_stack.pop(last_found)
+                self.emit_text_popped(last_element[0], last_element[2])
         else:
-            self.statusbar_stack.pop(last_found)
-            self.emit_text_popped(last_element[0], last_element[2])
+            raise TypeError(u'>context_id< argument must be a int type')
 
     def remove(self, context_id, message_id):
         """
@@ -141,26 +144,29 @@ class Statusbar(Widget):
         :param message_id: a message identifier, as returned by Statusbar.push()
         :type message_id: :py:obj:`int`
         """
-        count = 0
-        last_found = None
-        last_element = None
-        for element in self.statusbar_stack:
-            if context_id == element[0] and message_id == element[2]:
-                last_found = count
-                last_element = element
-            count += 1
-        if last_found is None:
-            pass
-        else:
-            logging.debug(
-                "STATUSBAR REMOVE: index={0} context_id={1} text={2} message_id={3}".format(
-                    str(last_found),
-                    str(last_element[0]),
-                    str(last_element[1]),
-                    str(last_element[2])
+        if type(context_id) == int and type(message_id) == int:
+            count = 0
+            last_found = None
+            last_element = None
+            for element in self.statusbar_stack:
+                if context_id == element[0] and message_id == element[2]:
+                    last_found = count
+                    last_element = element
+                count += 1
+            if last_found is None:
+                pass
+            else:
+                logging.debug(
+                    "STATUSBAR REMOVE: index={0} context_id={1} text={2} message_id={3}".format(
+                        str(last_found),
+                        str(last_element[0]),
+                        str(last_element[1]),
+                        str(last_element[2])
+                    )
                 )
-            )
-            self.statusbar_stack.pop(last_found)
+                self.statusbar_stack.pop(last_found)
+        else:
+            raise TypeError(u'>context_id< and >message_id< arguments must be int type')
 
     def remove_all(self, context_id):
         """
@@ -169,9 +175,12 @@ class Statusbar(Widget):
         :param context_id: a context identifier
         :type context_id: :py:obj:`int`
         """
-        for element in self.statusbar_stack:
-            if context_id == element[0]:
-                self.remove(element[0], element[2])
+        if type(context_id) == int:
+            for element in self.statusbar_stack:
+                if context_id == element[0]:
+                    self.remove(element[0], element[2])
+        else:
+            raise TypeError(u'>context_id< argument must be a int type')
 
     def get_message_area(self):
         """
