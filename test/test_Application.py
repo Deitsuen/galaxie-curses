@@ -27,7 +27,6 @@ class TestEventBus(unittest.TestCase):
         sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.width))
         sys.stdout.write(' ... ')
 
-
     def tearDown(self):
         # When the test is finish
         self.application.close()
