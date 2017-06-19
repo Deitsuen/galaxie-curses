@@ -28,6 +28,9 @@ if __name__ == '__main__':
     frame1.set_spacing(1)
     frame1.set_label_align(0.5, 0.0)
 
+    hbox1 = GLXCurses.HBox()
+
+    frame1.add(hbox1)
     win_main.add(frame1)
 
     def handle_keys(self, event_signal, *event_args):

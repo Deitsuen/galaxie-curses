@@ -9,15 +9,57 @@ __author__ = 'Tuux'
 
 
 class HBox(Box):
+    """
+    :Description:
+
+    The :class:`HBox <GLXCurses.HBox.HBox>` is a container that organizes child widgets into a single row.
+
+    Use the :class:`Box <GLXCurses.Box.Box>`  packing interface to determine the arrangement, spacing, width,
+    and alignment of :class:`HBox <GLXCurses.HBox.HBox>` children.
+
+    All children are allocated the same height.
+    """
+
     def destroy(self):
         raise NotImplementedError
 
     def __init__(self):
+        """
+        :Attributes Details:
+
+        .. py:attribute:: homogeneous
+
+           TRUE if all children are to be given equal space allotments.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`bool`               |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | TRUE                          |
+              +---------------+-------------------------------+
+
+        .. py:attribute:: spacing
+
+           The number of char to place by default between children.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`int`                |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0                             |
+              +---------------+-------------------------------+
+        """
+
         Box.__init__(self)
         self.set_name('HBox')
 
         self.preferred_height = 2
         self.preferred_width = 2
+
+        self.homogeneous = True
+        self.spacing = 0
 
     # GLXC HBox Functions called by GLXCurse.Widget.draw()
     def draw_widget_in_area(self):

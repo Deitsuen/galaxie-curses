@@ -135,7 +135,8 @@ class Box(Container):
         This option affects the other dimension.
         :type fill: bool
         :param padding: extra space in characters to put between this child and its neighbors, over and above \
-        the global amount specified by :py:attr:`spacing` attribute. If child is a widget at one of the reference ends of box , then padding pixels are also put between child and the reference edge of box
+        the global amount specified by :py:attr:`spacing` attribute. If child is a widget at one of the reference \
+        ends of box , then padding pixels are also put between child and the reference edge of box
         :type padding: bool
         """
         # Try to exit as soon of possible
@@ -160,6 +161,26 @@ class Box(Container):
             self._emit_pack_start_signal()
 
     def pack_end(self, child, expand=True, fill=True, padding=0):
+        """
+        Adds child to :class:`Box <GLXCurses.Box.Box>` , packed with reference to the end of
+        :class:`Box <GLXCurses.Box.Box>`.
+
+        :param child: the widget to be added to :class:`Box <GLXCurses.Box.Box>`
+        :type child: :class:`Widget <GLXCurses.Widget.Widget>`
+        :param expand: ``True`` if the new child is to be given extra space allocated to \
+        `Box <GLXCurses.Box.Box>`. The extra space will be divided evenly between all children that use this option
+        :type expand: bool
+        :param fill: ``True`` if space given to :py:obj:`child` by the :py:attr:`expend` option is actually \
+        allocated to :py:obj:`child`, rather than just padding it. This parameter has no effect if :py:attr:`expend` \
+        is set to :py:obj:`False`. A child is always allocated the full height of a horizontal \
+        :class:`Box <GLXCurses.Box.Box>` and the full width of a vertical :class:`Box <GLXCurses.Box.Box>`. \
+        This option affects the other dimension.
+        :type fill: bool
+        :param padding: extra space in characters to put between this child and its neighbors, over and above \
+        the global amount specified by :py:attr:`spacing` attribute. If child is a widget at one of the reference ends \
+        of box , then padding pixels are also put between child and the reference edge of box
+        :type padding: bool
+        """
         # Try to exit as soon of possible
         if type(expand) != bool:
             raise TypeError(u'>expand< argument must be a bool')
