@@ -38,9 +38,10 @@ class Application(object):
 
     That class have the role of a Controller and a NCurses Wrapper.
 
-    It have particularity to not be a GLXCurses.Widget, then have a tonne of function for be a fake widget.
+    It have particularity to not be a GLXCurses.Widget, then have a tonne of function for be a fake GLXCurses.Widget.
 
-    Everything start by it component that is the controller.
+    From GLXCurses point of view everything start with it component. All widget will be display and store inside it
+    component.
 
     Attributes:
         **active_window** --
@@ -263,9 +264,9 @@ class Application(object):
         Adds a Window to Application .
 
         This call can only happen after the application has started; typically, you should add new application windows
-        in response to the emission of the “activate” signal.
+        in response to the emission of the "activate" signal.
 
-        This call is equivalent to setting the “application” attribute of window to application .
+        This call is equivalent to setting the "application" attribute of window to application .
 
         :param window: a window to add
         :type window: GLXCurses.Window
@@ -281,7 +282,7 @@ class Application(object):
         Remove a window from application .
 
         If window belongs to application then this call is equivalent to setting the
-        “application” attribute of :func:`GLXCurses.Window <GLXCurses.Window.Window>` to :py:obj:`None`.
+        "application" attribute of :func:`GLXCurses.Window <GLXCurses.Window.Window>` to :py:obj:`None`.
 
         The application may stop running as a result of a call to this function.
 
