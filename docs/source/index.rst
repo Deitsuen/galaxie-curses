@@ -94,7 +94,7 @@ Documentations
    GLXCurses
    Basic-Types
    Standard-Enumerations
-   contributors
+   Contributors
 
 Note for GTK+ Project Developer's
 ---------------------------------

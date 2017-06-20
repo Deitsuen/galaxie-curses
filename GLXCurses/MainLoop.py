@@ -24,9 +24,7 @@ class Singleton(type):
 # https://developer.gnome.org/glib/stable/glib-The-Main-Event-Loop.html
 class MainLoop(object):
     """
-    ********
-    MainLoop
-    ********
+    :Description:
 
     The MainLoop is something close to a infinity loop with a start() and stop() method
      #. Refresh the Application for the frist time
@@ -170,6 +168,7 @@ class MainLoop(object):
         Emit a signal, it consist to add the signal structure inside a global event list
 
         .. code-block:: python
+
            args = dict(
                'uuid': Widget().get_widget_id()
                'key1': value1

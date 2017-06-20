@@ -244,9 +244,8 @@ class Entry(Widget):
         self.buffer = GLXCurses.EntryBuffer()
         self.buffer.get_text()
         ``
-
-        :return: A pointer to the contents of the widget as a string.
-        This string points to internally allocated storage in the widget and must not be freed,
+        :return: A pointer to the contents of the widget as a string. \
+        This string points to internally allocated storage in the widget and must not be freed, \
         modified or stored.
         :rtype: String
         """
@@ -295,7 +294,7 @@ class Entry(Widget):
         By default, GLXCurse picks the best invisible character available in the current font,
         but it can be changed with set_invisible_char().
 
-        .. note:: You probably want to set “input_purpose” to glx.INPUT_PURPOSE_PASSWORD or glx.INPUT_PURPOSE_PIN to
+        .. note:: You probably want to set “input_purpose” to glx.INPUT_PURPOSE_PASSWORD or glx.INPUT_PURPOSE_PIN to \
         inform input methods about the purpose of this entry, in addition to setting visibility to FALSE.
 
         """
@@ -313,7 +312,7 @@ class Entry(Widget):
 
         By default, GLXCurse picks the best invisible char available in the current font.
 
-        .. note:: If you set the invisible char to 0, then the user will get no feedback at all;
+        .. note:: If you set the invisible char to 0, then the user will get no feedback at all; \
         there will be no text on the screen as they type
 
         :param ch: a Unicode chracter
@@ -339,7 +338,7 @@ class Entry(Widget):
         self.buffer.set_max_length()
         ``
 
-        :param max: The maximum length of the entry, or 0 for no maximum. (other than the maximum length of entries.)
+        :param max: The maximum length of the entry, or 0 for no maximum. (other than the maximum length of entries.) \
         The value passed in will be clamped to the range 0-65536.
         """
         self.get_buffer().set_max_length(max)
