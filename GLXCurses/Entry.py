@@ -244,6 +244,7 @@ class Entry(Widget):
         self.buffer = GLXCurses.EntryBuffer()
         self.buffer.get_text()
         ``
+
         :return: A pointer to the contents of the widget as a string.
         This string points to internally allocated storage in the widget and must not be freed,
         modified or stored.
@@ -296,6 +297,7 @@ class Entry(Widget):
 
         .. note:: You probably want to set “input_purpose” to glx.INPUT_PURPOSE_PASSWORD or glx.INPUT_PURPOSE_PIN to
         inform input methods about the purpose of this entry, in addition to setting visibility to FALSE.
+
         """
         if bool(visible):
             self.visibility = True
@@ -322,6 +324,7 @@ class Entry(Widget):
         """"
         Unsets the invisible char previously set with set_invisible_char().
         So that the default invisible char is used again.
+
         """
         self.invisible_char = unicode('*')
 
@@ -335,6 +338,7 @@ class Entry(Widget):
         self.buffer = GLXCurses.EntryBuffer()
         self.buffer.set_max_length()
         ``
+
         :param max: The maximum length of the entry, or 0 for no maximum. (other than the maximum length of entries.)
         The value passed in will be clamped to the range 0-65536.
         """
@@ -460,6 +464,7 @@ class Entry(Widget):
         glxc.BORDER_STYLE_DOUBLE    Two parallel lines with some space between them
         glxc.BORDER_STYLE_GROOVE    Looks as if it were carved in the canvas
         glxc.BORDER_STYLE_RIDGE     Looks as if it were coming out of the canvas
+
         """
         available_border_style = [
             glxc.BORDER_STYLE_NONE,

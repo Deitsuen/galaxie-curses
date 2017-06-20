@@ -76,7 +76,7 @@ Features
 
 Contribute
 ----------
-The GTK+ documentation is our model: https://developer.gnome.org/gtk3/stable/
+The GTK+ v3 documentation is our model: https://developer.gnome.org/gtk3/stable/
 
 - Issue Tracker: https://github.com/Tuuux/galaxie-curses/issues
 - Source Code: https://github.com/Tuuux/galaxie-curses
@@ -95,6 +95,13 @@ Consider that actual documentation of Galaxie-Curse as the better i can do and i
 include to copy/past large parts of the GTK+ documentation. (sorry about that)
 
 As you probably see **Galaxie-Curses** is a Text Based **GTK+** like, then the GTK+ Doc is the **roadmap**.
+
+Thanks
+------
+All **Galaxie** API is develop with **pycharm** as IDE from **JetBrains** 
+link: https://www.jetbrains.com
+
+JetBrains graciously provide to us licenses for **pycharm profesional**
 
 License
 -------

@@ -72,7 +72,7 @@ class Application(object):
 
         .. py:data:: width
 
-            The width size in characters
+            The width size in characters, considered as the hard limit.
 
               +---------------+-------------------------------+
               | Type          | :py:data:`int`                |
@@ -84,7 +84,31 @@ class Application(object):
 
         .. py:data:: height
 
-            The height size in characters
+            The height size in characters, considered as the hard limit.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`int`                |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0                             |
+              +---------------+-------------------------------+
+
+        .. py:data:: preferred_height
+
+            The preferred height size in characters, considered as the shoft limit.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`int`                |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0                             |
+              +---------------+-------------------------------+
+
+        .. py:data:: preferred_width
+
+            The preferred width size in characters, considered as the shoft limit.
 
               +---------------+-------------------------------+
               | Type          | :py:data:`int`                |
@@ -192,6 +216,7 @@ class Application(object):
     def get_parent(self):
         """
         Return the area
+
         :return:
         """
         return self.curses_subwin
@@ -233,7 +258,10 @@ class Application(object):
     # Size management
     def get_width(self):
         """
-        Get the :py:obj:`width` property.
+        Get the :class:`Application <GLXCurses.Application.Application>` :py:obj:`width` property value.
+
+        .. seealso:: \
+        :func:`Application.set_width() <GLXCurses.Application.Application.set_width()>`
 
         :return: :py:obj:`width` property
         :rtype: int
@@ -242,7 +270,9 @@ class Application(object):
 
     def set_width(self, width):
         """
-        Set the :py:obj:`width` property.
+        Set the :class:`Application <GLXCurses.Application.Application>` :py:obj:`width` property value.
+
+        .. seealso:: :func:`Application.get_width() <GLXCurses.Application.Application.get_width()>`
 
         :param width:
         :type width: int
@@ -257,9 +287,12 @@ class Application(object):
 
     def get_height(self):
         """
-        Get the :py:obj:`height` property.
+        Get the :py:obj:`height` property value.
 
-        :return: :py:obj:`height` property
+        .. seealso:: \
+        :func:`Application.set_height() <GLXCurses.Application.Application.set_height()>`
+
+        :return: :py:obj:`height` property value
         :rtype: int
         """
         return self.height
@@ -267,6 +300,9 @@ class Application(object):
     def set_height(self, height):
         """
         Set the :py:obj:`height` property.
+
+        .. seealso:: \
+        :func:`Application.get_height() <GLXCurses.Application.Application.get_height()>`
 
         :param height:
         :type height: int
@@ -283,24 +319,61 @@ class Application(object):
         """
         Get the :py:obj:`preferred_height` property.
 
+        .. seealso:: \
+        :func:`Application.set_preferred_height() <GLXCurses.Application.Application.set_preferred_height()>`
+
         :return: :py:obj:`preferred_height` property
         :rtype: int
         """
         return self.preferred_height
 
-    def set_preferred_height(self, height):
-        if type(height) == int:
-            if height != self.get_preferred_height():
-                self.preferred_height = height
+    def set_preferred_height(self, preferred_height):
+        """
+        Set the :py:obj:`preferred_height` property.
+
+        .. seealso:: \
+        :func:`Application.set_preferred_height() <GLXCurses.Application.Application.set_preferred_height()>`
+
+        :param preferred_height:
+        :type preferred_height: int
+        :raise TypeError: if ``preferred_height`` parameter is not a :py:data:`int` type
+        """
+        if type(preferred_height) == int:
+            if preferred_height != self.get_preferred_height():
+                self.preferred_height = preferred_height
                 # Can emit signal
         else:
-            raise TypeError(u'>height< argument must be a int type')
+            raise TypeError(u'>preferred_height< argument must be a int type')
 
     def get_preferred_width(self):
+        """
+        Get the :py:obj:`preferred_width` property.
+
+        .. seealso:: \
+        :func:`Application.set_preferred_width() <GLXCurses.Application.Application.preferred_width()>`
+
+        :return: :py:obj:`preferred_width` property
+        :rtype: int
+        """
         return self.preferred_width
 
     def set_preferred_width(self, preferred_width):
-        self.preferred_width = preferred_width
+        """
+        Set the :py:obj:`preferred_width` property.
+
+        .. seealso:: \
+        :func:`Application.set_preferred_width() <GLXCurses.Application.Application.set_preferred_width()>`
+
+        :param preferred_width:
+        :type preferred_width: int
+        :raise TypeError: if ``preferred_width`` parameter is not a :py:data:`int` type
+        """
+        if type(preferred_width) == int:
+            if preferred_width != self.get_preferred_width():
+                self.preferred_width = preferred_width
+                # Can emit signal
+        else:
+            raise TypeError(u'>preferred_width< argument must be a int type')
 
     def get_preferred_size(self):
         # should preserve the Y X of ncuses ?

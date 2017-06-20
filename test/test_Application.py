@@ -68,6 +68,10 @@ class TestEventBus(unittest.TestCase):
         self.assertEqual(self.application.get_preferred_height(), value_random_1)
 
     # preferred_width
+    def test_raise_typeerror_set_preferred_width(self):
+        """Test raise TypeError of Application.set_preferred_width()"""
+        self.assertRaises(TypeError, self.application.set_preferred_width, float(randint(1, 250)))
+
     def test_get_set_preferred_width(self):
         """Test Application.set_preferred_width() and Application.get_preferred_width() method's """
         value_random_1 = int(randint(8, 250))

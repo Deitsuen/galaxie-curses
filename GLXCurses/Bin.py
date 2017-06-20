@@ -21,6 +21,7 @@ class Bin(Container):
      * :class:`Frame <GLXCurses.Frame.Frame>`
      * :class:`HandleBox <GLXCurses.HandleBox.HandleBox>`
      * :class:`ScrolledWindow <GLXCurses.ScrolledWindow.ScrolledWindow>`
+
     """
 
     def destroy(self):
@@ -31,7 +32,7 @@ class Bin(Container):
 
         * if the widget is inside a container, it will be removed from its parent
         * if the widget is a container, all its children will be destroyed, recursively
-        * if the widget is a top level, it will be removed from the list of top level widgets
+        * if the widget is a top level, it will be removed from the list of top level widgets \
         that :class:`Application <GLXCurses.Application.Application>` maintains internally
 
         :raise NotImplementedError: Method or function hasn't been implemented yet.
@@ -45,6 +46,7 @@ class Bin(Container):
     def add(self, child):
         """
         Add a widget as child, only if the :class:`Bin <GLXCurses.Bin.Bin>` haven't any child
+
         :param child: :class:`Widget <GLXCurses.Widget.Widget>`
         """
         if self.get_child() is not None:
