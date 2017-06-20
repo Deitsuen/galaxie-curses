@@ -68,6 +68,32 @@ class Application(object):
     def __init__(self):
         """
         Initialize the Curses Screen and all attribute
+        :Property's Details:
+
+        .. py:data:: width
+
+            The width size in characters
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`int`                |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0                             |
+              +---------------+-------------------------------+
+
+        .. py:data:: height
+
+            The height size in characters
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`int`                |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0                             |
+              +---------------+-------------------------------+
+
         """
         try:
             # Initialize curses
@@ -206,22 +232,69 @@ class Application(object):
 
     # Size management
     def get_width(self):
+        """
+        Get the :py:obj:`width` property.
+
+        :return: :py:obj:`width` property
+        :rtype: int
+        """
         return self.width
 
     def set_width(self, width):
-        self.width = width
+        """
+        Set the :py:obj:`width` property.
+
+        :param width:
+        :type width: int
+        :raise TypeError: if ``width`` parameter is not a :py:data:`int` type
+        """
+        if type(width) == int:
+            if width != self.get_width():
+                self.width = width
+                # Can emit signal
+        else:
+            raise TypeError(u'>width< argument must be a int type')
 
     def get_height(self):
+        """
+        Get the :py:obj:`height` property.
+
+        :return: :py:obj:`height` property
+        :rtype: int
+        """
         return self.height
 
     def set_height(self, height):
-        self.height = height
+        """
+        Set the :py:obj:`height` property.
+
+        :param height:
+        :type height: int
+        :raise TypeError: if ``height`` parameter is not a :py:data:`int` type
+        """
+        if type(height) == int:
+            if height != self.get_height():
+                self.height = height
+                # Can emit signal
+        else:
+            raise TypeError(u'>height< argument must be a int type')
 
     def get_preferred_height(self):
+        """
+        Get the :py:obj:`preferred_height` property.
+
+        :return: :py:obj:`preferred_height` property
+        :rtype: int
+        """
         return self.preferred_height
 
     def set_preferred_height(self, height):
-        self.preferred_height = height
+        if type(height) == int:
+            if height != self.get_preferred_height():
+                self.preferred_height = height
+                # Can emit signal
+        else:
+            raise TypeError(u'>height< argument must be a int type')
 
     def get_preferred_width(self):
         return self.preferred_width

@@ -22,7 +22,7 @@ class TestEventBus(unittest.TestCase):
         self.application = GLXCurses.Application()
         rows, columns = os.popen('stty size', 'r').read().split()
         self.columns = int(columns)
-        self.width = self.columns - 9
+        self.width = self.columns - 7
         sys.stdout.write('\r')
         sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.width))
         sys.stdout.write(' ... ')
@@ -34,17 +34,45 @@ class TestEventBus(unittest.TestCase):
         sys.stdout.flush()
 
     # Test Size management
+    # width
+    def test_raise_typeerror_set_width(self):
+        """Test raise TypeError of Application.set_width()"""
+        self.assertRaises(TypeError, self.application.set_width, float(randint(1, 250)))
+
     def test_get_set_width(self):
-        """Test 'Application.set_width()' and 'Application.get_width()' method's """
+        """Test Application.set_width() and Application.get_width() method's """
         value_random_1 = int(randint(8, 250))
         self.application.set_width(value_random_1)
         self.assertEqual(self.application.get_width(), value_random_1)
 
+    # height
+    def test_raise_typeerror_set_height(self):
+        """Test raise TypeError of Application.set_height()"""
+        self.assertRaises(TypeError, self.application.set_height, float(randint(1, 250)))
+
     def test_get_set_height(self):
-        """Test 'Application.set_height()' and 'Application.get_height()' method's """
+        """Test Application.set_height() and Application.get_height() method's """
         value_random_1 = int(randint(8, 250))
         self.application.set_height(value_random_1)
         self.assertEqual(self.application.get_height(), value_random_1)
+
+    # preferred_height
+    def test_raise_typeerror_set_preferred_height(self):
+        """Test raise TypeError of Application.set_preferred_height()"""
+        self.assertRaises(TypeError, self.application.set_preferred_height, float(randint(1, 250)))
+
+    def test_get_set_preferred_height(self):
+        """Test Application.set_preferred_height() and Application.get_preferred_height() method's """
+        value_random_1 = int(randint(8, 250))
+        self.application.set_preferred_height(value_random_1)
+        self.assertEqual(self.application.get_preferred_height(), value_random_1)
+
+    # preferred_width
+    def test_get_set_preferred_width(self):
+        """Test Application.set_preferred_width() and Application.get_preferred_width() method's """
+        value_random_1 = int(randint(8, 250))
+        self.application.set_preferred_width(value_random_1)
+        self.assertEqual(self.application.get_preferred_width(), value_random_1)
 
 if __name__ == '__main__':
     unittest.main()
