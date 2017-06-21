@@ -24,13 +24,17 @@ class TestEventBus(unittest.TestCase):
         self.columns = int(columns)
         self.width = self.columns - 7
         sys.stdout.write('\r')
-        sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.width))
-        sys.stdout.write(' ... ')
+        sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.columns))
+        sys.stdout.flush()
 
     def tearDown(self):
         # When the test is finish
         self.application.close()
-        sys.stdout.write('OK\n\r')
+        sys.stdout.write('\r')
+        sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.width))
+        sys.stdout.write(' ')
+        sys.stdout.write('[ OK ]')
+        sys.stdout.write('\n\r')
         sys.stdout.flush()
 
     # Test Size management
@@ -77,6 +81,38 @@ class TestEventBus(unittest.TestCase):
         value_random_1 = int(randint(8, 250))
         self.application.set_preferred_width(value_random_1)
         self.assertEqual(self.application.get_preferred_width(), value_random_1)
+
+    def test_get_preferred_size(self):
+        """Test Application.get_preferred_size()"""
+        pass
+
+    def test_set_preferred_size(self):
+        """Test Application.set_preferred_size()"""
+        pass
+
+    def test_get_size(self):
+        """Test Application.get_size()"""
+        pass
+
+    def test_get_x(self):
+        """Test Application.get_x()"""
+        pass
+
+    def test_get_y(self):
+        """Test Application.get_y()"""
+        pass
+
+    def test_set_name(self):
+        """Test Application.set_name()"""
+        pass
+
+    def test_get_name(self):
+        """Test Application.get_name()"""
+        pass
+
+    def test_draw(self):
+        """Test Application.draw()method's """
+        self.application.draw()
 
 if __name__ == '__main__':
     unittest.main()
