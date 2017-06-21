@@ -3,6 +3,9 @@
 
 import unittest
 from random import randint
+import random
+import string
+
 import sys
 import os
 import uuid
@@ -16,7 +19,6 @@ import GLXCurses
 
 # Unittest
 class TestEventBus(unittest.TestCase):
-
     def setUp(self):
         # Before the test start
         self.application = GLXCurses.Application()
@@ -102,17 +104,32 @@ class TestEventBus(unittest.TestCase):
         """Test Application.get_y()"""
         pass
 
-    def test_set_name(self):
-        """Test Application.set_name()"""
-        pass
+    def test_set_get_name(self):
+        """Test Application.set_name() and Application.get_name()"""
+        value_random_1 = u''.join(random.sample(string.letters, 52))
+        self.application.set_name(value_random_1)
+        self.assertEqual(self.application.get_name(), value_random_1)
 
-    def test_get_name(self):
-        """Test Application.get_name()"""
-        pass
+    def test_set_name_max_size(self):
+        """Test Application.set_name() maximum size"""
+        # Create a random string it have a len superior to 256 chars
+        value_random_1 = u''.join(random.sample(string.letters, 52))
+        value_random_1 += u''.join(random.sample(string.letters, 52))
+        value_random_1 += u''.join(random.sample(string.letters, 52))
+        value_random_1 += u''.join(random.sample(string.letters, 52))
+        value_random_1 += u''.join(random.sample(string.letters, 52))
+        # Try to set name with the to long string
+        self.assertRaises(ValueError, self.application.set_name, value_random_1)
+
+    def test_set_name_type(self):
+        """Test Application.set_name() maximum size"""
+        value_random_1 = float(1.4)
+        self.assertRaises(TypeError, self.application.set_name, int(randint(1, 42)))
 
     def test_draw(self):
         """Test Application.draw()method's """
         self.application.draw()
+
 
 if __name__ == '__main__':
     unittest.main()

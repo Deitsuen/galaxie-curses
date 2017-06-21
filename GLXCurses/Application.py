@@ -118,6 +118,19 @@ class Application(object):
               | Default value | 0                             |
               +---------------+-------------------------------+
 
+        .. py:data:: name
+
+            Name for the widget Application.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`char`               |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | Application                   |
+              +---------------+-------------------------------+
+
+
         """
         try:
             # Initialize curses
@@ -394,9 +407,43 @@ class Application(object):
 
     # GLXCApplication function
     def set_name(self, name):
-        self.name = name
+        """
+        Like a widget :class:`Application <GLXCurses.Application.Application>` can be named, which allows you to
+        refer to them from config file. You can apply a style to widgets with a particular name.
+
+        .. seealso:: \
+        :func:`Application.get_name() <GLXCurses.Application.Application.get_name()>`
+
+        :param name: name for the widget, limit to 256 Char
+        :type name: str or unicode
+        :raise ValueError: if ``name`` argument length is sup to 256 chars
+        :raise TypeError: if ``name`` argument length is not a str or unicode type
+
+        """
+        # Check the len in case of injection
+        if len(name) <= 256:
+            # And accept any string type
+            if isinstance(name, str) or isinstance(name, unicode):
+                # And check if value have to be change
+                if name != self.get_name():
+                    self.name = name
+                    # Can emit signal
+            else:
+                raise TypeError(u'>name< argument must str or unicode type')
+        else:
+            raise ValueError(u'>name< argument length must <= 256 chars')
 
     def get_name(self):
+        """
+        Get the :py:obj:`name` property.
+
+        .. seealso:: \
+        :func:`Application.set_name() <GLXCurses.Application.Application.set_name()>`
+
+        :return: :py:obj:`name` property value, type depends about how it have been stored via \
+        :func:`Application.set_name() <GLXCurses.Application.Application.set_name()>`
+        :rtype: str or unicode
+        """
         return self.name
 
     def set_style(self, style):
