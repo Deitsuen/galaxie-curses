@@ -134,7 +134,8 @@ class Application(object):
 
         .. py:data:: x
 
-            Display Area ``x`` location, that value change when a menu is added.
+            ``x`` location of the ``main_window`` supposed to be the children widgets area, it value can change when a \
+            menu is added
 
               +---------------+-------------------------------+
               | Type          | :py:data:`int`                |
@@ -146,7 +147,8 @@ class Application(object):
 
         .. py:data:: y
 
-            Display Area ``y`` location, that value change when a menu is added.
+            ``y`` location of the ``main_window`` supposed to be the children widgets area, it value can change when a \
+            menu is added
 
               +---------------+-------------------------------+
               | Type          | :py:data:`int`                |
@@ -428,20 +430,20 @@ class Application(object):
 
     def get_x(self):
         """
-        X Location of the subwindow use for display something inside a area of Curses.Screen.
-        O mean on left of screen
+        ``x`` location of the ncurses subwin call ``main_window``, it area is use to display a \
+        :class:`Window <GLXCurses.Window.Window>`
 
-        :return: X Location in char
+        :return: ``x`` location in char, 0 correspond to left
         :rtype: int
         """
         return self.x
 
     def get_y(self):
         """
-        Y Location of the subwindow use for display something inside a area of Curses.Screen.
-        O mean on top of screen
+        ``y`` location of the ncurses subwin call ``main_window``, it area is use to display a \
+        :class:`Window <GLXCurses.Window.Window>`
 
-        :return: Y Location in char
+        :return: ``y`` location in char, 0 correspond to top
         :rtype: int
         """
         return self.y
@@ -578,7 +580,7 @@ class Application(object):
         """
         Refresh the NCurses Screen, and redraw each contain widget's
 
-        It's a central refresh point.
+        It's a central refresh point for the entire application.
         """
         # Clean the screen
         self.screen.clear()
@@ -682,15 +684,61 @@ class Application(object):
 
     def close(self):
         """
-        A Application must be close for permit to Curses to clean up everything and get back the tty in good condition
+        A Application must be close properly for permit to Curses to clean up everything and get back the tty \
+        in startup condition
 
-        Generaly that is follow  by a sys.exit(0)
+        Generally that is follow  by a sys.exit(0) for generate a exit code.
         """
         # Set everything back to normal
         self.screen.keypad(False)
         curses.echo()
         curses.nocbreak()
         curses.endwin()
+
+    # Focus and Selection
+    def get_default(self):
+        return self.widget_it_have_default
+
+    def set_default(self, widget_unique_id):
+        self.widget_it_have_default = widget_unique_id
+
+    def get_is_focus(self):
+        """
+        Return the unique id of the widget it have been set by \
+        :func:`Application.set_is_focus() <GLXCurses.Application.Application.set_is_focus()>`
+
+        .. seealso:: \
+         :func:`Application.set_is_focus() <GLXCurses.Application.Application.set_is_focus()>`
+
+         :func:`Widget.get_widget_id() <GLXCurses.Widget.Widget.get_widget_id()>`
+
+        :return: a unique id
+        :rtype: int
+        """
+        return self.widget_it_have_focus
+
+    def set_is_focus(self, widget):
+        """
+        Determines if the widget is the focus widget within its toplevel. \
+        (This does not mean that the “has-focus” property is necessarily set; “has-focus” will only be set \
+        if the toplevel widget additionally has the global input focus.)
+
+        .. seealso:: \
+        :func:`Application.get_is_focus() <GLXCurses.Application.Application.get_is_focus()>`
+
+        :param widget: a GLXCurses Widget
+        :type widget: :class:`Widget <GLXCurses.Widget.Widget>`
+        """
+        if widget is None:
+            self.widget_it_have_focus = None
+        else:
+            self.widget_it_have_focus = widget.get_widget_id()
+
+    def get_tooltip(self):
+        return self.widget_it_have_tooltip
+
+    def set_tooltip(self, widget_unique_id):
+        self.widget_it_have_tooltip = widget_unique_id
 
     # Main Loop
     def adopt(self, orphan):
@@ -735,28 +783,6 @@ class Application(object):
                 handler(self, detailed_signal, args)
 
         self.windows[self.active_window_id]['WIDGET'].handle_and_dispatch_event(detailed_signal, args)
-
-    # Focus and Selection
-    def get_default(self):
-        return self.widget_it_have_default
-
-    def set_default(self, widget_unique_id):
-        self.widget_it_have_default = widget_unique_id
-
-    def get_is_focus(self):
-        return self.widget_it_have_focus
-
-    def set_is_focus(self, widget):
-        if widget is None:
-            self.widget_it_have_focus = None
-        else:
-            self.widget_it_have_focus = widget.get_widget_id()
-
-    def get_tooltip(self):
-        return self.widget_it_have_tooltip
-
-    def set_tooltip(self, widget_unique_id):
-        self.widget_it_have_tooltip = widget_unique_id
 
     # Internal
     def _get_signal_handlers_dict(self):

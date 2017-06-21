@@ -164,13 +164,24 @@ class TestEventBus(unittest.TestCase):
 
     def test_set_name_type(self):
         """Test Application.set_name() maximum size"""
-        value_random_1 = float(1.4)
+        value_random_1 = float(3.14)
         self.assertRaises(TypeError, self.application.set_name, int(randint(1, 42)))
 
+    def test_refresh(self):
+        """Test Application.refresh() method """
+        self.application.refresh()
+
     def test_draw(self):
-        """Test Application.draw()method's """
+        """Test Application.draw() method """
         self.application.draw()
 
+    # def test_getch(self):
+    #     """Test Application.getch() method"""
+    #     pass
+
+    def test_close(self):
+        """Test Application.close() method """
+        self.application.close()
 
 if __name__ == '__main__':
     unittest.main()
