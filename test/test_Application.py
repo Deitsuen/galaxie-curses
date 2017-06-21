@@ -97,12 +97,33 @@ class TestEventBus(unittest.TestCase):
         pass
 
     def test_get_x(self):
-        """Test Application.get_x()"""
-        pass
+        """Test Application.get_x() return a int after Application.draw() call"""
+        # That the Application.draw() it set value to Application.x attribute
+        self.application.draw()
+        self.assertIsInstance(self.application.get_x(), int)
+
+        # Create the main Application
+        app = GLXCurses.Application()
+        app.set_name('Galaxie-Curse Demo')
+
+        # Create a Menu
+        menu = GLXCurses.MenuModel()
+        menu.app_info_label = app.get_name()
 
     def test_get_y(self):
-        """Test Application.get_y()"""
-        pass
+        """Test Application.get_y() return a int after Application.draw() call"""
+        # That the Application.draw() it set value to Application.y attribute
+        # Test default value -> 0
+        self.assertIsInstance(self.application.get_y(), int)
+        self.assertEqual(self.application.get_y(), 0)
+
+        # Create a Menu
+        menu = GLXCurses.MenuModel()
+        menu.app_info_label = self.application.get_name()
+
+        self.application.add_menubar(menu)
+        self.application.draw()
+        self.assertEqual(self.application.get_y(), 1)
 
     def test_set_get_name(self):
         """Test Application.set_name() and Application.get_name()"""

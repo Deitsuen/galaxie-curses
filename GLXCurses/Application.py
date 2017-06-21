@@ -34,6 +34,8 @@ class Singleton(type):
 # https://developer.gnome.org/gtk3/stable/GtkApplication.html
 class Application(object):
     """
+    :Description:
+
     Create a Application singleton instance.
 
     That class have the role of a Controller and a NCurses Wrapper.
@@ -130,6 +132,30 @@ class Application(object):
               | Default value | Application                   |
               +---------------+-------------------------------+
 
+        .. py:data:: x
+
+            Display Area ``x`` location, that value change when a menu is added.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`int`                |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0                             |
+              +---------------+-------------------------------+
+
+        .. py:data:: y
+
+            Display Area ``y`` location, that value change when a menu is added.
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`int`                |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 0                             |
+              +---------------+-------------------------------+
+
 
         """
         try:
@@ -167,6 +193,7 @@ class Application(object):
             curses.start_color()
             curses.use_default_colors()
             self.style = GLXCurses.Style()
+
         self.screen.clear()
 
         curses.curs_set(0)
@@ -400,9 +427,23 @@ class Application(object):
         return self.get_curses_subwin().getmaxyx()
 
     def get_x(self):
+        """
+        X Location of the subwindow use for display something inside a area of Curses.Screen.
+        O mean on left of screen
+
+        :return: X Location in char
+        :rtype: int
+        """
         return self.x
 
     def get_y(self):
+        """
+        Y Location of the subwindow use for display something inside a area of Curses.Screen.
+        O mean on top of screen
+
+        :return: Y Location in char
+        :rtype: int
+        """
         return self.y
 
     # GLXCApplication function
