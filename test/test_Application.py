@@ -16,7 +16,6 @@ sys.path.append(os.path.dirname(current_dir))
 
 import GLXCurses
 
-
 # Unittest
 class TestEventBus(unittest.TestCase):
     def setUp(self):
@@ -35,7 +34,11 @@ class TestEventBus(unittest.TestCase):
         sys.stdout.write('\r')
         sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.width))
         sys.stdout.write(' ')
-        sys.stdout.write('[ OK ]')
+        sys.stdout.write('[ ')
+        sys.stdout.write('\033[92m')
+        sys.stdout.write('OK')
+        sys.stdout.write('\033[0m')
+        sys.stdout.write(' ]')
         sys.stdout.write('\n\r')
         sys.stdout.flush()
 
@@ -127,18 +130,35 @@ class TestEventBus(unittest.TestCase):
 
     def test_set_get_name(self):
         """Test Application.set_name() and Application.get_name()"""
-        value_random_1 = u''.join(random.sample(string.letters, 52))
+        try:
+            # Python 2.7
+            value_random_1 = u''.join(random.sample(string.letters, 52))
+        except AttributeError:
+            # Python 3
+            value_random_1 = u''.join(random.sample(string.ascii_letters, 52))
+
         self.application.set_name(value_random_1)
         self.assertEqual(self.application.get_name(), value_random_1)
 
     def test_set_name_max_size(self):
         """Test Application.set_name() maximum size"""
         # Create a random string it have a len superior to 256 chars
-        value_random_1 = u''.join(random.sample(string.letters, 52))
-        value_random_1 += u''.join(random.sample(string.letters, 52))
-        value_random_1 += u''.join(random.sample(string.letters, 52))
-        value_random_1 += u''.join(random.sample(string.letters, 52))
-        value_random_1 += u''.join(random.sample(string.letters, 52))
+        value_random_1 = u''
+        try:
+            # Python 2.7
+            value_random_1 += u''.join(random.sample(string.letters, 52))
+            value_random_1 += u''.join(random.sample(string.letters, 52))
+            value_random_1 += u''.join(random.sample(string.letters, 52))
+            value_random_1 += u''.join(random.sample(string.letters, 52))
+            value_random_1 += u''.join(random.sample(string.letters, 52))
+        except AttributeError:
+            # Python 3
+            value_random_1 += u''.join(random.sample(string.ascii_letters, 52))
+            value_random_1 += u''.join(random.sample(string.ascii_letters, 52))
+            value_random_1 += u''.join(random.sample(string.ascii_letters, 52))
+            value_random_1 += u''.join(random.sample(string.ascii_letters, 52))
+            value_random_1 += u''.join(random.sample(string.ascii_letters, 52))
+
         # Try to set name with the to long string
         self.assertRaises(ValueError, self.application.set_name, value_random_1)
 
