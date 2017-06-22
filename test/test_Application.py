@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import unittest
+import unittest2 as unittest
 from random import randint
 import random
 import string
