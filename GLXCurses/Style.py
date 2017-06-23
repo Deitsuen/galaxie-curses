@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import curses
-import itertools
+
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -9,67 +9,67 @@ __author__ = 'Tuux'
 
 
 class Style(object):
+    """
+    :Description:
+
+    Galaxie Curses Style is equivalent to a skin feature, the entire API receive a common Style from Application
+    and each individual Widget can use it own separate one.
+
+    Yet it's a bit hard to explain how create you own Style, in summary it consist to a dict() it have keys
+    with a special name call ``Attribute``, inside that dictionary we create a second level of dict() dedicated
+    to store color value of each ``States``
+    """
     def __init__(self):
         """
-        Galaxie Curses Style is equivalent to a skin feature, the entire API receive a common Style from Application \
-        and each individual Widget can use it own separate one.
-
-        Yet it's a bit hard to explain how create you own Style, in summary it consist to a dict() it have keys \
-        with a special name call ``Attribute``, inside that dictionary we create a second level of dict() dedicated \
-        to store color value of each ``States``
-
         :GLXCurses Style Attributes Type:
 
-        +---------+---------------------------------------------------------------------------------------------+
-        | text_fg | An color to be used for the foreground colors in each curses_subwin state.                  |
-        +-------------------+-----------------------------------------------------------------------------------+
-        | bg      | An color to be used for the background colors in each curses_subwin state.                  |
-        +---------+---------------------------------------------------------------------------------------------+
-        | light   | An color to be used for the light colors in each curses_subwin state.                       |
-        +---------+---------------------------------------------------------------------------------------------+
-        | dark    | An color to be used for the dark colors in each curses_subwin state.                        |
-        +---------+---------------------------------------------------------------------------------------------+
-        | mid     | An color to be used for the mid colors (between light and dark) in each curses_subwin state |
-        +---------+---------------------------------------------------------------------------------------------+
-        | text    | An color to be used for the text colors in each curses_subwin state.                        |
-        +---------+---------------------------------------------------------------------------------------------+
-        | base    | An color to be used for the base colors in each curses_subwin state.                        |
-        +---------+---------------------------------------------------------------------------------------------+
-        | black   | Used for the black color.                                                                   |
-        +---------+---------------------------------------------------------------------------------------------+
-        | white   | Used for the white color.                                                                   |
-        +---------+---------------------------------------------------------------------------------------------+
+         +-------------+---------------------------------------------------------------------------------------------+
+         | ``text_fg`` | An color to be used for the foreground colors in each curses_subwin state.                  |
+         +-------------+---------------------------------------------------------------------------------------------+
+         | ``bg``      | An color to be used for the background colors in each curses_subwin state.                  |
+         +-------------+---------------------------------------------------------------------------------------------+
+         | ``light``   | An color to be used for the light colors in each curses_subwin state.                       |
+         +-------------+---------------------------------------------------------------------------------------------+
+         | ``dark``    | An color to be used for the dark colors in each curses_subwin state.                        |
+         +-------------+---------------------------------------------------------------------------------------------+
+         | ``mid``     | An color to be used for the mid colors (between light and dark) in each curses_subwin state |
+         +-------------+---------------------------------------------------------------------------------------------+
+         | ``text``    | An color to be used for the text colors in each curses_subwin state.                        |
+         +-------------+---------------------------------------------------------------------------------------------+
+         | ``base``    | An color to be used for the base colors in each curses_subwin state.                        |
+         +-------------+---------------------------------------------------------------------------------------------+
+         | ``black``   | Used for the black color.                                                                   |
+         +-------------+---------------------------------------------------------------------------------------------+
+         | ``white``   | Used for the white color.                                                                   |
+         +-------------+---------------------------------------------------------------------------------------------+
 
         :GLXCurses States Type:
 
-        +-------------------+----------------------------------------------------------------+
-        | STATE_NORMAL      | The state during normal operation                              |
-        +-------------------+----------------------------------------------------------------+
-        | STATE_ACTIVE      | The curses_subwin is currently active, such as a button pushed |
-        +-------------------+----------------------------------------------------------------+
-        | STATE_PRELIGHT    | The mouse pointer is over the curses_subwin                    |
-        +-------------------+----------------------------------------------------------------+
-        | STATE_SELECTED    | The curses_subwin is selected                                  |
-        +-------------------+----------------------------------------------------------------+
-        | STATE_INSENSITIVE | The curses_subwin is disabled                                  |
-        +---------------+--------------------------------------------------------------------+
+         +------------------------+----------------------------------------------------------------+
+         | ``STATE_NORMAL``       | The state during normal operation                              |
+         +------------------------+----------------------------------------------------------------+
+         | ``STATE_ACTIVE``       | The curses_subwin is currently active, such as a button pushed |
+         +------------------------+----------------------------------------------------------------+
+         | ``STATE_PRELIGHT``     | The mouse pointer is over the curses_subwin                    |
+         +------------------------+----------------------------------------------------------------+
+         | ``STATE_SELECTED``     | The curses_subwin is selected                                  |
+         +------------------------+----------------------------------------------------------------+
+         | ``STATE_INSENSITIVE``  | The curses_subwin is disabled                                  |
+         +------------------------+----------------------------------------------------------------+
 
         """
-        # The White is CRAY and YELLOW is ORANGE
-        self.curses_native_colormap = {
-            'BLACK': curses.COLOR_BLACK,
-            'RED': curses.COLOR_RED,
-            'GREEN': curses.COLOR_GREEN,
-            'YELLOW': curses.COLOR_YELLOW,
-            'BLUE': curses.COLOR_BLUE,
-            'MAGENTA': curses.COLOR_MAGENTA,
-            'CYAN': curses.COLOR_CYAN,
-            'WHITE': curses.COLOR_WHITE,
-        }
-        self._curses_colors = list()
+        # Internal storage
+        self._curses_native_colormap = dict()
+        self._curses_colors_allowed = list()
         self._curses_colors_pairs = list()
+
+        # Internal init
+        self._gen_curses_native_colormap_dict()
+        self._gen_curses_colors()
+        self._gen_curses_colors_pairs()
+
+        # init
         self.attribute = self.get_default_style()
-        self.init_curses_pairs()
 
     @staticmethod
     def get_default_style():
@@ -158,31 +158,6 @@ class Style(object):
 
         return style
 
-    def init_curses_pairs(self):
-        """
-        Create big matrix of each color combination
-        """
-
-        self._gen_curses_colors()
-        self._gen_curses_colors_pairs()
-
-    def get_color_to_int(self, color):
-        color = str(color).upper()
-        if color in self.curses_native_colormap.keys():
-            return self.curses_native_colormap[color]
-        else:
-            return None
-
-    def get_int_to_color(self, integer):
-        for color in self.curses_native_colormap.keys():
-            if integer == self.curses_native_colormap[color]:
-                return color
-            else:
-                pass
-
-    def get_generated_pairs(self):
-        return list(itertools.product(self.curses_native_colormap.values(), self.curses_native_colormap.values()))
-
     def get_curses_pairs(self, fg='WHITE', bg='BLACK'):
         if fg in self._get_curses_colors() and bg in self._get_curses_colors():
             pairs = self._get_curses_colors_pairs().index(str(fg).upper() + '/' + str(bg).upper())
@@ -190,18 +165,57 @@ class Style(object):
         else:
             return 0
 
-    # Internal
     def get_attr(self, elem, state):
         return self.attribute[elem][state]
 
+    # Internal
+    def _set_curses_native_colormap(self, curses_native_colormap_dict=dict()):
+        """
+        Internal method for set ``_curses_native_colormap`` attribute
+
+        :param curses_native_colormap_dict: A list of color name
+        :type curses_native_colormap_dict: list
+        :raise TypeError: if ``curses_native_colormap_dict`` parameter is not a :py:data:`dict` type
+        """
+        if type(curses_native_colormap_dict) == dict:
+            if curses_native_colormap_dict != self._get_curses_native_colormap():
+                self._curses_native_colormap = curses_native_colormap_dict
+                # Can emit modification signal here
+        else:
+            raise TypeError(u'>curses_native_colormap_dict< argument must be a dict type')
+
+    def _get_curses_native_colormap(self):
+        """
+        Internal method for return ``_curses_native_colormap`` attribute
+
+        :return the _curses_native_colormap attribute
+        :rtype: dict
+        """
+        return self._curses_native_colormap
+
+    def _gen_curses_native_colormap_dict(self):
+        """
+        Internal it generate curses native colormap dictionary , the method work directly with \
+        other internal method's and have no parameter or return.
+        """
+        self._set_curses_native_colormap(dict())
+        self._get_curses_native_colormap()['BLACK'] = curses.COLOR_BLACK
+        self._get_curses_native_colormap()['RED'] = curses.COLOR_RED
+        self._get_curses_native_colormap()['GREEN'] = curses.COLOR_GREEN
+        self._get_curses_native_colormap()['YELLOW'] = curses.COLOR_YELLOW
+        self._get_curses_native_colormap()['BLUE'] = curses.COLOR_BLUE
+        self._get_curses_native_colormap()['MAGENTA'] = curses.COLOR_MAGENTA
+        self._get_curses_native_colormap()['CYAN'] = curses.COLOR_CYAN
+        self._get_curses_native_colormap()['WHITE'] = curses.COLOR_WHITE
+
     def _get_curses_colors(self):
         """
-        Internal method for return ``_curses_colors`` attribute
+        Internal method for return ``_curses_colors_allowed`` attribute
 
-        :return curses_colors list
+        :return the curses_colors attribute
         :rtype: list
         """
-        return self._curses_colors
+        return self._curses_colors_allowed
 
     def _set_curses_colors(self, curses_colors_list=list()):
         """
@@ -213,7 +227,7 @@ class Style(object):
         """
         if type(curses_colors_list) == list:
             if curses_colors_list != self._get_curses_colors():
-                self._curses_colors = curses_colors_list
+                self._curses_colors_allowed = curses_colors_list
                 # Can emit modification signal here
         else:
             raise TypeError(u'>curses_colors_list< argument must be a list type')
