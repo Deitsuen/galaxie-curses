@@ -302,4 +302,28 @@ class Constants(object):
         """Looks as if it were coming out of the canvas"""
         return 'BORDER_STYLE_RIDGE'
 
+    #################
+    #  PositionType #
+    #################
+    # Describes which edge of a widget a certain feature is positioned
+    @constant
+    def POS_LEFT():
+        """The feature is at the left edge."""
+        return 'LEFT'
+
+    @constant
+    def POS_RIGHT():
+        """The feature is at the right edge."""
+        return 'RIGHT'
+
+    @constant
+    def POS_TOP():
+        """The feature is at the top edge."""
+        return 'TOP'
+
+    @constant
+    def POS_BOTTOM():
+        """The feature is at the bottom edge."""
+        return 'BOTTOM'
+
 glxc = Constants()

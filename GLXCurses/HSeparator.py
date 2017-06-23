@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import GLXCurses
 import curses
+from GLXCurses import glxc
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -11,42 +12,87 @@ __author__ = 'Tuux'
 
 class HSeparator(GLXCurses.Widget):
     def __init__(self):
+        """
+        The GLXCurses.HSeparator widget is a horizontal separator, used to visibly separate the widgets within a \
+        window. It displays a horizontal line.
+
+        :Property's Details:
+
+        .. py:data:: name
+
+            The widget can be named, which allows you to refer to them from a GLXCurses.Style
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`str`                |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | HSeparator                    |
+              +---------------+-------------------------------+
+
+        .. py:data:: set_preferred_height
+
+            Size management
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`int`                |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | 1                             |
+              +---------------+-------------------------------+
+
+        .. py:data:: position_type
+
+            PositionType: CENTER, TOP, BOTTOM
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`PositionType`       |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | CENTER                        |
+              +---------------+-------------------------------+
+
+        """
+
         GLXCurses.Widget.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('HSeparator')
 
-        # Internal Widget Setting
-        self.hseperator_x = 0
-        self.hseperator_y = 0
-        
         # Size management
         self.set_preferred_height(1)
+
+        # PositionType: CENTER, TOP, BOTTOM
+        self.position_type = glxc.BASELINE_POSITION_CENTER
+
+        # Internal Widget Setting
+        self._hseperator_x = 0
+        self._hseperator_y = 0
 
         # Make a Style heritage attribute
         if self.style.attribute:
             self.attribute = self.style.attribute
 
-        # PositionType: CENTER, TOP, BOTTOM
-        self.position_type = 'CENTER'
-
     def draw_widget_in_area(self):
-        self.update_preferred_sizes()
+        self.set_preferred_width(self._get_estimated_preferred_width())
+        self.set_preferred_height(self._get_estimated_preferred_height())
         self.check_horizontal_position_type()
         if (self.get_height() >= self.get_preferred_height()) and (self.get_width() >= self.get_preferred_width()):
             self.draw_horizontal_separator()
 
     def check_horizontal_position_type(self):
         # PositionType: CENTER, TOP, BOTTOM
-        self.hseperator_y = 0
-        if self.get_position_type() == 'CENTER':
+        self._hseperator_y = 0
+        if self.get_position_type() == glxc.BASELINE_POSITION_CENTER:
             if (self.get_height() / 2) > self.get_preferred_height():
-                self.hseperator_y = (self.get_height() / 2) - self.get_preferred_height()
+                self._hseperator_y = (self.get_height() / 2) - self.get_preferred_height()
             else:
-                self.hseperator_y = 0
-        elif self.get_position_type() == 'TOP':
-            self.hseperator_y = 0
-        elif self.get_position_type() == 'BOTTOM':
-            self.hseperator_y = self.get_height() - self.get_preferred_height()
+                self._hseperator_y = 0
+        elif self.get_position_type() == glxc.BASELINE_POSITION_TOP:
+            self._hseperator_y = 0
+        elif self.get_position_type() == glxc.BASELINE_POSITION_BOTTOM:
+            self._hseperator_y = self.get_height() - self.get_preferred_height()
 
     def get_attr(self, elem, state):
         return self.attribute[elem][state]
@@ -55,8 +101,8 @@ class HSeparator(GLXCurses.Widget):
         # Draw the Horizontal Separator with PositionType
         for x in range(self.get_x(), self.get_width()):
             self.get_curses_subwin().insch(
-                self.hseperator_y,
-                self.hseperator_x + x,
+                self._hseperator_y,
+                self._hseperator_x + x,
                 curses.ACS_HLINE,
                 curses.color_pair(self.get_style().get_curses_pairs(
                     fg=self.get_attr('base', 'STATE_NORMAL'),
@@ -64,18 +110,35 @@ class HSeparator(GLXCurses.Widget):
                 )
             )
 
-    def update_preferred_sizes(self):
-        preferred_width = self.get_x()
-        preferred_height = 1 + self.get_spacing() * 2
-        preferred_width += self.get_width()
-        preferred_width += self.get_spacing() * 2
-        self.set_preferred_height(preferred_height)
-        self.set_preferred_width(preferred_width)
-
     # PositionType: CENTER, TOP, BOTTOM
     def set_position_type(self, position_type):
         self.position_type = str(position_type).upper()
-        self.update_preferred_sizes()
+        self.set_preferred_width(self._get_estimated_preferred_width())
+        self.set_preferred_height(self._get_estimated_preferred_height())
 
     def get_position_type(self):
         return self.position_type
+
+    # Internal
+    def _get_estimated_preferred_width(self):
+        """
+        Estimate a preferred width, by consider X Location, allowed width and spacing
+
+        :return: a estimated preferred width
+        :rtype: int
+        """
+        estimated_preferred_width = self.get_x()
+        estimated_preferred_width += self.get_width()
+        estimated_preferred_width += self.get_spacing() * 2
+        return estimated_preferred_width
+
+    def _get_estimated_preferred_height(self):
+        """
+        Estimate a preferred height, by consider Y Location, and spacing
+
+        :return: a estimated preferred height
+        :rtype: int
+        """
+        estimated_preferred_height = 1
+        estimated_preferred_height += self.get_spacing() * 2
+        return estimated_preferred_height
