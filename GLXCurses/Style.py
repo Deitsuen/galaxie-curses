@@ -10,6 +10,51 @@ __author__ = 'Tuux'
 
 class Style(object):
     def __init__(self):
+        """
+        Galaxie Curses Style is equivalent to a skin feature, the entire API receive a common Style from Application \
+        and each individual Widget can use it own separate one.
+
+        Yet it's a bit hard to explain how create you own Style, in summary it consist to a dict() it have keys \
+        with a special name call ``Attribute``, inside that dictionary we create a second level of dict() dedicated \
+        to store color value of each ``States``
+
+        :GLXCurses Style Attributes Type:
+
+        +---------+---------------------------------------------------------------------------------------------+
+        | text_fg | An color to be used for the foreground colors in each curses_subwin state.                  |
+        +-------------------+-----------------------------------------------------------------------------------+
+        | bg      | An color to be used for the background colors in each curses_subwin state.                  |
+        +---------+---------------------------------------------------------------------------------------------+
+        | light   | An color to be used for the light colors in each curses_subwin state.                       |
+        +---------+---------------------------------------------------------------------------------------------+
+        | dark    | An color to be used for the dark colors in each curses_subwin state.                        |
+        +---------+---------------------------------------------------------------------------------------------+
+        | mid     | An color to be used for the mid colors (between light and dark) in each curses_subwin state |
+        +---------+---------------------------------------------------------------------------------------------+
+        | text    | An color to be used for the text colors in each curses_subwin state.                        |
+        +---------+---------------------------------------------------------------------------------------------+
+        | base    | An color to be used for the base colors in each curses_subwin state.                        |
+        +---------+---------------------------------------------------------------------------------------------+
+        | black   | Used for the black color.                                                                   |
+        +---------+---------------------------------------------------------------------------------------------+
+        | white   | Used for the white color.                                                                   |
+        +---------+---------------------------------------------------------------------------------------------+
+
+        :GLXCurses States Type:
+
+        +-------------------+----------------------------------------------------------------+
+        | STATE_NORMAL      | The state during normal operation                              |
+        +-------------------+----------------------------------------------------------------+
+        | STATE_ACTIVE      | The curses_subwin is currently active, such as a button pushed |
+        +-------------------+----------------------------------------------------------------+
+        | STATE_PRELIGHT    | The mouse pointer is over the curses_subwin                    |
+        +-------------------+----------------------------------------------------------------+
+        | STATE_SELECTED    | The curses_subwin is selected                                  |
+        +-------------------+----------------------------------------------------------------+
+        | STATE_INSENSITIVE | The curses_subwin is disabled                                  |
+        +---------------+--------------------------------------------------------------------+
+
+        """
         # The White is CRAY and YELLOW is ORANGE
         self.curses_native_colormap = {
             'BLACK': curses.COLOR_BLACK,
@@ -26,26 +71,16 @@ class Style(object):
         self.attribute = self.get_default_style()
         self.init_curses_pairs()
 
-    def get_default_style(self):
+    @staticmethod
+    def get_default_style():
+        """
+        Return a default style, that will be use by the entire GLXCurses API via the ``attribute`` object. \
+        every Widget's  will receive it style by default.
+
+        :return: A Galaxie Curses Style dictionary
+        :rtype: dict
+        """
         style = dict()
-
-        # GLXCurses States Type:
-        # STATE_NORMAL      - The state during normal operation.
-        # STATE_ACTIVE      - The curses_subwin is currently active, such as a button pushed
-        # STATE_PRELIGHT    - The mouse pointer is over the curses_subwin.
-        # STATE_SELECTED    - The curses_subwin is selected
-        # STATE_INSENSITIVE - The curses_subwin is disabled
-
-        # GLXCurses Attributes Type:
-        # text_fg     - a list of 5 foreground colors - one for each state
-        # bg     - a list of 5 background colors
-        # light  - a list of 5 colors - created during set_style() method
-        # dark   - a list of 5 colors - created during set_style() method
-        # mid    - a list of 5 colors - created during set_style() method
-        # text   - a list of 5 colors
-        # base   - a list of 5 colors
-        # black  - the black color
-        # white  - the white color
 
         # An color to be used for the foreground colors in each curses_subwin state.
         style['text_fg'] = dict()
@@ -124,6 +159,10 @@ class Style(object):
         return style
 
     def init_curses_pairs(self):
+        """
+        Create big matrix of each color combination
+        """
+
         self.curses_colors = list()
         self.curses_colors.append('BLACK')
         self.curses_colors.append('RED')

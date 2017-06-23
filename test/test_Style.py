@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import unittest2 as unittest
+import unittest
 from random import randint
 import random
 import string
@@ -17,10 +17,16 @@ sys.path.append(os.path.dirname(current_dir))
 import GLXCurses
 
 # Unittest
-class TestEventBus(unittest.TestCase):
+class TestStyle(unittest.TestCase):
+
     def setUp(self):
         # Before the test start
+        # Require for init the screen
+        self.application = GLXCurses.Application()
+        # The component to test
         self.style = GLXCurses.Style()
+
+        # Display thing that because curses have flush the screen
         rows, columns = os.popen('stty size', 'r').read().split()
         self.columns = int(columns)
         self.width = self.columns - 7
@@ -30,8 +36,10 @@ class TestEventBus(unittest.TestCase):
 
     def tearDown(self):
         # When the test is finish
-        # self.application.refresh()
-        # self.application.close()
+        # Require for ask to curse to clean up it
+        self.application.close()
+
+        # Display thing that because curses have flush the screen
         sys.stdout.write('\r')
         sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.width))
         sys.stdout.write(' ')
@@ -43,30 +51,91 @@ class TestEventBus(unittest.TestCase):
         sys.stdout.write('\n\r')
         sys.stdout.flush()
 
+    # Tests
     def test_get_default_style(self):
-        """Test Style.get_default_style() return a dictionnaty"""
+        """Test Style.get_default_style() return a dictionary"""
         self.assertEqual(type(self.style.get_default_style()), type(dict()))
 
-    def test_get_default_style_dictionarys(self):
-        """Test Style.get_default_style() dictionary contain specific keys"""
-        # text_fg     - a list of 5 foreground colors - one for each state
+    def test_get_default_style_dictionary_text_fg(self):
+        """Test Style.get_default_style() 'text_fg' dictionary key"""
         self.assertEqual(type(self.style.get_default_style()['text_fg']), type(dict()))
-        # bg     - a list of 5 background colors
+
+    def test_get_default_style_dictionary_text_fg_states(self):
+        """Test Style.get_default_style() 'text_fg' states dictionary key's"""
+        for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
+            self.assertEqual(type(self.style.get_default_style()['text_fg'][state]), type(str()))
+
+    def test_get_default_style_dictionary_bg(self):
+        """Test Style.get_default_style() 'bg' dictionary key"""
         self.assertEqual(type(self.style.get_default_style()['bg']), type(dict()))
-        # light  - a list of 5 colors - created during set_style() method
+
+    def test_get_default_style_dictionary_bg_states(self):
+        """Test Style.get_default_style() 'bg' states dictionary key's"""
+        for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
+            self.assertEqual(type(self.style.get_default_style()['bg'][state]), type(str()))
+
+    def test_get_default_style_dictionary_light(self):
+        """Test Style.get_default_style() 'light' dictionary key"""
         self.assertEqual(type(self.style.get_default_style()['light']), type(dict()))
-        # dark   - a list of 5 colors - created during set_style() method
+
+    def test_get_default_style_dictionary_light_states(self):
+        """Test Style.get_default_style() 'light' states dictionary key's"""
+        for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
+            self.assertEqual(type(self.style.get_default_style()['light'][state]), type(str()))
+
+    def test_get_default_style_dictionary_dark(self):
+        """Test Style.get_default_style() 'dark' dictionary key"""
         self.assertEqual(type(self.style.get_default_style()['dark']), type(dict()))
-        # mid    - a list of 5 colors - created during set_style() method
+
+    def test_get_default_style_dictionary_dark_states(self):
+        """Test Style.get_default_style() 'dark' states dictionary key's"""
+        for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
+            self.assertEqual(type(self.style.get_default_style()['dark'][state]), type(str()))
+
+    def test_get_default_style_dictionary_mid(self):
+        """Test Style.get_default_style() 'mid' dictionary key"""
         self.assertEqual(type(self.style.get_default_style()['mid']), type(dict()))
-        # text   - a list of 5 colors
+
+    def test_get_default_style_dictionary_mid_states(self):
+        """Test Style.get_default_style() 'mid' states dictionary key's"""
+        for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
+            self.assertEqual(type(self.style.get_default_style()['mid'][state]), type(str()))
+
+    def test_get_default_style_dictionary_text(self):
+        """Test Style.get_default_style() 'text' dictionary key"""
         self.assertEqual(type(self.style.get_default_style()['text']), type(dict()))
-        # base   - a list of 5 colors
+
+    def test_get_default_style_dictionary_text_states(self):
+        """Test Style.get_default_style() 'text' states dictionary key's"""
+        for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
+            self.assertEqual(type(self.style.get_default_style()['text'][state]), type(str()))
+
+    def test_get_default_style_dictionary_base(self):
+        """Test Style.get_default_style() 'base' dictionary key"""
         self.assertEqual(type(self.style.get_default_style()['base']), type(dict()))
-        # black  - the black color
+
+    def test_get_default_style_dictionary_base_states(self):
+        """Test Style.get_default_style() 'base' states dictionary key's"""
+        for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
+            self.assertEqual(type(self.style.get_default_style()['base'][state]), type(str()))
+
+    def test_get_default_style_dictionary_black(self):
+        """Test Style.get_default_style() 'black' dictionary key"""
         self.assertEqual(type(self.style.get_default_style()['black']), type(dict()))
-        # white  - the white color
+
+    def test_get_default_style_dictionary_black_states(self):
+        """Test Style.get_default_style() 'black' states dictionary key's"""
+        for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
+            self.assertEqual(type(self.style.get_default_style()['black'][state]), type(str()))
+
+    def test_get_default_style_dictionary_white(self):
+        """Test Style.get_default_style() 'white' dictionary key"""
         self.assertEqual(type(self.style.get_default_style()['white']), type(dict()))
+
+    def test_get_default_style_dictionary_white_states(self):
+        """Test Style.get_default_style() 'white' states dictionary key's"""
+        for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
+            self.assertEqual(type(self.style.get_default_style()['white'][state]), type(str()))
 
 if __name__ == '__main__':
     unittest.main()

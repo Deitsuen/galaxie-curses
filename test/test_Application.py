@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import unittest2 as unittest
+import unittest
 from random import randint
 import random
 import string
@@ -16,8 +16,10 @@ sys.path.append(os.path.dirname(current_dir))
 
 import GLXCurses
 
+
 # Unittest
-class TestEventBus(unittest.TestCase):
+class TestApplication(unittest.TestCase):
+
     def setUp(self):
         # Before the test start
         self.application = GLXCurses.Application()
