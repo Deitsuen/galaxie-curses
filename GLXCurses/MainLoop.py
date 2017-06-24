@@ -230,21 +230,26 @@ class MainLoop(object):
         if self.is_running():
             # A bit light for notify about we are up and runing, but we are really inside the main while(1) loop
             logging.debug(self.__class__.__name__ + ': Started')
-            # That in theory the first refresh of the application
 
+            # That normaly the first refresh of the application, it can be considered as the first screen display.
             Application().refresh()
 
-        # Main while 1
+        # The loop
         while self.is_running():
+
+            # Wait for a event
             input_event = Application().getch()
             # logging.debug(self.event_buffer)
 
+            # Wait for a event
             if input_event != -1:
                 self._handle_curses_input(input_event)
 
+            # Do something with event
             self._handle_event()
 
-            # In case it was a graphic event we refresh the screen
+            # In case it was a graphic event we refresh the screen, ncurse have a optimization mechanism for refrech
+            # only character's it need.
             Application().refresh()
 
         # Here self.get_started() == False , then the GLXCurse.Mainloop() should be close
