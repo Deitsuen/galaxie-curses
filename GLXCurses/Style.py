@@ -163,7 +163,7 @@ class Style(object):
         Return a curses color pairs correspondent with the right foreground and background.
         All possible foreground/background combination have been generate automatically during GLXC.Style init.
 
-        :param fg: Forground  color like 'WHITE'
+        :param fg: Foreground  color like 'WHITE'
         :param bg: Background color like 'BLACK'
         :return: Curse color pair it correspond to the right foreground and background
         :rtype: int
