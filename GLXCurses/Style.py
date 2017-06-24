@@ -69,10 +69,10 @@ class Style(object):
         self._gen_curses_colors_pairs()
 
         # init
-        self.attribute = self.get_default_style()
+        self.attribute_states = self.get_default_attribute_states()
 
     @staticmethod
-    def get_default_style():
+    def get_default_attribute_states():
         """
         Return a default style, that will be use by the entire GLXCurses API via the ``attribute`` object. \
         every Widget's  will receive it style by default.
@@ -165,8 +165,32 @@ class Style(object):
         else:
             return 0
 
-    def get_attr(self, elem, state):
-        return self.attribute[elem][state]
+    def get_color(self, attribute='base', state='STATE_NORMAL'):
+        """
+        Return a text color, for a attribute and a state passed as argument, it's use by widget for know which color
+        use, when a state change.
+
+        By example: When color change if the button is pressed
+
+        :param attribute: accepted value: text_fg, bg, light, dark, mid, text, base, black, white
+        :param state: accepted value: STATE_NORMAL, STATE_ACTIVE, STATE_PRELIGHT, STATE_SELECTED, STATE_INSENSITIVE
+        :return: text color
+        :rtype: str
+        """
+        return self.attribute_states[attribute][state]
+
+    def set_attribute_states(self, attribute_states):
+        self.attribute_states = attribute_states
+
+    def get_attribute_states(self):
+        """
+        Return the ``attribute_states`` attribute, it consist to a dictionary it store a second level of dictionary \
+        with keys if have special name.
+
+        :return: attribute states dictionary
+        :rtype: dict
+        """
+        return self.attribute_states
 
     # Internal
     def _set_curses_native_colormap(self, curses_native_colormap_dict=dict()):

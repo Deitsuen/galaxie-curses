@@ -54,88 +54,88 @@ class TestStyle(unittest.TestCase):
     # Tests
     def test_get_default_style(self):
         """Test Style.get_default_style() return a dictionary"""
-        self.assertEqual(type(self.style.get_default_style()), type(dict()))
+        self.assertEqual(type(self.style.get_default_attribute_states()), type(dict()))
 
     def test_get_default_style_dictionary_text_fg(self):
         """Test Style.get_default_style() 'text_fg' dictionary key"""
-        self.assertEqual(type(self.style.get_default_style()['text_fg']), type(dict()))
+        self.assertEqual(type(self.style.get_default_attribute_states()['text_fg']), type(dict()))
 
     def test_get_default_style_dictionary_text_fg_states(self):
         """Test Style.get_default_style() 'text_fg' states dictionary key's"""
         for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
-            self.assertEqual(type(self.style.get_default_style()['text_fg'][state]), type(str()))
+            self.assertEqual(type(self.style.get_default_attribute_states()['text_fg'][state]), type(str()))
 
     def test_get_default_style_dictionary_bg(self):
         """Test Style.get_default_style() 'bg' dictionary key"""
-        self.assertEqual(type(self.style.get_default_style()['bg']), type(dict()))
+        self.assertEqual(type(self.style.get_default_attribute_states()['bg']), type(dict()))
 
     def test_get_default_style_dictionary_bg_states(self):
         """Test Style.get_default_style() 'bg' states dictionary key's"""
         for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
-            self.assertEqual(type(self.style.get_default_style()['bg'][state]), type(str()))
+            self.assertEqual(type(self.style.get_default_attribute_states()['bg'][state]), type(str()))
 
     def test_get_default_style_dictionary_light(self):
         """Test Style.get_default_style() 'light' dictionary key"""
-        self.assertEqual(type(self.style.get_default_style()['light']), type(dict()))
+        self.assertEqual(type(self.style.get_default_attribute_states()['light']), type(dict()))
 
     def test_get_default_style_dictionary_light_states(self):
         """Test Style.get_default_style() 'light' states dictionary key's"""
         for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
-            self.assertEqual(type(self.style.get_default_style()['light'][state]), type(str()))
+            self.assertEqual(type(self.style.get_default_attribute_states()['light'][state]), type(str()))
 
     def test_get_default_style_dictionary_dark(self):
         """Test Style.get_default_style() 'dark' dictionary key"""
-        self.assertEqual(type(self.style.get_default_style()['dark']), type(dict()))
+        self.assertEqual(type(self.style.get_default_attribute_states()['dark']), type(dict()))
 
     def test_get_default_style_dictionary_dark_states(self):
         """Test Style.get_default_style() 'dark' states dictionary key's"""
         for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
-            self.assertEqual(type(self.style.get_default_style()['dark'][state]), type(str()))
+            self.assertEqual(type(self.style.get_default_attribute_states()['dark'][state]), type(str()))
 
     def test_get_default_style_dictionary_mid(self):
         """Test Style.get_default_style() 'mid' dictionary key"""
-        self.assertEqual(type(self.style.get_default_style()['mid']), type(dict()))
+        self.assertEqual(type(self.style.get_default_attribute_states()['mid']), type(dict()))
 
     def test_get_default_style_dictionary_mid_states(self):
         """Test Style.get_default_style() 'mid' states dictionary key's"""
         for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
-            self.assertEqual(type(self.style.get_default_style()['mid'][state]), type(str()))
+            self.assertEqual(type(self.style.get_default_attribute_states()['mid'][state]), type(str()))
 
     def test_get_default_style_dictionary_text(self):
         """Test Style.get_default_style() 'text' dictionary key"""
-        self.assertEqual(type(self.style.get_default_style()['text']), type(dict()))
+        self.assertEqual(type(self.style.get_default_attribute_states()['text']), type(dict()))
 
     def test_get_default_style_dictionary_text_states(self):
         """Test Style.get_default_style() 'text' states dictionary key's"""
         for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
-            self.assertEqual(type(self.style.get_default_style()['text'][state]), type(str()))
+            self.assertEqual(type(self.style.get_default_attribute_states()['text'][state]), type(str()))
 
     def test_get_default_style_dictionary_base(self):
         """Test Style.get_default_style() 'base' dictionary key"""
-        self.assertEqual(type(self.style.get_default_style()['base']), type(dict()))
+        self.assertEqual(type(self.style.get_default_attribute_states()['base']), type(dict()))
 
     def test_get_default_style_dictionary_base_states(self):
         """Test Style.get_default_style() 'base' states dictionary key's"""
         for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
-            self.assertEqual(type(self.style.get_default_style()['base'][state]), type(str()))
+            self.assertEqual(type(self.style.get_default_attribute_states()['base'][state]), type(str()))
 
     def test_get_default_style_dictionary_black(self):
         """Test Style.get_default_style() 'black' dictionary key"""
-        self.assertEqual(type(self.style.get_default_style()['black']), type(dict()))
+        self.assertEqual(type(self.style.get_default_attribute_states()['black']), type(dict()))
 
     def test_get_default_style_dictionary_black_states(self):
         """Test Style.get_default_style() 'black' states dictionary key's"""
         for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
-            self.assertEqual(type(self.style.get_default_style()['black'][state]), type(str()))
+            self.assertEqual(type(self.style.get_default_attribute_states()['black'][state]), type(str()))
 
     def test_get_default_style_dictionary_white(self):
         """Test Style.get_default_style() 'white' dictionary key"""
-        self.assertEqual(type(self.style.get_default_style()['white']), type(dict()))
+        self.assertEqual(type(self.style.get_default_attribute_states()['white']), type(dict()))
 
     def test_get_default_style_dictionary_white_states(self):
         """Test Style.get_default_style() 'white' states dictionary key's"""
         for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
-            self.assertEqual(type(self.style.get_default_style()['white'][state]), type(str()))
+            self.assertEqual(type(self.style.get_default_attribute_states()['white'][state]), type(str()))
 
     # Internal Method test
     # Curses Native colors map

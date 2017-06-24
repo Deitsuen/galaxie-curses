@@ -213,7 +213,7 @@ class Application(object):
         self.windows_id_number = None
         self.active_window_id = None
         self.windows = list()
-        self.attribute = self.style.get_default_style()
+        self.attribute = self.get_style().get_attribute_states()
 
         # Controller
         self.widget_it_have_default = None

@@ -37,7 +37,7 @@ class Widget(GLXCurses.Object):
 
         # Widget Parent
         self.screen = None
-        self.attribute = None
+        self.attribute_states = None
 
         # Size Management
         self.screen_height = 0
@@ -263,10 +263,10 @@ class Widget(GLXCurses.Object):
 
     # Name management use for GLXCStyle color's
     def override_color(self, color):
-        self.get_style().attribute['text']['STATE_NORMAL'] = str(color).upper()
+        self.get_style().get_attribute_states()['text']['STATE_NORMAL'] = str(color).upper()
 
     def override_background_color(self, color):
-        self.get_style().attribute['bg']['STATE_NORMAL'] = str(color).upper()
+        self.get_style().get_attribute_states()['bg']['STATE_NORMAL'] = str(color).upper()
 
     # Size management
     def get_width(self):
@@ -312,6 +312,13 @@ class Widget(GLXCurses.Object):
     # Sets the sensitivity of a curses_subwin.
     # A curses_subwin is sensitive if the user can interact with it. Insensitive widgets are “grayed out”
     # and the user can’t interact with them.
+
+    def set_attribute_states(self, attribute_states):
+        self.attribute_states = attribute_states
+
+    def get_attribute_states(self):
+        return self.attribute_states
+
     # Properties
     def set_app_paintable(self, boolean):
         self.flags['APP_PAINTABLE'] = bool(boolean)

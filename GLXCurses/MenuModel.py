@@ -18,8 +18,8 @@ class MenuModel(GLXCurses.Widget):
         self.app_info_label = None
 
         # Make a Style heritage attribute
-        if self.get_style().attribute:
-            self.attribute = self.get_style().attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
     def draw(self):
         app_info_label = self.app_info_label
@@ -37,15 +37,15 @@ class MenuModel(GLXCurses.Widget):
                     0,
                     str(' ' * (self.get_width() - 1)),
                     curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('dark', 'STATE_NORMAL'),
-                        bg=self.get_attr('light', 'STATE_NORMAL'))
+                        fg=self.get_style().get_color('dark', 'STATE_NORMAL'),
+                        bg=self.get_style().get_color('light', 'STATE_NORMAL'))
                     )
                 )
             self.get_curses_subwin().bkgdset(
                     ord(' '),
                     curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('dark', 'STATE_NORMAL'),
-                        bg=self.get_attr('light', 'STATE_NORMAL'))
+                        fg=self.get_style().get_color('dark', 'STATE_NORMAL'),
+                        bg=self.get_style().get_color('light', 'STATE_NORMAL'))
                     )
                 )
         if self.app_info_label:
@@ -56,8 +56,8 @@ class MenuModel(GLXCurses.Widget):
                         (self.get_width() - 1) - len(str(app_info_label[:-1])),
                         app_info_label[:-1],
                         curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('dark', 'STATE_NORMAL'),
-                            bg=self.get_attr('light', 'STATE_NORMAL'))
+                            fg=self.get_style().get_color('dark', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color('light', 'STATE_NORMAL'))
                         )
                     )
                     self.get_curses_subwin().insstr(
@@ -65,12 +65,9 @@ class MenuModel(GLXCurses.Widget):
                         self.get_width() - 1,
                         app_info_label[-1:],
                         curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('dark', 'STATE_NORMAL'),
-                            bg=self.get_attr('light', 'STATE_NORMAL'))
+                            fg=self.get_style().get_color('dark', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color('light', 'STATE_NORMAL'))
                         )
                     )
                 except curses.error:
                     pass
-
-    def get_attr(self, elem, state):
-        return self.attribute[elem][state]

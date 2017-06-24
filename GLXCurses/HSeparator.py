@@ -71,8 +71,8 @@ class HSeparator(GLXCurses.Widget):
         self._hseperator_y = 0
 
         # Make a Style heritage attribute
-        if self.style.attribute:
-            self.attribute = self.style.attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
     def draw_widget_in_area(self):
         self.set_preferred_width(self._get_estimated_preferred_width())

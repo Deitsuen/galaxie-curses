@@ -45,6 +45,10 @@ class VSeparator(GLXCurses.Widget):
 
         self.update_preferred_sizes()
 
+        # Make a Style heritage attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
+
     def draw_widget_in_area(self):
 
         if (self.get_height() >= 1 + (self.get_spacing() * 2)) and (self.get_width() >= 1 + (self.get_spacing() * 2)):

@@ -101,8 +101,8 @@ class Frame(Bin):
         self.set_name('Frame')
 
         # Make a Style heritage attribute
-        if self.style.attribute:
-            self.attribute = self.style.attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
         self.preferred_height = 2
         self.preferred_width = 2
@@ -127,15 +127,15 @@ class Frame(Bin):
         self.get_curses_subwin().bkgdset(
             ord(' '),
             curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                fg=self.get_style().get_color('text', 'STATE_NORMAL'),
+                bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
             )
         )
         self.get_curses_subwin().bkgd(
             ord(' '),
             curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                fg=self.get_style().get_color('text', 'STATE_NORMAL'),
+                bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
             )
         )
 

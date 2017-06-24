@@ -117,8 +117,8 @@ class Label(GLXCurses.Misc):
         self.update_preferred_sizes()
 
         # Make a Style heritage attribute
-        if self.style.attribute:
-            self.attribute = self.style.attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
     ###########
     # Methods #
@@ -367,8 +367,8 @@ class Label(GLXCurses.Misc):
                 self._get_label_x(),
                 self._get_single_line_resided_label_text(),
                 curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                    bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                    fg=self.get_style().get_color('text', 'STATE_NORMAL'),
+                    bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
                 )
             )
         except curses.error:
@@ -387,8 +387,8 @@ class Label(GLXCurses.Misc):
                         self._get_label_x(),
                         self._check_justification(text=line, width=max_width),
                         curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                            bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                            fg=self.get_style().get_color('text', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
                         )
                     )
                 elif self.get_max_width_chars() == 0:
@@ -399,8 +399,8 @@ class Label(GLXCurses.Misc):
                         self._get_label_x(),
                         self._check_justification(text=line, width=self.get_max_width_chars())[:self.get_max_width_chars()],
                         curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                            bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                            fg=self.get_style().get_color('text', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
                         )
                     )
             except curses.error:

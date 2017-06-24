@@ -29,13 +29,14 @@ class Toolbar(GLXCurses.Widget):
         self.set_name('Toolbar')
 
         # Widget setting
-        if self.style.attribute:
-            self.text_fg = self.style.attribute['dark']['STATE_NORMAL']
-            self.text_bg = self.style.attribute['light']['STATE_NORMAL']
-            self.text_prefix_fg = self.style.attribute['text']['STATE_NORMAL']
-            self.text_prefix_bg = self.style.attribute['dark']['STATE_NORMAL']
-            self.widget_fg = self.style.attribute['dark']['STATE_NORMAL']
-            self.widget_bg = self.style.attribute['dark']['STATE_NORMAL']
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
+            self.text_fg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
+            self.text_bg = self.get_style().get_attribute_states()['light']['STATE_NORMAL']
+            self.text_prefix_fg = self.get_style().get_attribute_states()['text']['STATE_NORMAL']
+            self.text_prefix_bg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
+            self.widget_fg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
+            self.widget_bg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
 
             self.color_text_normal = self.style.get_curses_pairs(fg=self.text_fg, bg=self.text_bg)
             self.color_text_prefix = self.style.get_curses_pairs(fg=self.text_prefix_fg, bg=self.text_prefix_bg)

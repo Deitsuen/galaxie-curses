@@ -31,8 +31,8 @@ class ProgressBar(GLXCurses.Widget):
         self.set_name('ProgressBar')
 
         # Make a Style heritage attribute
-        if self.get_style().attribute:
-            self.attribute = self.get_style().attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
         # The Percent value
         self.value = 0
@@ -75,9 +75,6 @@ class ProgressBar(GLXCurses.Widget):
 
         self.char = ' '
 
-    def get_attr(self, elem, state):
-        return self.attribute[elem][state]
-
     def draw_widget_in_area(self):
         # Orientation: HORIZONTAL, VERTICAL
         if self.get_orientation() == 'HORIZONTAL':
@@ -102,8 +99,8 @@ class ProgressBar(GLXCurses.Widget):
             x_progress,
             curses.ACS_HLINE,
             curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_attr('base', 'STATE_NORMAL'),
-                bg=self.get_attr('bg', 'STATE_NORMAL'))
+                fg=self.get_style().get_color('base', 'STATE_NORMAL'),
+                bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
             )
         )
         # Draw the Vertical ProgressBar with Justification and PositionType
@@ -118,8 +115,8 @@ class ProgressBar(GLXCurses.Widget):
                         x_progress,
                         CHAR,
                         curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('base', 'STATE_NORMAL'),
-                            bg=self.get_attr('bg', 'STATE_NORMAL'))
+                            fg=self.get_style().get_color('base', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
                         )
                     )
                     increment += 1
@@ -131,8 +128,8 @@ class ProgressBar(GLXCurses.Widget):
                         x_progress,
                         CHAR,
                         curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('bg', 'STATE_NORMAL'),
-                            bg=self.get_attr('base', 'STATE_NORMAL'))
+                            fg=self.get_style().get_color('bg', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color('base', 'STATE_NORMAL'))
                         )
                     )
                     count += 1
@@ -143,8 +140,8 @@ class ProgressBar(GLXCurses.Widget):
                     x_progress,
                     curses.ACS_HLINE,
                     curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('base', 'STATE_NORMAL'),
-                        bg=self.get_attr('bg', 'STATE_NORMAL'))
+                        fg=self.get_style().get_color('base', 'STATE_NORMAL'),
+                        bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
                     )
                 )
             except curses.error:
@@ -159,8 +156,8 @@ class ProgressBar(GLXCurses.Widget):
                         x_progress,
                         CHAR,
                         curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('base', 'STATE_NORMAL'),
-                            bg=self.get_attr('bg', 'STATE_NORMAL'))
+                            fg=self.get_style().get_color('base', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
                         )
                     )
                     count += 1
@@ -173,8 +170,8 @@ class ProgressBar(GLXCurses.Widget):
                         x_progress,
                         CHAR,
                         curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('bg', 'STATE_NORMAL'),
-                            bg=self.get_attr('base', 'STATE_NORMAL'))
+                            fg=self.get_style().get_color('bg', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color('base', 'STATE_NORMAL'))
                         )
                     )
                     count += 1
@@ -185,8 +182,8 @@ class ProgressBar(GLXCurses.Widget):
                     x_progress,
                     curses.ACS_HLINE,
                     curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('base', 'STATE_NORMAL'),
-                        bg=self.get_attr('bg', 'STATE_NORMAL'))
+                        fg=self.get_style().get_color('base', 'STATE_NORMAL'),
+                        bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
                     )
                 )
             except curses.error:
@@ -261,8 +258,8 @@ class ProgressBar(GLXCurses.Widget):
                 x_progress - 1,
                 self.progressbar_border[:len(self.progressbar_border) / 2],
                 curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('base', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_NORMAL'))
+                    fg=self.get_style().get_color('base', 'STATE_NORMAL'),
+                    bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
                 )
             )
             # Draw the progressbar1 background
@@ -276,8 +273,8 @@ class ProgressBar(GLXCurses.Widget):
                         self.get_width() - self.get_spacing() - 2 - increment,
                         CHAR,
                         curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('base', 'STATE_NORMAL'),
-                            bg=self.get_attr('bg', 'STATE_NORMAL'))
+                            fg=self.get_style().get_color('base', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
                         )
                     )
                     increment += 1
@@ -288,8 +285,8 @@ class ProgressBar(GLXCurses.Widget):
                         self.get_width() - self.get_spacing() - 2 - increment,
                         CHAR,
                         curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('bg', 'STATE_NORMAL'),
-                            bg=self.get_attr('base', 'STATE_NORMAL'))
+                            fg=self.get_style().get_color('bg', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color('base', 'STATE_NORMAL'))
                         )
                     )
                     increment += 1
@@ -305,8 +302,8 @@ class ProgressBar(GLXCurses.Widget):
                         x_progress + increment,
                         CHAR,
                         curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('base', 'STATE_NORMAL'),
-                            bg=self.get_attr('bg', 'STATE_NORMAL'))
+                            fg=self.get_style().get_color('base', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
                         )
                     )
                     increment += 1
@@ -317,8 +314,8 @@ class ProgressBar(GLXCurses.Widget):
                         x_progress + increment,
                         CHAR,
                         curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('bg', 'STATE_NORMAL'),
-                            bg=self.get_attr('base', 'STATE_NORMAL'))
+                            fg=self.get_style().get_color('bg', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color('base', 'STATE_NORMAL'))
                         )
                     )
                     increment += 1
@@ -331,8 +328,8 @@ class ProgressBar(GLXCurses.Widget):
             self.get_width() - self.get_spacing() - 1,
             self.progressbar_border[-len(self.progressbar_border) / 2:],
             curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_attr('base', 'STATE_NORMAL'),
-                bg=self.get_attr('bg', 'STATE_NORMAL'))
+                fg=self.get_style().get_color('base', 'STATE_NORMAL'),
+                bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
             )
         )
 

@@ -53,8 +53,8 @@ class Statusbar(Widget):
         self.statusbar_stack = []
 
         # Make a Style heritage attribute
-        if self.get_style().attribute:
-            self.attribute = self.get_style().attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
         self.context_id_dict = dict()
 
@@ -217,15 +217,15 @@ class Statusbar(Widget):
                 0,
                 str(' ' * (self.get_width() - 1)),
                 curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_style().get_attr('white', 'STATE_NORMAL'),
-                    bg=self.get_style().get_attr('black', 'STATE_NORMAL'))
+                    fg=self.get_style().get_color('white', 'STATE_NORMAL'),
+                    bg=self.get_style().get_color('black', 'STATE_NORMAL'))
                 )
             )
             self.curses_subwin.insstr(
                 str(' '),
                 curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_style().get_attr('white', 'STATE_NORMAL'),
-                    bg=self.get_style().get_attr('black', 'STATE_NORMAL'))
+                    fg=self.get_style().get_color('white', 'STATE_NORMAL'),
+                    bg=self.get_style().get_color('black', 'STATE_NORMAL'))
                 )
             )
 
