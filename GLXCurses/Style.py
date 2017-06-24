@@ -80,85 +80,94 @@ class Style(object):
         :return: A Galaxie Curses Style dictionary
         :rtype: dict
         """
-        style = dict()
+        attribute_states = dict()
 
         # An color to be used for the foreground colors in each curses_subwin state.
-        style['text_fg'] = dict()
-        style['text_fg']['STATE_NORMAL'] = 'WHITE'
-        style['text_fg']['STATE_ACTIVE'] = 'WHITE'
-        style['text_fg']['STATE_PRELIGHT'] = 'WHITE'
-        style['text_fg']['STATE_SELECTED'] = 'WHITE'
-        style['text_fg']['STATE_INSENSITIVE'] = 'WHITE'
+        attribute_states['text_fg'] = dict()
+        attribute_states['text_fg']['STATE_NORMAL'] = 'WHITE'
+        attribute_states['text_fg']['STATE_ACTIVE'] = 'WHITE'
+        attribute_states['text_fg']['STATE_PRELIGHT'] = 'WHITE'
+        attribute_states['text_fg']['STATE_SELECTED'] = 'WHITE'
+        attribute_states['text_fg']['STATE_INSENSITIVE'] = 'WHITE'
 
         # An color to be used for the background colors in each curses_subwin state.
-        style['bg'] = dict()
-        style['bg']['STATE_NORMAL'] = 'BLUE'
-        style['bg']['STATE_ACTIVE'] = 'BLUE'
-        style['bg']['STATE_PRELIGHT'] = 'CYAN'
-        style['bg']['STATE_SELECTED'] = 'CYAN'
-        style['bg']['STATE_INSENSITIVE'] = 'BLUE'
+        attribute_states['bg'] = dict()
+        attribute_states['bg']['STATE_NORMAL'] = 'BLUE'
+        attribute_states['bg']['STATE_ACTIVE'] = 'BLUE'
+        attribute_states['bg']['STATE_PRELIGHT'] = 'CYAN'
+        attribute_states['bg']['STATE_SELECTED'] = 'CYAN'
+        attribute_states['bg']['STATE_INSENSITIVE'] = 'BLUE'
 
         # An color to be used for the light colors in each curses_subwin state.
         # The light colors are slightly lighter than the bg colors and used for creating shadows.
-        style['light'] = dict()
-        style['light']['STATE_NORMAL'] = 'CYAN'
-        style['light']['STATE_ACTIVE'] = 'WHITE'
-        style['light']['STATE_PRELIGHT'] = 'WHITE'
-        style['light']['STATE_SELECTED'] = 'WHITE'
-        style['light']['STATE_INSENSITIVE'] = 'WHITE'
+        attribute_states['light'] = dict()
+        attribute_states['light']['STATE_NORMAL'] = 'CYAN'
+        attribute_states['light']['STATE_ACTIVE'] = 'WHITE'
+        attribute_states['light']['STATE_PRELIGHT'] = 'WHITE'
+        attribute_states['light']['STATE_SELECTED'] = 'WHITE'
+        attribute_states['light']['STATE_INSENSITIVE'] = 'WHITE'
 
         # An color to be used for the dark colors in each curses_subwin state.
         # The dark colors are slightly darker than the bg colors and used for creating shadows.
-        style['dark'] = dict()
-        style['dark']['STATE_NORMAL'] = 'BLACK'
-        style['dark']['STATE_ACTIVE'] = 'BLACK'
-        style['dark']['STATE_PRELIGHT'] = 'BLACK'
-        style['dark']['STATE_SELECTED'] = 'BLACK'
-        style['dark']['STATE_INSENSITIVE'] = 'BLACK'
+        attribute_states['dark'] = dict()
+        attribute_states['dark']['STATE_NORMAL'] = 'BLACK'
+        attribute_states['dark']['STATE_ACTIVE'] = 'BLACK'
+        attribute_states['dark']['STATE_PRELIGHT'] = 'BLACK'
+        attribute_states['dark']['STATE_SELECTED'] = 'BLACK'
+        attribute_states['dark']['STATE_INSENSITIVE'] = 'BLACK'
 
         # An color to be used for the mid colors (between light and dark) in each curses_subwin state
-        style['mid'] = dict()
-        style['mid']['STATE_NORMAL'] = 'YELLOW'
-        style['mid']['STATE_ACTIVE'] = 'WHITE'
-        style['mid']['STATE_PRELIGHT'] = 'WHITE'
-        style['mid']['STATE_SELECTED'] = 'WHITE'
-        style['mid']['STATE_INSENSITIVE'] = 'WHITE'
+        attribute_states['mid'] = dict()
+        attribute_states['mid']['STATE_NORMAL'] = 'YELLOW'
+        attribute_states['mid']['STATE_ACTIVE'] = 'WHITE'
+        attribute_states['mid']['STATE_PRELIGHT'] = 'WHITE'
+        attribute_states['mid']['STATE_SELECTED'] = 'WHITE'
+        attribute_states['mid']['STATE_INSENSITIVE'] = 'WHITE'
 
         # An color to be used for the text colors in each curses_subwin state.
-        style['text'] = dict()
-        style['text']['STATE_NORMAL'] = 'WHITE'
-        style['text']['STATE_ACTIVE'] = 'WHITE'
-        style['text']['STATE_PRELIGHT'] = 'WHITE'
-        style['text']['STATE_SELECTED'] = 'WHITE'
-        style['text']['STATE_INSENSITIVE'] = 'WHITE'
+        attribute_states['text'] = dict()
+        attribute_states['text']['STATE_NORMAL'] = 'WHITE'
+        attribute_states['text']['STATE_ACTIVE'] = 'WHITE'
+        attribute_states['text']['STATE_PRELIGHT'] = 'WHITE'
+        attribute_states['text']['STATE_SELECTED'] = 'WHITE'
+        attribute_states['text']['STATE_INSENSITIVE'] = 'WHITE'
 
         # An color to be used for the base colors in each curses_subwin state.
-        style['base'] = dict()
-        style['base']['STATE_NORMAL'] = 'WHITE'
-        style['base']['STATE_ACTIVE'] = 'WHITE'
-        style['base']['STATE_PRELIGHT'] = 'WHITE'
-        style['base']['STATE_SELECTED'] = 'WHITE'
-        style['base']['STATE_INSENSITIVE'] = 'WHITE'
+        attribute_states['base'] = dict()
+        attribute_states['base']['STATE_NORMAL'] = 'WHITE'
+        attribute_states['base']['STATE_ACTIVE'] = 'WHITE'
+        attribute_states['base']['STATE_PRELIGHT'] = 'WHITE'
+        attribute_states['base']['STATE_SELECTED'] = 'WHITE'
+        attribute_states['base']['STATE_INSENSITIVE'] = 'WHITE'
 
         # Used for the black color.
-        style['black'] = dict()
-        style['black']['STATE_NORMAL'] = 'BLACK'
-        style['black']['STATE_ACTIVE'] = 'BLACK'
-        style['black']['STATE_PRELIGHT'] = 'BLACK'
-        style['black']['STATE_SELECTED'] = 'BLACK'
-        style['black']['STATE_INSENSITIVE'] = 'BLACK'
+        attribute_states['black'] = dict()
+        attribute_states['black']['STATE_NORMAL'] = 'BLACK'
+        attribute_states['black']['STATE_ACTIVE'] = 'BLACK'
+        attribute_states['black']['STATE_PRELIGHT'] = 'BLACK'
+        attribute_states['black']['STATE_SELECTED'] = 'BLACK'
+        attribute_states['black']['STATE_INSENSITIVE'] = 'BLACK'
 
         # Used for the white color.
-        style['white'] = dict()
-        style['white']['STATE_NORMAL'] = 'WHITE'
-        style['white']['STATE_ACTIVE'] = 'WHITE'
-        style['white']['STATE_PRELIGHT'] = 'WHITE'
-        style['white']['STATE_SELECTED'] = 'WHITE'
-        style['white']['STATE_INSENSITIVE'] = 'WHITE'
+        attribute_states['white'] = dict()
+        attribute_states['white']['STATE_NORMAL'] = 'WHITE'
+        attribute_states['white']['STATE_ACTIVE'] = 'WHITE'
+        attribute_states['white']['STATE_PRELIGHT'] = 'WHITE'
+        attribute_states['white']['STATE_SELECTED'] = 'WHITE'
+        attribute_states['white']['STATE_INSENSITIVE'] = 'WHITE'
 
-        return style
+        return attribute_states
 
     def get_curses_pairs(self, fg='WHITE', bg='BLACK'):
+        """
+        Return a curses color pairs correspondent with the right foreground and background.
+        All possible foreground/background combination have been generate automatically during GLXC.Style init.
+
+        :param fg: Forground  color like 'WHITE'
+        :param bg: Background color like 'BLACK'
+        :return: Curse color pair it correspond to the right foreground and background
+        :rtype: int
+        """
         if fg in self._get_curses_colors() and bg in self._get_curses_colors():
             pairs = self._get_curses_colors_pairs().index(str(fg).upper() + '/' + str(bg).upper())
             return pairs
