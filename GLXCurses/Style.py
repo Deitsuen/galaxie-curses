@@ -124,7 +124,7 @@ class Style(object):
 
         # An color to be used for the text colors in each curses_subwin state.
         attribute_states['text'] = dict()
-        attribute_states['text']['STATE_NORMAL'] = 'WHITE'
+        attribute_states['text']['STATE_NORMAL'] = 'GRAY'
         attribute_states['text']['STATE_ACTIVE'] = 'WHITE'
         attribute_states['text']['STATE_PRELIGHT'] = 'WHITE'
         attribute_states['text']['STATE_SELECTED'] = 'WHITE'
@@ -166,20 +166,37 @@ class Style(object):
         :return: Curse color pair it correspond to the right foreground and background
         :rtype: int
         """
-        if str(fg).upper() + '/' + str(bg).upper() in self._get_text_pairs():
+        if str(fg).upper() == 'YELLOW':
+            pairs = self._get_text_pairs().index(
+                'YELLOW' + '/' + str(bg).upper()
+            )
+            return curses.color_pair(pairs) | curses.A_BOLD
+        elif str(fg).upper() == 'ORANGE':
+            pairs = self._get_text_pairs().index(
+                'YELLOW' + '/' + str(bg).upper()
+            )
+            return curses.color_pair(pairs)
+        elif str(fg).upper() == 'PINK':
+            pairs = self._get_text_pairs().index(
+                'RED' + '/' + str(bg).upper()
+            )
+            return curses.color_pair(pairs) | curses.A_BOLD
+        elif str(fg).upper() == 'WHITE':
+            pairs = self._get_text_pairs().index(
+                'WHITE' + '/' + str(bg).upper()
+            )
+            return curses.color_pair(pairs) | curses.A_BOLD
+        elif str(fg).upper() == 'GRAY':
+            pairs = self._get_text_pairs().index(
+                'WHITE' + '/' + str(bg).upper()
+            )
+            return curses.color_pair(pairs)
+
+        else:
             pairs = self._get_text_pairs().index(
                 str(fg).upper() + '/' + str(bg).upper()
             )
-            if str(fg).upper() == 'YELLOW':
-                return curses.color_pair(pairs) | curses.A_BOLD
-            elif str(fg).upper() == 'WHITE':
-                return curses.color_pair(pairs) | curses.A_BOLD
-            elif str(fg).upper() == 'PINK':
-                return curses.color_pair(pairs) | curses.A_BOLD
-            else:
-                return curses.color_pair(pairs)
-        else:
-            return curses.color_pair(0)
+            return curses.color_pair(pairs)
 
     def get_color_by_attribute_state(self, attribute='base', state='STATE_NORMAL'):
         """
@@ -362,13 +379,19 @@ class Style(object):
 
         # Start by clean the list
         self._set_text_pairs(list())
+
         # The first color pair is WHITE/BLACK for no color support
         self._get_text_pairs().append('WHITE' + '/' + 'BLACK')
+        curses.init_pair(
+            0,
+            curses.COLOR_WHITE,
+            curses.COLOR_BLACK
+        )
 
         # Init a counter it start to 1 and not 0
         counter = 1
-        fg = curses.COLOR_WHITE
-        bg = curses.COLOR_BLACK
+        fg = None
+        bg = None
 
         for background in self._get_allowed_bg_colors():
             if str(background).upper() == 'BLACK':
@@ -423,7 +446,7 @@ class Style(object):
                 # Curses pair provisioning it have a index it match with the curses_colors_pairs list index
                 # Generate a colors pair like 'WHITE/RED' and ad
                 if foreground in self._get_allowed_fg_colors() and background in self._get_allowed_bg_colors():
-                    if bg is not None and fg is not None:
+                    if str(foreground).upper() + '/' + str(background).upper() not in self._get_text_pairs():
                         self._get_text_pairs().append(
                             str(foreground).upper() + '/' + str(background).upper()
                         )
