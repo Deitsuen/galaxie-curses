@@ -217,15 +217,15 @@ class Statusbar(Widget):
                 0,
                 str(' ' * (self.get_width() - 1)),
                 self.get_style().get_color_pair(
-                    fg=self.get_style().get_color_by_attribute_state('white', 'STATE_NORMAL'),
-                    bg=self.get_style().get_color_by_attribute_state('black', 'STATE_NORMAL')
+                    foreground=self.get_style().get_color_by_attribute_state('white', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_by_attribute_state('black', 'STATE_NORMAL')
                 )
             )
             self.curses_subwin.insstr(
                 str(' '),
                 self.get_style().get_color_pair(
-                    fg=self.get_style().get_color_by_attribute_state('white', 'STATE_NORMAL'),
-                    bg=self.get_style().get_color_by_attribute_state('black', 'STATE_NORMAL')
+                    foreground=self.get_style().get_color_by_attribute_state('white', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_by_attribute_state('black', 'STATE_NORMAL')
                 )
             )
 

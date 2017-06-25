@@ -367,8 +367,8 @@ class Label(GLXCurses.Misc):
                 self._get_label_x(),
                 self._get_single_line_resided_label_text(),
                 self.get_style().get_color_pair(
-                    fg=self.get_style().get_color_by_attribute_state('text', 'STATE_NORMAL'),
-                    bg=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
+                    foreground=self.get_style().get_color_by_attribute_state('text', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
                 )
             )
         except curses.error:
@@ -387,8 +387,8 @@ class Label(GLXCurses.Misc):
                         self._get_label_x(),
                         self._check_justification(text=line, width=max_width),
                         self.get_style().get_color_pair(
-                            fg=self.get_style().get_color_by_attribute_state('text', 'STATE_NORMAL'),
-                            bg=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
+                            foreground=self.get_style().get_color_by_attribute_state('text', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
                         )
                     )
                 elif self.get_max_width_chars() == 0:
@@ -399,8 +399,8 @@ class Label(GLXCurses.Misc):
                         self._get_label_x(),
                         self._check_justification(text=line, width=self.get_max_width_chars())[:self.get_max_width_chars()],
                         self.get_style().get_color_pair(
-                            fg=self.get_style().get_color_by_attribute_state('text', 'STATE_NORMAL'),
-                            bg=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
+                            foreground=self.get_style().get_color_by_attribute_state('text', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
                         )
                     )
             except curses.error:

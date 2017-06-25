@@ -156,47 +156,72 @@ class Style(object):
 
         return attribute_states
 
-    def get_color_pair(self, fg='WHITE', bg='BLACK'):
+    def get_color_pair(self, foreground='WHITE', background='BLACK'):
         """
         Return a curses color pairs correspondent with the right foreground and background.
         All possible foreground/background combination have been generate automatically during GLXC.Style init.
 
-        :param fg: Foreground  color like 'WHITE'
-        :param bg: Background color like 'BLACK'
+        :param foreground: Foreground  color like 'WHITE'
+        :param background: Background color like 'BLACK'
         :return: Curse color pair it correspond to the right foreground and background
         :rtype: int
         """
-        if str(fg).upper() == 'YELLOW':
+        fg = None
+        bg = None
+        fg_found_yellow = False
+        fg_found_orange = False
+        fg_found_pink = False
+        fg_found_red = False
+        fg_found_white = False
+        fg_found_gray = False
+
+        bg_found_yellow = False
+        bg_found_orange = False
+        bg_found_pink = False
+        bg_found_red = False
+        bg_found_white = False
+        bg_found_gray = False
+
+        if str(foreground).upper() == 'YELLOW':
+            fg = 'YELLOW'
+            fg_found_yellow = True
+
             pairs = self._get_text_pairs().index(
-                'YELLOW' + '/' + str(bg).upper()
+                'YELLOW' + '/' + str(background).upper()
             )
             return curses.color_pair(pairs) | curses.A_BOLD
-        elif str(fg).upper() == 'ORANGE':
+
+        elif str(foreground).upper() == 'ORANGE':
+            fg = 'YELLOW'
+            fg_found_orange = True
             pairs = self._get_text_pairs().index(
-                'YELLOW' + '/' + str(bg).upper()
+                'YELLOW' + '/' + str(background).upper()
             )
             return curses.color_pair(pairs)
-        elif str(fg).upper() == 'PINK':
+        elif str(foreground).upper() == 'PINK':
             pairs = self._get_text_pairs().index(
-                'RED' + '/' + str(bg).upper()
+                'RED' + '/' + str(background).upper()
             )
             return curses.color_pair(pairs) | curses.A_BOLD
-        elif str(fg).upper() == 'WHITE':
+        elif str(foreground).upper() == 'WHITE':
             pairs = self._get_text_pairs().index(
-                'WHITE' + '/' + str(bg).upper()
+                'WHITE' + '/' + str(background).upper()
             )
             return curses.color_pair(pairs) | curses.A_BOLD
-        elif str(fg).upper() == 'GRAY':
+        elif str(foreground).upper() == 'GRAY':
             pairs = self._get_text_pairs().index(
-                'WHITE' + '/' + str(bg).upper()
+                'WHITE' + '/' + str(background).upper()
             )
             return curses.color_pair(pairs)
 
         else:
             pairs = self._get_text_pairs().index(
-                str(fg).upper() + '/' + str(bg).upper()
+                str(foreground).upper() + '/' + str(background).upper()
             )
-            return curses.color_pair(pairs)
+            try:
+                return curses.color_pair(pairs)
+            except curses.error:
+                return curses.color_pair(0)
 
     def get_color_by_attribute_state(self, attribute='base', state='STATE_NORMAL'):
         """
@@ -450,32 +475,11 @@ class Style(object):
                         self._get_text_pairs().append(
                             str(foreground).upper() + '/' + str(background).upper()
                         )
-                        print (str(foreground).upper() + '/' + str(background).upper())
                         curses.init_pair(
                             counter,
                             fg,
                             bg
                         )
                         counter += 1
-                # try:
-                #     curses.init_pair(
-                #         counter,
-                #         fg,
-                #         bg
-                #     )
-                #     counter += 1
-                # except curses.error:
-                #     pass
-                    #self._get_curses_colors_pairs().pop()
 
-                # Generate a colors pair like 'WHITE/RED' and ad
-                #self._get_curses_colors_pairs().append(str(foreground).upper() + '/' + str(background).upper())
-
-
-                # curses.init_pair(
-                #     counter,
-                #     self._get_allowed_fg_colors().index(foreground),
-                #     self._get_allowed_bg_colors().index(background)
-                # )
-                # The curses pair number match  with the curses_colors_pairs list index
 
