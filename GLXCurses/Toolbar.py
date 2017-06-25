@@ -34,7 +34,7 @@ class Toolbar(GLXCurses.Widget):
 
             self.text_fg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
             self.text_bg = self.get_style().get_attribute_states()['light']['STATE_NORMAL']
-            self.text_prefix_fg = self.get_style().get_attribute_states()['text']['STATE_NORMAL']
+            self.text_prefix_fg = self.get_style().get_attribute_states()['text']['STATE_PRELIGHT']
             self.text_prefix_bg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
             self.widget_fg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
             self.widget_bg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
