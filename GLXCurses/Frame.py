@@ -120,6 +120,8 @@ class Frame(Bin):
         self.label_yalign = 0
         self.shadow_type = glxc.SHADOW_NONE
 
+
+
     # GLXC Frame Functions
     def draw_widget_in_area(self):
 

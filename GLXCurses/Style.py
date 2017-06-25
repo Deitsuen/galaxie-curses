@@ -61,7 +61,7 @@ class Style(object):
         # Internal storage
         self._allowed_fg_colors = list()
         self._allowed_bg_colors = list()
-        self._curses_colors_pairs = list()
+        self._text_pairs = list()
 
         # Internal init
         self._gen_curses_colors_pairs()
@@ -124,11 +124,11 @@ class Style(object):
 
         # An color to be used for the text colors in each curses_subwin state.
         attribute_states['text'] = dict()
-        attribute_states['text']['STATE_NORMAL'] = 'GRAY'
-        attribute_states['text']['STATE_ACTIVE'] = 'GRAY'
-        attribute_states['text']['STATE_PRELIGHT'] = 'GRAY'
-        attribute_states['text']['STATE_SELECTED'] = 'GRAY'
-        attribute_states['text']['STATE_INSENSITIVE'] = 'GRAY'
+        attribute_states['text']['STATE_NORMAL'] = 'WHITE'
+        attribute_states['text']['STATE_ACTIVE'] = 'WHITE'
+        attribute_states['text']['STATE_PRELIGHT'] = 'WHITE'
+        attribute_states['text']['STATE_SELECTED'] = 'WHITE'
+        attribute_states['text']['STATE_INSENSITIVE'] = 'WHITE'
 
         # An color to be used for the base colors in each curses_subwin state.
         attribute_states['base'] = dict()
@@ -166,8 +166,8 @@ class Style(object):
         :return: Curse color pair it correspond to the right foreground and background
         :rtype: int
         """
-        if fg in self._get_allowed_fg_colors() and bg in self._get_allowed_bg_colors():
-            pairs = self._get_curses_colors_pairs().index(
+        if str(fg).upper() + '/' + str(bg).upper() in self._get_text_pairs():
+            pairs = self._get_text_pairs().index(
                 str(fg).upper() + '/' + str(bg).upper()
             )
             if str(fg).upper() == 'YELLOW':
@@ -179,7 +179,7 @@ class Style(object):
             else:
                 return curses.color_pair(pairs)
         else:
-            return 0
+            return curses.color_pair(0)
 
     def get_color_by_attribute_state(self, attribute='base', state='STATE_NORMAL'):
         """
@@ -270,16 +270,16 @@ class Style(object):
 
         # Append allowed colors
         self._get_allowed_fg_colors().append('BLACK')
-        self._get_allowed_fg_colors().append('WHITE')
-        self._get_allowed_fg_colors().append('GRAY')
-        self._get_allowed_fg_colors().append('BLUE')
         self._get_allowed_fg_colors().append('RED')
+        self._get_allowed_fg_colors().append('GREEN')
+        self._get_allowed_fg_colors().append('YELLOW')
+        self._get_allowed_fg_colors().append('WHITE')
+        self._get_allowed_fg_colors().append('BLUE')
         self._get_allowed_fg_colors().append('MAGENTA')
         self._get_allowed_fg_colors().append('CYAN')
-        self._get_allowed_fg_colors().append('GREEN')
-        self._get_allowed_fg_colors().append('ORANGE')
-        self._get_allowed_fg_colors().append('YELLOW')
-        self._get_allowed_fg_colors().append('PINK')
+        # self._get_allowed_fg_colors().append('GRAY')
+        # self._get_allowed_fg_colors().append('ORANGE')
+        # self._get_allowed_fg_colors().append('PINK')
 
     def _get_allowed_bg_colors(self):
         """
@@ -300,7 +300,7 @@ class Style(object):
         """
         if type(allowed_bg_colors) == list:
             if allowed_bg_colors != self._get_allowed_bg_colors():
-                self._allowed_fg_colors = allowed_bg_colors
+                self._allowed_bg_colors = allowed_bg_colors
                 # Can emit modification signal here
         else:
             raise TypeError(u'>allowed_bg_colors< argument must be a list type')
@@ -318,40 +318,37 @@ class Style(object):
 
         # Append allowed colors
         self._get_allowed_bg_colors().append('BLACK')
-        self._get_allowed_bg_colors().append('WHITE')
-        self._get_allowed_bg_colors().append('GRAY')
-        self._get_allowed_bg_colors().append('BLUE')
         self._get_allowed_bg_colors().append('RED')
+        self._get_allowed_bg_colors().append('GREEN')
+        self._get_allowed_bg_colors().append('YELLOW')
+        self._get_allowed_bg_colors().append('WHITE')
+        self._get_allowed_bg_colors().append('BLUE')
         self._get_allowed_bg_colors().append('MAGENTA')
         self._get_allowed_bg_colors().append('CYAN')
-        self._get_allowed_bg_colors().append('GREEN')
-        self._get_allowed_bg_colors().append('ORANGE')
-        self._get_allowed_bg_colors().append('YELLOW')
-        self._get_allowed_bg_colors().append('PINK')
 
-    def _set_curses_colors_pairs(self, curses_colors_pairs_list):
+    def _set_text_pairs(self, text_pairs):
         """
-        Internal method for set ``_curses_colors_pairs`` attribute with a list
+        Internal method for set ``_text_pairs`` attribute with a list
 
-        :param curses_colors_pairs_list: A list of color name
-        :type curses_colors_pairs_list: list
-        :raise TypeError: if ``curses_colors_pairs_list`` parameter is not a :py:data:`list` type
+        :param text_pairs: A list of color name
+        :type text_pairs: list
+        :raise TypeError: if ``text_pairs`` parameter is not a :py:data:`list` type
         """
-        if type(curses_colors_pairs_list) == list:
-            if curses_colors_pairs_list != self._curses_colors_pairs:
-                self._curses_colors_pairs = curses_colors_pairs_list
+        if type(text_pairs) == list:
+            if text_pairs != self._text_pairs:
+                self._text_pairs = text_pairs
                 # Can emit modification signal here
         else:
-            raise TypeError(u'>curses_colors_pairs_list< argument must be a list type')
+            raise TypeError(u'>text_pairs< argument must be a list type')
 
-    def _get_curses_colors_pairs(self):
+    def _get_text_pairs(self):
         """
-        Internal method for return ``_curses_colors_pairs`` attribute
+        Internal method for return ``_text_pairs`` attribute
 
-        :return curses_colors_pairs list ex: ['WHITE/BLACK', 'WHITE/RED']
+        :return _text_pairs list ex: ['WHITE/BLACK', 'WHITE/RED']
         :rtype: list
         """
-        return self._curses_colors_pairs
+        return self._text_pairs
 
     def _gen_curses_colors_pairs(self):
         """
@@ -364,80 +361,93 @@ class Style(object):
         self._gen_allowed_bg_colors()
 
         # Start by clean the list
-        self._set_curses_colors_pairs(list())
+        self._set_text_pairs(list())
         # The first color pair is WHITE/BLACK for no color support
-        self._get_curses_colors_pairs().append('BLACK' + '/' + 'WHITE')
+        self._get_text_pairs().append('WHITE' + '/' + 'BLACK')
 
         # Init a counter it start to 1 and not 0
         counter = 1
-        fg = None
-        bg = None
-        # For each foreground colors
-        for foreground in self._get_allowed_fg_colors():
-            # And each background colors
-            if str(foreground).upper() == 'BLACK':
-                fg = curses.COLOR_BLACK
-            elif str(foreground).upper() == 'GRAY':
-                fg = curses.COLOR_WHITE
-            elif str(foreground).upper() == 'WHITE':
-                fg = curses.COLOR_WHITE
-            elif str(foreground).upper() == 'BLUE':
-                fg = curses.COLOR_BLUE
-            elif str(foreground).upper() == 'RED':
-                fg = curses.COLOR_RED
-            elif str(foreground).upper() == 'MAGENTA':
-                fg = curses.COLOR_MAGENTA
-            elif str(foreground).upper() == 'CYAN':
-                fg = curses.COLOR_CYAN
-            elif str(foreground).upper() == 'GREEN':
-                fg = curses.COLOR_GREEN
-            elif str(foreground).upper() == 'ORANGE':
-                fg = curses.COLOR_YELLOW
-            elif str(foreground).upper() == 'YELLOW':
-                fg = curses.COLOR_YELLOW
-            elif str(foreground).upper() == 'PINK':
-                fg = curses.COLOR_RED
+        fg = curses.COLOR_WHITE
+        bg = curses.COLOR_BLACK
 
-            for background in self._get_allowed_bg_colors():
+        for background in self._get_allowed_bg_colors():
+            if str(background).upper() == 'BLACK':
+                bg = curses.COLOR_BLACK
+            elif str(background).upper() == 'GRAY':
+                bg = curses.COLOR_WHITE
+            elif str(background).upper() == 'WHITE':
+                bg = curses.COLOR_WHITE
+            elif str(background).upper() == 'BLUE':
+                bg = curses.COLOR_BLUE
+            elif str(background).upper() == 'RED':
+                bg = curses.COLOR_RED
+            elif str(background).upper() == 'MAGENTA':
+                bg = curses.COLOR_MAGENTA
+            elif str(background).upper() == 'CYAN':
+                bg = curses.COLOR_CYAN
+            elif str(background).upper() == 'GREEN':
+                bg = curses.COLOR_GREEN
+            elif str(background).upper() == 'ORANGE':
+                bg = curses.COLOR_YELLOW
+            elif str(background).upper() == 'YELLOW':
+                bg = curses.COLOR_YELLOW
+            elif str(background).upper() == 'PINK':
+                bg = curses.COLOR_RED
+
+            # For each foreground colors
+            for foreground in self._get_allowed_fg_colors():
+                # And each background colors
+                if str(foreground).upper() == 'BLACK':
+                    fg = curses.COLOR_BLACK
+                elif str(foreground).upper() == 'GRAY':
+                    fg = curses.COLOR_WHITE
+                elif str(foreground).upper() == 'WHITE':
+                    fg = curses.COLOR_WHITE
+                elif str(foreground).upper() == 'BLUE':
+                    fg = curses.COLOR_BLUE
+                elif str(foreground).upper() == 'RED':
+                    fg = curses.COLOR_RED
+                elif str(foreground).upper() == 'MAGENTA':
+                    fg = curses.COLOR_MAGENTA
+                elif str(foreground).upper() == 'CYAN':
+                    fg = curses.COLOR_CYAN
+                elif str(foreground).upper() == 'GREEN':
+                    fg = curses.COLOR_GREEN
+                elif str(foreground).upper() == 'ORANGE':
+                    fg = curses.COLOR_YELLOW
+                elif str(foreground).upper() == 'YELLOW':
+                    fg = curses.COLOR_YELLOW
+                elif str(foreground).upper() == 'PINK':
+                    fg = curses.COLOR_RED
 
                 # Curses pair provisioning it have a index it match with the curses_colors_pairs list index
-                if str(background).upper() == 'BLACK':
-                    bg = curses.COLOR_BLACK
-                elif str(background).upper() == 'GRAY':
-                    bg = curses.COLOR_WHITE
-                elif str(background).upper() == 'WHITE':
-                    bg = curses.COLOR_WHITE
-                elif str(background).upper() == 'BLUE':
-                    bg = curses.COLOR_BLUE
-                elif str(background).upper() == 'RED':
-                    bg = curses.COLOR_RED
-                elif str(background).upper() == 'MAGENTA':
-                    bg = curses.COLOR_MAGENTA
-                elif str(background).upper() == 'CYAN':
-                    bg = curses.COLOR_CYAN
-                elif str(background).upper() == 'GREEN':
-                    bg = curses.COLOR_GREEN
-                elif str(background).upper() == 'ORANGE':
-                    bg = curses.COLOR_YELLOW
-                elif str(background).upper() == 'YELLOW':
-                    bg = curses.COLOR_YELLOW
-                elif str(background).upper() == 'PINK':
-                    bg = curses.COLOR_RED
+                # Generate a colors pair like 'WHITE/RED' and ad
+                if foreground in self._get_allowed_fg_colors() and background in self._get_allowed_bg_colors():
+                    if bg is not None and fg is not None:
+                        self._get_text_pairs().append(
+                            str(foreground).upper() + '/' + str(background).upper()
+                        )
+                        print (str(foreground).upper() + '/' + str(background).upper())
+                        curses.init_pair(
+                            counter,
+                            fg,
+                            bg
+                        )
+                        counter += 1
+                # try:
+                #     curses.init_pair(
+                #         counter,
+                #         fg,
+                #         bg
+                #     )
+                #     counter += 1
+                # except curses.error:
+                #     pass
+                    #self._get_curses_colors_pairs().pop()
 
-                try:
-                    # Generate a colors pair like 'WHITE/RED' and ad
-                    self._get_curses_colors_pairs().append(str(foreground).upper() + '/' + str(background).upper())
+                # Generate a colors pair like 'WHITE/RED' and ad
+                #self._get_curses_colors_pairs().append(str(foreground).upper() + '/' + str(background).upper())
 
-                    curses.init_pair(
-                        counter,
-                        fg,
-                        bg
-                    )
-
-                    counter += 1
-
-                except curses.error:
-                    pass
 
                 # curses.init_pair(
                 #     counter,

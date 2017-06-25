@@ -170,7 +170,7 @@ class CheckButton(Widget):
                 color=self.get_style().get_color_pair(
                     fg=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL'),
                     bg=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
-                ) | curses.A_BOLD
+                )
             )
         elif self.state['PRELIGHT']:
             self.draw_the_good_button(
