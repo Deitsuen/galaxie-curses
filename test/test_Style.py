@@ -66,6 +66,17 @@ class TestStyle(unittest.TestCase):
                 # Check if the key value is a string
                 self.assertEqual(type(default_attribute_states[attribute][state]), type(str()))
 
+    def test_get_curses_color_pair(self):
+        """Test Style.get_curses_color_pair()"""
+        # Check if fg='WHITE', bg='BLACK' first in the list
+        self.assertEqual(self.style.get_color_pair(fg='WHITE', bg='BLACK'), 0)
+
+        # Check if fg='WHITE', bg='BLUE' return a int type
+        self.assertEqual(type(self.style.get_color_pair(fg='WHITE', bg='BLUE')), type(int()))
+
+        # Check if fg='WHITE', bg='BLUE' return a value > 0
+        self.assertGreater(self.style.get_color_pair(fg='WHITE', bg='BLUE'), 0)
+
     def test_get_attribute_states(self):
         """Test Style.get_attribute_states()"""
         attribute_states = self.style.get_attribute_states()
@@ -81,63 +92,29 @@ class TestStyle(unittest.TestCase):
                 self.assertEqual(type(attribute_states[attribute][state]), type(str()))
 
     # Internal Method test
-    # Curses Native colors map
-    def test__get__set_curses_native_colormap(self):
-        """Test Style curses native colormap internal dict 'get' and 'set' method's"""
-        import curses
-        tested_curses_native_colormap = dict()
-        tested_curses_native_colormap['BLACK'] = curses.COLOR_BLACK
-        tested_curses_native_colormap['RED'] = curses.COLOR_RED
-        tested_curses_native_colormap['GREEN'] = curses.COLOR_GREEN
-        tested_curses_native_colormap['YELLOW'] = curses.COLOR_YELLOW
-        tested_curses_native_colormap['BLUE'] = curses.COLOR_BLUE
-        tested_curses_native_colormap['MAGENTA'] = curses.COLOR_MAGENTA
-        tested_curses_native_colormap['CYAN'] = curses.COLOR_CYAN
-        tested_curses_native_colormap['WHITE'] = curses.COLOR_WHITE
-
-        self.style._set_curses_native_colormap(curses_native_colormap_dict=tested_curses_native_colormap)
-        self.assertEqual(tested_curses_native_colormap, self.style._get_curses_native_colormap())
-
-    def test__set_curses_native_colormap_raise(self):
-        """Test Style raise TypeError of _set_curses_native_colormap()"""
-        self.assertRaises(TypeError, self.style._set_curses_native_colormap, float(randint(1, 42)))
-
-    def test__gen_curses_native_colormap(self):
-        """Test Style curses native colors dictionary generation method"""
-        # Set a empty list as curses colors
-        self.style._set_curses_native_colormap(dict())
-        # The curses_colors_list should be empty
-        self.assertEqual(dict(), self.style._get_curses_native_colormap())
-        # Generate the curses colors list
-        self.style._gen_curses_native_colormap_dict()
-        # The curses_colors_list should still be a list type
-        self.assertEqual(type(dict()), type(self.style._get_curses_native_colormap()))
-        # The curses_colors_list should not be a empty list
-        self.assertGreater(len(self.style._get_curses_native_colormap()), len(dict()))
-
     # Curses colors
-    def test__get__set_curses_colors(self):
+    def test__get__set_allowed_fg_colors(self):
         """Test Style curses colors internal list 'get' and 'set' method's"""
         tested_colors_list = ['BLACK', 'WHITE']
-        self.style._set_curses_colors(curses_colors_list=tested_colors_list)
-        self.assertEqual(tested_colors_list, self.style._get_curses_colors())
+        self.style._set_allowed_fg_colors(allowed_fg_colors=tested_colors_list)
+        self.assertEqual(tested_colors_list, self.style._get_allowed_fg_colors())
 
-    def test__set_curses_colors_pairs_raise(self):
+    def test__set_allowed_fg_colors_raise(self):
         """Test Style raise TypeError of _set_curses_colors()"""
-        self.assertRaises(TypeError, self.style._set_curses_colors, float(randint(1, 42)))
+        self.assertRaises(TypeError, self.style._set_allowed_fg_colors, float(randint(1, 42)))
 
-    def test__gen_curses_colors(self):
-        """Test Style curses colors list generation method"""
+    def test__gen_allowed_fg_colors(self):
+        """Test Style allowed foreground colors list generation method"""
         # Set a empty list as curses colors
-        self.style._set_curses_colors(curses_colors_list=list())
+        self.style._set_allowed_fg_colors(allowed_fg_colors=list())
         # The curses_colors_list should be empty
-        self.assertEqual(list(), self.style._get_curses_colors())
+        self.assertEqual(list(), self.style._get_allowed_fg_colors())
         # Generate the curses colors list
-        self.style._gen_curses_colors()
+        self.style._gen_allowed_fg_colors()
         # The curses_colors_list should still be a list type
-        self.assertEqual(type(list()), type(self.style._get_curses_colors()))
+        self.assertEqual(type(list()), type(self.style._get_allowed_fg_colors()))
         # The curses_colors_list should not be a empty list
-        self.assertGreater(len(self.style._get_curses_colors()), len(list()))
+        self.assertGreater(len(self.style._get_allowed_fg_colors()), len(list()))
 
     # Curses Colors pairs
     def test__get__set_curses_colors_pairs(self):

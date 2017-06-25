@@ -126,16 +126,16 @@ class Frame(Bin):
         # Apply the Background color
         self.get_curses_subwin().bkgdset(
             ord(' '),
-            curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_style().get_color('text', 'STATE_NORMAL'),
-                bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
+            self.get_style().get_color_pair(
+                fg=self.get_style().get_color_by_attribute_state('text', 'STATE_NORMAL'),
+                bg=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
             )
         )
         self.get_curses_subwin().bkgd(
             ord(' '),
-            curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_style().get_color('text', 'STATE_NORMAL'),
-                bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
+            self.get_style().get_color_pair(
+                fg=self.get_style().get_color_by_attribute_state('text', 'STATE_NORMAL'),
+                bg=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
             )
         )
 

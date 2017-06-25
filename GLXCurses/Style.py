@@ -59,13 +59,11 @@ class Style(object):
 
         """
         # Internal storage
-        self._curses_native_colormap = dict()
-        self._curses_colors_allowed = list()
+        self._allowed_fg_colors = list()
+        self._allowed_bg_colors = list()
         self._curses_colors_pairs = list()
 
         # Internal init
-        self._gen_curses_native_colormap_dict()
-        self._gen_curses_colors()
         self._gen_curses_colors_pairs()
 
         # init
@@ -74,7 +72,7 @@ class Style(object):
     @staticmethod
     def get_default_attribute_states():
         """
-        Return a default style, that will be use by the entire GLXCurses API via the ``attribute`` object. \
+        Return a default style, that will be use by the entire GLXCurses API via the ``attribute_states`` object. \
         every Widget's  will receive it style by default.
 
         :return: A Galaxie Curses Style dictionary
@@ -126,11 +124,11 @@ class Style(object):
 
         # An color to be used for the text colors in each curses_subwin state.
         attribute_states['text'] = dict()
-        attribute_states['text']['STATE_NORMAL'] = 'WHITE'
-        attribute_states['text']['STATE_ACTIVE'] = 'WHITE'
-        attribute_states['text']['STATE_PRELIGHT'] = 'WHITE'
-        attribute_states['text']['STATE_SELECTED'] = 'WHITE'
-        attribute_states['text']['STATE_INSENSITIVE'] = 'WHITE'
+        attribute_states['text']['STATE_NORMAL'] = 'GRAY'
+        attribute_states['text']['STATE_ACTIVE'] = 'GRAY'
+        attribute_states['text']['STATE_PRELIGHT'] = 'GRAY'
+        attribute_states['text']['STATE_SELECTED'] = 'GRAY'
+        attribute_states['text']['STATE_INSENSITIVE'] = 'GRAY'
 
         # An color to be used for the base colors in each curses_subwin state.
         attribute_states['base'] = dict()
@@ -158,7 +156,7 @@ class Style(object):
 
         return attribute_states
 
-    def get_curses_pairs(self, fg='WHITE', bg='BLACK'):
+    def get_color_pair(self, fg='WHITE', bg='BLACK'):
         """
         Return a curses color pairs correspondent with the right foreground and background.
         All possible foreground/background combination have been generate automatically during GLXC.Style init.
@@ -168,13 +166,22 @@ class Style(object):
         :return: Curse color pair it correspond to the right foreground and background
         :rtype: int
         """
-        if fg in self._get_curses_colors() and bg in self._get_curses_colors():
-            pairs = self._get_curses_colors_pairs().index(str(fg).upper() + '/' + str(bg).upper())
-            return pairs
+        if fg in self._get_allowed_fg_colors() and bg in self._get_allowed_bg_colors():
+            pairs = self._get_curses_colors_pairs().index(
+                str(fg).upper() + '/' + str(bg).upper()
+            )
+            if str(fg).upper() == 'YELLOW':
+                return curses.color_pair(pairs) | curses.A_BOLD
+            elif str(fg).upper() == 'WHITE':
+                return curses.color_pair(pairs) | curses.A_BOLD
+            elif str(fg).upper() == 'PINK':
+                return curses.color_pair(pairs) | curses.A_BOLD
+            else:
+                return curses.color_pair(pairs)
         else:
             return 0
 
-    def get_color(self, attribute='base', state='STATE_NORMAL'):
+    def get_color_by_attribute_state(self, attribute='base', state='STATE_NORMAL'):
         """
         Return a text color, for a attribute and a state passed as argument, it's use by widget for know which color
         use, when a state change.
@@ -226,46 +233,31 @@ class Style(object):
         """
         return self._curses_native_colormap
 
-    def _gen_curses_native_colormap_dict(self):
+    def _get_allowed_fg_colors(self):
         """
-        Internal it generate curses native colormap dictionary , the method work directly with \
-        other internal method's and have no parameter or return.
-        """
-        self._set_curses_native_colormap(dict())
-        self._get_curses_native_colormap()['BLACK'] = curses.COLOR_BLACK
-        self._get_curses_native_colormap()['RED'] = curses.COLOR_RED
-        self._get_curses_native_colormap()['GREEN'] = curses.COLOR_GREEN
-        self._get_curses_native_colormap()['YELLOW'] = curses.COLOR_YELLOW
-        self._get_curses_native_colormap()['BLUE'] = curses.COLOR_BLUE
-        self._get_curses_native_colormap()['MAGENTA'] = curses.COLOR_MAGENTA
-        self._get_curses_native_colormap()['CYAN'] = curses.COLOR_CYAN
-        self._get_curses_native_colormap()['WHITE'] = curses.COLOR_WHITE
+        Internal method for return ``_allowed_fg_colors`` attribute
 
-    def _get_curses_colors(self):
-        """
-        Internal method for return ``_curses_colors_allowed`` attribute
-
-        :return the curses_colors attribute
+        :return the _allowed_fg_colors attribute
         :rtype: list
         """
-        return self._curses_colors_allowed
+        return self._allowed_fg_colors
 
-    def _set_curses_colors(self, curses_colors_list=list()):
+    def _set_allowed_fg_colors(self, allowed_fg_colors=list()):
         """
         Internal method for set ``_curses_colors`` attribute
 
-        :param curses_colors_list: A list of color name
-        :type curses_colors_list: list
-        :raise TypeError: if ``curses_colors_list`` parameter is not a :py:data:`list` type
+        :param allowed_fg_colors: A list of color name
+        :type allowed_fg_colors: list
+        :raise TypeError: if ``allowed_fg_colors`` parameter is not a :py:data:`list` type
         """
-        if type(curses_colors_list) == list:
-            if curses_colors_list != self._get_curses_colors():
-                self._curses_colors_allowed = curses_colors_list
+        if type(allowed_fg_colors) == list:
+            if allowed_fg_colors != self._get_allowed_fg_colors():
+                self._allowed_fg_colors = allowed_fg_colors
                 # Can emit modification signal here
         else:
-            raise TypeError(u'>curses_colors_list< argument must be a list type')
+            raise TypeError(u'>allowed_fg_colors< argument must be a list type')
 
-    def _gen_curses_colors(self):
+    def _gen_allowed_fg_colors(self):
         """
         Internal it generate color list name of supported color by Galaxie Curses, the method work directly with \
         other internal method's and have no parameter or return.
@@ -274,34 +266,79 @@ class Style(object):
         """
 
         # Start by clean the list
-        self._set_curses_colors(list())
+        self._set_allowed_fg_colors(list())
 
-        # Appen allowed colors
-        self._get_curses_colors().append('BLACK')
-        self._get_curses_colors().append('RED')
-        self._get_curses_colors().append('GREEN')
-        self._get_curses_colors().append('YELLOW')
-        self._get_curses_colors().append('BLUE')
-        self._get_curses_colors().append('MAGENTA')
-        self._get_curses_colors().append('CYAN')
-        self._get_curses_colors().append('WHITE')
+        # Append allowed colors
+        self._get_allowed_fg_colors().append('BLACK')
+        self._get_allowed_fg_colors().append('WHITE')
+        self._get_allowed_fg_colors().append('GRAY')
+        self._get_allowed_fg_colors().append('BLUE')
+        self._get_allowed_fg_colors().append('RED')
+        self._get_allowed_fg_colors().append('MAGENTA')
+        self._get_allowed_fg_colors().append('CYAN')
+        self._get_allowed_fg_colors().append('GREEN')
+        self._get_allowed_fg_colors().append('ORANGE')
+        self._get_allowed_fg_colors().append('YELLOW')
+        self._get_allowed_fg_colors().append('PINK')
 
-        # unimplemented colors
-        # self._get_curses_colors.append('GRAY')
-        # self._get_curses_colors.append('ORANGE')
-        # self._get_curses_colors.append('PINK')
+    def _get_allowed_bg_colors(self):
+        """
+        Internal method for return ``_allowed_bg_colors`` attribute
+
+        :return the _allowed_bg_colors attribute
+        :rtype: list
+        """
+        return self._allowed_bg_colors
+
+    def _set_allowed_bg_colors(self, allowed_bg_colors=list()):
+        """
+        Internal method for set ``_curses_colors`` attribute
+
+        :param allowed_bg_colors: A list of color name
+        :type allowed_bg_colors: list
+        :raise TypeError: if ``allowed_bg_colors`` parameter is not a :py:data:`list` type
+        """
+        if type(allowed_bg_colors) == list:
+            if allowed_bg_colors != self._get_allowed_bg_colors():
+                self._allowed_fg_colors = allowed_bg_colors
+                # Can emit modification signal here
+        else:
+            raise TypeError(u'>allowed_bg_colors< argument must be a list type')
+
+    def _gen_allowed_bg_colors(self):
+        """
+        Internal it generate color list name of supported color by Galaxie Curses, the method work directly with \
+        other internal method's and have no parameter or return.
+
+        That list will be use as source for generate a color pair.
+        """
+
+        # Start by clean the list
+        self._set_allowed_bg_colors(list())
+
+        # Append allowed colors
+        self._get_allowed_bg_colors().append('BLACK')
+        self._get_allowed_bg_colors().append('WHITE')
+        self._get_allowed_bg_colors().append('GRAY')
+        self._get_allowed_bg_colors().append('BLUE')
+        self._get_allowed_bg_colors().append('RED')
+        self._get_allowed_bg_colors().append('MAGENTA')
+        self._get_allowed_bg_colors().append('CYAN')
+        self._get_allowed_bg_colors().append('GREEN')
+        self._get_allowed_bg_colors().append('ORANGE')
+        self._get_allowed_bg_colors().append('YELLOW')
+        self._get_allowed_bg_colors().append('PINK')
 
     def _set_curses_colors_pairs(self, curses_colors_pairs_list):
         """
-        Internal method for set ``_curses_colors_pairs`` attribute
+        Internal method for set ``_curses_colors_pairs`` attribute with a list
 
         :param curses_colors_pairs_list: A list of color name
         :type curses_colors_pairs_list: list
         :raise TypeError: if ``curses_colors_pairs_list`` parameter is not a :py:data:`list` type
         """
-
         if type(curses_colors_pairs_list) == list:
-            if curses_colors_pairs_list != self._get_curses_colors():
+            if curses_colors_pairs_list != self._curses_colors_pairs:
                 self._curses_colors_pairs = curses_colors_pairs_list
                 # Can emit modification signal here
         else:
@@ -323,24 +360,89 @@ class Style(object):
 
         That list index number match with the curses colors pair number.
         """
+        self._gen_allowed_fg_colors()
+        self._gen_allowed_bg_colors()
+
         # Start by clean the list
         self._set_curses_colors_pairs(list())
         # The first color pair is WHITE/BLACK for no color support
-        self._get_curses_colors_pairs().append('WHITE' + '/' + 'BLACK')
+        self._get_curses_colors_pairs().append('BLACK' + '/' + 'WHITE')
 
         # Init a counter it start to 1 and not 0
         counter = 1
+        fg = None
+        bg = None
         # For each foreground colors
-        for foreground in self._get_curses_colors():
+        for foreground in self._get_allowed_fg_colors():
             # And each background colors
-            for background in self._get_curses_colors():
+            if str(foreground).upper() == 'BLACK':
+                fg = curses.COLOR_BLACK
+            elif str(foreground).upper() == 'GRAY':
+                fg = curses.COLOR_WHITE
+            elif str(foreground).upper() == 'WHITE':
+                fg = curses.COLOR_WHITE
+            elif str(foreground).upper() == 'BLUE':
+                fg = curses.COLOR_BLUE
+            elif str(foreground).upper() == 'RED':
+                fg = curses.COLOR_RED
+            elif str(foreground).upper() == 'MAGENTA':
+                fg = curses.COLOR_MAGENTA
+            elif str(foreground).upper() == 'CYAN':
+                fg = curses.COLOR_CYAN
+            elif str(foreground).upper() == 'GREEN':
+                fg = curses.COLOR_GREEN
+            elif str(foreground).upper() == 'ORANGE':
+                fg = curses.COLOR_YELLOW
+            elif str(foreground).upper() == 'YELLOW':
+                fg = curses.COLOR_YELLOW
+            elif str(foreground).upper() == 'PINK':
+                fg = curses.COLOR_RED
 
-                # Generate a colors pair like 'WHITE/RED' and ad
-                self._get_curses_colors_pairs().append(str(foreground) + '/' + str(background))
+            for background in self._get_allowed_bg_colors():
 
                 # Curses pair provisioning it have a index it match with the curses_colors_pairs list index
-                curses.init_pair(
-                    counter, self._get_curses_colors().index(foreground), self._get_curses_colors().index(background)
-                )
+                if str(background).upper() == 'BLACK':
+                    bg = curses.COLOR_BLACK
+                elif str(background).upper() == 'GRAY':
+                    bg = curses.COLOR_WHITE
+                elif str(background).upper() == 'WHITE':
+                    bg = curses.COLOR_WHITE
+                elif str(background).upper() == 'BLUE':
+                    bg = curses.COLOR_BLUE
+                elif str(background).upper() == 'RED':
+                    bg = curses.COLOR_RED
+                elif str(background).upper() == 'MAGENTA':
+                    bg = curses.COLOR_MAGENTA
+                elif str(background).upper() == 'CYAN':
+                    bg = curses.COLOR_CYAN
+                elif str(background).upper() == 'GREEN':
+                    bg = curses.COLOR_GREEN
+                elif str(background).upper() == 'ORANGE':
+                    bg = curses.COLOR_YELLOW
+                elif str(background).upper() == 'YELLOW':
+                    bg = curses.COLOR_YELLOW
+                elif str(background).upper() == 'PINK':
+                    bg = curses.COLOR_RED
+
+                try:
+                    # Generate a colors pair like 'WHITE/RED' and ad
+                    self._get_curses_colors_pairs().append(str(foreground).upper() + '/' + str(background).upper())
+
+                    curses.init_pair(
+                        counter,
+                        fg,
+                        bg
+                    )
+
+                    counter += 1
+
+                except curses.error:
+                    pass
+
+                # curses.init_pair(
+                #     counter,
+                #     self._get_allowed_fg_colors().index(foreground),
+                #     self._get_allowed_bg_colors().index(background)
+                # )
                 # The curses pair number match  with the curses_colors_pairs list index
-                counter += 1
+

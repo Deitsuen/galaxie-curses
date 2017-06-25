@@ -162,23 +162,23 @@ class RadioButton(GLXCurses.Widget):
 
         if not self.get_sensitive():
             self.draw_the_good_button(
-                color=curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_style().get_color('bg', 'STATE_NORMAL'),
-                    bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
+                color=self.get_style().get_color_pair(
+                    fg=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL'),
+                    bg=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
                 ) | curses.A_BOLD
             )
         elif self.state['PRELIGHT']:
             self.draw_the_good_button(
-                color=curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_style().get_color('dark', 'STATE_NORMAL'),
-                    bg=self.get_style().get_color('bg', 'STATE_PRELIGHT'))
+                color=self.get_style().get_color_pair(
+                    fg=self.get_style().get_color_by_attribute_state('dark', 'STATE_NORMAL'),
+                    bg=self.get_style().get_color_by_attribute_state('bg', 'STATE_PRELIGHT')
                 )
             )
         elif self.state['NORMAL']:
             self.draw_the_good_button(
-                color=curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_style().get_color('text', 'STATE_NORMAL'),
-                    bg=self.get_style().get_color('bg', 'STATE_NORMAL'))
+                color=self.get_style().get_color_pair(
+                    fg=self.get_style().get_color_by_attribute_state('text', 'STATE_NORMAL'),
+                    bg=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
                 )
             )
 

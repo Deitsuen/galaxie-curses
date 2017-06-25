@@ -94,9 +94,6 @@ class HSeparator(GLXCurses.Widget):
         elif self.get_position_type() == glxc.BASELINE_POSITION_BOTTOM:
             self._hseperator_y = self.get_height() - self.get_preferred_height()
 
-    def get_attr(self, elem, state):
-        return self.attribute[elem][state]
-
     def draw_horizontal_separator(self):
         # Draw the Horizontal Separator with PositionType
         for x in range(self.get_x(), self.get_width()):
@@ -104,9 +101,9 @@ class HSeparator(GLXCurses.Widget):
                 self._hseperator_y,
                 self._hseperator_x + x,
                 curses.ACS_HLINE,
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('base', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_NORMAL'))
+                self.get_style().get_color_pair(
+                    fg=self.get_style().get_color_by_attribute_state('base', 'STATE_NORMAL'),
+                    bg=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
                 )
             )
 

@@ -36,16 +36,16 @@ class MenuModel(GLXCurses.Widget):
                     0,
                     0,
                     str(' ' * (self.get_width() - 1)),
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_style().get_color('dark', 'STATE_NORMAL'),
-                        bg=self.get_style().get_color('light', 'STATE_NORMAL'))
+                    self.get_style().get_color_pair(
+                        fg=self.get_style().get_color_by_attribute_state('dark', 'STATE_NORMAL'),
+                        bg=self.get_style().get_color_by_attribute_state('light', 'STATE_NORMAL')
                     )
                 )
             self.get_curses_subwin().bkgdset(
                     ord(' '),
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_style().get_color('dark', 'STATE_NORMAL'),
-                        bg=self.get_style().get_color('light', 'STATE_NORMAL'))
+                    self.get_style().get_color_pair(
+                        fg=self.get_style().get_color_by_attribute_state('dark', 'STATE_NORMAL'),
+                        bg=self.get_style().get_color_by_attribute_state('light', 'STATE_NORMAL')
                     )
                 )
         if self.app_info_label:
@@ -55,18 +55,18 @@ class MenuModel(GLXCurses.Widget):
                         0,
                         (self.get_width() - 1) - len(str(app_info_label[:-1])),
                         app_info_label[:-1],
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_style().get_color('dark', 'STATE_NORMAL'),
-                            bg=self.get_style().get_color('light', 'STATE_NORMAL'))
+                        self.get_style().get_color_pair(
+                            fg=self.get_style().get_color_by_attribute_state('dark', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color_by_attribute_state('light', 'STATE_NORMAL')
                         )
                     )
                     self.get_curses_subwin().insstr(
                         0,
                         self.get_width() - 1,
                         app_info_label[-1:],
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_style().get_color('dark', 'STATE_NORMAL'),
-                            bg=self.get_style().get_color('light', 'STATE_NORMAL'))
+                        self.get_style().get_color_pair(
+                            fg=self.get_style().get_color_by_attribute_state('dark', 'STATE_NORMAL'),
+                            bg=self.get_style().get_color_by_attribute_state('light', 'STATE_NORMAL')
                         )
                     )
                 except curses.error:
