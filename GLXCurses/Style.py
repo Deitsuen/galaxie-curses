@@ -179,35 +179,35 @@ class Style(object):
             'PINK',
             'WHITE'
         ]
+
+        # all special color will be estimate here
         if str(foreground).upper() in special_color:
             if str(foreground).upper() in color_need_bold:
                 pairs = self._get_text_pairs().index(
                     str(foreground).upper() + '/' + str(background).upper()
                 )
+
                 return curses.color_pair(pairs) | curses.A_BOLD
 
             else:
-                pairs = 0
-                if str(foreground).upper() == 'ORANGE':
-                    pairs = self._get_text_pairs().index(
-                        'YELLOW' + '/' + str(background).upper()
-                    )
-                elif str(foreground).upper() == 'GRAY':
+                if str(foreground).upper() == 'GRAY':
                     pairs = self._get_text_pairs().index(
                         'WHITE' + '/' + str(background).upper()
                     )
-                elif str(foreground).upper() == 'RED':
+                else:
                     pairs = self._get_text_pairs().index(
-                        'RED' + '/' + str(background).upper()
+                        str(foreground).upper() + '/' + str(background).upper()
                     )
                 return curses.color_pair(pairs)
 
+        # native color here
         else:
             pairs = self._get_text_pairs().index(
                 str(foreground).upper() + '/' + str(background).upper()
             )
             try:
                 return curses.color_pair(pairs)
+            # if it have a error back to a pair number 0, suppose to be WHITE/BLACK
             except ValueError:
                 return curses.color_pair(0)
 
@@ -239,7 +239,7 @@ class Style(object):
         return self.attribute_states
 
     # Internal
-    def _set_curses_native_colormap(self, curses_native_colormap_dict=dict()):
+    def _set_curses_native_colormap(self, curses_native_colormap_dict=None):
         """
         Internal method for set ``_curses_native_colormap`` attribute
 
@@ -247,6 +247,8 @@ class Style(object):
         :type curses_native_colormap_dict: list
         :raise TypeError: if ``curses_native_colormap_dict`` parameter is not a :py:data:`dict` type
         """
+        if curses_native_colormap_dict is None:
+            curses_native_colormap_dict = dict()
         if type(curses_native_colormap_dict) == dict:
             if curses_native_colormap_dict != self._get_curses_native_colormap():
                 self._curses_native_colormap = curses_native_colormap_dict
@@ -307,9 +309,7 @@ class Style(object):
         self._get_allowed_fg_colors().append('BLUE')
         self._get_allowed_fg_colors().append('MAGENTA')
         self._get_allowed_fg_colors().append('CYAN')
-        # self._get_allowed_fg_colors().append('GRAY')
-        # self._get_allowed_fg_colors().append('ORANGE')
-        # self._get_allowed_fg_colors().append('PINK')
+        # no more color, curse not permit it
 
     def _get_allowed_bg_colors(self):
         """
@@ -355,6 +355,7 @@ class Style(object):
         self._get_allowed_bg_colors().append('BLUE')
         self._get_allowed_bg_colors().append('MAGENTA')
         self._get_allowed_bg_colors().append('CYAN')
+        # no more color, curse not permit it
 
     def _set_text_pairs(self, text_pairs):
         """
@@ -456,10 +457,14 @@ class Style(object):
                 elif str(foreground).upper() == 'PINK':
                     fg = curses.COLOR_RED
 
-                # Curses pair provisioning it have a index it match with the curses_colors_pairs list index
-                # Generate a colors pair like 'WHITE/RED' and ad
+                # Curses pair provisioning it have a index it match with the _get_text_pairs list index
+                # Generate a colors pair like 'WHITE/RED'.
+
+                # if color is inside allowed color list
                 if foreground in self._get_allowed_fg_colors() and background in self._get_allowed_bg_colors():
+                    # if the text_pair is not all ready inside the pairs list.
                     if str(foreground).upper() + '/' + str(background).upper() not in self._get_text_pairs():
+                        # the text pair to the list where counter and index MUST match.
                         self._get_text_pairs().append(
                             str(foreground).upper() + '/' + str(background).upper()
                         )
