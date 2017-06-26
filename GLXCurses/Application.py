@@ -25,7 +25,7 @@ class Singleton(type):
         super(Singleton, cls).__init__(name, bases, dict)
         cls.instance = None
 
-    def __call__(cls,*args,**kw):
+    def __call__(cls, *args, **kw):
         if cls.instance is None:
             cls.instance = super(Singleton, cls).__call__(*args, **kw)
         return cls.instance
@@ -490,9 +490,29 @@ class Application(object):
         return self.name
 
     def set_style(self, style):
-        self.style = style
+        """
+        Set the Style, it must be a :class:`Style <GLXCurses.Style.Style>` class, with a valid attribute_states
+
+        .. seealso:: :class:`Style <GLXCurses.Style.Style>`
+
+        :param style:
+        :return:
+        """
+        if hasattr(style, 'attribute_states'):
+            if style != self.get_style():
+                self.style = style
+        else:
+            raise TypeError(u'>style< is not a Galaxie Curses Style')
 
     def get_style(self):
+        """
+        Return the global Galaxie Curses Style
+
+        .. seealso:: :class:`Style <GLXCurses.Style.Style>`
+
+        :return: a Galaxie Curses Style dictionary
+        :rtype: dict
+        """
         return self.style
 
     def add_window(self, window):
@@ -767,8 +787,8 @@ class Application(object):
         if args:
             self._get_signal_handlers_dict()[detailed_signal].append(args)
 
-        # Test about EventBus
-        #GLXCurses.signal.connect(detailed_signal, handler, args)
+            # Test about EventBus
+            # GLXCurses.signal.connect(detailed_signal, handler, args)
 
     def disconnect(self, detailed_signal, handler):
 

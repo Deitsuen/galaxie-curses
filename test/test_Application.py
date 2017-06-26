@@ -169,6 +169,17 @@ class TestApplication(unittest.TestCase):
         value_random_1 = float(3.14)
         self.assertRaises(TypeError, self.application.set_name, int(randint(1, 42)))
 
+    def test_set_get_style(self):
+        """Test Application.set_style()"""
+        style = GLXCurses.Style()
+
+        self.application.set_style(style)
+        self.assertEqual(style, self.application.get_style())
+
+    def test_set_style_raise(self):
+        """Test Application.set_style() raise TypeError"""
+        self.assertRaises(TypeError, self.application.set_style, int())
+
     def test_refresh(self):
         """Test Application.refresh() method """
         self.application.refresh()
