@@ -235,14 +235,30 @@ class Style(object):
         :param attribute_states: a Dictionary with Galaxie Curses Style format
         :type attribute_states: dict(dict(str()))
         """
-        self.attribute_states = attribute_states
+        # Try to found a way to not be execute
+        # Check first level dictionary
+        if type(attribute_states) == dict:
+            # For each key's
+            for attribute in ['text_fg', 'bg', 'light', 'dark', 'mid', 'text', 'base', 'black', 'white']:
+                # Check if the key value is a dictionary
+                if type(attribute_states[attribute]) != dict:
+                    raise TypeError(u'>attribute_states< is not a Galaxie Curses Style')
+                # For each key value, in that case a sub dictionary
+                for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
+                    # Check if the key value is a string
+                    if type(attribute_states[state]) != str:
+                        raise TypeError(u'>attribute_states< is not a Galaxie Curses Style')
+
+        # If it haven't quit that ok
+        if attribute_states != self.get_attribute_states():
+            self.attribute_states = attribute_states
 
     def get_attribute_states(self):
         """
         Return the ``attribute_states`` attribute, it consist to a dictionary it store a second level of dictionary \
         with keys if have special name.
 
-        :return: attribute states dictionary
+        :return: attribute states dictionary on Galaxie Curses Style format
         :rtype: dict
         """
         return self.attribute_states

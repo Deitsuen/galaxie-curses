@@ -66,7 +66,7 @@ class TestStyle(unittest.TestCase):
                 # Check if the key value is a string
                 self.assertEqual(type(default_attribute_states[attribute][state]), type(str()))
 
-    def test_get_curses_color_pair(self):
+    def test_get_color_pair(self):
         """Test Style.get_curses_color_pair()"""
         # Check if fg='WHITE', bg='BLACK' first in the list
         self.assertEqual(self.style.get_color_pair(foreground='WHITE', background='BLACK'), 2097152)
@@ -77,7 +77,7 @@ class TestStyle(unittest.TestCase):
         # Check if fg='WHITE', bg='BLUE' return a value > 0
         self.assertGreater(self.style.get_color_pair(foreground='WHITE', background='BLUE'), 0)
 
-    def test_get_attribute_states(self):
+    def test_set_get_attribute_states(self):
         """Test Style.get_attribute_states()"""
         attribute_states = self.style.get_attribute_states()
         # Check first level dictionary
@@ -90,6 +90,19 @@ class TestStyle(unittest.TestCase):
             for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
                 # Check if the key value is a string
                 self.assertEqual(type(attribute_states[attribute][state]), type(str()))
+        # Check raise
+        attribute_states = dict()
+        attribute_states['text_fg'] = dict()
+        attribute_states['bg'] = dict()
+        attribute_states['light'] = dict()
+        attribute_states['dark'] = dict()
+        attribute_states['mid'] = dict()
+        attribute_states['text'] = dict()
+        attribute_states['base'] = dict()
+        attribute_states['black'] = dict()
+        attribute_states['white'] = dict()
+        self.assertRaises(TypeError, self.style.get_attribute_states, float(randint(1, 42)))
+        self.assertRaises(TypeError, self.style.get_attribute_states, attribute_states)
 
     # Internal Method test
     # Curses colors
