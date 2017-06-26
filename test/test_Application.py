@@ -8,7 +8,6 @@ import string
 
 import sys
 import os
-import uuid
 
 # Require when you haven't GLXBob as default Package
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -166,7 +165,6 @@ class TestApplication(unittest.TestCase):
 
     def test_set_name_type(self):
         """Test Application.set_name() maximum size"""
-        value_random_1 = float(3.14)
         self.assertRaises(TypeError, self.application.set_name, int(randint(1, 42)))
 
     def test_set_get_style(self):
@@ -179,6 +177,39 @@ class TestApplication(unittest.TestCase):
     def test_set_style_raise(self):
         """Test Application.set_style() raise TypeError"""
         self.assertRaises(TypeError, self.application.set_style, int())
+
+    def test_add_window(self):
+        """Test Application.add_window()"""
+        # create a new window
+        window = GLXCurses.Window()
+
+        # check if window parent is not self.application
+        self.assertNotEqual(window.get_parent(), self.application)
+
+        # check the size of the children windows list before add a window
+        windows_list_size_before = len(self.application._get_windows_list())
+
+        # add a window to the application
+        self.application.add_window(window)
+
+        # check the size of the children windows list after add a window
+        windows_list_size_after = len(self.application._get_windows_list())
+
+        # we must have one more children on the list
+        self.assertGreater(windows_list_size_after, windows_list_size_before)
+
+        # we get the last windows children element
+        the_last_children_on_list = self.application._get_windows_list()[-1]
+
+        # the last list element must contain the same reference to our window
+        self.assertEqual(the_last_children_on_list['WIDGET'], window)
+
+        # check if the application is the parent of our window
+        self.assertEqual(window.get_parent(), self.application)
+
+    def test_add_window_raise(self):
+        """Test Application.add_window() raise TypeError"""
+        self.assertRaises(TypeError, self.application.add_window, int())
 
     def test_refresh(self):
         """Test Application.refresh() method """
@@ -195,6 +226,39 @@ class TestApplication(unittest.TestCase):
     def test_close(self):
         """Test Application.close() method """
         self.application.close()
+
+    # Test Internal methode
+    def test__set__get_windows_list(self):
+        """Test Application children windows list"""
+        # List creation
+        tested_list = [1, 2, 3]
+
+        # flush teh children windows list with our list
+        self.application._set_windows_list(tested_list)
+
+        # list must be equal
+        self.assertEqual(self.application._get_windows_list(), tested_list)
+
+        # check if worng type is detected
+        self.assertRaises(TypeError, self.application._set_windows_list, int())
+
+    def test__add_child_to_windows_list(self):
+        """Test Application child add to the children windows list"""
+        # create a new window
+        window = GLXCurses.Window()
+
+        # check the size of the children windows list before add a window
+        windows_list_size_before = len(self.application._get_windows_list())
+
+        # add a window to the children window list
+        self.application._add_child_to_windows_list(window)
+
+        # check the size of the children windows list after add a window
+        windows_list_size_after = len(self.application._get_windows_list())
+
+        # we must have one more children on the list
+        self.assertGreater(windows_list_size_after, windows_list_size_before)
+
 
 if __name__ == '__main__':
     unittest.main()

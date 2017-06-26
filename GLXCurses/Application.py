@@ -160,6 +160,7 @@ class Application(object):
 
 
         """
+        self.glxc_type = 'GLXCurses.Application'
         try:
             # Initialize curses
             os.environ["NCURSES_NO_UTF8_ACS"] = '1'
@@ -196,8 +197,8 @@ class Application(object):
             curses.use_default_colors()
             self.style = GLXCurses.Style()
 
+        # Curses setting
         self.screen.clear()
-
         curses.curs_set(0)
         curses.mousemask(-1)
 
@@ -498,11 +499,11 @@ class Application(object):
         :param style:
         :return:
         """
-        if hasattr(style, 'attribute_states'):
+        if hasattr(style, 'glxc_type') and style.glxc_type == 'GLXCurses.Style':
             if style != self.get_style():
                 self.style = style
         else:
-            raise TypeError(u'>style< is not a Galaxie Curses Style')
+            raise TypeError(u'>style< is not a GLXCurses.Style type')
 
     def get_style(self):
         """
@@ -517,21 +518,23 @@ class Application(object):
 
     def add_window(self, window):
         """
-        Adds a Window to Application .
+        Adds a Window child to Application windows children's list.
 
-        This call can only happen after the application has started; typically, you should add new application windows
-        in response to the emission of the "activate" signal.
-
-        This call is equivalent to setting the "application" attribute of window to application .
 
         :param window: a window to add
         :type window: GLXCurses.Window
         """
-        window.set_parent(self)
-        child_info = dict()
-        child_info['WIDGET'] = window
-        self.windows.append(child_info)
-        self.active_window_id = len(self.windows) - 1
+        # Check if window is a Galaxie Class
+        if hasattr(window, 'glxc_type') and window.glxc_type == 'GLXCurses.Window':
+            # set the Application it self as parent of the child window
+            window.set_parent(self)
+            # create a dictionary structure for add it to windows list
+            self._add_child_to_windows_list(window)
+            # if it have only one window child then it's will be the active window
+            if len(self._get_windows_list()) - 1 <= 1:
+                self.active_window_id = len(self._get_windows_list()) - 1
+        else:
+            raise TypeError(u'>window< is not a GLXCurses.Window type')
 
     def remove_window(self, window):
         """
@@ -552,17 +555,17 @@ class Application(object):
         # Search for the good window id and delete it from the window list
         count = 0
         last_found = None
-        for children_window in self.windows:
+        for children_window in self._get_windows_list():
             if children_window.id == window.id:
                 last_found = count
             count += 1
         if last_found is None:
             pass
         else:
-            self.windows.pop(last_found)
+            self._get_windows_list().pop(last_found)
 
         # Update the active_window_id
-        self.active_window_id = len(self.windows) - 1
+        self.active_window_id = len(self._get_windows_list()) - 1
 
     def add_menubar(self, menu_bar):
         """
@@ -807,3 +810,38 @@ class Application(object):
     # Internal
     def _get_signal_handlers_dict(self):
         return self.event_handlers
+
+    def _get_windows_list(self):
+        """
+        Internal method for return self.windows list
+
+        :return: Windows children list
+        :rtype: list
+        """
+        return self.windows
+
+    def _set_windows_list(self, windows_list=list()):
+        """
+        Internal method for set self.windows list
+
+        :param windows_list: a windows children list
+        :type windows_list: list
+        """
+        if type(windows_list) == list:
+            if windows_list != self._get_windows_list():
+                self.windows = windows_list
+        else:
+            raise TypeError(u'>windows_list< is not a int type')
+
+    def _add_child_to_windows_list(self, window):
+        """
+        Create a dictionary structure for add it to windows list
+
+        :param window: a Window to add on children windows list
+        :type window: GLXCurses.Window
+        """
+        child_info = dict()
+        child_info['WIDGET'] = window
+        child_info['TYPE'] = window.glxc_type
+        self._get_windows_list().append(child_info)
+

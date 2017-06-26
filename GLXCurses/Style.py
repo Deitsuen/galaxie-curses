@@ -58,6 +58,8 @@ class Style(object):
          +------------------------+----------------------------------------------------------------+
 
         """
+        self.glxc_type = 'GLXCurses.Style'
+
         # Internal storage
         self._allowed_fg_colors = list()
         self._allowed_bg_colors = list()
