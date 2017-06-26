@@ -256,22 +256,22 @@ class Button(Widget):
         if not self.get_sensitive():
             self.draw_the_good_button(
                 color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
+                    foreground=self.get_style().get_color_text('bg', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                 )
             )
         elif self.state['PRELIGHT']:
             self.draw_the_good_button(
                 color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_by_attribute_state('dark', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_by_attribute_state('bg', 'STATE_PRELIGHT')
+                    foreground=self.get_style().get_color_text('dark', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_PRELIGHT')
                 )
             )
         elif self.state['NORMAL']:
             self.draw_the_good_button(
                 color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_by_attribute_state('text', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
+                    foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                 )
             )
 

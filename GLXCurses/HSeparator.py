@@ -102,8 +102,8 @@ class HSeparator(GLXCurses.Widget):
                 self._hseperator_x + x,
                 curses.ACS_HLINE,
                 self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_by_attribute_state('base', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
+                    foreground=self.get_style().get_color_text('base', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                 )
             )
 

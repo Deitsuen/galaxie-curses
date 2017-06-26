@@ -78,8 +78,8 @@ class VSeparator(GLXCurses.Widget):
                     self.vseperator_x,
                     curses.ACS_VLINE,
                     self.get_style().get_color_pair(
-                        foreground=self.get_style().get_color_by_attribute_state('text', 'STATE_NORMAL'),
-                        background=self.get_style().get_color_by_attribute_state('bg', 'STATE_NORMAL')
+                        foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
+                        background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                     )
                 )
                 increment += 1
