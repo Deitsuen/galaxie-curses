@@ -79,6 +79,9 @@ class TestStyle(unittest.TestCase):
 
     def test_set_get_attribute_states(self):
         """Test Style.get_attribute_states()"""
+        # Load a valid Style
+        self.style.set_attribute_states(self.style.get_default_attribute_states())
+        # Load the Valid Style
         attribute_states = self.style.get_attribute_states()
         # Check first level dictionary
         self.assertEqual(type(attribute_states), type(dict()))
@@ -90,8 +93,17 @@ class TestStyle(unittest.TestCase):
             for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
                 # Check if the key value is a string
                 self.assertEqual(type(attribute_states[attribute][state]), type(str()))
-        # Check raise
+
+        # Check if not a dictionary
+        self.assertRaises(TypeError, self.style.set_attribute_states, float(randint(1, 42)))
+
+        # Check raise with wrong Style
         attribute_states = dict()
+
+        # Check with a empty dictionary
+        self.assertRaises(KeyError, self.style.set_attribute_states, attribute_states)
+
+        # Check with first level dictionary it look ok
         attribute_states['text_fg'] = dict()
         attribute_states['bg'] = dict()
         attribute_states['light'] = dict()
@@ -101,8 +113,7 @@ class TestStyle(unittest.TestCase):
         attribute_states['base'] = dict()
         attribute_states['black'] = dict()
         attribute_states['white'] = dict()
-        self.assertRaises(TypeError, self.style.get_attribute_states, float(randint(1, 42)))
-        self.assertRaises(TypeError, self.style.get_attribute_states, attribute_states)
+        self.assertRaises(KeyError, self.style.set_attribute_states, attribute_states)
 
     # Internal Method test
     # Curses colors

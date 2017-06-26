@@ -241,13 +241,21 @@ class Style(object):
             # For each key's
             for attribute in ['text_fg', 'bg', 'light', 'dark', 'mid', 'text', 'base', 'black', 'white']:
                 # Check if the key value is a dictionary
-                if type(attribute_states[attribute]) != dict:
-                    raise TypeError(u'>attribute_states< is not a Galaxie Curses Style')
+                try:
+                    if type(attribute_states[attribute]) != dict:
+                        raise TypeError(u'>attribute_states< is not a dictionary')
+                except KeyError:
+                    raise KeyError(u'>attribute_states< is not a Galaxie Curses Style')
                 # For each key value, in that case a sub dictionary
                 for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
                     # Check if the key value is a string
-                    if type(attribute_states[state]) != str:
-                        raise TypeError(u'>attribute_states< is not a Galaxie Curses Style')
+                    try:
+                        if type(attribute_states[attribute][state]) != str:
+                            raise TypeError(u'>attribute_states< key is not a str')
+                    except KeyError:
+                        raise KeyError(u'>attribute_states< is not a Galaxie Curses Style')
+        else:
+            raise TypeError(u'>attribute_states< is not a dictionary')
 
         # If it haven't quit that ok
         if attribute_states != self.get_attribute_states():
