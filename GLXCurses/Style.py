@@ -166,53 +166,41 @@ class Style(object):
         :return: Curse color pair it correspond to the right foreground and background
         :rtype: int
         """
-        fg = None
-        bg = None
-        fg_found_yellow = False
-        fg_found_orange = False
-        fg_found_pink = False
-        fg_found_red = False
-        fg_found_white = False
-        fg_found_gray = False
+        special_color = [
+            'YELLOW',
+            'ORANGE',
+            'PINK',
+            'RED',
+            'WHITE',
+            'GRAY'
+        ]
+        color_need_bold = [
+            'YELLOW',
+            'PINK',
+            'WHITE'
+        ]
+        if str(foreground).upper() in special_color:
+            if str(foreground).upper() in color_need_bold:
+                pairs = self._get_text_pairs().index(
+                    str(foreground).upper() + '/' + str(background).upper()
+                )
+                return curses.color_pair(pairs) | curses.A_BOLD
 
-        bg_found_yellow = False
-        bg_found_orange = False
-        bg_found_pink = False
-        bg_found_red = False
-        bg_found_white = False
-        bg_found_gray = False
-
-        if str(foreground).upper() == 'YELLOW':
-            fg = 'YELLOW'
-            fg_found_yellow = True
-
-            pairs = self._get_text_pairs().index(
-                'YELLOW' + '/' + str(background).upper()
-            )
-            return curses.color_pair(pairs) | curses.A_BOLD
-
-        elif str(foreground).upper() == 'ORANGE':
-            fg = 'YELLOW'
-            fg_found_orange = True
-            pairs = self._get_text_pairs().index(
-                'YELLOW' + '/' + str(background).upper()
-            )
-            return curses.color_pair(pairs)
-        elif str(foreground).upper() == 'PINK':
-            pairs = self._get_text_pairs().index(
-                'RED' + '/' + str(background).upper()
-            )
-            return curses.color_pair(pairs) | curses.A_BOLD
-        elif str(foreground).upper() == 'WHITE':
-            pairs = self._get_text_pairs().index(
-                'WHITE' + '/' + str(background).upper()
-            )
-            return curses.color_pair(pairs) | curses.A_BOLD
-        elif str(foreground).upper() == 'GRAY':
-            pairs = self._get_text_pairs().index(
-                'WHITE' + '/' + str(background).upper()
-            )
-            return curses.color_pair(pairs)
+            else:
+                pairs = 0
+                if str(foreground).upper() == 'ORANGE':
+                    pairs = self._get_text_pairs().index(
+                        'YELLOW' + '/' + str(background).upper()
+                    )
+                elif str(foreground).upper() == 'GRAY':
+                    pairs = self._get_text_pairs().index(
+                        'WHITE' + '/' + str(background).upper()
+                    )
+                elif str(foreground).upper() == 'RED':
+                    pairs = self._get_text_pairs().index(
+                        'RED' + '/' + str(background).upper()
+                    )
+                return curses.color_pair(pairs)
 
         else:
             pairs = self._get_text_pairs().index(
@@ -220,7 +208,7 @@ class Style(object):
             )
             try:
                 return curses.color_pair(pairs)
-            except curses.error:
+            except ValueError:
                 return curses.color_pair(0)
 
     def get_color_by_attribute_state(self, attribute='base', state='STATE_NORMAL'):

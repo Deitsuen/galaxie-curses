@@ -69,7 +69,7 @@ class TestStyle(unittest.TestCase):
     def test_get_curses_color_pair(self):
         """Test Style.get_curses_color_pair()"""
         # Check if fg='WHITE', bg='BLACK' first in the list
-        self.assertEqual(self.style.get_color_pair(foreground='WHITE', background='BLACK'), 0)
+        self.assertEqual(self.style.get_color_pair(foreground='WHITE', background='BLACK'), 2097152)
 
         # Check if fg='WHITE', bg='BLUE' return a int type
         self.assertEqual(type(self.style.get_color_pair(foreground='WHITE', background='BLUE')), type(int()))
