@@ -30,9 +30,12 @@ class TestStyle(unittest.TestCase):
         rows, columns = os.popen('stty size', 'r').read().split()
         self.columns = int(columns)
         self.width = self.columns - 7
-        sys.stdout.write('\r')
-        sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.columns))
-        sys.stdout.flush()
+        try:
+            sys.stdout.write('\r')
+            sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.columns))
+            sys.stdout.flush()
+        except ValueError:
+            pass
 
     def tearDown(self):
         # When the test is finish
@@ -40,16 +43,19 @@ class TestStyle(unittest.TestCase):
         self.application.close()
 
         # Display thing that because curses have flush the screen
-        sys.stdout.write('\r')
-        sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.width))
-        sys.stdout.write(' ')
-        sys.stdout.write('[ ')
-        sys.stdout.write('\033[92m')
-        sys.stdout.write('OK')
-        sys.stdout.write('\033[0m')
-        sys.stdout.write(' ]')
-        sys.stdout.write('\n\r')
-        sys.stdout.flush()
+        try:
+            sys.stdout.write('\r')
+            sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.width))
+            sys.stdout.write(' ')
+            sys.stdout.write('[ ')
+            sys.stdout.write('\033[92m')
+            sys.stdout.write('OK')
+            sys.stdout.write('\033[0m')
+            sys.stdout.write(' ]')
+            sys.stdout.write('\n\r')
+            sys.stdout.flush()
+        except ValueError:
+            pass
 
     # Tests
     def test_get_default_attribute_states(self):
