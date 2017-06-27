@@ -217,6 +217,38 @@ class TestApplication(unittest.TestCase):
         """Test Application.add_window() raise TypeError"""
         self.assertRaises(TypeError, self.application.add_window, int())
 
+    def test_remove_window(self):
+        """Test Application.remove_window()"""
+        # create a new window
+        window = GLXCurses.Window()
+        window2 = GLXCurses.Window()
+
+        # check the size of the children windows list before add a window
+        windows_list_size_before = len(self.application._get_windows_list())
+
+        # add a window to the application
+        self.application.add_window(window)
+
+        # add a window to the application
+        self.application.add_window(window2)
+
+        # check the size of the children windows list after add a window
+        windows_list_size_after = len(self.application._get_windows_list())
+
+        # we get the last windows children element
+        the_last_children_on_list = self.application._get_windows_list()[-1]
+
+        # the last list element must contain the same reference to our window
+        self.assertEqual(the_last_children_on_list['WIDGET'], window2)
+
+        self.application.remove_window(window2)
+
+        # we get again the last windows children element
+        the_last_children_on_list = self.application._get_windows_list()[-1]
+
+        # the last list element must contain the same reference to our window
+        self.assertEqual(the_last_children_on_list['WIDGET'], window)
+
     def test_refresh(self):
         """Test Application.refresh() method """
         self.application.refresh()
@@ -248,6 +280,9 @@ class TestApplication(unittest.TestCase):
         # check if worng type is detected
         self.assertRaises(TypeError, self.application._set_windows_list, int())
 
+        # Let the Application children list to None
+        self.application._set_windows_list(list())
+
     def test__add_child_to_windows_list(self):
         """Test Application child add to the children windows list"""
         # create a new window
@@ -264,6 +299,26 @@ class TestApplication(unittest.TestCase):
 
         # we must have one more children on the list
         self.assertGreater(windows_list_size_after, windows_list_size_before)
+
+        # let list of children empty
+        self.application._set_windows_list(list())
+
+    def test__get_displayed_window(self):
+        """Test Application displayed Window"""
+        # let list of children empty
+        self.application._set_windows_list(list())
+
+        # create a new window
+        window = GLXCurses.Window()
+
+        # add a window to the children window list
+        self.application.add_window(window)
+
+        # we must have one more children on the list
+        self.assertEqual(self.application._get_displayed_window(), window)
+
+
+
 
 
 if __name__ == '__main__':

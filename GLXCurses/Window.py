@@ -188,6 +188,7 @@ class Window(Bin):
     # The set_title() method sets the "title" property of the Window to the value specified by title.
     # The title of a window will be displayed in its title bar
     def set_title(self, title):
+
         self.title = title
 
     # The get_title() method returns the value of the "title" property of the window. See the set_title() method.
@@ -233,9 +234,15 @@ class Window(Bin):
         else:
             return False
 
-    # The get_focus() method returns the current focused widget within the window.
-    # The focus widget is the widget that would have the focus if the toplevel window is focused.
     def get_focus(self):
+        """
+        The get_focus() method returns the current focused widget within the window.
+
+        The focus widget is the widget that would have the focus if the toplevel window is focused.
+
+        :return: The current focused widget
+        :rtype: GLXCurses.Widget or None
+        """
         if self.get_child().get_has_focus() and self.get_is_focus():
             return self.get_child()
         else:

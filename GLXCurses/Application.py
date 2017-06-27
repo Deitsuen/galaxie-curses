@@ -532,9 +532,7 @@ class Application(object):
             window.set_parent(self)
             # create a dictionary structure for add it to windows list
             self._add_child_to_windows_list(window)
-            # if it have only one window child then it's will be the active window
-            if len(self._get_windows_list()) - 1 <= 1:
-                self.active_window_id = len(self._get_windows_list()) - 1
+            self._set_active_window(window)
         else:
             raise TypeError(u'>window< is not a GLXCurses.Window type')
 
@@ -557,17 +555,17 @@ class Application(object):
             # Search for the good window id and delete it from the window list
             count = 0
             last_found = None
-            for children_window in self._get_windows_list():
-                if children_window.id == window.id:
+            for child in self._get_windows_list():
+                if child['ID'] == window.get_widget_id():
                     last_found = count
+                    print str(child['ID'])
                 count += 1
-            if last_found is None:
-                pass
-            else:
-                self._get_windows_list().pop(last_found)
 
-            # Update the active_window_id
-            self.active_window_id = len(self._get_windows_list()) - 1
+            if last_found is not None:
+                self._get_windows_list().pop(last_found)
+                if len(self._get_windows_list()) - 1 >= 0:
+                    self._set_active_window(self._get_windows_list()[-1]['WIDGET'])
+
         else:
             raise TypeError(u'>window< is not a GLXCurses.Window type')
 
@@ -617,10 +615,8 @@ class Application(object):
 
         # Check main curses_subwin to display
         if self.curses_subwin:
-            try:
-                self.windows[self.active_window_id]['WIDGET'].draw()
-            except TypeError:
-                pass
+            if self._get_displayed_window():
+                self._get_displayed_window().draw()
 
         if self.menubar:
             self.menubar.draw()
@@ -805,11 +801,13 @@ class Application(object):
     def dispatch(self, detailed_signal, args=None):
         if args is None:
             args = []
+
         if detailed_signal in self._get_signal_handlers_dict():
             for handler in self._get_signal_handlers_dict()[detailed_signal]:
                 handler(self, detailed_signal, args)
 
-        self.windows[self.active_window_id]['WIDGET'].handle_and_dispatch_event(detailed_signal, args)
+        if self._get_displayed_window():
+            self._get_displayed_window().handle_and_dispatch_event(detailed_signal, args)
 
     # Internal
     def _get_signal_handlers_dict(self):
@@ -847,5 +845,37 @@ class Application(object):
         child_info = dict()
         child_info['WIDGET'] = window
         child_info['TYPE'] = window.glxc_type
+        child_info['ID'] = window.get_widget_id()
         self._get_windows_list().append(child_info)
 
+    def _set_active_window(self, window):
+        if window.get_widget_id() != self._get_active_window_id():
+            self.active_window_id = window.get_widget_id()
+
+    def _get_active_window_id(self):
+        """
+        Return the active_window_id attribute instance
+
+        :return: active_window_id attribute
+        :rtype: list
+        """
+        return self.active_window_id
+
+    def _get_displayed_window(self):
+        """
+        Return A :class:`Window <GLXCurses.Window.Window>` widget if any.
+
+        A return to None mean it have no :class:`Window <GLXCurses.Window.Window>` to display
+        :return: A :class:`Window <GLXCurses.Window.Window>` widget if any or None
+        :rtype: GLXCurses.Window or None
+        """
+        # Search for the good window id to display
+        windows_to_display = None
+        for child in self._get_windows_list():
+            if child['ID'] == self._get_active_window_id():
+                windows_to_display = child['WIDGET']
+
+        if windows_to_display is not None:
+            return windows_to_display
+        else:
+            return None
