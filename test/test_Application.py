@@ -5,7 +5,7 @@ import unittest
 from random import randint
 import random
 import string
-
+import uuid
 import sys
 import os
 
@@ -220,34 +220,22 @@ class TestApplication(unittest.TestCase):
     def test_remove_window(self):
         """Test Application.remove_window()"""
         # create a new window
-        window = GLXCurses.Window()
+        window1 = GLXCurses.Window()
         window2 = GLXCurses.Window()
 
-        # check the size of the children windows list before add a window
-        windows_list_size_before = len(self.application._get_windows_list())
-
         # add a window to the application
-        self.application.add_window(window)
+        self.application.add_window(window1)
 
-        # add a window to the application
+        # add a second window to the application
         self.application.add_window(window2)
 
-        # check the size of the children windows list after add a window
-        windows_list_size_after = len(self.application._get_windows_list())
-
-        # we get the last windows children element
-        the_last_children_on_list = self.application._get_windows_list()[-1]
-
         # the last list element must contain the same reference to our window
-        self.assertEqual(the_last_children_on_list['WIDGET'], window2)
+        self.assertEqual(self.application._get_active_window(), window2)
 
         self.application.remove_window(window2)
 
         # we get again the last windows children element
-        the_last_children_on_list = self.application._get_windows_list()[-1]
-
-        # the last list element must contain the same reference to our window
-        self.assertEqual(the_last_children_on_list['WIDGET'], window)
+        self.assertEqual(self.application._get_active_window(), window1)
 
     def test_refresh(self):
         """Test Application.refresh() method """
@@ -303,7 +291,19 @@ class TestApplication(unittest.TestCase):
         # let list of children empty
         self.application._set_windows_list(list())
 
-    def test__get_displayed_window(self):
+    def test__set_get_active_window_id(self):
+        """Test Application._set_active_window_id() and Application._get_active_window_id()"""
+        value1 = uuid.uuid1().int
+        value2 = uuid.uuid1().int
+        self.application._set_active_window_id(value1)
+        self.assertEqual(self.application._get_active_window_id(), value1)
+        self.assertNotEqual(self.application._get_active_window_id(), value2)
+
+    def test__set__get_active_window_id_raise(self):
+        """Test Application._set_active_window_id() TypeError"""
+        self.assertRaises(TypeError, self.application._set_active_window_id, float())
+
+    def test__set__get_active_window(self):
         """Test Application displayed Window"""
         # let list of children empty
         self.application._set_windows_list(list())
@@ -311,15 +311,11 @@ class TestApplication(unittest.TestCase):
         # create a new window
         window = GLXCurses.Window()
 
-        # add a window to the children window list
+        # add a window
         self.application.add_window(window)
 
-        # we must have one more children on the list
-        self.assertEqual(self.application._get_displayed_window(), window)
-
-
-
-
+        # _get_displayed_window() must return the last added window
+        self.assertEqual(self.application._get_active_window(), window)
 
 if __name__ == '__main__':
     unittest.main()

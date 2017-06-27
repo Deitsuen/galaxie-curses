@@ -532,7 +532,9 @@ class Application(object):
             window.set_parent(self)
             # create a dictionary structure for add it to windows list
             self._add_child_to_windows_list(window)
-            self._set_active_window(window)
+            # Make the last element active
+            self._set_active_window(self._get_windows_list()[-1]['WIDGET'])
+            #self._set_active_window(window)
         else:
             raise TypeError(u'>window< is not a GLXCurses.Window type')
 
@@ -558,7 +560,6 @@ class Application(object):
             for child in self._get_windows_list():
                 if child['ID'] == window.get_widget_id():
                     last_found = count
-                    print str(child['ID'])
                 count += 1
 
             if last_found is not None:
@@ -615,8 +616,8 @@ class Application(object):
 
         # Check main curses_subwin to display
         if self.curses_subwin:
-            if self._get_displayed_window():
-                self._get_displayed_window().draw()
+            if self._get_active_window():
+                self._get_active_window().draw()
 
         if self.menubar:
             self.menubar.draw()
@@ -806,8 +807,8 @@ class Application(object):
             for handler in self._get_signal_handlers_dict()[detailed_signal]:
                 handler(self, detailed_signal, args)
 
-        if self._get_displayed_window():
-            self._get_displayed_window().handle_and_dispatch_event(detailed_signal, args)
+        if self._get_active_window():
+            self._get_active_window().handle_and_dispatch_event(detailed_signal, args)
 
     # Internal
     def _get_signal_handlers_dict(self):
@@ -848,24 +849,45 @@ class Application(object):
         child_info['ID'] = window.get_widget_id()
         self._get_windows_list().append(child_info)
 
-    def _set_active_window(self, window):
-        if window.get_widget_id() != self._get_active_window_id():
-            self.active_window_id = window.get_widget_id()
+    def _set_active_window_id(self, window_id):
+        """
+        Set the active_window_id attribute
+
+        :param window_id: a uuid generate by Widget
+        :type window_id: long
+        """
+        if type(window_id) == long:
+            if window_id != self._get_active_window_id():
+                self.active_window_id = window_id
+        else:
+            raise TypeError(u'>window_id< is not a long type')
 
     def _get_active_window_id(self):
         """
-        Return the active_window_id attribute instance
+        Return the active_window_id attribute
 
         :return: active_window_id attribute
         :rtype: list
         """
         return self.active_window_id
 
-    def _get_displayed_window(self):
+    def _set_active_window(self, window):
+        """
+        Set the window widget passed as argument as active
+
+        :param window: a window to add
+        :type window: GLXCurses.Window
+        :return:
+        """
+        if window.get_widget_id() != self._get_active_window_id():
+            self._set_active_window_id(window.get_widget_id())
+
+    def _get_active_window(self):
         """
         Return A :class:`Window <GLXCurses.Window.Window>` widget if any.
 
         A return to None mean it have no :class:`Window <GLXCurses.Window.Window>` to display
+
         :return: A :class:`Window <GLXCurses.Window.Window>` widget if any or None
         :rtype: GLXCurses.Window or None
         """
@@ -875,6 +897,7 @@ class Application(object):
             if child['ID'] == self._get_active_window_id():
                 windows_to_display = child['WIDGET']
 
+        # If a active window is found
         if windows_to_display is not None:
             return windows_to_display
         else:
