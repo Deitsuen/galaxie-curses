@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
-import curses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
-# Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
-__author__ = 'Tuux'
+# Author: the Galaxie Curses Team, all rights reserved
+import GLXCurses
+import curses
 
 
-class MenuModel(GLXCurses.Widget):
+class MenuBar(GLXCurses.Widget):
     def __init__(self):
         GLXCurses.Widget.__init__(self)
-        self.set_name('MenuModel')
+        self.glxc_type = 'GLXCurses.MenuBar'
+        self.set_name('MenuBar')
 
         # Internal Widget Setting
         self.app_info_label = None
@@ -21,8 +21,12 @@ class MenuModel(GLXCurses.Widget):
         if self.get_style().get_attribute_states():
             self.set_attribute_states(self.get_style().get_attribute_states())
 
-    def draw(self):
+    def draw_widget_in_area(self):
+        """
+        White the menubar to the screen, the location is imposed to top left corner
+        """
         app_info_label = self.app_info_label
+
         drawing_area = self.get_screen().subwin(
             0,
             0,

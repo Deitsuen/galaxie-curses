@@ -7,7 +7,7 @@ import curses
 import sys
 import os
 import locale
-import functools
+import uuid
 
 # Locales Setting
 locale.setlocale(locale.LC_ALL, '')
@@ -439,6 +439,20 @@ class Application(object):
         """
         return self.x
 
+    def set_x(self, x):
+        """
+        ``x`` location of the ncurses subwin call ``main_window``, it area is use to display a \
+        :class:`Window <GLXCurses.Window.Window>`
+
+        :param x: ``x`` location in char, 0 correspond to left
+
+        """
+        if type(x) == int:
+            if self.get_x() != x:
+                self.x = x
+        else:
+            raise TypeError(u'>x< parameter is not int type')
+
     def get_y(self):
         """
         ``y`` location of the ncurses subwin call ``main_window``, it area is use to display a \
@@ -448,6 +462,20 @@ class Application(object):
         :rtype: int
         """
         return self.y
+
+    def set_y(self, y):
+        """
+        ``y`` location of the ncurses subwin call ``main_window``, it area is use to display a \
+        :class:`Window <GLXCurses.Window.Window>`
+
+        :param y: ``y`` location in char, 0 correspond to top
+        :type y: int
+        """
+        if type(y) == int:
+            if self.get_y() != y:
+                self.y = y
+        else:
+            raise TypeError(u'>x< parameter is not int type')
 
     # GLXCApplication function
     def set_name(self, name):
@@ -535,6 +563,7 @@ class Application(object):
             # Make the last element active
             self._set_active_window(self._get_windows_list()[-1]['WIDGET'])
             #self._set_active_window(window)
+            #self.refresh()
         else:
             raise TypeError(u'>window< is not a GLXCurses.Window type')
 
@@ -567,24 +596,35 @@ class Application(object):
                 if len(self._get_windows_list()) - 1 >= 0:
                     self._set_active_window(self._get_windows_list()[-1]['WIDGET'])
 
+            self.refresh()
         else:
             raise TypeError(u'>window< is not a GLXCurses.Window type')
 
-    def add_menubar(self, menu_bar):
+    def add_menubar(self, menubar):
         """
-        Sets or unsets the menubar of application .
+        Sets the menubar of application .
 
         This can only be done in the primary instance of the application, after it has been registered.
         “startup” is a good place to call this.
 
-        :param menu_bar: a MenuModel or None
-        :type menu_bar: a MenuModel or None
+        :param menubar: a :class:`MenuBar <GLXCurses.MenuBar.MenuBar>`
+        :type menubar: GLXCurses.MenuBar or
         """
-        menu_bar.set_parent(self)
-        self.menubar = menu_bar
+        if hasattr(menubar, 'glxc_type') and menubar.glxc_type == 'GLXCurses.MenuBar':
+            menubar.set_parent(self)
+            self._set_menubar(menubar)
+            self.refresh()
+        else:
+            raise TypeError(u'>menubar< is not a GLXCurses.MenuBar')
 
     def remove_menubar(self):
-        self.menubar = None
+        """
+        Unset the menubar of application
+        """
+        if self._get_menubar() is not None:
+            self._get_menubar().set_parent(None)
+        self._set_menubar(None)
+        self.refresh()
 
     def add_statusbar(self, glx_statusbar):
         glx_statusbar.set_parent(self)
@@ -615,17 +655,17 @@ class Application(object):
         self.draw()
 
         # Check main curses_subwin to display
-        if self.curses_subwin:
-            if self._get_active_window():
+        if self.curses_subwin is not None:
+            if self._get_active_window() is not None:
                 self._get_active_window().draw()
 
-        if self.menubar:
-            self.menubar.draw()
+        if hasattr(self._get_menubar(), 'glxc_type') and self._get_menubar().glxc_type == 'GLXCurses.MenuBar':
+            self._get_menubar().draw()
 
-        if self.statusbar:
+        if self.statusbar is not None:
             self.statusbar.draw()
 
-        if self.toolbar:
+        if self.toolbar is not None:
             self.toolbar.draw()
 
         # After have redraw everything it's time to refresh the screen
@@ -636,19 +676,23 @@ class Application(object):
         Special code for rendering to the screen
         """
         parent_height, parent_width = self.screen.getmaxyx()
-        if self.menubar:
+
+        if self._get_menubar() is not None:
             menu_bar_height = 1
         else:
             menu_bar_height = 0
-        if self.statusbar:
+
+        if self.statusbar is not None:
             status_bar_height = 1
         else:
             status_bar_height = 0
-        if self.message_bar:
+
+        if self.message_bar is not None:
             message_bar_height = 1
         else:
             message_bar_height = 0
-        if self.toolbar:
+
+        if self.toolbar is not None:
             tool_bar_height = 1
         else:
             tool_bar_height = 0
@@ -856,7 +900,7 @@ class Application(object):
         :param window_id: a uuid generate by Widget
         :type window_id: long
         """
-        if type(window_id) == long:
+        if type(window_id) == type(uuid.uuid1().int):
             if window_id != self._get_active_window_id():
                 self.active_window_id = window_id
         else:
@@ -902,3 +946,24 @@ class Application(object):
             return windows_to_display
         else:
             return None
+
+    def _set_menubar(self, menubar=None):
+        """
+        Set the menubar attribute
+
+        :param menubar: A :class:`MenuBar <GLXCurses.MenuBar.MenuBar>` or None
+        :type menubar: GLXCurses.MenuBar or None
+        """
+        if (hasattr(menubar, 'glxc_type') and menubar.glxc_type == 'GLXCurses.MenuBar') or (menubar is None):
+            self.menubar = menubar
+        else:
+            raise TypeError(u'>menubar< is not a GLXCurses.MenuBar or None type')
+
+    def _get_menubar(self):
+        """
+        Return menubar attribute
+
+        :return: A :class:`MenuBar <GLXCurses.MenuBar.MenuBar>`
+        :rtype: GLXCurses.MenuBar or None
+        """
+        return self.menubar

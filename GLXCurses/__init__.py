@@ -19,7 +19,7 @@ from GLXCurses.Frame import Frame
 from GLXCurses.Box import Box
 from GLXCurses.VBox import VBox
 from GLXCurses.HBox import HBox
-from GLXCurses.MenuModel import MenuModel
+from GLXCurses.MenuBar import MenuBar
 from GLXCurses.Statusbar import Statusbar
 from GLXCurses.Toolbar import Toolbar
 from GLXCurses.Misc import Misc

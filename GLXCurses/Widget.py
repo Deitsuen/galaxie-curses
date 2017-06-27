@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
+from GLXCurses import Object
+from GLXCurses import Style
 import uuid
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -9,9 +10,9 @@ import uuid
 __author__ = 'Tuux'
 
 
-class Widget(GLXCurses.Object):
+class Widget(Object):
     def __init__(self):
-        GLXCurses.Object.__init__(self)
+        Object.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Widget'
         # Unique ID it permit to individually identify a widget by example for get_focus get_default
@@ -36,6 +37,7 @@ class Widget(GLXCurses.Object):
         self.widget_decorated = False
 
         # Widget Parent
+        # Set the Application
         self.screen = None
         self.attribute_states = None
 
@@ -114,7 +116,7 @@ class Widget(GLXCurses.Object):
         # Each Widget come with it own Style by default
         # It can receive parent Style() or a new Style() during a set_parent() / un_parent() call
         # GLXCApplication is a special case where it have no parent, it role is to impose it own style to each Widget
-        self.style = GLXCurses.Style()
+        self.style = Style()
         self.style_backup = None
 
         # Sets the text of tooltip to be the given string.
@@ -451,33 +453,37 @@ class Widget(GLXCurses.Object):
 
     # DRAW
     def draw(self):
-        self.height, self.width = self.get_parent().get_curses_subwin().getmaxyx()
-        self.y, self.x = self.get_parent().get_curses_subwin().getbegyx()
+        try:
+            self.height, self.width = self.get_parent().get_curses_subwin().getmaxyx()
+            self.y, self.x = self.get_parent().get_curses_subwin().getbegyx()
 
-        # Check if the Parent have decoration add and 1 to spacing in case
-        padding = self.get_spacing()
-        if self.get_parent().get_decorated():
-            padding += self.get_parent().get_border_width()
+            # Check if the Parent have decoration add and 1 to spacing in case
+            padding = self.get_spacing()
+            if self.get_parent().get_decorated():
+                padding += self.get_parent().get_border_width()
 
-        min_size_width = (padding * 2) + 1
-        min_size_height = (padding * 2) + 1
+            min_size_width = (padding * 2) + 1
+            min_size_height = (padding * 2) + 1
 
-        height_ok = self.get_height() >= min_size_height
-        width_ok = self.get_width() >= min_size_width
+            height_ok = self.get_height() >= min_size_height
+            width_ok = self.get_width() >= min_size_width
 
-        if not height_ok or not width_ok:
-            return
+            if not height_ok or not width_ok:
+                return
 
-        drawing_area = self.get_parent().get_curses_subwin().subwin(
-            self.get_height() - (padding * 2),
-            self.get_width() - (padding * 2),
-            self.get_y() + padding,
-            self.get_x() + padding
-        )
+            drawing_area = self.get_parent().get_curses_subwin().subwin(
+                self.get_height() - (padding * 2),
+                self.get_width() - (padding * 2),
+                self.get_y() + padding,
+                self.get_x() + padding
+            )
 
-        self.set_curses_subwin(drawing_area)
-        if (self.get_height() > self.preferred_height) and (self.get_width() > self.preferred_width):
-            self.draw_widget_in_area()
+            self.set_curses_subwin(drawing_area)
+            if (self.get_height() > self.preferred_height) and (self.get_width() > self.preferred_width):
+                self.draw_widget_in_area()
+
+        except AttributeError:
+            pass
 
     # Selection and Focus
 

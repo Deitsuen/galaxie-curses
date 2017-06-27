@@ -26,7 +26,7 @@ if __name__ == '__main__':
     app.set_name('Galaxie-Curse Demo')
 
     # Create a Menu
-    menu = GLXCurses.MenuModel()
+    menu = GLXCurses.MenuBar()
     menu.app_info_label = app.get_name()
 
     # Create a Window

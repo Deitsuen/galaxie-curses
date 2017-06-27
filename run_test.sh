@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-nosetests --with-coverage
+nosetests --with-coverage --with-isolation
