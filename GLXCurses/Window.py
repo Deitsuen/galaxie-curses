@@ -266,14 +266,42 @@ class Window(Bin):
         else:
             return 'sa maman'
 
-    def get_attr(self, elem, state):
-        return self.get_attribute_states()[elem][state]
+    def set_application(self, application=None):
+        """
+        Set the :class:`Application <GLXCurses.Application.Application>` manager \
+        of the :class:`Window <GLXCurses.Window.Window>` widget.
+
+        The :class:`Application <GLXCurses.Application.Application>`, is reponsable of the init \
+        of the mainloop, states, and many other thing.
+
+        :class:`Application <GLXCurses.Application.Application>` is a Singleton instance, then normally you'll never \
+        have multiple instances of :class:`Application <GLXCurses.Application.Application>`, it \
+        method is here for assist :func:`Application.add_window() <GLXCurses.Application.Application.add_window()>` \
+        and :func:`Application.remove_window() <GLXCurses.Application.Application.remove_window()>`
+
+        Note if application is None the application will be remove.
+
+        :param application: a Galaxie Curses :class:`Application <GLXCurses.Application.Application>` , as application \
+        manager.
+        :type   application: GLXCurses.Application or None
+        :return: nothing
+        :rtype: nothing
+        :raise TypeError: if ``application`` parameter is not a \
+        :class:`Application <GLXCurses.Application.Application>` type
+        """
+        if (hasattr(application, 'glxc_type') and application.glxc_type == 'GLXCurses.Application')\
+                or (application is None):
+            if application != self.get_application():
+                self.application = application
+        else:
+            raise TypeError(u'>application< is not a GLXCurses.Application type')
 
     def get_application(self):
         """
-        Gets the Application associated with the window (if any).
+        Gets the :class:`Application <GLXCurses.Application.Application>` associated with the \
+        :class:`Window <GLXCurses.Window.Window>` (if any).
 
-        :param self: a Window
-        :return: a GLXCurses.Application, or None
+        :return: a Singleton :class:`Application <GLXCurses.Application.Application>` instance, or None
+        :rtype: GLXCurses.Application or None
         """
         return self.application

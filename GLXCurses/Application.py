@@ -496,8 +496,9 @@ class Application(object):
 
         .. seealso:: :class:`Style <GLXCurses.Style.Style>`
 
-        :param style:
-        :return:
+        :param style: a :class:`Style <GLXCurses.Style.Style>` previously declared
+        :type style: GLXCurses.Style
+        :raise TypeError: if ``style`` parameter is not a :class:`Style <GLXCurses.Style.Style>` type
         """
         if hasattr(style, 'glxc_type') and style.glxc_type == 'GLXCurses.Style':
             if style != self.get_style():
@@ -518,11 +519,12 @@ class Application(object):
 
     def add_window(self, window):
         """
-        Adds a Window child to Application windows children's list.
-
+        Add a :class:`Window <GLXCurses.Window.Window>` widget to the\
+        :class:`Application <GLXCurses.Application.Application>` windows children's list.
 
         :param window: a window to add
         :type window: GLXCurses.Window
+        :raise TypeError: if ``window`` parameter is not a :class:`Window <GLXCurses.Window.Window>` type
         """
         # Check if window is a Galaxie Class
         if hasattr(window, 'glxc_type') and window.glxc_type == 'GLXCurses.Window':
@@ -538,34 +540,36 @@ class Application(object):
 
     def remove_window(self, window):
         """
-        Remove a window from application .
+        Remove a :class:`Window <GLXCurses.Window.Window>` widget from the\
+        :class:`Application <GLXCurses.Application.Application>` windows children's list.
 
-        If window belongs to application then this call is equivalent to setting the
-        "application" attribute of :func:`GLXCurses.Window <GLXCurses.Window.Window>` to :py:obj:`None`.
-
-        The application may stop running as a result of a call to this function.
+        Set"application" and "parent' attribute of the :func:`GLXCurses.Window <GLXCurses.Window.Window>`
+        to :py:obj:`None`.
 
         :param window: a window to add
         :type window: GLXCurses.Window
         """
-        # Detach the children
-        window.set_parent(None)
-        window.application = None
+        if hasattr(window, 'glxc_type') and window.glxc_type == 'GLXCurses.Window':
+            # Detach the children
+            window.set_parent(None)
+            window.set_application(None)
 
-        # Search for the good window id and delete it from the window list
-        count = 0
-        last_found = None
-        for children_window in self._get_windows_list():
-            if children_window.id == window.id:
-                last_found = count
-            count += 1
-        if last_found is None:
-            pass
+            # Search for the good window id and delete it from the window list
+            count = 0
+            last_found = None
+            for children_window in self._get_windows_list():
+                if children_window.id == window.id:
+                    last_found = count
+                count += 1
+            if last_found is None:
+                pass
+            else:
+                self._get_windows_list().pop(last_found)
+
+            # Update the active_window_id
+            self.active_window_id = len(self._get_windows_list()) - 1
         else:
-            self._get_windows_list().pop(last_found)
-
-        # Update the active_window_id
-        self.active_window_id = len(self._get_windows_list()) - 1
+            raise TypeError(u'>window< is not a GLXCurses.Window type')
 
     def add_menubar(self, menu_bar):
         """

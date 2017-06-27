@@ -16,6 +16,7 @@ sys.path.append(os.path.dirname(current_dir))
 
 import GLXCurses
 
+
 # Unittest
 class TestStyle(unittest.TestCase):
 
