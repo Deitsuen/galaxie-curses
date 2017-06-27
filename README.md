@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/Tuuux/galaxie-curses.svg?branch=master)](https://travis-ci.org/Tuuux/galaxie-curses)
 Galaxie Curses, ToolKit
 =======================
 - - - -
