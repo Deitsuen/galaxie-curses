@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import GLXCurses
-
+from GLXCurses.Utils import glxc_type
 import curses
 import sys
 import os
@@ -32,21 +32,6 @@ class Singleton(type):
 
 
 # https://developer.gnome.org/gtk3/stable/GtkApplication.html
-def glxc_type(thing_to_test=None):
-    """
-    Internal method for check if object pass as argument is GLXCurses Type Object
-
-    :param thing_to_test = A object to test
-    :type thing_to_test: object
-    :return: True or False
-    :rtype: bool
-    """
-    if hasattr(thing_to_test, 'glxc_type') and (thing_to_test.glxc_type == str(
-                'GLXCurses.' + thing_to_test.__class__.__name__)):
-        return True
-    else:
-        return False
-
 
 class Application(object):
     """

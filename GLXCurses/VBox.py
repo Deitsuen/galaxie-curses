@@ -15,6 +15,7 @@ class VBox(Box):
 
     def __init__(self):
         Box.__init__(self)
+        self.glxc_type = 'GLXCurses.VBox'
         self.set_name('VBox')
 
         self.preferred_height = 2

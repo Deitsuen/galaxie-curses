@@ -6,6 +6,7 @@
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 
 from GLXCurses import Container
+from GLXCurses.Utils import glxc_type
 
 __author__ = 'Tuux'
 
@@ -41,30 +42,42 @@ class Bin(Container):
 
     def __init__(self):
         Container.__init__(self)
+        self.glxc_type = 'GLXCurses.Bin'
+        self.set_name('Bin')
+
         self.child = None
 
-    def add(self, child):
+    def add(self, child=None):
         """
         Add a widget as child, only if the :class:`Bin <GLXCurses.Bin.Bin>` haven't any child
 
-        :param child: :class:`Widget <GLXCurses.Widget.Widget>`
+        :param child: A child
+        :type child: GLXCurses Type
         """
-        if self.get_child() is not None:
-            import logging
-            logging.debug('Bin subclass can only contain one widget at a time')
-            pass
+        if glxc_type(child) or child is None:
+            if child is not None:
+                if self.get_child() is not None:
+                    self.get_child()['WIDGET'].set_parent(None)
+
+                # The added widget recive a parent
+                child.set_parent(self)
+
+                child_info = dict()
+                child_info['WIDGET'] = child
+                child_info['TYPE'] = child.glxc_type
+                child_info['ID'] = child.get_widget_id()
+
+                # The parent recive a new child
+                self.child = child_info
+
+                # Try to emit add signal
+                self._emit_add_signal()
+            else:
+                if self.get_child() is not None:
+                    self.get_child()['WIDGET'].set_parent(None)
+                self.child = None
         else:
-            # The added widget recive a parent
-            child.set_parent(self)
-
-            child_info = dict()
-            child_info['WIDGET'] = child
-
-            # The parent recive a new child
-            self.child = child_info
-
-            # Try to emit add signal
-            self._emit_add_signal()
+            raise TypeError(u'>style< is not a GLXCurses.Style type or None')
 
     def get_child(self):
         """
@@ -77,3 +90,4 @@ class Bin(Container):
         :rtype: :class:`Box <GLXCurses.Box.Box>` or :py:obj:`None`
         """
         return self.child
+

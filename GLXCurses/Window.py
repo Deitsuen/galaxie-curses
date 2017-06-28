@@ -3,18 +3,11 @@
 import curses
 from GLXCurses import Bin
 from GLXCurses import Application
-
+from GLXCurses.Utils import resize_text
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
-
-
-def resize_text(text, max_width, separator='~'):
-    if max_width < len(text):
-        return text[:(max_width / 2) - 1] + separator + text[-max_width / 2:]
-    else:
-        return text
 
 
 class Window(Bin):

@@ -53,6 +53,7 @@ class HBox(Box):
         """
 
         Box.__init__(self)
+        self.glxc_type = 'GLXCurses.HBox'
         self.set_name('HBox')
 
         self.preferred_height = 2

@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 from GLXCurses import Object
 from GLXCurses import Style
+from datetime import datetime
+import random
 import uuid
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE

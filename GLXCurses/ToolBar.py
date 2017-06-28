@@ -9,20 +9,6 @@ import curses
 __author__ = 'Tuux'
 
 
-def resize_text(text, max_width, separator='~'):
-    if max_width < len(text):
-        text_to_return = text[:(max_width / 2) - 1] + separator + text[-max_width / 2:]
-        if len(text_to_return) == 1:
-            text_to_return = text[:1]
-        elif len(text_to_return) == 2:
-            text_to_return = str(text[:1] + text[-1:])
-        elif len(text_to_return) == 3:
-            text_to_return = str(text[:1] + separator + text[-1:])
-        return text_to_return
-    else:
-        return text
-
-
 class ToolBar(GLXCurses.Widget):
     def __init__(self):
         GLXCurses.Widget.__init__(self)
