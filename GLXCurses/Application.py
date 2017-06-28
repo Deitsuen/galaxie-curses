@@ -491,7 +491,7 @@ class Application(object):
             if self.get_y() != y:
                 self.y = y
         else:
-            raise TypeError(u'>x< parameter is not int type')
+            raise TypeError(u'>y< parameter is not int type')
 
     # GLXCApplication function
     def set_name(self, name):
@@ -722,7 +722,7 @@ class Application(object):
         It's a central refresh point for the entire application.
         """
         # Clean the screen
-        self.screen.clear()
+        self.get_screen().clear()
 
         # Calculate the Main Window size
         try:
@@ -755,27 +755,24 @@ class Application(object):
         """
         Special code for rendering to the screen
         """
-        parent_height, parent_width = self.screen.getmaxyx()
+        parent_height, parent_width = self.get_screen().getmaxyx()
+
+        menu_bar_height = 0
+        message_bar_height = 0
+        status_bar_height = 0
+        tool_bar_height = 0
 
         if glxc_type(self._get_menubar()):
-            menu_bar_height = 1
-        else:
-            menu_bar_height = 0
+            menu_bar_height += 1
 
         if glxc_type(self._get_messagebar()):
-            message_bar_height = 1
-        else:
-            message_bar_height = 0
+            message_bar_height += 1
 
         if glxc_type(self._get_statusbar()):
-            status_bar_height = 1
-        else:
-            status_bar_height = 0
+            status_bar_height += 1
 
         if glxc_type(self._get_toolbar()):
-            tool_bar_height = 1
-        else:
-            tool_bar_height = 0
+            tool_bar_height += 1
 
         interface_elements_height = 0
         interface_elements_height += menu_bar_height
@@ -785,18 +782,18 @@ class Application(object):
 
         self.set_height(parent_height - interface_elements_height)
         self.set_width(0)
-        begin_y = menu_bar_height
-        begin_x = 0
-        self.curses_subwin = self.screen.subwin(
-            self.get_height(),
-            self.get_width(),
-            begin_y,
-            begin_x
-        )
+        self.set_x(0)
+        self.set_y(menu_bar_height)
         self.set_preferred_height(self.get_height())
         self.set_preferred_width(self.get_width())
-        self.x = begin_x
-        self.y = begin_y
+
+        self.curses_subwin = self.get_screen().subwin(
+            self.get_height(),
+            self.get_width(),
+            self.get_y(),
+            self.get_x()
+        )
+
 
     def getch(self):
         """
