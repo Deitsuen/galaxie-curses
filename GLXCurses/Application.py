@@ -562,8 +562,8 @@ class Application(object):
             self._add_child_to_windows_list(window)
             # Make the last element active
             self._set_active_window(self._get_windows_list()[-1]['WIDGET'])
-            #self._set_active_window(window)
-            #self.refresh()
+            # self._set_active_window(window)
+            # self.refresh()
         else:
             raise TypeError(u'>window< is not a GLXCurses.Window type')
 
@@ -641,7 +641,7 @@ class Application(object):
         else:
             raise TypeError(u'>statusbar< is not a GLXCurses.StatusBar')
 
-    def remove_statusbar(self, statusbar):
+    def remove_statusbar(self):
         """
         Unset the statusbar of application
         """
@@ -649,13 +649,30 @@ class Application(object):
             self._get_statusbar().set_parent(None)
         self._set_statusbar(None)
 
-    def add_toolbar(self, glx_toolbar):
-        glx_toolbar.set_parent(self)
-        self.toolbar = glx_toolbar
+    def add_toolbar(self, toolbar):
+        """
+        Sets the toolbar of application .
 
-    def remove_toolbar(self, glx_toolbar):
-        glx_toolbar.un_parent()
-        self.toolbar = None
+        This can only be done in the primary instance of the application, after it has been registered.
+        “startup” is a good place to call this.
+
+        :param toolbar: a :class:`ToolBar <GLXCurses.ToolBar.ToolBar>`
+        :type toolbar: GLXCurses.ToolBar
+        """
+        if hasattr(toolbar, 'glxc_type') and toolbar.glxc_type == 'GLXCurses.ToolBar':
+            toolbar.set_parent(self)
+            self._set_toolbar(toolbar)
+            self.refresh()
+        else:
+            raise TypeError(u'>toolbar< is not a GLXCurses.ToolBar')
+
+    def remove_toolbar(self):
+        """
+        Unset the toolbar of application
+        """
+        if self._get_toolbar() is not None:
+            self._get_toolbar().set_parent(None)
+        self._set_toolbar(None)
 
     def refresh(self):
         """
@@ -671,7 +688,10 @@ class Application(object):
 
         # Check main curses_subwin to display
         if self.curses_subwin is not None:
-            if self._get_active_window() is not None:
+            if hasattr(
+                    self._get_active_window(),
+                    'glxc_type'
+                    ) and self._get_active_window().glxc_type == 'GLXCurses.Window':
                 self._get_active_window().draw()
 
         if hasattr(self._get_menubar(), 'glxc_type') and self._get_menubar().glxc_type == 'GLXCurses.MenuBar':
@@ -1012,7 +1032,7 @@ class Application(object):
         :type toolbar: GLXCurses.ToolBar or None
         """
         if (hasattr(toolbar, 'glxc_type') and toolbar.glxc_type == 'GLXCurses.ToolBar') or (toolbar is None):
-            self.statusbar = toolbar
+            self.toolbar = toolbar
         else:
             raise TypeError(u'>toolbar< is not a GLXCurses.ToolBar or None type')
 

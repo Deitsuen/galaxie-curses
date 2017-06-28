@@ -302,38 +302,65 @@ class TestApplication(unittest.TestCase):
         # _get_displayed_window() must return the last added window
         self.assertEqual(self.application._get_active_window(), window)
 
-    def test__set__get_menubar(self):
-        """Test Application._set_menubar() and Application._get_menubar()"""
+    def test_everything_menubar(self):
+        """Test Application MenuBar"""
+        # Create a MenuBar
         menubar = GLXCurses.MenuBar()
-
+        # Default Value must be None
         self.assertEqual(self.application._get_menubar(), None)
-
+        # Add the MenuBar to application and set Parent
         self.application.add_menubar(menubar)
-
+        # Test the set menu bar
         self.application._set_menubar(menubar)
+        # check if we have the same menubar
         self.assertEqual(self.application._get_menubar(), menubar)
+        # Test to remove the Menubar
+        self.application.remove_menubar()
+        # check if the menubar have been remove
+        self.assertEqual(self.application._get_menubar(), None)
+        # Check Type error
+        self.assertRaises(TypeError, self.application._set_menubar, int())
+        self.assertRaises(TypeError, self.application.add_menubar, int())
 
-    def test__set__get_statusbar(self):
-        """Test Application._set_statusbar() and Application._get_statusbar()"""
+    def test_everything_statusbar(self):
+        """Test Application StatusBar"""
+        # Create a StatusBar
         statusbar = GLXCurses.StatusBar()
-
+        # Default Value must be None
         self.assertEqual(self.application._get_statusbar(), None)
-
+        # Add the StatusBar to application and set ot parent
         self.application.add_statusbar(statusbar)
-
+        # Test the set status bar with internal method
         self.application._set_statusbar(statusbar)
+        # check if we have the same statusbar
         self.assertEqual(self.application._get_statusbar(), statusbar)
+        # Test to remove the StatusBar
+        self.application.remove_statusbar()
+        # check if the status bar have been removed
+        self.assertEqual(self.application._get_statusbar(), None)
+        # Check Type error
+        self.assertRaises(TypeError, self.application._set_statusbar, int())
+        self.assertRaises(TypeError, self.application.add_statusbar, int())
 
-    def test__set__get_toolbar(self):
-        """Test Application._set_toolbar() and Application._get_toolbar()"""
+    def test_everything_toolbar(self):
+        """Test Application ToolBar"""
+        # Create a StatusBar
         toolbar = GLXCurses.ToolBar()
-
+        # Default ToolBar value must be None
         self.assertEqual(self.application._get_toolbar(), None)
-
+        # Add the ToolBar to application and set ot parent
         self.application.add_toolbar(toolbar)
-
+        # Test the set ToolBar with internal method
         self.application._set_toolbar(toolbar)
+        # check if we have the same ToolBar
         self.assertEqual(self.application._get_toolbar(), toolbar)
+        # Test to remove the ToolBar
+        self.application.remove_toolbar()
+        # check if the ToolBar have been removed
+        self.assertEqual(self.application._get_toolbar(), None)
+        # Check Type error
+        self.assertRaises(TypeError, self.application._set_toolbar, int())
+        self.assertRaises(TypeError, self.application.add_toolbar, int())
 
 if __name__ == '__main__':
     unittest.main()
