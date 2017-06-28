@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import time
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -12,15 +11,17 @@ __author__ = 'Tuux'
 # http://www.tonalsoft.com/enc/number/12edo.aspx
 
 try:
+    # noinspection PyUnresolvedReferences
     import winsound
 
-    def playsound(frequency, duration):
+    def play_sound(frequency, duration):
         winsound.Beep(frequency, duration)
+
 except ImportError:
     import os
 
 
-    def playsound(frequency, duration):
+    def play_sound(frequency, duration):
         """
         Play a sound via the Buzzer of the computer
 
@@ -303,7 +304,8 @@ class Buzzer(object):
         """
         return self.midi_notes
 
-    def get_ms_to_tempo(self, ms):
+    @staticmethod
+    def get_ms_to_tempo(ms):
         """
         Get the conversion of a ms value to a tempo value
 
@@ -323,7 +325,8 @@ class Buzzer(object):
         """
         return int(self.get_tempo() / 60)
 
-    def get_hertz_to_ms(self, hz):
+    @staticmethod
+    def get_hertz_to_ms(hz):
         """
         Get the conversion of a **Hz** value to a **ms** value
 
@@ -345,7 +348,7 @@ if __name__ == '__main__':
                 line += ' '
                 line += str(note[1])
                 print (line)
-                playsound(int(note[3]), buzzer.get_triple_croche())
+                play_sound(int(note[3]), buzzer.get_triple_croche())
 
         for note in reversed(buzzer.get_notes()):
             if note[3] > 50:
@@ -354,7 +357,4 @@ if __name__ == '__main__':
                 line += ' '
                 line += str(note[1])
                 print (line)
-                playsound(int(note[3]), buzzer.get_triple_croche())
-
-
-
+                play_sound(int(note[3]), buzzer.get_triple_croche())
