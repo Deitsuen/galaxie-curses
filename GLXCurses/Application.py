@@ -32,6 +32,22 @@ class Singleton(type):
 
 
 # https://developer.gnome.org/gtk3/stable/GtkApplication.html
+def glxc_type(thing_to_test=None):
+    """
+    Internal method for check if object pass as argument is GLXCurses Type Object
+
+    :param thing_to_test = A object to test
+    :type thing_to_test: object
+    :return: True or False
+    :rtype: bool
+    """
+    if hasattr(thing_to_test, 'glxc_type') and (thing_to_test.glxc_type == str(
+                'GLXCurses.' + thing_to_test.__class__.__name__)):
+        return True
+    else:
+        return False
+
+
 class Application(object):
     """
     :Description:
@@ -206,7 +222,7 @@ class Application(object):
         self.menubar = None
         self.main_window = None
         self.statusbar = None
-        self.message_bar = None
+        self.messagebar = None
         self.toolbar = None
 
         # Store Variables
@@ -528,7 +544,7 @@ class Application(object):
         :type style: GLXCurses.Style
         :raise TypeError: if ``style`` parameter is not a :class:`Style <GLXCurses.Style.Style>` type
         """
-        if hasattr(style, 'glxc_type') and style.glxc_type == 'GLXCurses.Style':
+        if glxc_type(style):
             if style != self.get_style():
                 self.style = style
         else:
@@ -555,7 +571,7 @@ class Application(object):
         :raise TypeError: if ``window`` parameter is not a :class:`Window <GLXCurses.Window.Window>` type
         """
         # Check if window is a Galaxie Class
-        if hasattr(window, 'glxc_type') and window.glxc_type == 'GLXCurses.Window':
+        if glxc_type(window):
             # set the Application it self as parent of the child window
             window.set_parent(self)
             # create a dictionary structure for add it to windows list
@@ -609,7 +625,7 @@ class Application(object):
         :param menubar: a :class:`MenuBar <GLXCurses.MenuBar.MenuBar>`
         :type menubar: GLXCurses.MenuBar
         """
-        if hasattr(menubar, 'glxc_type') and menubar.glxc_type == 'GLXCurses.MenuBar':
+        if glxc_type(menubar):
             menubar.set_parent(self)
             self._set_menubar(menubar)
             self.refresh()
@@ -634,7 +650,7 @@ class Application(object):
         :param statusbar: a :class:`StatusBar <GLXCurses.StatusBar.StatusBar>`
         :type statusbar: GLXCurses.StatusBar
         """
-        if hasattr(statusbar, 'glxc_type') and statusbar.glxc_type == 'GLXCurses.StatusBar':
+        if glxc_type(statusbar):
             statusbar.set_parent(self)
             self._set_statusbar(statusbar)
             self.refresh()
@@ -649,6 +665,31 @@ class Application(object):
             self._get_statusbar().set_parent(None)
         self._set_statusbar(None)
 
+    def add_messagebar(self, messagebar):
+        """
+        Sets the messagebar of application .
+
+        This can only be done in the primary instance of the application, after it has been registered.
+        “startup” is a good place to call this.
+
+        :param messagebar: a :class:`MessageBar <GLXCurses.MessageBar.MessageBar>`
+        :type messagebar: GLXCurses.MessageBar
+        """
+        if glxc_type(messagebar):
+            messagebar.set_parent(self)
+            self._set_messagebar(messagebar)
+            self.refresh()
+        else:
+            raise TypeError(u'>messagebar< is not a GLXCurses.MessageBar')
+
+    def remove_messagebar(self):
+        """
+        Unset the messagebar of application
+        """
+        if self._get_messagebar() is not None:
+            self._get_messagebar().set_parent(None)
+        self._set_messagebar(None)
+
     def add_toolbar(self, toolbar):
         """
         Sets the toolbar of application .
@@ -659,7 +700,7 @@ class Application(object):
         :param toolbar: a :class:`ToolBar <GLXCurses.ToolBar.ToolBar>`
         :type toolbar: GLXCurses.ToolBar
         """
-        if hasattr(toolbar, 'glxc_type') and toolbar.glxc_type == 'GLXCurses.ToolBar':
+        if glxc_type(toolbar):
             toolbar.set_parent(self)
             self._set_toolbar(toolbar)
             self.refresh()
@@ -684,24 +725,28 @@ class Application(object):
         self.screen.clear()
 
         # Calculate the Main Window size
-        self.draw()
+        try:
+            self.draw()
 
-        # Check main curses_subwin to display
-        if self.curses_subwin is not None:
-            if hasattr(
-                    self._get_active_window(),
-                    'glxc_type'
-                    ) and self._get_active_window().glxc_type == 'GLXCurses.Window':
-                self._get_active_window().draw()
+            if glxc_type(self._get_menubar()):
+                self._get_menubar().draw()
 
-        if hasattr(self._get_menubar(), 'glxc_type') and self._get_menubar().glxc_type == 'GLXCurses.MenuBar':
-            self._get_menubar().draw()
+            # Check main curses_subwin to display
+            if self.curses_subwin is not None:
+                if glxc_type(self._get_active_window()):
+                    self._get_active_window().draw()
 
-        if hasattr(self._get_statusbar(), 'glxc_type') and self._get_statusbar().glxc_type == 'GLXCurses.StatusBar':
-            self._get_statusbar().draw()
+            if glxc_type(self._get_messagebar()):
+                self._get_messagebar().draw()
 
-        if hasattr(self._get_toolbar(), 'glxc_type') and self._get_toolbar().glxc_type == 'GLXCurses.ToolBar':
-            self._get_toolbar().draw()
+            if glxc_type(self._get_statusbar()):
+                self._get_statusbar().draw()
+
+            if glxc_type(self._get_toolbar()):
+                self._get_toolbar().draw()
+
+        except AttributeError:
+            pass
 
         # After have redraw everything it's time to refresh the screen
         self.get_screen().refresh()
@@ -712,22 +757,22 @@ class Application(object):
         """
         parent_height, parent_width = self.screen.getmaxyx()
 
-        if self._get_menubar() is not None:
+        if glxc_type(self._get_menubar()):
             menu_bar_height = 1
         else:
             menu_bar_height = 0
 
-        if self.statusbar is not None:
-            status_bar_height = 1
-        else:
-            status_bar_height = 0
-
-        if self.message_bar is not None:
+        if glxc_type(self._get_messagebar()):
             message_bar_height = 1
         else:
             message_bar_height = 0
 
-        if self.toolbar is not None:
+        if glxc_type(self._get_statusbar()):
+            status_bar_height = 1
+        else:
+            status_bar_height = 0
+
+        if glxc_type(self._get_toolbar()):
             tool_bar_height = 1
         else:
             tool_bar_height = 0
@@ -989,7 +1034,7 @@ class Application(object):
         :param menubar: A :class:`MenuBar <GLXCurses.MenuBar.MenuBar>` or None
         :type menubar: GLXCurses.MenuBar or None
         """
-        if (hasattr(menubar, 'glxc_type') and menubar.glxc_type == 'GLXCurses.MenuBar') or (menubar is None):
+        if glxc_type(menubar) or menubar is None:
             self.menubar = menubar
         else:
             raise TypeError(u'>menubar< is not a GLXCurses.MenuBar or None type')
@@ -1003,6 +1048,27 @@ class Application(object):
         """
         return self.menubar
 
+    def _set_messagebar(self, messagebar=None):
+        """
+        Set the messagebar attribute
+
+        :param messagebar: A :class:`MessageBar <GLXCurses.MessageBar.MessageBar>` or None
+        :type messagebar: GLXCurses.MessageBar or None
+        """
+        if glxc_type(messagebar) or messagebar is None:
+            self.messagebar = messagebar
+        else:
+            raise TypeError(u'>messagebar< is not a GLXCurses.MessageBar or None type')
+
+    def _get_messagebar(self):
+        """
+        Return messagebar attribute
+
+        :return: A :class:`MessageBar <GLXCurses.MessageBar.MessageBar>`
+        :rtype: GLXCurses.MessageBar or None
+        """
+        return self.messagebar
+
     def _set_statusbar(self, statusbar=None):
         """
         Set the statusbar attribute
@@ -1010,7 +1076,7 @@ class Application(object):
         :param statusbar: A :class:`StatusBar <GLXCurses.StatusBar.StatusBar>` or None
         :type statusbar: GLXCurses.StatusBar or None
         """
-        if (hasattr(statusbar, 'glxc_type') and statusbar.glxc_type == 'GLXCurses.StatusBar') or (statusbar is None):
+        if glxc_type(statusbar) or statusbar is None:
             self.statusbar = statusbar
         else:
             raise TypeError(u'>menubar< is not a GLXCurses.StatusBar or None type')
@@ -1031,7 +1097,7 @@ class Application(object):
         :param toolbar: A :class:`ToolBar <GLXCurses.ToolBar.ToolBar>` or None
         :type toolbar: GLXCurses.ToolBar or None
         """
-        if (hasattr(toolbar, 'glxc_type') and toolbar.glxc_type == 'GLXCurses.ToolBar') or (toolbar is None):
+        if glxc_type(toolbar) or toolbar is None:
             self.toolbar = toolbar
         else:
             raise TypeError(u'>toolbar< is not a GLXCurses.ToolBar or None type')

@@ -342,6 +342,26 @@ class TestApplication(unittest.TestCase):
         self.assertRaises(TypeError, self.application._set_statusbar, int())
         self.assertRaises(TypeError, self.application.add_statusbar, int())
 
+    def test_everything_messagebar(self):
+        """Test Application MessageBar"""
+        # Create a StatusBar
+        messagebar = GLXCurses.MessageBar()
+        # Default Value of the MessageBar must be None
+        self.assertEqual(self.application._get_messagebar(), None)
+        # Add the MessageBar to application and set ot parent
+        self.application.add_messagebar(messagebar)
+        # Test the set MessageBar with internal method
+        self.application._set_messagebar(messagebar)
+        # check if we have the same MessageBar
+        self.assertEqual(self.application._get_messagebar(), messagebar)
+        # Test to remove the MessageBar
+        self.application.remove_messagebar()
+        # check if the MessageBar have been removed
+        self.assertEqual(self.application._get_messagebar(), None)
+        # Check Type error
+        self.assertRaises(TypeError, self.application._set_messagebar, int())
+        self.assertRaises(TypeError, self.application.add_messagebar, int())
+
     def test_everything_toolbar(self):
         """Test Application ToolBar"""
         # Create a StatusBar

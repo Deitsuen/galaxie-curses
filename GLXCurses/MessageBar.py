@@ -14,9 +14,9 @@ import logging
 __author__ = 'Tuux'
 
 
-class StatusBar(Widget):
+class MessageBar(Widget):
     """
-    A StatusBar is usually placed along the bottom of an Application. It may provide a regular
+    A MessageBar is usually placed along the bottom of an Application. It may provide a regular
     commentary of the application's status (as is usually the case in a web browser, for example), or may be used to
     simply output a message when the status changes, (when an upload is complete in an FTP client, for example).
 
@@ -34,24 +34,24 @@ class StatusBar(Widget):
     producers to maintain sub-stacks of the messages they produced (via context ids).
 
     Status bars are created using
-    :func:`GLXCurses.StatusBar.new() <GLXCurses.StatusBar.StatusBar.new>`.
+    :func:`GLXCurses.MessageBar.new() <GLXCurses.MessageBar.MessageBar.new>`.
 
     Messages are added to the bar’s stack with
-    :func:`GLXCurses.StatusBar.push() <GLXCurses.StatusBar.StatusBar.push>`.
+    :func:`GLXCurses.MessageBar.push() <GLXCurses.MessageBar.MessageBar.push>`.
 
     The message at the top of the stack can be removed using
-    :func:`GLXCurses.StatusBar.pop() <GLXCurses.StatusBar.StatusBar.pop>`.
+    :func:`GLXCurses.MessageBar.pop() <GLXCurses.MessageBar.MessageBar.pop>`.
 
     A message can be removed from anywhere in the stack if its message id was recorded at the time it was added.
-    This is done using :func:`GLXCurses.StatusBar.remove() <GLXCurses.StatusBar.StatusBar.remove>`.
+    This is done using :func:`GLXCurses.MessageBar.remove() <GLXCurses.MessageBar.StatusBar.remove>`.
     """
     def __init__(self):
         Widget.__init__(self)
-        self.glxc_type = 'GLXCurses.StatusBar'
-        self.set_name('StatusBar')
+        self.glxc_type = 'GLXCurses.MessageBar'
+        self.set_name('MessageBar')
 
         # Widget Setting
-        self.statusbar_stack = []
+        self.messagebar_stack = []
 
         # Make a Style heritage attribute
         if self.get_style().get_attribute_states():
@@ -61,10 +61,10 @@ class StatusBar(Widget):
 
     def new(self):
         """
-        Creates a new :func:`GLXCurses.StatusBar <GLXCurses.StatusBar.StatusBar>` ready for messages.
+        Creates a new :func:`GLXCurses.MessageBar <GLXCurses.MessageBar.MessageBar>` ready for messages.
 
-        :return: the new StatusBar
-        :rtype: GLXCurses.StatusBar
+        :return: the new MessageBar
+        :rtype: GLXCurses.MessageBar
         """
         self.__init__()
         return self
@@ -83,7 +83,7 @@ class StatusBar(Widget):
         if context_description not in self._get_context_id_list():
             self._get_context_id_list()[context_description] = uuid.uuid1().int
             logging.debug(
-                "StatusBar CONTEXT CREATION: context_id={0} context_description={1}".format(
+                "MessageBar CONTEXT CREATION: context_id={0} context_description={1}".format(
                     self._get_context_id_list()[context_description],
                     str(context_description)
                 )
@@ -93,7 +93,7 @@ class StatusBar(Widget):
 
     def push(self, context_id, text):
         """
-        Push a new message onto the StatusBar's stack.
+        Push a new message onto the MessageBar's stack.
 
         :param context_id: the message’s context id, as returned by get_context_id()
         :type context_id: :py:obj:`int`
@@ -103,13 +103,13 @@ class StatusBar(Widget):
         :rtype: :py:obj:`int`
         """
         message_id = uuid.uuid1().int
-        self.statusbar_stack.append([context_id, text, message_id])
+        self.messagebar_stack.append([context_id, text, message_id])
         self.emit_text_pushed(context_id, text)
         return message_id
 
     def pop(self, context_id):
         """
-        Removes the first message in the StatusBar’s stack with the given context id.
+        Removes the first message in the MessageBar’s stack with the given context id.
 
         Note that this may not change the displayed message, if the message at the top of the stack has a different
         context id.
@@ -121,7 +121,7 @@ class StatusBar(Widget):
             count = 0
             last_found = None
             last_element = None
-            for element in self.statusbar_stack:
+            for element in self.messagebar_stack:
                 if context_id == element[0]:
                     last_found = count
                     last_element = element
@@ -130,7 +130,7 @@ class StatusBar(Widget):
             if last_found is None:
                 pass
             else:
-                self.statusbar_stack.pop(last_found)
+                self.messagebar_stack.pop(last_found)
                 self.emit_text_popped(last_element[0], last_element[2])
         else:
             raise TypeError(u'>context_id< argument must be a int type')
@@ -149,7 +149,7 @@ class StatusBar(Widget):
             count = 0
             last_found = None
             last_element = None
-            for element in self.statusbar_stack:
+            for element in self.messagebar_stack:
                 if context_id == element[0] and message_id == element[2]:
                     last_found = count
                     last_element = element
@@ -165,7 +165,7 @@ class StatusBar(Widget):
                         str(last_element[2])
                     )
                 )
-                self.statusbar_stack.pop(last_found)
+                self.messagebar_stack.pop(last_found)
         else:
             raise TypeError(u'>context_id< and >message_id< arguments must be int type')
 
@@ -177,7 +177,7 @@ class StatusBar(Widget):
         :type context_id: :py:obj:`int`
         """
         if type(context_id) == int:
-            for element in self.statusbar_stack:
+            for element in self.messagebar_stack:
                 if context_id == element[0]:
                     self.remove(element[0], element[2])
         else:
@@ -199,6 +199,8 @@ class StatusBar(Widget):
         line_from_max_screen_height = 1
         if self.get_parent()is not None:
             if self.get_parent().toolbar is not None:
+                line_from_max_screen_height += 1
+            if self.get_parent().statusbar is not None:
                 line_from_max_screen_height += 1
 
         # Prepare a drawing area
@@ -231,8 +233,8 @@ class StatusBar(Widget):
             )
 
         # If it have something inside the StatusBar stack they display it but care about the display size
-        if len(self.statusbar_stack):
-            message_to_display = self.statusbar_stack[-1][1]
+        if len(self.messagebar_stack):
+            message_to_display = self.messagebar_stack[-1][1]
             if not len(message_to_display) <= self.get_width() - 1:
                 start, end = message_to_display[:self.get_width() - 1], message_to_display[self.get_width() - 1:]
                 self.curses_subwin.addstr(

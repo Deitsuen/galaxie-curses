@@ -21,6 +21,7 @@ from GLXCurses.VBox import VBox
 from GLXCurses.HBox import HBox
 from GLXCurses.MenuBar import MenuBar
 from GLXCurses.StatusBar import StatusBar
+from GLXCurses.MessageBar import MessageBar
 from GLXCurses.ToolBar import ToolBar
 from GLXCurses.Misc import Misc
 from GLXCurses.Label import Label

@@ -343,6 +343,10 @@ if __name__ == '__main__':
     statusbar = GLXCurses.StatusBar()
     context_id = statusbar.get_context_id("example")
 
+    messagebar = GLXCurses.MessageBar()
+    message_context_id = messagebar.get_context_id("message")
+    messagebar.push(message_context_id, 'Welcome to Galaxie Curses demonstration')
+
     def on_resize(self, event_signal, *event_args):
         message_text = ''
         message_text += 'Screen Size:'
@@ -452,6 +456,7 @@ if __name__ == '__main__':
     # Add Everything inside the Application
     app.add_menubar(menu)
     app.add_window(win1)
+    app.add_messagebar(messagebar)
     app.add_statusbar(statusbar)
     app.add_toolbar(toolbar)
 
