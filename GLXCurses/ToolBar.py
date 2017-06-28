@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import GLXCurses
-import curses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -65,7 +64,7 @@ class ToolBar(GLXCurses.Widget):
         drawing_area = self.get_screen().subwin(
             0,
             0,
-            screen_height - 1,
+            int(screen_height - 1),
             0
         )
 

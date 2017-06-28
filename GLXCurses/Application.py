@@ -22,12 +22,13 @@ __author__ = 'Tuux'
 
 class Singleton(type):
     def __init__(cls, name, bases, dict):
+
         super(Singleton, cls).__init__(name, bases, dict)
         cls.instance = None
 
     def __call__(cls, *args, **kw):
         if cls.instance is None:
-            cls.instance = super(Singleton, cls).__call__(*args, **kw)
+            cls.instance = super(Singleton, cls).__call__(*args)
         return cls.instance
 
 
@@ -215,7 +216,7 @@ class Application(object):
         self.windows_id_number = None
         self.active_window_id = None
         self.windows = list()
-        self.attribute = self.get_style().get_attribute_states()
+        self.attribute = self.style.get_attribute_states()
 
         # Controller
         self.widget_it_have_default = None
@@ -230,6 +231,7 @@ class Application(object):
         self.screen_width = 0
         self.screen_y = 0
         self.screen_x = 0
+        self.parent = None
         self.parent_y = 0
         self.parent_x = 0
         self.parent_width = 0
@@ -255,7 +257,10 @@ class Application(object):
 
         :param parent: what you want it will be ignore
         """
-        pass
+        if parent is None:
+            self.parent = None
+        else:
+            self.parent = None
 
     def get_parent(self):
         """
@@ -779,7 +784,6 @@ class Application(object):
             self.get_x()
         )
 
-
     def getch(self):
         """
         Use by the Mainloop for interact with teh keyboard and the mouse.
@@ -871,7 +875,8 @@ class Application(object):
         self.widget_it_have_tooltip = widget_unique_id
 
     # Main Loop
-    def adopt(self, orphan):
+    @staticmethod
+    def adopt(orphan):
         """
         not implemented yesr
         :param orphan: a poor widget orphan
@@ -879,7 +884,8 @@ class Application(object):
         pass
 
     # should be replace by a EventBus
-    def emit(self, detailed_signal, args=None):
+    @staticmethod
+    def emit(detailed_signal, args=None):
         if args is None:
             args = list()
         GLXCurses.mainloop.emit(detailed_signal, args)
@@ -962,7 +968,7 @@ class Application(object):
         :param window_id: a uuid generate by Widget
         :type window_id: long
         """
-        if type(window_id) == type(uuid.uuid1().int):
+        if str(type(window_id)) == str(type(uuid.uuid1().int)):
             if window_id != self._get_active_window_id():
                 self.active_window_id = window_id
         else:

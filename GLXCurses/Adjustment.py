@@ -230,7 +230,7 @@ class Adjustment(object):
         #             }
 
         # EVENT EMIT
-        Application.emit('SIGNALS', instance)
+        Application.emit(instance)
 
     def emit_value_changed(self):
         """
@@ -255,7 +255,7 @@ class Adjustment(object):
         #             G_TYPE_NONE, 0]
 
         # EVENT EMIT
-        Application.emit('SIGNALS', instance)
+        Application.emit(instance)
 
     def configure(self, value, lower, upper, step_increment, page_increment, page_size):
         """
