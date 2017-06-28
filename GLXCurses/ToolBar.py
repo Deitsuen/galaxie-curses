@@ -26,9 +26,18 @@ class ToolBar(GLXCurses.Widget):
             self.widget_fg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
             self.widget_bg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
 
-            self.color_text_normal = self.get_style().get_color_pair(foreground=self.text_fg, background=self.text_bg)
-            self.color_text_prefix = self.get_style().get_color_pair(foreground=self.text_prefix_fg, background=self.text_prefix_bg)
-            self.color_normal = self.get_style().get_color_pair(foreground=self.widget_fg, background=self.widget_bg)
+            self.color_text_normal = self.get_style().get_color_pair(
+                foreground=self.text_fg,
+                background=self.text_bg
+            )
+            self.color_text_prefix = self.get_style().get_color_pair(
+                foreground=self.text_prefix_fg,
+                background=self.text_prefix_bg
+            )
+            self.color_normal = self.get_style().get_color_pair(
+                foreground=self.widget_fg,
+                background=self.widget_bg
+            )
         else:
             self.color_text_normal = 0
             self.color_text_prefix = 0
@@ -77,7 +86,7 @@ class ToolBar(GLXCurses.Widget):
             dv = widget_width / req_button_number + 1
             md = widget_width % req_button_number + 1
             i = 0
-            for i in range(0, req_button_number / 2):
+            for i in range(0, int(req_button_number / 2)):
                 pos += dv
                 if req_button_number / 2 - 1 - i < md / 2:
                     pos += 1
@@ -106,8 +115,8 @@ class ToolBar(GLXCurses.Widget):
                 )
                 self.curses_subwin.insstr(
                     0,
-                    widget_width - 1,
-                    " ",
+                    int(widget_width - 1),
+                    str(' '),
                     self.color_text_normal
                 )
                 self.curses_subwin.addstr(
@@ -131,8 +140,8 @@ class ToolBar(GLXCurses.Widget):
                 if screen_width - (labels_end_coord[count - 1] + 0) >= len(item_list[count]) + 3:
                     self.curses_subwin.addstr(
                         0,
-                        (labels_end_coord[count - 1] + 0),
-                        "",
+                        int((labels_end_coord[count - 1] + 0)),
+                        str(''),
                         self.color_text_normal
                     )
                     self.curses_subwin.addstr(
@@ -147,12 +156,12 @@ class ToolBar(GLXCurses.Widget):
                 if screen_width - (labels_end_coord[count - 1] + 1) >= len(item_list[count]) + 3:
                     self.curses_subwin.addstr(
                         0,
-                        (labels_end_coord[count - 1] + 1),
+                        int(labels_end_coord[count - 1] + 1),
                         str('{0: >2}'.format(count + 1)),
                         self.color_text_prefix
                     )
                     self.curses_subwin.addstr(
-                        item_list[count],
+                        str(item_list[count]),
                         self.color_text_normal
                     )
             count += 1
