@@ -306,11 +306,34 @@ class TestApplication(unittest.TestCase):
         """Test Application._set_menubar() and Application._get_menubar()"""
         menubar = GLXCurses.MenuBar()
 
-        self.application.remove_menubar()
         self.assertEqual(self.application._get_menubar(), None)
+
+        self.application.add_menubar(menubar)
 
         self.application._set_menubar(menubar)
         self.assertEqual(self.application._get_menubar(), menubar)
+
+    def test__set__get_statusbar(self):
+        """Test Application._set_statusbar() and Application._get_statusbar()"""
+        statusbar = GLXCurses.StatusBar()
+
+        self.assertEqual(self.application._get_statusbar(), None)
+
+        self.application.add_statusbar(statusbar)
+
+        self.application._set_statusbar(statusbar)
+        self.assertEqual(self.application._get_statusbar(), statusbar)
+
+    def test__set__get_toolbar(self):
+        """Test Application._set_toolbar() and Application._get_toolbar()"""
+        toolbar = GLXCurses.ToolBar()
+
+        self.assertEqual(self.application._get_toolbar(), None)
+
+        self.application.add_toolbar(toolbar)
+
+        self.application._set_toolbar(toolbar)
+        self.assertEqual(self.application._get_toolbar(), toolbar)
 
 if __name__ == '__main__':
     unittest.main()

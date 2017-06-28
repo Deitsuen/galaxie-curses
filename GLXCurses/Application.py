@@ -596,7 +596,6 @@ class Application(object):
                 if len(self._get_windows_list()) - 1 >= 0:
                     self._set_active_window(self._get_windows_list()[-1]['WIDGET'])
 
-            self.refresh()
         else:
             raise TypeError(u'>window< is not a GLXCurses.Window type')
 
@@ -608,7 +607,7 @@ class Application(object):
         “startup” is a good place to call this.
 
         :param menubar: a :class:`MenuBar <GLXCurses.MenuBar.MenuBar>`
-        :type menubar: GLXCurses.MenuBar or
+        :type menubar: GLXCurses.MenuBar
         """
         if hasattr(menubar, 'glxc_type') and menubar.glxc_type == 'GLXCurses.MenuBar':
             menubar.set_parent(self)
@@ -624,15 +623,31 @@ class Application(object):
         if self._get_menubar() is not None:
             self._get_menubar().set_parent(None)
         self._set_menubar(None)
-        self.refresh()
 
-    def add_statusbar(self, glx_statusbar):
-        glx_statusbar.set_parent(self)
-        self.statusbar = glx_statusbar
+    def add_statusbar(self, statusbar):
+        """
+        Sets the statusbar of application .
 
-    def remove_statusbar(self, glx_statusbar):
-        glx_statusbar.un_parent()
-        self.statusbar = None
+        This can only be done in the primary instance of the application, after it has been registered.
+        “startup” is a good place to call this.
+
+        :param statusbar: a :class:`StatusBar <GLXCurses.StatusBar.StatusBar>`
+        :type statusbar: GLXCurses.StatusBar
+        """
+        if hasattr(statusbar, 'glxc_type') and statusbar.glxc_type == 'GLXCurses.StatusBar':
+            statusbar.set_parent(self)
+            self._set_statusbar(statusbar)
+            self.refresh()
+        else:
+            raise TypeError(u'>statusbar< is not a GLXCurses.StatusBar')
+
+    def remove_statusbar(self, statusbar):
+        """
+        Unset the statusbar of application
+        """
+        if self._get_statusbar() is not None:
+            self._get_statusbar().set_parent(None)
+        self._set_statusbar(None)
 
     def add_toolbar(self, glx_toolbar):
         glx_toolbar.set_parent(self)
@@ -662,11 +677,11 @@ class Application(object):
         if hasattr(self._get_menubar(), 'glxc_type') and self._get_menubar().glxc_type == 'GLXCurses.MenuBar':
             self._get_menubar().draw()
 
-        if self.statusbar is not None:
-            self.statusbar.draw()
+        if hasattr(self._get_statusbar(), 'glxc_type') and self._get_statusbar().glxc_type == 'GLXCurses.StatusBar':
+            self._get_statusbar().draw()
 
-        if self.toolbar is not None:
-            self.toolbar.draw()
+        if hasattr(self._get_toolbar(), 'glxc_type') and self._get_toolbar().glxc_type == 'GLXCurses.ToolBar':
+            self._get_toolbar().draw()
 
         # After have redraw everything it's time to refresh the screen
         self.get_screen().refresh()
@@ -967,3 +982,45 @@ class Application(object):
         :rtype: GLXCurses.MenuBar or None
         """
         return self.menubar
+
+    def _set_statusbar(self, statusbar=None):
+        """
+        Set the statusbar attribute
+
+        :param statusbar: A :class:`StatusBar <GLXCurses.StatusBar.StatusBar>` or None
+        :type statusbar: GLXCurses.StatusBar or None
+        """
+        if (hasattr(statusbar, 'glxc_type') and statusbar.glxc_type == 'GLXCurses.StatusBar') or (statusbar is None):
+            self.statusbar = statusbar
+        else:
+            raise TypeError(u'>menubar< is not a GLXCurses.StatusBar or None type')
+
+    def _get_statusbar(self):
+        """
+        Return statusbar attribute
+
+        :return: A :class:`StatusBar <GLXCurses.StatusBar.StatusBar>`
+        :rtype: GLXCurses.StatusBar or None
+        """
+        return self.statusbar
+
+    def _set_toolbar(self, toolbar=None):
+        """
+        Set the toolbar attribute
+
+        :param toolbar: A :class:`ToolBar <GLXCurses.ToolBar.ToolBar>` or None
+        :type toolbar: GLXCurses.ToolBar or None
+        """
+        if (hasattr(toolbar, 'glxc_type') and toolbar.glxc_type == 'GLXCurses.ToolBar') or (toolbar is None):
+            self.statusbar = toolbar
+        else:
+            raise TypeError(u'>toolbar< is not a GLXCurses.ToolBar or None type')
+
+    def _get_toolbar(self):
+        """
+        Return toolbar attribute
+
+        :return: A :class:`ToolBar <GLXCurses.ToolBar.ToolBar>`
+        :rtype: GLXCurses.ToolBar or None
+        """
+        return self.toolbar

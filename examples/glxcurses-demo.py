@@ -326,7 +326,7 @@ if __name__ == '__main__':
     win1.add(hbox)
 
     # Creat a Status Bar
-    toolbar = GLXCurses.Toolbar()
+    toolbar = GLXCurses.ToolBar()
     toolbar.button_list = [
         'Help',
         'Normal',
@@ -340,7 +340,7 @@ if __name__ == '__main__':
         'Quit'
     ]
 
-    statusbar = GLXCurses.Statusbar()
+    statusbar = GLXCurses.StatusBar()
     context_id = statusbar.get_context_id("example")
 
     def on_resize(self, event_signal, *event_args):

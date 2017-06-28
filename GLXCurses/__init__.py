@@ -20,8 +20,8 @@ from GLXCurses.Box import Box
 from GLXCurses.VBox import VBox
 from GLXCurses.HBox import HBox
 from GLXCurses.MenuBar import MenuBar
-from GLXCurses.Statusbar import Statusbar
-from GLXCurses.Toolbar import Toolbar
+from GLXCurses.StatusBar import StatusBar
+from GLXCurses.ToolBar import ToolBar
 from GLXCurses.Misc import Misc
 from GLXCurses.Label import Label
 from GLXCurses.ProgressBar import ProgressBar

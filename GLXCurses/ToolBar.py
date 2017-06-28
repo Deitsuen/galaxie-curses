@@ -23,10 +23,11 @@ def resize_text(text, max_width, separator='~'):
         return text
 
 
-class Toolbar(GLXCurses.Widget):
+class ToolBar(GLXCurses.Widget):
     def __init__(self):
         GLXCurses.Widget.__init__(self)
-        self.set_name('Toolbar')
+        self.glxc_type = 'GLXCurses.ToolBar'
+        self.set_name('ToolBar')
 
         # Widget setting
         if self.get_style().get_attribute_states():

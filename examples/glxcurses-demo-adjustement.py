@@ -138,7 +138,7 @@ if __name__ == '__main__':
     win_main.add(vbox_main)
 
     # Create a Status Bar
-    statusbar = GLXCurses.Statusbar()
+    statusbar = GLXCurses.StatusBar()
     context_id = statusbar.get_context_id("example")
 
 

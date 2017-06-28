@@ -21,7 +21,6 @@ class Window(Bin):
     def __init__(self):
         Bin.__init__(self)
         self.glxc_type = 'GLXCurses.Window'
-
         self.set_name('Window')
 
         # Make a Style heritage attribute
