@@ -250,60 +250,167 @@ class Application(object):
         self.parent_style = self.style
 
     # Parent
-    def set_parent(self, parent=None):
+    @staticmethod
+    def set_parent(parent=None):
         """
         Suppose to set the parent, but Application haven't any parent, and don't need.
         That method exist for be compatible with a normal Widget.
 
         :param parent: what you want it will be ignore
         """
-        if parent is not None:
-            self.parent = self.curses_subwin
-        else:
-            self.parent = self.curses_subwin
+        pass
 
     def get_parent(self):
         """
+        Application haven't parent, then return false information's about it parent.
+
         Return the area object where draw widget , that cover all the area it is not all ready use by \
          MenuBar, ToolBar, MessageBar and StatusBar
 
-        :return: curses subwin
-        :rtype: curses.subwin
+        :return: A curses object
+        :rtype: <type '_curses.curses window'>
         """
         return self.curses_subwin
 
+    @staticmethod
+    def remove_parent():
+        """
+        The Application have no parent , then that impossible to remove it parent. That function is here for be \
+        presented as a true Widget with all functionality.
+
+        It function do nothing
+        """
+        pass
+
     def get_parent_size(self):
+        """
+        Return the size of the main window of the Application. Application haven't any parent then it function return \
+        the size of the area dedicated to display widget.
+
+        :return: the size of the main window area X,Y
+        :rtype: tuple of int
+        """
         return self.get_parent().getmaxyx()
 
     def get_parent_origin(self):
+        """
+        Return the origin location of the main window of the Application.
+        Application haven't any parent then it function return the origin of the area dedicated to display widget.
+
+        :return: the origin of the main window X,Y
+        :rtype: tuple of int
+        """
         return self.get_parent().getbegyx()
 
     def get_parent_spacing(self):
-        return self.get_parent().spacing
+        """
+        Return the parent spacing, Application haven't any parent , then it must return the spacing of the Application.
+
+        From Application point of view it function is equivalent to Application.set_spacing()
+
+        :return: The spacing in Character
+        :rtype: int
+        """
+        return self.spacing
 
     def get_parent_style(self):
+        """
+        Return the parent Style, Application haven't parent then it return it own Style.
+        It function is the top end , after it have noting. The Style will be it Style for everyone
+
+        From Application point of view it function is equivalent to Application.get_style()
+
+        :return: a Galaxie Curses Style
+        :rtype: GLXCurses.Style
+        """
         return self.style
 
     # Widget
     def get_curses_subwin(self):
+        """
+        Return the area object where draw widget , that cover all the area it is not all ready use by \
+        MenuBar, ToolBar, MessageBar and StatusBar
+
+        :return: A curses object
+        :rtype: <type '_curses.curses window'>
+        """
         return self.curses_subwin
 
     def get_origin(self):
+        """
+        Return the origin location of the main window of the Application.
+
+        :return: the origin of the area dedicated to display widget. X,Y
+        :rtype: tuple of int
+        """
         return self.curses_subwin.getbegyx()
 
+    def set_spacing(self, spacing=0):
+        """
+        Set the Spacing for add a artificial space around Widget's, in that case it will be apply to the Window \
+        container added via Application.add_window().
+
+        :param spacing: Spacing in character
+        :return: int
+        """
+        if type(spacing) == int:
+            if spacing != self.get_spacing():
+                self.spacing = spacing
+        else:
+            raise TypeError(u'>spacing< argument must be a int type')
+
     def get_spacing(self):
+        """
+        Get the Spacing value to apply as artificial space around Widget's, in that case it will be apply to the \
+        Window container added via Application.add_window().
+
+        :return: Spacing in character
+        :return: int
+        """
         return self.spacing
 
+    def set_decorated(self, decorated=0):
+        """
+        Set if the area main window, will be decorated, that mean have a outer line as decoration.
+
+        :param decorated: 1 if decorated
+        :type decorated: int
+        """
+        if type(decorated) == int:
+            if decorated != self.get_decorated():
+                self.decorated = decorated
+        else:
+            raise TypeError(u'>decorated< argument must be a int type')
+
     def get_decorated(self):
+        """
+        Return the decorated attribute, in charge to store if the main window area will be decorated.
+
+        :return: True if decorated
+        :rtype: bool
+        """
         return self.decorated
 
-    def remove_parent(self):
-        pass
-
     def get_screen(self):
+        """
+        Only Applictaion initialize curses.screen and store it on screen attribute.
+        It function return the curses.screen object.
+
+        :return: a Curses Screen, it consist to the entire terminal
+        :rtype: curses.curses.screen
+        """
         return self.screen
 
-    def set_screen(self, screen):
+    @staticmethod
+    def set_screen(screen):
+        """
+        The Application have role to initialize the curses.screen, it have no way to change the screen on fly.
+
+        Actually it have no plan for permit to change the default screen for a other one. technically it should be \
+        possible. But yet Galaxie Curses is designed for have only Application singleton it use the curses.screen
+
+        It function do nothing
+        """
         pass
 
     # Size management
@@ -568,10 +675,8 @@ class Application(object):
             window.set_parent(self)
             # create a dictionary structure for add it to windows list
             self._add_child_to_windows_list(window)
-            # Make the last element active
+            # Make the last added element active
             self._set_active_window(self._get_windows_list()[-1]['WIDGET'])
-            # self._set_active_window(window)
-            # self.refresh()
         else:
             raise TypeError(u'>window< is not a GLXCurses.Window type')
 
@@ -603,7 +708,6 @@ class Application(object):
                 self._get_windows_list().pop(last_found)
                 if len(self._get_windows_list()) - 1 >= 0:
                     self._set_active_window(self._get_windows_list()[-1]['WIDGET'])
-
         else:
             raise TypeError(u'>window< is not a GLXCurses.Window type')
 
@@ -620,7 +724,6 @@ class Application(object):
         if glxc_type(menubar):
             menubar.set_parent(self)
             self._set_menubar(menubar)
-            self.refresh()
         else:
             raise TypeError(u'>menubar< is not a GLXCurses.MenuBar')
 
@@ -645,7 +748,6 @@ class Application(object):
         if glxc_type(statusbar):
             statusbar.set_parent(self)
             self._set_statusbar(statusbar)
-            self.refresh()
         else:
             raise TypeError(u'>statusbar< is not a GLXCurses.StatusBar')
 

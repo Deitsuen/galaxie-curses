@@ -9,6 +9,8 @@ import uuid
 import sys
 import os
 
+from GLXCurses.Utils import glxc_type
+
 # Require when you haven't GLXBob as default Package
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(current_dir))
@@ -51,11 +53,147 @@ class TestApplication(unittest.TestCase):
 
     def test_set_get_parent(self):
         """Test Application.set_parent() and Application.get_parent()"""
+        # Call the method without argument
         self.application.set_parent()
+        # Check if None argument is accept
         self.application.set_parent(None)
 
+        # call .draw method for start all computation of subwindow
         self.application.draw()
+        # Now get_parent() shouldn't None return
         self.assertNotEqual(self.application.get_parent(), None)
+        # We check the return is a curses object window
+        self.assertEqual(str(type(self.application.get_parent())), "<type '_curses.curses window'>")
+
+        # Try to erase the parent
+        self.application.set_parent(None)
+        # It must be ignore
+        self.assertNotEqual(self.application.get_parent(), None)
+        # It must continue to return a curses window object
+        self.assertEqual(str(type(self.application.get_parent())), "<type '_curses.curses window'>")
+
+        # Must be the same
+        self.assertEqual(self.application.get_curses_subwin(), self.application.get_parent())
+
+    def test_get_parent_size(self):
+        """Test Application.get_parent_size"""
+        # call .draw method for start all computation of subwindow
+        self.application.draw()
+        # We check the return is a curses object window
+        self.assertEqual(str(type(self.application.get_parent())), "<type '_curses.curses window'>")
+        # check return type tuple
+        self.assertEqual(type(self.application.get_parent_size()), type(tuple()))
+        # check the len of the tuple
+        self.assertEqual(len(self.application.get_parent_size()), 2)
+        # check if both element are a a int type
+        self.assertEqual(type(self.application.get_parent_size()[0]), type(int()))
+        self.assertEqual(type(self.application.get_parent_size()[1]), type(int()))
+
+        # Must be the same
+        self.assertEqual(self.application.get_size(), self.application.get_parent_size())
+
+    def test_get_parent_origin(self):
+        """Test Application.get_parent_size"""
+        # call .draw method for start all computation of subwindow
+        self.application.draw()
+        # We check the return is a curses object window
+        self.assertEqual(str(type(self.application.get_parent())), "<type '_curses.curses window'>")
+        # check return type tuple
+        self.assertEqual(type(self.application.get_parent_origin()), type(tuple()))
+        # check the len of the tuple
+        self.assertEqual(len(self.application.get_parent_origin()), 2)
+        # check if both element are a a int type
+        self.assertEqual(type(self.application.get_parent_origin()[0]), type(int()))
+        self.assertEqual(type(self.application.get_parent_origin()[1]), type(int()))
+
+        # Must be the same
+        self.assertEqual(self.application.get_parent_origin(), self.application.get_origin())
+
+    def test_get_parent_spacing(self):
+        """Test Application.get_parent_spacing()"""
+        # call .draw method for start all computation of subwindow
+        self.application.draw()
+        # We check the return is a curses object window
+        self.assertEqual(str(type(self.application.get_parent())), "<type '_curses.curses window'>")
+        # check return type int
+        self.assertEqual(type(self.application.get_parent_spacing()), type(int()))
+
+        self.application.set_spacing(2)
+        self.assertEqual(self.application.get_parent_spacing(), 2)
+        self.application.set_spacing()
+        self.assertEqual(self.application.get_parent_spacing(), 0)
+
+        # Must be the same
+        self.assertEqual(self.application.get_parent_spacing(), self.application.get_spacing())
+
+    def test_get_parent_style(self):
+        """Test Application.get_parent_style()"""
+        # The Application Style must be the same ast the parent one, because Application have no parent
+        self.assertEqual(self.application.get_parent_style(), self.application.get_style())
+        # Check it's a valid GLXCurses.Style object type
+        self.assertTrue(glxc_type(self.application.get_parent_style()))
+
+        # Must be the same
+        self.assertEqual(self.application.get_parent_style(), self.application.get_style())
+
+    def test_get_curses_subwin(self):
+        """Test Application.get_curses_subwin()"""
+        # call .draw method for start all computation of subwindow
+        self.application.draw()
+        # We check the return is a curses object window
+        self.assertEqual(str(type(self.application.get_curses_subwin())), "<type '_curses.curses window'>")
+
+    def test_get_origin(self):
+        """Test Application.get_origin()"""
+        # call .draw method for start all computation of subwindow
+        self.application.draw()
+        # We check the return is a curses object window
+        self.assertEqual(str(type(self.application.get_curses_subwin())), "<type '_curses.curses window'>")
+        # check return type tuple
+        self.assertEqual(type(self.application.get_origin()), type(tuple()))
+        # check the len of the tuple
+        self.assertEqual(len(self.application.get_origin()), 2)
+        # check if both element are a a int type
+        self.assertEqual(type(self.application.get_origin()[0]), type(int()))
+        self.assertEqual(type(self.application.get_origin()[1]), type(int()))
+
+    def test_set_get_spacing(self):
+        """Test Application.set_spacing() and Application.get_spacing()"""
+        # Set spacing to None
+        self.application.set_spacing()
+        # set spacing to 5
+        self.application.set_spacing(5)
+        # test the raise TypeError
+        self.assertRaises(TypeError, self.application.set_spacing, str('galaxie'))
+        # check if we cat get back the set value
+        self.assertEqual(self.application.get_spacing(), 5)
+        # back to normal
+        self.application.set_spacing()
+
+    def test_set_get_decorated(self):
+        """Test Application.set_decorated() and Application.get_decorated()"""
+        # call set_decorated() without argument
+        self.application.set_decorated()
+        # call set_decorated() with 0 as argument
+        self.assertEqual(self.application.get_decorated(), 0)
+        # verify we go back 0
+        self.assertEqual(self.application.get_decorated(), 0)
+        # call set_decorated() with 1 as argument
+        self.application.set_decorated(1)
+        # verify we go back 0
+        self.assertEqual(self.application.get_decorated(), 1)
+        # test raise TypeError
+        self.assertRaises(TypeError, self.application.set_decorated, 'Galaxie')
+
+    def test_set_get_screen(self):
+        """Test Application.set_screen() and Application.get_screen()"""
+        # call .draw method for start all computation of subwindow
+        self.application.draw()
+        # We check the return is a curses object window
+        self.assertEqual(str(type(self.application.get_screen())), "<type '_curses.curses window'>")
+
+        self.application.set_screen('lala')
+        self.application.set_screen('lulu')
 
     # Test Size management
     # width
