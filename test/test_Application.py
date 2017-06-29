@@ -49,6 +49,14 @@ class TestApplication(unittest.TestCase):
         except ValueError:
             pass
 
+    def test_set_get_parent(self):
+        """Test Application.set_parent() and Application.get_parent()"""
+        self.application.set_parent()
+        self.application.set_parent(None)
+
+        self.application.draw()
+        self.assertNotEqual(self.application.get_parent(), None)
+
     # Test Size management
     # width
     def test_raise_typeerror_set_width(self):

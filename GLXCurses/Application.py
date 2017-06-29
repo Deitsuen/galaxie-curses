@@ -257,16 +257,18 @@ class Application(object):
 
         :param parent: what you want it will be ignore
         """
-        if parent is None:
-            self.parent = None
+        if parent is not None:
+            self.parent = self.curses_subwin
         else:
-            self.parent = None
+            self.parent = self.curses_subwin
 
     def get_parent(self):
         """
-        Return the area
+        Return the area object where draw widget , that cover all the area it is not all ready use by \
+         MenuBar, ToolBar, MessageBar and StatusBar
 
-        :return:
+        :return: curses subwin
+        :rtype: curses.subwin
         """
         return self.curses_subwin
 
@@ -778,10 +780,10 @@ class Application(object):
         self.set_preferred_width(self.get_width())
 
         self.curses_subwin = self.get_screen().subwin(
-            self.get_height(),
-            self.get_width(),
-            self.get_y(),
-            self.get_x()
+            int(self.get_height()),
+            int(self.get_width()),
+            int(self.get_y()),
+            int(self.get_x())
         )
 
     def getch(self):
