@@ -156,10 +156,18 @@ GLXCurses.MainLoop module
     :undoc-members:
     :show-inheritance:
 
-GLXCurses.MenuModel module
---------------------------
+GLXCurses.MenuBar module
+------------------------
 
-.. automodule:: GLXCurses.MenuModel
+.. automodule:: GLXCurses.MenuBar
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+GLXCurses.MessageBar module
+---------------------------
+
+.. automodule:: GLXCurses.MessageBar
     :members:
     :undoc-members:
     :show-inheritance:
@@ -196,10 +204,10 @@ GLXCurses.RadioButton module
     :undoc-members:
     :show-inheritance:
 
-GLXCurses.Statusbar module
+GLXCurses.StatusBar module
 --------------------------
 
-.. automodule:: GLXCurses.Statusbar
+.. automodule:: GLXCurses.StatusBar
     :members:
     :undoc-members:
     :show-inheritance:
@@ -212,10 +220,18 @@ GLXCurses.Style module
     :undoc-members:
     :show-inheritance:
 
-GLXCurses.Toolbar module
+GLXCurses.ToolBar module
 ------------------------
 
-.. automodule:: GLXCurses.Toolbar
+.. automodule:: GLXCurses.ToolBar
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+GLXCurses.Utils module
+----------------------
+
+.. automodule:: GLXCurses.Utils
     :members:
     :undoc-members:
     :show-inheritance:
