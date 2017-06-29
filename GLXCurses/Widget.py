@@ -199,9 +199,6 @@ class Widget(Object):
 
         self.get_parent().adopt(self)
 
-        # POUR MO
-        # self.set_application(self.get_parent().get_application())
-
         # Widget start with own Style, and will use the Style of it parent when it add to a contener
         # GLXCApplication Widget is a special case where it parent is it self.
 

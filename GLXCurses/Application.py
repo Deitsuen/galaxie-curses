@@ -534,14 +534,38 @@ class Application(object):
             raise TypeError(u'>preferred_width< argument must be a int type')
 
     def get_preferred_size(self):
+        """
+        Return the preferred size of the Application.
+
+        :return: the preferred size
+        :rtype: list
+        """
         # should preserve the Y X of ncuses ?
         return self.preferred_size
 
-    def set_preferred_size(self):
+    def set_preferred_size(self, x=0, y=0):
+        """
+        Set the preferred size, of the Application. It have not big importance for a Application component.
+        It here as informal thing.
+
+        :param x: X size in characters
+        :type x: int
+        :param y: Y size in characters
+        :type y: int
+        """
         # should preserve the Y X of ncuses ?
-        return self.preferred_size
+        if (type(x) == int) and (type(y) == int):
+            self.preferred_size = [x, y]
+        else:
+            raise TypeError(u'>x and y parameters must be int type<')
 
     def get_size(self):
+        """
+        Return the size of the main window of the Application.
+
+        :return: the size of the main window area X,Y
+        :rtype: tuple of int
+        """
         return self.get_curses_subwin().getmaxyx()
 
     def get_x(self):
@@ -918,7 +942,7 @@ class Application(object):
         :return: an integer corresponding to the key pressed.
         :rtype: int
         """
-        return self.screen.getch()
+        return self.get_screen().getch()
 
     def close(self):
         """
@@ -928,7 +952,7 @@ class Application(object):
         Generally that is follow  by a sys.exit(0) for generate a exit code.
         """
         # Set everything back to normal
-        self.screen.keypad(False)
+        self.get_screen().keypad(False)
         curses.echo()
         curses.nocbreak()
         curses.endwin()
@@ -950,12 +974,12 @@ class Application(object):
 
          :func:`Widget.get_widget_id() <GLXCurses.Widget.Widget.get_widget_id()>`
 
-        :return: a unique id
-        :rtype: int
+        :return: a unique id generate by uuid module
+        :rtype: long or None
         """
         return self.widget_it_have_focus
 
-    def set_is_focus(self, widget):
+    def set_is_focus(self, widget=None):
         """
         Determines if the widget is the focus widget within its toplevel. \
         (This does not mean that the “has-focus” property is necessarily set; “has-focus” will only be set \
@@ -964,13 +988,14 @@ class Application(object):
         .. seealso:: \
         :func:`Application.get_is_focus() <GLXCurses.Application.Application.get_is_focus()>`
 
-        :param widget: a GLXCurses Widget
-        :type widget: :class:`Widget <GLXCurses.Widget.Widget>`
+        :param widget: a Widget
+        :type widget: GLXCurses.Widget or None
         """
-        if widget is None:
-            self.widget_it_have_focus = None
-        else:
+        if glxc_type(widget):
             self.widget_it_have_focus = widget.get_widget_id()
+        else:
+            self.widget_it_have_focus = None
+        # Nothing more at all !!!
 
     def get_tooltip(self):
         return self.widget_it_have_tooltip

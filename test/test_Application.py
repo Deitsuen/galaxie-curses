@@ -20,7 +20,6 @@ import GLXCurses
 
 # Unittest
 class TestApplication(unittest.TestCase):
-
     def setUp(self):
         # Before the test start
         self.application = GLXCurses.Application()
@@ -191,66 +190,70 @@ class TestApplication(unittest.TestCase):
         self.application.draw()
         # We check the return is a curses object window
         self.assertEqual(str(type(self.application.get_screen())), "<type '_curses.curses window'>")
-
-        self.application.set_screen('lala')
+        # Must do nothing
+        self.application.set_screen('lilo')
+        # Must do nothing
         self.application.set_screen('lulu')
 
     # Test Size management
     # width
-    def test_raise_typeerror_set_width(self):
-        """Test raise TypeError of Application.set_width()"""
-        self.assertRaises(TypeError, self.application.set_width, float(randint(1, 250)))
-
     def test_get_set_width(self):
-        """Test Application.set_width() and Application.get_width() method's """
+        """Test Application.set_width() and Application.get_width()"""
         value_random_1 = int(randint(8, 250))
         self.application.set_width(value_random_1)
         self.assertEqual(self.application.get_width(), value_random_1)
+        # Test Raise
+        self.assertRaises(TypeError, self.application.set_width, float(randint(1, 250)))
 
     # height
-    def test_raise_typeerror_set_height(self):
-        """Test raise TypeError of Application.set_height()"""
-        self.assertRaises(TypeError, self.application.set_height, float(randint(1, 250)))
-
     def test_get_set_height(self):
-        """Test Application.set_height() and Application.get_height() method's """
+        """Test Application.set_height() and Application.get_height()"""
         value_random_1 = int(randint(8, 250))
         self.application.set_height(value_random_1)
         self.assertEqual(self.application.get_height(), value_random_1)
+        # Test Raise
+        self.assertRaises(TypeError, self.application.set_height, float(randint(1, 250)))
 
     # preferred_height
-    def test_raise_typeerror_set_preferred_height(self):
-        """Test raise TypeError of Application.set_preferred_height()"""
-        self.assertRaises(TypeError, self.application.set_preferred_height, float(randint(1, 250)))
-
     def test_get_set_preferred_height(self):
         """Test Application.set_preferred_height() and Application.get_preferred_height() method's """
         value_random_1 = int(randint(8, 250))
         self.application.set_preferred_height(value_random_1)
         self.assertEqual(self.application.get_preferred_height(), value_random_1)
+        # Test Raise
+        self.assertRaises(TypeError, self.application.set_preferred_height, float(randint(1, 250)))
 
     # preferred_width
-    def test_raise_typeerror_set_preferred_width(self):
-        """Test raise TypeError of Application.set_preferred_width()"""
-        self.assertRaises(TypeError, self.application.set_preferred_width, float(randint(1, 250)))
-
     def test_get_set_preferred_width(self):
         """Test Application.set_preferred_width() and Application.get_preferred_width() method's """
         value_random_1 = int(randint(8, 250))
         self.application.set_preferred_width(value_random_1)
         self.assertEqual(self.application.get_preferred_width(), value_random_1)
+        # Test Raise
+        self.assertRaises(TypeError, self.application.set_preferred_width, float(randint(1, 250)))
 
-    def test_get_preferred_size(self):
-        """Test Application.get_preferred_size()"""
-        pass
-
-    def test_set_preferred_size(self):
-        """Test Application.set_preferred_size()"""
-        pass
+    def test_get_set_preferred_size(self):
+        """Test Application.set_preferred_size() and Test Application.get_preferred_size()"""
+        value_random_1 = int(randint(8, 250))
+        value_random_2 = int(randint(8, 250))
+        self.application.set_preferred_size(x=value_random_1, y=value_random_2)
+        self.assertEqual(self.application.get_preferred_size(), [value_random_1, value_random_2])
+        # Test Raise
+        self.assertRaises(TypeError, self.application.set_preferred_size, float(randint(1, 250)))
 
     def test_get_size(self):
         """Test Application.get_size()"""
-        pass
+        # call .draw method for start all computation of subwindow
+        self.application.draw()
+        # We check the return is a curses object window
+        self.assertEqual(str(type(self.application.get_curses_subwin())), "<type '_curses.curses window'>")
+        # check return type tuple
+        self.assertEqual(type(self.application.get_size()), type(tuple()))
+        # check the len of the tuple
+        self.assertEqual(len(self.application.get_size()), 2)
+        # check if both element are a a int type
+        self.assertEqual(type(self.application.get_size()[0]), type(int()))
+        self.assertEqual(type(self.application.get_size()[1]), type(int()))
 
     def test_set_get_x(self):
         """Test Application.set_y() and  Application.get_y()"""
@@ -344,8 +347,7 @@ class TestApplication(unittest.TestCase):
         # check if the application is the parent of our window
         self.assertEqual(window.get_parent(), self.application)
 
-    def test_add_window_raise(self):
-        """Test Application.add_window() raise TypeError"""
+        # test raise
         self.assertRaises(TypeError, self.application.add_window, int())
 
     def test_remove_window(self):
@@ -383,6 +385,27 @@ class TestApplication(unittest.TestCase):
     def test_close(self):
         """Test Application.close() method """
         self.application.close()
+
+    # focus
+    def test_set_get_is_focus(self):
+        """Test Application.set_is_focus() and Application.get_is_focus()"""
+        window = GLXCurses.Window()
+        # nothing happen
+        self.application.set_is_focus()
+        # focus get_is_focus return None
+        self.assertEqual(self.application.get_is_focus(), None)
+        # set_is_focus to the window
+        self.application.set_is_focus(window)
+        # check if the window have the focus
+        self.assertEqual(self.application.get_is_focus(), window.get_widget_id())
+        # Test None
+        self.application.set_is_focus(None)
+        # focus get_is_focus return None
+        self.assertEqual(self.application.get_is_focus(), None)
+
+    def test_set_get_tooltip(self):
+        """Test Application.set_tooltip() and Application.get_tooltip()"""
+        pass
 
     # Test Internal methode
     def test__set__get_windows_list(self):
@@ -527,6 +550,7 @@ class TestApplication(unittest.TestCase):
         # Check Type error
         self.assertRaises(TypeError, self.application._set_toolbar, int())
         self.assertRaises(TypeError, self.application.add_toolbar, int())
+
 
 if __name__ == '__main__':
     unittest.main()
