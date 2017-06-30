@@ -8,6 +8,9 @@ import logging
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
 
+##############################
+# Migration of Mainloop
+##############################
 
 class EventBus(object):
     def __init__(self):

@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from GLXCurses import Object
 from GLXCurses import Style
+from GLXCurses import EventBusClient
 from datetime import datetime
 import random
 import uuid
@@ -12,9 +13,10 @@ import uuid
 __author__ = 'Tuux'
 
 
-class Widget(Object):
+class Widget(Object, EventBusClient):
     def __init__(self):
         Object.__init__(self)
+        EventBusClient.__init__(self)
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Widget'
         # Unique ID it permit to individually identify a widget by example for get_focus get_default
@@ -23,15 +25,12 @@ class Widget(Object):
         # Widget Setting
         self.set_flags()
 
-        self.event_handlers = dict()
-
         self.state = dict()
         self.state['NORMAL'] = True
         self.state['ACTIVE'] = False
         self.state['PRELIGHT'] = False
         self.state['SELECTED'] = False
         self.state['INSENSITIVE'] = False
-        self.children = list()
         # Widget
         self.curses_subwin = None
         self.spacing = 0
@@ -494,22 +493,4 @@ class Widget(Object):
         self.imposed_spacing = int(spacing)
 
     # Signal management Client part
-    def subscribe(self, event_signal, event_handler):
-        if event_signal not in self.event_handlers:
-            self.event_handlers[event_signal] = list()
 
-        self.event_handlers[event_signal].append(event_handler)
-
-    def unsubscribe(self, event_signal, event_handler):
-        if event_signal in self.event_handlers:
-            self.event_handlers[event_signal].remove(event_handler)
-
-    def handle_and_dispatch_event(self, event_signal, args=None):
-        if args is None:
-            args = []
-        if event_signal in self.event_handlers:
-            for handler in self.event_handlers[event_signal]:
-                handler(self, event_signal, args)
-
-        for children in self.children:
-            children['WIDGET'].handle_and_dispatch_event(event_signal, args)
