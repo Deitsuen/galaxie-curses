@@ -34,7 +34,60 @@ class Singleton(type):
 
 # https://developer.gnome.org/gtk3/stable/GtkApplication.html
 
-class Application(object):
+class EventBus(object):
+
+    def __init__(self):
+        self.event_handlers = dict()
+
+    def adopt(self, orphan):
+        """
+        not implemented yesr
+        :param orphan: a poor widget orphan
+        """
+        pass
+
+    def emit(self, detailed_signal, args=None):
+        if args is None:
+            args = list()
+        GLXCurses.mainloop.emit(detailed_signal, args)
+
+    def connect(self, detailed_signal, handler, args=None):
+        if args is None:
+            args = list()
+
+        # check if it's all ready connect if not create it
+        if detailed_signal not in self._get_signal_handlers_dict():
+            self._get_signal_handlers_dict()[detailed_signal] = list()
+
+        self._get_signal_handlers_dict()[detailed_signal].append(handler)
+
+        if args:
+            self._get_signal_handlers_dict()[detailed_signal].append(args)
+
+            # Test about EventBus
+            # GLXCurses.signal.connect(detailed_signal, handler, args)
+
+    def disconnect(self, detailed_signal, handler):
+
+        if detailed_signal in self._get_signal_handlers_dict():
+            self._get_signal_handlers_dict()[detailed_signal].remove(handler)
+
+    def dispatch(self, detailed_signal, args=None):
+        if args is None:
+            args = []
+
+        if detailed_signal in self._get_signal_handlers_dict():
+            for handler in self._get_signal_handlers_dict()[detailed_signal]:
+                handler(self, detailed_signal, args)
+
+        if self._get_active_window():
+            self._get_active_window().handle_and_dispatch_event(detailed_signal, args)
+
+    def _get_signal_handlers_dict(self):
+        return self.event_handlers
+
+
+class Application(EventBus):
     """
     :Description:
 
@@ -162,12 +215,11 @@ class Application(object):
 
 
         """
+        super(Application, self).__init__()
         self.glxc_type = 'GLXCurses.Application'
         try:
             # Initialize curses
             os.environ["NCURSES_NO_UTF8_ACS"] = '1'
-
-            self.event_handlers = dict()
 
             # Initialize curses
             self.screen = curses.initscr()
@@ -1003,57 +1055,7 @@ class Application(object):
     def set_tooltip(self, widget_unique_id):
         self.widget_it_have_tooltip = widget_unique_id
 
-    # Main Loop
-    @staticmethod
-    def adopt(orphan):
-        """
-        not implemented yesr
-        :param orphan: a poor widget orphan
-        """
-        pass
-
-    # should be replace by a EventBus
-    @staticmethod
-    def emit(detailed_signal, args=None):
-        if args is None:
-            args = list()
-        GLXCurses.mainloop.emit(detailed_signal, args)
-
-    def connect(self, detailed_signal, handler, args=None):
-        if args is None:
-            args = list()
-
-        # check if it's all ready connect if not create it
-        if detailed_signal not in self._get_signal_handlers_dict():
-            self._get_signal_handlers_dict()[detailed_signal] = list()
-
-        self._get_signal_handlers_dict()[detailed_signal].append(handler)
-
-        if args:
-            self._get_signal_handlers_dict()[detailed_signal].append(args)
-
-            # Test about EventBus
-            # GLXCurses.signal.connect(detailed_signal, handler, args)
-
-    def disconnect(self, detailed_signal, handler):
-
-        if detailed_signal in self._get_signal_handlers_dict():
-            self._get_signal_handlers_dict()[detailed_signal].remove(handler)
-
-    def dispatch(self, detailed_signal, args=None):
-        if args is None:
-            args = []
-
-        if detailed_signal in self._get_signal_handlers_dict():
-            for handler in self._get_signal_handlers_dict()[detailed_signal]:
-                handler(self, detailed_signal, args)
-
-        if self._get_active_window():
-            self._get_active_window().handle_and_dispatch_event(detailed_signal, args)
-
     # Internal
-    def _get_signal_handlers_dict(self):
-        return self.event_handlers
 
     def _get_windows_list(self):
         """

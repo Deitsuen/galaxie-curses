@@ -5,7 +5,9 @@
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: the Galaxie Curses Team, all rights reserved
 
+
 class EventBusClient:
+
     def __init__(self):
         self.event_handlers = dict()
         self.children = list()

@@ -8,7 +8,7 @@
 from GLXCurses.Constants import glxc
 from GLXCurses.Application import Application
 from GLXCurses.MainLoop import MainLoop
-from GLXCurses.EventBus import EventBus
+# from GLXCurses.EventBus import EventBus
 from GLXCurses.EventBusClient import EventBusClient
 from GLXCurses.Style import Style
 from GLXCurses.Object import Object
