@@ -616,8 +616,11 @@ class TestApplication(unittest.TestCase):
         self.application.add_toolbar(self.toolbar)
         # check if we have the same ToolBar
 
-        self.application.draw()
-        self.application.refresh()
+        self.menubar.draw()
+        self.window.draw()
+        self.messagebar.draw()
+        self.statusbar.draw()
+        self.toolbar.draw()
 
 if __name__ == '__main__':
     unittest.main()
