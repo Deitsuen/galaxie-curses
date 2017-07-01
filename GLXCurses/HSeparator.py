@@ -55,68 +55,79 @@ class HSeparator(GLXCurses.Widget):
               +---------------+-------------------------------+
 
         """
-
+        # Load heritage
         GLXCurses.Widget.__init__(self)
+
+        # It's a GLXCurse Type
+        self.glxc_type = 'GLXCurses.HSeparator'
+
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('HSeparator')
+
+        # Make a Widget Style heritage attribute as local attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
         # Size management
         self.set_preferred_height(1)
 
         # PositionType: CENTER, TOP, BOTTOM
-        self.position_type = glxc.BASELINE_POSITION_CENTER
+        self.position_type = glxc.POS_CENTER
 
         # Internal Widget Setting
         self._hseperator_x = 0
         self._hseperator_y = 0
 
-        # Make a Style heritage attribute
-        if self.get_style().get_attribute_states():
-            self.set_attribute_states(self.get_style().get_attribute_states())
-
     def draw_widget_in_area(self):
         self.set_preferred_width(self._get_estimated_preferred_width())
         self.set_preferred_height(self._get_estimated_preferred_height())
-        self.check_horizontal_position_type()
-        if (self.get_height() >= self.get_preferred_height()) and (self.get_width() >= self.get_preferred_width()):
-            self.draw_horizontal_separator()
-
-    def check_horizontal_position_type(self):
-        # PositionType: CENTER, TOP, BOTTOM
-        self._hseperator_y = 0
-        if self.get_position_type() == glxc.BASELINE_POSITION_CENTER:
-            if (self.get_height() / 2) > self.get_preferred_height():
-                self._hseperator_y = (self.get_height() / 2) - self.get_preferred_height()
-            else:
-                self._hseperator_y = 0
-        elif self.get_position_type() == glxc.BASELINE_POSITION_TOP:
-            self._hseperator_y = 0
-        elif self.get_position_type() == glxc.BASELINE_POSITION_BOTTOM:
-            self._hseperator_y = self.get_height() - self.get_preferred_height()
-
-    def draw_horizontal_separator(self):
-        # Draw the Horizontal Separator with PositionType
-        for x in range(self.get_x(), self.get_width()):
-            self.get_curses_subwin().insch(
-                self._hseperator_y,
-                self._hseperator_x + x,
-                curses.ACS_HLINE,
-                self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_text('base', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
-                )
-            )
+        self._check_position_type()
+        if self.get_height() >= self.get_preferred_height():
+            if self.get_width() >= self.get_preferred_width():
+                self._draw_horizontal_separator()
 
     # PositionType: CENTER, TOP, BOTTOM
     def set_position_type(self, position_type):
-        self.position_type = str(position_type).upper()
-        self.set_preferred_width(self._get_estimated_preferred_width())
-        self.set_preferred_height(self._get_estimated_preferred_height())
+        allowed_value = [glxc.POS_TOP, glxc.POS_CENTER, glxc.POS_BOTTOM]
+        if position_type in allowed_value:
+            if self.get_position_type() != str(position_type).upper():
+                self.position_type = str(position_type).upper()
+                self.set_preferred_width(self._get_estimated_preferred_width())
+                self.set_preferred_height(self._get_estimated_preferred_height())
+        else:
+            raise TypeError(u'PositionType must be CENTER or TOP or BOTTOM')
 
     def get_position_type(self):
         return self.position_type
 
     # Internal
+    def _check_position_type(self):
+        """
+        Check the PositionType of the Y axe
+
+        PositionType: CENTER, TOP, BOTTOM
+        """
+        if self.get_position_type() == glxc.POS_CENTER:
+            self._set_hseperator_y((self.get_height() / 2) - self.get_preferred_height())
+        elif self.get_position_type() == glxc.POS_TOP:
+            self._set_hseperator_y(0)
+        elif self.get_position_type() == glxc.POS_BOTTOM:
+            self._set_hseperator_y(self.get_height() - self.get_preferred_height())
+
+    def _draw_horizontal_separator(self):
+        """Draw the Horizontal Separator with PositionType"""
+        if self.get_width() >= self.get_preferred_width():
+            for x in range(self.get_x(), self.get_width()):
+                self.get_curses_subwin().insch(
+                    int(self._get_hseperator_y()),
+                    int(self._get_hseperator_x() + x),
+                    curses.ACS_HLINE,
+                    self.get_style().get_color_pair(
+                        foreground=self.get_style().get_color_text('base', 'STATE_NORMAL'),
+                        background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
+                    )
+                )
+
     def _get_estimated_preferred_width(self):
         """
         Estimate a preferred width, by consider X Location, allowed width and spacing
@@ -139,3 +150,47 @@ class HSeparator(GLXCurses.Widget):
         estimated_preferred_height = 1
         estimated_preferred_height += self.get_spacing() * 2
         return estimated_preferred_height
+
+    def _set_hseperator_x(self, number):
+        """
+        Set the Horizontal Axe Separator X
+
+        :param number: the new value of hseperator_x
+        :type number: int
+        """
+        if type(number) == int:
+            if self._get_hseperator_x() != number:
+                self._hseperator_x = number
+        else:
+            raise TypeError(u'>number< is not a int type')
+
+    def _get_hseperator_x(self):
+        """
+        Return Horizontal Axe Separator
+
+        :return: hseperator_x value
+        :rtype: int
+        """
+        return self._hseperator_x
+
+    def _set_hseperator_y(self, number):
+        """
+        Set the Horizontal Axe Separator
+
+        :param number: the new value of hseperator_x
+        :type number: int
+        """
+        if type(number) == int:
+            if self._get_hseperator_y() != number:
+                self._hseperator_y = number
+        else:
+            raise TypeError(u'>number< is not a int type')
+
+    def _get_hseperator_y(self):
+        """
+        Return Horizontal Axe Separator
+
+        :return: hseperator_y value
+        :rtype: int
+        """
+        return self._hseperator_y

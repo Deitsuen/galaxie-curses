@@ -83,22 +83,22 @@ class Constants(object):
     @constant
     def JUSTIFY_LEFT():
         """The text is placed at the left edge of the label."""
-        return 'JUSTIFY_LEFT'
+        return 'LEFT'
 
     @constant
     def JUSTIFY_RIGHT():
         """The text is placed at the right edge of the label."""
-        return 'JUSTIFY_RIGHT'
+        return 'RIGHT'
 
     @constant
     def JUSTIFY_CENTER():
         """The text is placed in the center of the label."""
-        return 'JUSTIFY_CENTER'
+        return 'CENTER'
 
     @constant
     def JUSTIFY_FILL():
         """The text is placed is distributed across the label."""
-        return 'JUSTIFY_FILL'
+        return 'FILL'
 
     #####################################
     # ProgressBar Orientation Constants #
@@ -315,6 +315,11 @@ class Constants(object):
     def POS_RIGHT():
         """The feature is at the right edge."""
         return 'RIGHT'
+
+    @constant
+    def POS_CENTER():
+        """The feature is at the center."""
+        return 'CENTER'
 
     @constant
     def POS_TOP():

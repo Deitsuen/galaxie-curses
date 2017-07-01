@@ -14,6 +14,7 @@ class Window(Bin):
     def __init__(self):
         Bin.__init__(self)
         self.glxc_type = 'GLXCurses.Window'
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('Window')
 
         # Make a Style heritage attribute

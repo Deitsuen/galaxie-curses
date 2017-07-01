@@ -108,6 +108,22 @@ GLXCurses.EventBus module
     :undoc-members:
     :show-inheritance:
 
+GLXCurses.EventBusBkp module
+----------------------------
+
+.. automodule:: GLXCurses.EventBusBkp
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+GLXCurses.EventBusClient module
+-------------------------------
+
+.. automodule:: GLXCurses.EventBusClient
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 GLXCurses.EventLoop module
 --------------------------
 
