@@ -8,7 +8,6 @@ import string
 import uuid
 import sys
 import os
-import curses
 
 from GLXCurses.Utils import glxc_type
 
@@ -39,7 +38,6 @@ class TestApplication(unittest.TestCase):
         rows, columns = os.popen('stty size', 'r').read().split()
         self.columns = int(columns)
         self.width = self.columns - 7
-
 
         try:
             sys.stdout.write('\r')
@@ -403,7 +401,7 @@ class TestApplication(unittest.TestCase):
         self.application.close()
 
     def test_set_get_default(self):
-        "Test Application.set_default() and Application.get_default()"
+        """Test Application.set_default() and Application.get_default()"""
         self.window = GLXCurses.Window()
         # nothing happen
         self.application.set_default()
@@ -437,15 +435,15 @@ class TestApplication(unittest.TestCase):
 
     def test_set_get_tooltip(self):
         """Test Application.set_tooltip() and Application.get_tooltip()"""
-        window = GLXCurses.Window()
+        self.window = GLXCurses.Window()
         # nothing happen
         self.application.set_tooltip()
         # focus get_tooltip return None
         self.assertEqual(self.application.get_tooltip(), None)
         # set_tooltip to the window
-        self.application.set_tooltip(window)
+        self.application.set_tooltip(self.window)
         # check if the window have the focus
-        self.assertEqual(self.application.get_tooltip(), window.get_widget_id())
+        self.assertEqual(self.application.get_tooltip(), self.window.get_widget_id())
         # Test None
         self.application.set_tooltip(None)
         # focus get_tooltip return None
@@ -616,11 +614,11 @@ class TestApplication(unittest.TestCase):
         self.application.add_toolbar(self.toolbar)
         # check if we have the same ToolBar
 
-        self.menubar.draw()
-        self.window.draw()
-        self.messagebar.draw()
-        self.statusbar.draw()
-        self.toolbar.draw()
+        # self.menubar.draw()
+        # self.window.draw()
+        # self.messagebar.draw()
+        # self.statusbar.draw()
+        # self.toolbar.draw()
 
 if __name__ == '__main__':
     unittest.main()
