@@ -30,6 +30,11 @@ class TestApplication(unittest.TestCase):
             0,
             0
         )
+        self.toolbar = None
+        self.messagebar = None
+        self.statusbar = None
+        self.menubar = None
+        self.window = None
 
         rows, columns = os.popen('stty size', 'r').read().split()
         self.columns = int(columns)
@@ -332,16 +337,16 @@ class TestApplication(unittest.TestCase):
     def test_add_window(self):
         """Test Application.add_window()"""
         # create a new window
-        window = GLXCurses.Window()
+        self.window = GLXCurses.Window()
 
         # check if window parent is not self.application
-        self.assertNotEqual(window.get_parent(), self.application)
+        self.assertNotEqual(self.window.get_parent(), self.application)
 
         # check the size of the children windows list before add a window
         windows_list_size_before = len(self.application._get_windows_list())
 
         # add a window to the application
-        self.application.add_window(window)
+        self.application.add_window(self.window)
 
         # check the size of the children windows list after add a window
         windows_list_size_after = len(self.application._get_windows_list())
@@ -353,10 +358,10 @@ class TestApplication(unittest.TestCase):
         the_last_children_on_list = self.application._get_windows_list()[-1]
 
         # the last list element must contain the same reference to our window
-        self.assertEqual(the_last_children_on_list['WIDGET'], window)
+        self.assertEqual(the_last_children_on_list['WIDGET'], self.window)
 
         # check if the application is the parent of our window
-        self.assertEqual(window.get_parent(), self.application)
+        self.assertEqual(self.window.get_parent(), self.application)
 
         # test raise
         self.assertRaises(TypeError, self.application.add_window, int())
@@ -364,22 +369,22 @@ class TestApplication(unittest.TestCase):
     def test_remove_window(self):
         """Test Application.remove_window()"""
         # create a new window
-        window1 = GLXCurses.Window()
-        window2 = GLXCurses.Window()
+        self.window1 = GLXCurses.Window()
+        self.window2 = GLXCurses.Window()
 
         # add a window to the application
-        self.application.add_window(window1)
+        self.application.add_window(self.window1)
 
         # add a second window to the application
-        self.application.add_window(window2)
+        self.application.add_window(self.window2)
 
         # the last list element must contain the same reference to our window
-        self.assertEqual(self.application.get_active_window(), window2)
+        self.assertEqual(self.application.get_active_window(), self.window2)
 
-        self.application.remove_window(window2)
+        self.application.remove_window(self.window2)
 
         # we get again the last windows children element
-        self.assertEqual(self.application.get_active_window(), window1)
+        self.assertEqual(self.application.get_active_window(), self.window1)
 
     def test_refresh(self):
         """Test Application.refresh() method """
@@ -399,15 +404,15 @@ class TestApplication(unittest.TestCase):
 
     def test_set_get_default(self):
         "Test Application.set_default() and Application.get_default()"
-        window = GLXCurses.Window()
+        self.window = GLXCurses.Window()
         # nothing happen
         self.application.set_default()
         # focus get_default return None
         self.assertEqual(self.application.get_default(), None)
         # set_is_focus to the window
-        self.application.set_default(window)
+        self.application.set_default(self.window)
         # check if the window have the default
-        self.assertEqual(self.application.get_default(), window.get_widget_id())
+        self.assertEqual(self.application.get_default(), self.window.get_widget_id())
         # Test None
         self.application.set_default(None)
         # focus get_default return None
@@ -416,15 +421,15 @@ class TestApplication(unittest.TestCase):
     # focus
     def test_set_get_is_focus(self):
         """Test Application.set_is_focus() and Application.get_is_focus()"""
-        window = GLXCurses.Window()
+        self.window = GLXCurses.Window()
         # nothing happen
         self.application.set_is_focus()
         # focus get_is_focus return None
         self.assertEqual(self.application.get_is_focus(), None)
         # set_is_focus to the window
-        self.application.set_is_focus(window)
+        self.application.set_is_focus(self.window)
         # check if the window have the focus
-        self.assertEqual(self.application.get_is_focus(), window.get_widget_id())
+        self.assertEqual(self.application.get_is_focus(), self.window.get_widget_id())
         # Test None
         self.application.set_is_focus(None)
         # focus get_is_focus return None
@@ -467,13 +472,13 @@ class TestApplication(unittest.TestCase):
     def test__add_child_to_windows_list(self):
         """Test Application child add to the children windows list"""
         # create a new window
-        window = GLXCurses.Window()
+        self.window = GLXCurses.Window()
 
         # check the size of the children windows list before add a window
         windows_list_size_before = len(self.application._get_windows_list())
 
         # add a window to the children window list
-        self.application._add_child_to_windows_list(window)
+        self.application._add_child_to_windows_list(self.window)
 
         # check the size of the children windows list after add a window
         windows_list_size_after = len(self.application._get_windows_list())
@@ -502,26 +507,27 @@ class TestApplication(unittest.TestCase):
         self.application._set_windows_list(list())
 
         # create a new window
-        window = GLXCurses.Window()
+        self.window = GLXCurses.Window()
 
         # add a window
-        self.application.add_window(window)
+        self.application.add_window(self.window)
 
         # _get_displayed_window() must return the last added window
-        self.assertEqual(self.application.get_active_window(), window)
+        self.assertEqual(self.application.get_active_window(), self.window)
 
     def test_everything_menubar(self):
         """Test Application MenuBar"""
         # Create a MenuBar
-        menubar = GLXCurses.MenuBar()
-        # Default Value must be None
+        self.menubar = GLXCurses.MenuBar()
+        # Default MenuBar value be None
+        self.application._set_menubar(None)
         self.assertEqual(self.application._get_menubar(), None)
         # Add the MenuBar to application and set Parent
-        self.application.add_menubar(menubar)
+        self.application.add_menubar(self.menubar)
         # Test the set menu bar
-        self.application._set_menubar(menubar)
+        self.application._set_menubar(self.menubar)
         # check if we have the same menubar
-        self.assertEqual(self.application._get_menubar(), menubar)
+        self.assertEqual(self.application._get_menubar(), self.menubar)
         # Test to remove the Menubar
         self.application.remove_menubar()
         # check if the menubar have been remove
@@ -533,15 +539,16 @@ class TestApplication(unittest.TestCase):
     def test_everything_statusbar(self):
         """Test Application StatusBar"""
         # Create a StatusBar
-        statusbar = GLXCurses.StatusBar()
-        # Default Value must be None
+        self.statusbar = GLXCurses.StatusBar()
+        # Default StatusBar value be None
+        self.application._set_statusbar(None)
         self.assertEqual(self.application._get_statusbar(), None)
         # Add the StatusBar to application and set ot parent
-        self.application.add_statusbar(statusbar)
+        self.application.add_statusbar(self.statusbar)
         # Test the set status bar with internal method
-        self.application._set_statusbar(statusbar)
+        self.application._set_statusbar(self.statusbar)
         # check if we have the same statusbar
-        self.assertEqual(self.application._get_statusbar(), statusbar)
+        self.assertEqual(self.application._get_statusbar(), self.statusbar)
         # Test to remove the StatusBar
         self.application.remove_statusbar()
         # check if the status bar have been removed
@@ -552,16 +559,17 @@ class TestApplication(unittest.TestCase):
 
     def test_everything_messagebar(self):
         """Test Application MessageBar"""
-        # Create a StatusBar
-        messagebar = GLXCurses.MessageBar()
-        # Default Value of the MessageBar must be None
+        # Create a MessageBar
+        self.messagebar = GLXCurses.MessageBar()
+        # Default MessageBar value be None
+        self.application._set_messagebar(None)
         self.assertEqual(self.application._get_messagebar(), None)
         # Add the MessageBar to application and set ot parent
-        self.application.add_messagebar(messagebar)
+        self.application.add_messagebar(self.messagebar)
         # Test the set MessageBar with internal method
-        self.application._set_messagebar(messagebar)
+        self.application._set_messagebar(self.messagebar)
         # check if we have the same MessageBar
-        self.assertEqual(self.application._get_messagebar(), messagebar)
+        self.assertEqual(self.application._get_messagebar(), self.messagebar)
         # Test to remove the MessageBar
         self.application.remove_messagebar()
         # check if the MessageBar have been removed
@@ -573,15 +581,16 @@ class TestApplication(unittest.TestCase):
     def test_everything_toolbar(self):
         """Test Application ToolBar"""
         # Create a StatusBar
-        toolbar = GLXCurses.ToolBar()
-        # Default ToolBar value must be None
+        self.toolbar = GLXCurses.ToolBar()
+        # Default ToolBar value be None
+        self.application._set_toolbar(None)
         self.assertEqual(self.application._get_toolbar(), None)
         # Add the ToolBar to application and set ot parent
-        self.application.add_toolbar(toolbar)
+        self.application.add_toolbar(self.toolbar)
         # Test the set ToolBar with internal method
-        self.application._set_toolbar(toolbar)
+        self.application._set_toolbar(self.toolbar)
         # check if we have the same ToolBar
-        self.assertEqual(self.application._get_toolbar(), toolbar)
+        self.assertEqual(self.application._get_toolbar(), self.toolbar)
         # Test to remove the ToolBar
         self.application.remove_toolbar()
         # check if the ToolBar have been removed
@@ -590,6 +599,25 @@ class TestApplication(unittest.TestCase):
         self.assertRaises(TypeError, self.application._set_toolbar, int())
         self.assertRaises(TypeError, self.application.add_toolbar, int())
 
+    def test_everything(self):
+        """Test Application"""
+        # Create a StatusBar
+        self.menubar = GLXCurses.MenuBar()
+        self.window = GLXCurses.Window()
+        self.messagebar = GLXCurses.MessageBar()
+        self.statusbar = GLXCurses.StatusBar()
+        self.toolbar = GLXCurses.ToolBar()
+
+        # Add the ToolBar to application and set ot parent
+        self.application.add_menubar(self.menubar)
+        self.application.add_window(self.window)
+        self.application.add_messagebar(self.messagebar)
+        self.application.add_statusbar(self.statusbar)
+        self.application.add_toolbar(self.toolbar)
+        # check if we have the same ToolBar
+
+        self.application.draw()
+        self.application.refresh()
 
 if __name__ == '__main__':
     unittest.main()
