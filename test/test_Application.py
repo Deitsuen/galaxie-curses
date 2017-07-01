@@ -363,12 +363,12 @@ class TestApplication(unittest.TestCase):
         self.application.add_window(window2)
 
         # the last list element must contain the same reference to our window
-        self.assertEqual(self.application._get_active_window(), window2)
+        self.assertEqual(self.application.get_active_window(), window2)
 
         self.application.remove_window(window2)
 
         # we get again the last windows children element
-        self.assertEqual(self.application._get_active_window(), window1)
+        self.assertEqual(self.application.get_active_window(), window1)
 
     def test_refresh(self):
         """Test Application.refresh() method """
@@ -385,6 +385,22 @@ class TestApplication(unittest.TestCase):
     def test_close(self):
         """Test Application.close() method """
         self.application.close()
+
+    def test_set_get_default(self):
+        "Test Application.set_default() and Application.get_default()"
+        window = GLXCurses.Window()
+        # nothing happen
+        self.application.set_default()
+        # focus get_default return None
+        self.assertEqual(self.application.get_default(), None)
+        # set_is_focus to the window
+        self.application.set_default(window)
+        # check if the window have the default
+        self.assertEqual(self.application.get_default(), window.get_widget_id())
+        # Test None
+        self.application.set_default(None)
+        # focus get_default return None
+        self.assertEqual(self.application.get_default(), None)
 
     # focus
     def test_set_get_is_focus(self):
@@ -405,7 +421,19 @@ class TestApplication(unittest.TestCase):
 
     def test_set_get_tooltip(self):
         """Test Application.set_tooltip() and Application.get_tooltip()"""
-        pass
+        window = GLXCurses.Window()
+        # nothing happen
+        self.application.set_tooltip()
+        # focus get_tooltip return None
+        self.assertEqual(self.application.get_tooltip(), None)
+        # set_tooltip to the window
+        self.application.set_tooltip(window)
+        # check if the window have the focus
+        self.assertEqual(self.application.get_tooltip(), window.get_widget_id())
+        # Test None
+        self.application.set_tooltip(None)
+        # focus get_tooltip return None
+        self.assertEqual(self.application.get_tooltip(), None)
 
     # Test Internal methode
     def test__set__get_windows_list(self):
@@ -469,7 +497,7 @@ class TestApplication(unittest.TestCase):
         self.application.add_window(window)
 
         # _get_displayed_window() must return the last added window
-        self.assertEqual(self.application._get_active_window(), window)
+        self.assertEqual(self.application.get_active_window(), window)
 
     def test_everything_menubar(self):
         """Test Application MenuBar"""

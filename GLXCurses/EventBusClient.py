@@ -6,7 +6,7 @@
 # Author: the Galaxie Curses Team, all rights reserved
 
 
-class EventBusClient:
+class EventBusClient(object):
 
     def __init__(self):
         self.event_handlers = dict()
@@ -23,8 +23,10 @@ class EventBusClient:
             self.event_handlers[event_signal].remove(event_handler)
 
     def handle_and_dispatch_event(self, event_signal, args=None):
+
         if args is None:
             args = []
+
         if event_signal in self.event_handlers:
             for handler in self.event_handlers[event_signal]:
                 handler(self, event_signal, args)

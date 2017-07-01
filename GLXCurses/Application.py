@@ -41,7 +41,8 @@ class EventBus(object):
 
     def adopt(self, orphan):
         """
-        not implemented yesr
+        not implemented yet
+
         :param orphan: a poor widget orphan
         """
         pass
@@ -80,8 +81,8 @@ class EventBus(object):
             for handler in self._get_signal_handlers_dict()[detailed_signal]:
                 handler(self, detailed_signal, args)
 
-        if self._get_active_window():
-            self._get_active_window().handle_and_dispatch_event(detailed_signal, args)
+        if GLXCurses.application.get_active_window():
+            GLXCurses.application.get_active_window().handle_and_dispatch_event(detailed_signal, args)
 
     def _get_signal_handlers_dict(self):
         return self.event_handlers
@@ -903,8 +904,8 @@ class Application(EventBus):
 
             # Check main curses_subwin to display
             if self.curses_subwin is not None:
-                if glxc_type(self._get_active_window()):
-                    self._get_active_window().draw()
+                if glxc_type(self.get_active_window()):
+                    self.get_active_window().draw()
 
             if glxc_type(self._get_messagebar()):
                 self._get_messagebar().draw()
@@ -1011,10 +1012,31 @@ class Application(EventBus):
 
     # Focus and Selection
     def get_default(self):
+        """
+        Return the unique id of the widget it have been set by \
+        :func:`Application.set_default() <GLXCurses.Application.Application.set_default()>`
+
+        .. seealso:: \
+         :func:`Application.set_default() <GLXCurses.Application.Application.set_default()>`
+
+         :func:`Widget.get_widget_id() <GLXCurses.Widget.Widget.get_widget_id()>`
+
+        :return: a unique id generate by uuid module
+        :rtype: long or None
+        """
         return self.widget_it_have_default
 
-    def set_default(self, widget_unique_id):
-        self.widget_it_have_default = widget_unique_id
+    def set_default(self, widget=None):
+        """
+        The default widget is the widget that’s activated when the user presses Enter in a dialog (for example).
+
+        :param widget: a Widget or None to unset the default widget.
+        :type widget: GLXCurses.Widget or None
+        """
+        if glxc_type(widget):
+            self.widget_it_have_default = widget.get_widget_id()
+        else:
+            self.widget_it_have_default = None
 
     def get_is_focus(self):
         """
@@ -1050,10 +1072,36 @@ class Application(EventBus):
         # Nothing more at all !!!
 
     def get_tooltip(self):
+        """
+        Return the unique id of the widget it have been set by \
+        :func:`Application.set_tooltip() <GLXCurses.Application.Application.set_tooltip()>`
+
+        .. seealso:: \
+         :func:`Application.set_tooltip() <GLXCurses.Application.Application.set_tooltip()>`
+
+         :func:`Widget.get_widget_id() <GLXCurses.Widget.Widget.get_widget_id()>`
+
+        :return: a unique id generate by uuid module
+        :rtype: long or None
+        """
         return self.widget_it_have_tooltip
 
-    def set_tooltip(self, widget_unique_id):
-        self.widget_it_have_tooltip = widget_unique_id
+    def set_tooltip(self, widget=None):
+        """
+        Determines if the widget have to display a tooltip
+
+        "Not implemented yet"
+
+        .. seealso:: \
+        :func:`Application.get_tooltip() <GLXCurses.Application.Application.get_tooltip()>`
+
+        :param widget: a Widget
+        :type widget: GLXCurses.Widget or None
+        """
+        if glxc_type(widget):
+            self.widget_it_have_tooltip = widget.get_widget_id()
+        else:
+            self.widget_it_have_tooltip = None
 
     # Internal
 
@@ -1125,7 +1173,7 @@ class Application(EventBus):
         if window.get_widget_id() != self._get_active_window_id():
             self._set_active_window_id(window.get_widget_id())
 
-    def _get_active_window(self):
+    def get_active_window(self):
         """
         Return A :class:`Window <GLXCurses.Window.Window>` widget if any.
 
