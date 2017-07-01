@@ -30,18 +30,6 @@ class HSeparator(GLXCurses.Widget):
               | Default value | HSeparator                    |
               +---------------+-------------------------------+
 
-        .. py:data:: set_preferred_height
-
-            Size management
-
-              +---------------+-------------------------------+
-              | Type          | :py:data:`int`                |
-              +---------------+-------------------------------+
-              | Flags         | Read / Write                  |
-              +---------------+-------------------------------+
-              | Default value | 1                             |
-              +---------------+-------------------------------+
-
         .. py:data:: position_type
 
             PositionType: CENTER, TOP, BOTTOM
@@ -79,6 +67,11 @@ class HSeparator(GLXCurses.Widget):
         self._hseperator_y = 0
 
     def draw_widget_in_area(self):
+        """
+        Call by the \
+        :func:`Widget.draw() <GLXCurses.Widget.Widget.draw()>` method each time the MainLoop call a \
+        :func:`Application.refresh() <GLXCurses.Application.Application.refresh()>`
+        """
         self.set_preferred_width(self._get_estimated_preferred_width())
         self.set_preferred_height(self._get_estimated_preferred_height())
         self._check_position_type()
@@ -86,18 +79,32 @@ class HSeparator(GLXCurses.Widget):
             if self.get_width() >= self.get_preferred_width():
                 self._draw_horizontal_separator()
 
-    # PositionType: CENTER, TOP, BOTTOM
     def set_position_type(self, position_type):
-        allowed_value = [glxc.POS_TOP, glxc.POS_CENTER, glxc.POS_BOTTOM]
-        if position_type in allowed_value:
+        """
+        Set the Position of the Horizontal separator
+
+        PositionType: glxc.POS_TOP, glxc.POS_CENTER, glxc.POS_BOTTOM
+
+        :param position_type: a PositionType
+        :type position_type: str
+        """
+        if position_type in [glxc.POS_TOP, glxc.POS_CENTER, glxc.POS_BOTTOM]:
             if self.get_position_type() != str(position_type).upper():
                 self.position_type = str(position_type).upper()
+                # When the position type is set update preferred sizes store in Widget class
                 self.set_preferred_width(self._get_estimated_preferred_width())
                 self.set_preferred_height(self._get_estimated_preferred_height())
         else:
             raise TypeError(u'PositionType must be CENTER or TOP or BOTTOM')
 
     def get_position_type(self):
+        """
+        Return the Position Type of the Horizontal separator
+
+        PositionType: glxc.POS_TOP, glxc.POS_CENTER, glxc.POS_BOTTOM
+
+        :return: str
+        """
         return self.position_type
 
     # Internal

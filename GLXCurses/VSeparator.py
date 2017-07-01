@@ -30,18 +30,6 @@ class VSeparator(Widget):
               | Default value | HSeparator                    |
               +---------------+-------------------------------+
 
-        .. py:data:: set_preferred_height
-
-            Size management
-
-              +---------------+-------------------------------+
-              | Type          | :py:data:`int`                |
-              +---------------+-------------------------------+
-              | Flags         | Read / Write                  |
-              +---------------+-------------------------------+
-              | Default value | 1                             |
-              +---------------+-------------------------------+
-
         .. py:data:: Justify
 
             Justify: CENTER, LEFT, RIGHT
@@ -79,6 +67,11 @@ class VSeparator(Widget):
         self._vseperator_y = 0
 
     def draw_widget_in_area(self):
+        """
+        Call by the \
+        :func:`Widget.draw() <GLXCurses.Widget.Widget.draw()>` method each time the MainLoop call a \
+        :func:`Application.refresh() <GLXCurses.Application.Application.refresh()>`
+        """
         self.set_preferred_width(self._get_estimated_preferred_width())
         self.set_preferred_height(self._get_estimated_preferred_height())
         self._check_justification()
@@ -88,15 +81,31 @@ class VSeparator(Widget):
 
     # Justification: LEFT, RIGHT, CENTER
     def set_justify(self, justify):
-        allowed_value = [glxc.JUSTIFY_LEFT, glxc.JUSTIFY_CENTER, glxc.JUSTIFY_RIGHT]
-        if justify in allowed_value:
-            self.justify = str(justify).upper()
-            self.set_preferred_width(self._get_estimated_preferred_width())
-            self.set_preferred_height(self._get_estimated_preferred_height())
+        """
+        Set the Justify of the Vertical separator
+
+        Justify: glxc.JUSTIFY_LEFT, glxc.JUSTIFY_CENTER, glxc.JUSTIFY_RIGHT
+
+        :param justify: a Justify
+        :type justify: str
+        """
+        if justify in [glxc.JUSTIFY_LEFT, glxc.JUSTIFY_CENTER, glxc.JUSTIFY_RIGHT]:
+            if self.get_justify() != str(justify).upper():
+                self.justify = str(justify).upper()
+                # When the justify is set update preferred sizes store in Widget class
+                self.set_preferred_width(self._get_estimated_preferred_width())
+                self.set_preferred_height(self._get_estimated_preferred_height())
         else:
             raise TypeError(u'PositionType must be LEFT or CENTER or RIGHT')
 
     def get_justify(self):
+        """
+        Return the Justify of the Vertical separator
+
+        PositionType: glxc.JUSTIFY_LEFT, glxc.JUSTIFY_CENTER, glxc.JUSTIFY_RIGHT
+
+        :return: str
+        """
         return self.justify
 
     # Internal

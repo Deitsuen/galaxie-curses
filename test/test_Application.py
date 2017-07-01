@@ -8,6 +8,7 @@ import string
 import uuid
 import sys
 import os
+import curses
 
 from GLXCurses.Utils import glxc_type
 
@@ -23,9 +24,18 @@ class TestApplication(unittest.TestCase):
     def setUp(self):
         # Before the test start
         self.application = GLXCurses.Application()
+        self.win_to_test = self.application.get_screen().subwin(
+            0,
+            0,
+            0,
+            0
+        )
+
         rows, columns = os.popen('stty size', 'r').read().split()
         self.columns = int(columns)
         self.width = self.columns - 7
+
+
         try:
             sys.stdout.write('\r')
             sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.columns))
@@ -62,14 +72,14 @@ class TestApplication(unittest.TestCase):
         # Now get_parent() shouldn't None return
         self.assertNotEqual(self.application.get_parent(), None)
         # We check the return is a curses object window
-        self.assertEqual(str(type(self.application.get_parent())), "<type '_curses.curses window'>")
+        self.assertEqual(type(self.application.get_parent()), type(self.win_to_test))
 
         # Try to erase the parent
         self.application.set_parent(None)
         # It must be ignore
         self.assertNotEqual(self.application.get_parent(), None)
         # It must continue to return a curses window object
-        self.assertEqual(str(type(self.application.get_parent())), "<type '_curses.curses window'>")
+        self.assertEqual(type(self.application.get_parent()), type(self.win_to_test))
 
         # Must be the same
         self.assertEqual(self.application.get_curses_subwin(), self.application.get_parent())
@@ -79,7 +89,7 @@ class TestApplication(unittest.TestCase):
         # call .draw method for start all computation of subwindow
         self.application.draw()
         # We check the return is a curses object window
-        self.assertEqual(str(type(self.application.get_parent())), "<type '_curses.curses window'>")
+        self.assertEqual(type(self.application.get_parent()), type(self.win_to_test))
         # check return type tuple
         self.assertEqual(type(self.application.get_parent_size()), type(tuple()))
         # check the len of the tuple
@@ -96,7 +106,7 @@ class TestApplication(unittest.TestCase):
         # call .draw method for start all computation of subwindow
         self.application.draw()
         # We check the return is a curses object window
-        self.assertEqual(str(type(self.application.get_parent())), "<type '_curses.curses window'>")
+        self.assertEqual(type(self.application.get_parent()), type(self.win_to_test))
         # check return type tuple
         self.assertEqual(type(self.application.get_parent_origin()), type(tuple()))
         # check the len of the tuple
@@ -113,7 +123,7 @@ class TestApplication(unittest.TestCase):
         # call .draw method for start all computation of subwindow
         self.application.draw()
         # We check the return is a curses object window
-        self.assertEqual(str(type(self.application.get_parent())), "<type '_curses.curses window'>")
+        self.assertEqual(type(self.application.get_parent()), type(self.win_to_test))
         # check return type int
         self.assertEqual(type(self.application.get_parent_spacing()), type(int()))
 
@@ -139,15 +149,16 @@ class TestApplication(unittest.TestCase):
         """Test Application.get_curses_subwin()"""
         # call .draw method for start all computation of subwindow
         self.application.draw()
+
         # We check the return is a curses object window
-        self.assertEqual(str(type(self.application.get_curses_subwin())), "<type '_curses.curses window'>")
+        self.assertEqual(type(self.application.get_curses_subwin()), type(self.win_to_test))
 
     def test_get_origin(self):
         """Test Application.get_origin()"""
         # call .draw method for start all computation of subwindow
         self.application.draw()
         # We check the return is a curses object window
-        self.assertEqual(str(type(self.application.get_curses_subwin())), "<type '_curses.curses window'>")
+        self.assertEqual(type(self.application.get_curses_subwin()), type(self.win_to_test))
         # check return type tuple
         self.assertEqual(type(self.application.get_origin()), type(tuple()))
         # check the len of the tuple
@@ -189,7 +200,7 @@ class TestApplication(unittest.TestCase):
         # call .draw method for start all computation of subwindow
         self.application.draw()
         # We check the return is a curses object window
-        self.assertEqual(str(type(self.application.get_screen())), "<type '_curses.curses window'>")
+        self.assertEqual(type(self.application.get_screen()), type(self.win_to_test))
         # Must do nothing
         self.application.set_screen('lilo')
         # Must do nothing
@@ -246,7 +257,7 @@ class TestApplication(unittest.TestCase):
         # call .draw method for start all computation of subwindow
         self.application.draw()
         # We check the return is a curses object window
-        self.assertEqual(str(type(self.application.get_curses_subwin())), "<type '_curses.curses window'>")
+        self.assertEqual(type(self.application.get_curses_subwin()), type(self.win_to_test))
         # check return type tuple
         self.assertEqual(type(self.application.get_size()), type(tuple()))
         # check the len of the tuple
