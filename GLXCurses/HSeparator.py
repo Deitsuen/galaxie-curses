@@ -60,7 +60,7 @@ class HSeparator(GLXCurses.Widget):
         self.set_preferred_height(1)
 
         # PositionType: CENTER, TOP, BOTTOM
-        self.position_type = glxc.POS_CENTER
+        self._position_type = glxc.POS_CENTER
 
         # Internal Widget Setting
         self._hseperator_x = 0
@@ -90,7 +90,7 @@ class HSeparator(GLXCurses.Widget):
         """
         if position_type in [glxc.POS_TOP, glxc.POS_CENTER, glxc.POS_BOTTOM]:
             if self.get_position_type() != str(position_type).upper():
-                self.position_type = str(position_type).upper()
+                self._position_type = str(position_type).upper()
                 # When the position type is set update preferred sizes store in Widget class
                 self.set_preferred_width(self._get_estimated_preferred_width())
                 self.set_preferred_height(self._get_estimated_preferred_height())
@@ -105,7 +105,7 @@ class HSeparator(GLXCurses.Widget):
 
         :return: str
         """
-        return self.position_type
+        return self._position_type
 
     # Internal
     def _check_position_type(self):

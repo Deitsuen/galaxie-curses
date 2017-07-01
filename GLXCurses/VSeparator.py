@@ -60,7 +60,7 @@ class VSeparator(Widget):
         self.set_preferred_width(1)
 
         # Justification: LEFT, RIGHT, CENTER
-        self.justify = glxc.JUSTIFY_CENTER
+        self._justify = glxc.JUSTIFY_CENTER
 
         # Internal Widget Setting
         self._vseperator_x = 0
@@ -69,12 +69,13 @@ class VSeparator(Widget):
     def draw_widget_in_area(self):
         """
         Call by the \
-        :func:`Widget.draw() <GLXCurses.Widget.Widget.draw()>` method each time the MainLoop call a \
+        :func:`Widget.draw() <GLXCurses.Widget.Widget.draw()>` method each time the \
+        :class:`MainLoop <GLXCurses.MainLoop.MainLoop>` call a \
         :func:`Application.refresh() <GLXCurses.Application.Application.refresh()>`
         """
         self.set_preferred_width(self._get_estimated_preferred_width())
         self.set_preferred_height(self._get_estimated_preferred_height())
-        self._check_justification()
+        self._check_justify()
         if self.get_height() >= 1 + (self.get_spacing() * 2):
             if self.get_width() >= 1 + (self.get_spacing() * 2):
                 self._draw_vertical_separator()
@@ -84,14 +85,17 @@ class VSeparator(Widget):
         """
         Set the Justify of the Vertical separator
 
-        Justify: glxc.JUSTIFY_LEFT, glxc.JUSTIFY_CENTER, glxc.JUSTIFY_RIGHT
+         Justify:
+          - LEFT
+          - CENTER
+          - RIGHT
 
         :param justify: a Justify
         :type justify: str
         """
         if justify in [glxc.JUSTIFY_LEFT, glxc.JUSTIFY_CENTER, glxc.JUSTIFY_RIGHT]:
             if self.get_justify() != str(justify).upper():
-                self.justify = str(justify).upper()
+                self._justify = str(justify).upper()
                 # When the justify is set update preferred sizes store in Widget class
                 self.set_preferred_width(self._get_estimated_preferred_width())
                 self.set_preferred_height(self._get_estimated_preferred_height())
@@ -102,19 +106,22 @@ class VSeparator(Widget):
         """
         Return the Justify of the Vertical separator
 
-        PositionType: glxc.JUSTIFY_LEFT, glxc.JUSTIFY_CENTER, glxc.JUSTIFY_RIGHT
+         Justify:
+          - LEFT
+          - CENTER
+          - RIGHT
 
         :return: str
         """
-        return self.justify
+        return self._justify
 
     # Internal
-    def _check_justification(self):
+    def _check_justify(self):
         """Check the justification of the X axe"""
         if self.get_justify() == glxc.JUSTIFY_CENTER:
             self._set_vseperator_x((self.get_width() / 2) - (self.get_preferred_width() / 2))
         elif self.get_justify() == glxc.JUSTIFY_LEFT:
-            self._set_vseperator_x(0 + self.get_spacing())
+            self._set_vseperator_x(self.get_spacing())
         elif self.get_justify() == glxc.JUSTIFY_RIGHT:
             self._set_vseperator_x(self.get_width() - self.get_preferred_width() - self.get_spacing())
 
