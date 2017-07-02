@@ -119,11 +119,101 @@ class VSeparator(Widget):
     def _check_justify(self):
         """Check the justification of the X axe"""
         if self.get_justify() == glxc.JUSTIFY_CENTER:
-            self._set_vseperator_x((self.get_width() / 2) - (self.get_preferred_width() / 2))
+
+            width = self.get_width()
+            preferred_width = self.get_preferred_width()
+
+            # Clamp value et impose the center
+            if width is None:
+                estimated_width = 0
+            elif width <= 0:
+                estimated_width = 0
+            elif width == 1:
+                estimated_width = 0
+            else:
+                estimated_width = int(width / 2)
+
+            # Clamp value et impose the center
+            if preferred_width is None:
+                estimated_preferred_width = 0
+            elif preferred_width <= 0:
+                estimated_preferred_width = 0
+            elif preferred_width == 1:
+                estimated_preferred_width = 0
+            else:
+                estimated_preferred_width = int(preferred_width / 2)
+
+            # Make the compute
+            final_value = int(estimated_width - estimated_preferred_width)
+
+            # clamp the result
+            if final_value <= 0:
+                final_value = 0
+
+            # Finally set the value
+            self._set_vseperator_x(final_value)
+
         elif self.get_justify() == glxc.JUSTIFY_LEFT:
-            self._set_vseperator_x(self.get_spacing())
+            spacing = self.get_spacing()
+
+            # Clamp estimated_spacing
+            if spacing is None:
+                estimated_spacing = 0
+            elif spacing <= 0:
+                estimated_spacing = 0
+            else:
+                estimated_spacing = spacing
+
+            # Make the compute
+            final_value = int(estimated_spacing)
+
+            # clamp the result
+            if final_value <= 0:
+                final_value = 0
+
+            # Finally set the value
+            self._set_vseperator_x(final_value)
+            # self._set_vseperator_x(self.get_spacing())
+
         elif self.get_justify() == glxc.JUSTIFY_RIGHT:
-            self._set_vseperator_x(self.get_width() - self.get_preferred_width() - self.get_spacing())
+            width = self.get_width()
+            preferred_width = self.get_preferred_width()
+            spacing = self.get_spacing()
+
+            # Clamp estimated_width
+            if width is None:
+                estimated_width = 0
+            elif width <= 0:
+                estimated_width = 0
+            else:
+                estimated_width = width
+
+            # Clamp preferred_width
+            if preferred_width is None:
+                estimated_preferred_width = 0
+            elif preferred_width <= 0:
+                estimated_preferred_width = 0
+            else:
+                estimated_preferred_width = preferred_width
+
+            # Clamp estimated_spacing
+            if spacing is None:
+                estimated_spacing = 0
+            elif spacing <= 0:
+                estimated_spacing = 0
+            else:
+                estimated_spacing = spacing
+
+            # Make the compute
+            final_value = int(estimated_width - estimated_preferred_width - estimated_spacing)
+
+            # clamp the result
+            if final_value <= 0:
+                final_value = 0
+
+            # Finally set the value
+            self._set_vseperator_x(final_value)
+            # self._set_vseperator_x(int(self.get_width() - self.get_preferred_width() - self.get_spacing()))
 
     def _draw_vertical_separator(self):
         """Draw the Vertical Label with Justification and PositionType"""

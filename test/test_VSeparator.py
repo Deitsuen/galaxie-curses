@@ -97,11 +97,55 @@ class TestWindow(unittest.TestCase):
         vline._check_justify()
         self.assertEqual(vline._vseperator_x, 42)
 
+        vline.width = None
+        vline.preferred_width = None
+        vline._check_justify()
+        self.assertEqual(vline._vseperator_x, 0)
+
+        vline.width = -1
+        vline.preferred_width = -1
+        vline._check_justify()
+        self.assertEqual(vline._vseperator_x, 0)
+
+        vline.width = 0
+        vline.preferred_width = -0
+        vline._check_justify()
+        self.assertEqual(vline._vseperator_x, 0)
+
+        vline.width = -1000
+        vline.preferred_width = -100
+        vline._check_justify()
+        self.assertEqual(vline._vseperator_x, 0)
+
         # glxc.JUSTIFY_LEFT -> self.get_spacing()
         vline._justify = glxc.JUSTIFY_LEFT
         vline.spacing = 24
         vline._check_justify()
         self.assertEqual(vline._vseperator_x, 24)
+
+        vline.width = None
+        vline.preferred_width = None
+        vline.spacing = None
+        vline._check_justify()
+        self.assertEqual(vline._vseperator_x, 0)
+
+        vline.width = -1
+        vline.preferred_width = -1
+        vline.spacing = -1
+        vline._check_justify()
+        self.assertEqual(vline._vseperator_x, 0)
+
+        vline.width = 0
+        vline.preferred_width = 0
+        vline.spacing = 0
+        vline._check_justify()
+        self.assertEqual(vline._vseperator_x, 0)
+
+        vline.width = -1000
+        vline.preferred_width = -100
+        vline.spacing = -10
+        vline._check_justify()
+        self.assertEqual(vline._vseperator_x, 0)
 
         # glxc.JUSTIFY_RIGHT -> self.get_width() - self.get_preferred_width() - self.get_spacing()
         vline._justify = glxc.JUSTIFY_RIGHT
@@ -110,6 +154,26 @@ class TestWindow(unittest.TestCase):
         vline.spacing = 2
         vline._check_justify()
         self.assertEqual(vline._vseperator_x, 42)
+
+        vline.width = None
+        vline.preferred_width = None
+        vline._check_justify()
+        self.assertEqual(vline._vseperator_x, 0)
+
+        vline.width = -1
+        vline.preferred_width = -1
+        vline._check_justify()
+        self.assertEqual(vline._vseperator_x, 0)
+
+        vline.width = 0
+        vline.preferred_width = -0
+        vline._check_justify()
+        self.assertEqual(vline._vseperator_x, 0)
+
+        vline.width = -1000
+        vline.preferred_width = -100
+        vline._check_justify()
+        self.assertEqual(vline._vseperator_x, 0)
 
     def test__get_estimated_preferred_width(self):
         """Test VSeparator._get_estimated_preferred_width()"""

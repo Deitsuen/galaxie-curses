@@ -115,11 +115,73 @@ class HSeparator(GLXCurses.Widget):
         PositionType: CENTER, TOP, BOTTOM
         """
         if self.get_position_type() == glxc.POS_CENTER:
-            self._set_hseperator_y((self.get_height() / 2) - self.get_preferred_height())
+
+            height = self.get_height()
+            preferred_height = self.get_preferred_height()
+
+            # Clamp height
+            if height is None:
+                estimated_height = 0
+            elif height <= 0:
+                estimated_height = 0
+            elif height == 1:
+                # prevent a 1/2 = float(0.5) case
+                estimated_height = 0
+            else:
+                estimated_height = int(height / 2)
+
+            # Clamp preferred_height
+            if preferred_height is None:
+                estimated_preferred_height = 0
+            elif preferred_height <= 0:
+                estimated_preferred_height = 0
+            else:
+                estimated_preferred_height = preferred_height
+
+            # Make teh compute
+            final_value = int(estimated_height - estimated_preferred_height)
+
+            # Clamp the result to a positive
+            if final_value <= 0:
+                final_value = 0
+
+            # Finally set the result
+            self._set_hseperator_y(final_value)
+
         elif self.get_position_type() == glxc.POS_TOP:
             self._set_hseperator_y(0)
+
         elif self.get_position_type() == glxc.POS_BOTTOM:
-            self._set_hseperator_y(self.get_height() - self.get_preferred_height())
+
+            height = self.get_height()
+            preferred_height = self.get_preferred_height()
+
+            # Clamp height
+            if height is None:
+                estimated_height = 0
+            elif height <= 0:
+                estimated_height = 0
+            else:
+                estimated_height = height
+
+            # Clamp preferred_height
+            if preferred_height is None:
+                estimated_preferred_height = 0
+            elif self.get_preferred_height() <= 0:
+                estimated_preferred_height = 0
+            else:
+                estimated_preferred_height = preferred_height
+
+            # Make the compute
+            final_value = int(estimated_height - estimated_preferred_height)
+
+            # Clamp the result to a positive
+            if final_value <= 0:
+                final_value = 0
+
+            # Finally set the result
+            self._set_hseperator_y(final_value)
+            #self._set_hseperator_y(self.get_height() - self.get_preferred_height())
 
     def _draw_horizontal_separator(self):
         """Draw the Horizontal Separator with PositionType"""

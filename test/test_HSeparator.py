@@ -97,8 +97,48 @@ class TestWindow(unittest.TestCase):
         hline._check_position_type()
         self.assertEqual(hline._hseperator_y, 42)
 
+        hline.height = None
+        hline.preferred_height = None
+        hline._check_position_type()
+        self.assertEqual(hline._hseperator_y, 0)
+
+        hline.height = -1
+        hline.preferred_height = -1
+        hline._check_position_type()
+        self.assertEqual(hline._hseperator_y, 0)
+
+        hline.height = 0
+        hline.preferred_height = -0
+        hline._check_position_type()
+        self.assertEqual(hline._hseperator_y, 0)
+
+        hline.height = -1000
+        hline.preferred_height = -100
+        hline._check_position_type()
+        self.assertEqual(hline._hseperator_y, 0)
+
         # glxc.POS_TOP -> self._set_hseperator_y(0)
         hline._position_type = glxc.POS_TOP
+        hline._check_position_type()
+        self.assertEqual(hline._hseperator_y, 0)
+
+        hline.height = None
+        hline.preferred_height = None
+        hline._check_position_type()
+        self.assertEqual(hline._hseperator_y, 0)
+
+        hline.height = -1
+        hline.preferred_height = -1
+        hline._check_position_type()
+        self.assertEqual(hline._hseperator_y, 0)
+
+        hline.height = 0
+        hline.preferred_height = -0
+        hline._check_position_type()
+        self.assertEqual(hline._hseperator_y, 0)
+
+        hline.height = -1000
+        hline.preferred_height = -100
         hline._check_position_type()
         self.assertEqual(hline._hseperator_y, 0)
 
@@ -108,6 +148,26 @@ class TestWindow(unittest.TestCase):
         hline.preferred_height = 20
         hline._check_position_type()
         self.assertEqual(hline._hseperator_y, 42)
+
+        hline.height = None
+        hline.preferred_height = None
+        hline._check_position_type()
+        self.assertEqual(hline._hseperator_y, 0)
+
+        hline.height = -1
+        hline.preferred_height = -1
+        hline._check_position_type()
+        self.assertEqual(hline._hseperator_y, 0)
+
+        hline.height = 0
+        hline.preferred_height = -0
+        hline._check_position_type()
+        self.assertEqual(hline._hseperator_y, 0)
+
+        hline.height = -1000
+        hline.preferred_height = -100
+        hline._check_position_type()
+        self.assertEqual(hline._hseperator_y, 0)
 
     def test__get_estimated_preferred_width(self):
         """Test VSeparator._get_estimated_preferred_width()"""
