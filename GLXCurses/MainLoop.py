@@ -185,7 +185,7 @@ class MainLoop(object):
         if args is None:
             args = dict()
 
-        logging.debug(signal + ' ' + str(args))
+        logging.info(signal + ' ' + str(args))
 
         self.get_event_buffer().insert(0, [signal, args])
 

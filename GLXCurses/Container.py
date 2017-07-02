@@ -41,9 +41,6 @@ class Container(Widget):
     implementation. See more about implementing custom widgets at https://wiki.gnome.org/HowDoI/CustomWidgets
     """
 
-    def destroy(self):
-        raise NotImplementedError
-
     def __init__(self):
         Widget.__init__(self)
 
@@ -101,7 +98,7 @@ class Container(Widget):
         :type widget: GLXCurses.Widget
         """
         # The added widget recive a parent
-        widget.set_parent(self)
+        widget.parent = self
         child_info = dict()
         child_info['WIDGET'] = widget
 
@@ -286,7 +283,7 @@ class Container(Widget):
             'user_data': self.get_children()[0]
         }
         # EVENT EMIT
-        Application().emit('SIGNALS', instance)
+        self.emit('SIGNALS', instance)
 
     def _emit_check_resize_signal(self, user_data=None):
         """
