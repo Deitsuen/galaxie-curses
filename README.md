@@ -85,6 +85,7 @@ The GTK+ v3 documentation is our model: https://developer.gnome.org/gtk3/stable/
 Documentations
 --------------
 
+[![Documentation Status](https://readthedocs.org/projects/galaxie-curses/badge/?version=latest)](http://galaxie-curses.readthedocs.io/?badge=latest)
 Readthedocs link: http://galaxie-curses.readthedocs.io
 
 Note for GTK+ Project Developer's
