@@ -3,6 +3,7 @@
 from GLXCurses import Object
 from GLXCurses import Style
 from GLXCurses import EventBusClient
+
 from datetime import datetime
 import random
 import uuid
@@ -23,7 +24,7 @@ class Widget(Object, EventBusClient):
         self.id = uuid.uuid1().int
 
         # Widget Setting
-        self.set_flags()
+        self.set_flags(self.get_default_flags())
 
         self.state = dict()
         self.state['NORMAL'] = True
@@ -31,6 +32,7 @@ class Widget(Object, EventBusClient):
         self.state['PRELIGHT'] = False
         self.state['SELECTED'] = False
         self.state['INSENSITIVE'] = False
+
         # Widget
         self.curses_subwin = None
         self.spacing = 0
@@ -118,6 +120,7 @@ class Widget(Object, EventBusClient):
         # It can receive parent Style() or a new Style() during a set_parent() / un_parent() call
         # GLXCApplication is a special case where it have no parent, it role is to impose it own style to each Widget
         self.style = Style()
+
         self.style_backup = None
 
         # Sets the text of tooltip to be the given string.

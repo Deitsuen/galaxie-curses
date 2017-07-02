@@ -7,19 +7,91 @@ import uuid
 __author__ = 'Tuux'
 
 
+# Ref Doc: https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#GObject-struct
 class Object(object):
-    def __init__(self):
+    """
+    :Description:
 
-        # Object flags
-        self.flags = None
+    Object is the fundamental type providing the common attributes and methods for all object types in GLXCurses.
+
+    The Object class provides methods for object construction and destruction, property access methods, and signal
+    support.
+
+    Signals are described in detail here.
+
+    """
+    def __init__(self):
+        self.glxc_type = 'GLXCurses.Object'
 
         # Signal
-        self.signal_handlers = dict()
-        self.blocked_handler = list()
-        self.blocked_function = list()
-        self.data = dict()
+        # self.signal_handlers = dict()
+        # self.blocked_handler = list()
+        # self.blocked_function = list()
+        # self.data = dict()
 
-    def set_flags(self):
+        # init
+        self.flags = self.get_default_flags()
+
+    def set_flags(self, flags):
+        """
+        Set the ``flags`` attribute, it consist to a dictionary with keys if have special name.
+
+        see: Object.get_default_flags() for get a default flags.
+
+        :param flags: a Dictionary with Galaxie Curses Object Flags format
+        :type flags: dict
+        """
+        valid_flags = ['IN_DESTRUCTION',
+                       'FLOATING',
+                       'TOPLEVEL',
+                       'NO_WINDOW',
+                       'REALIZED',
+                       'MAPPED',
+                       'VISIBLE',
+                       'SENSITIVE',
+                       'PARENT_SENSITIVE',
+                       'CAN_FOCUS',
+                       'HAS_FOCUS',
+                       'CAN_DEFAULT',
+                       'HAS_DEFAULT',
+                       'HAS_GRAB',
+                       'RC_STYLE',
+                       'COMPOSITE_CHILD',
+                       'NO_REPARENT',
+                       'APP_PAINTABLE',
+                       'RECEIVES_DEFAULT',
+                       'DOUBLE_BUFFERED'
+                       ]
+
+        # Try to found a way to not be execute
+        # Check first level dictionary
+        if type(flags) == dict:
+            # For each key's
+            for key in valid_flags:
+                # Check key in the dictionary
+                try:
+                    flags[key]
+                except KeyError:
+                    raise KeyError(u'>flags< is not a Galaxie Curses Object flags')
+        else:
+            raise TypeError(u'>flags< is not a Galaxie Curses Object flags')
+
+        # If it haven't quit that ok
+        if flags != self.get_flags():
+            self.flags = flags
+
+    def get_flags(self):
+        """
+        Return the ``flags`` attribute, it consist to a dictionary it store keys with have special name.
+
+        :return: a Dictionary with Galaxie Curses Object Flags format
+        :rtype: dict
+        """
+        return self.flags
+
+
+    @staticmethod
+    def get_default_flags():
         flags = dict()
 
         # The object is currently being destroyed.
@@ -89,11 +161,17 @@ class Object(object):
         # Exposes done on the widget should be double-buffered.
         flags['DOUBLE_BUFFERED'] = False
 
-        self.flags = flags
+        return flags
 
-    def unset_flags(self, flags):
-        self.flags = None
+    def unset_flags(self):
+        """
+        Back to default flags by call Object.get_default_flags()
+
+        """
+        self.set_flags(self.get_default_flags())
 
     def destroy(self):
-        raise NotImplementedError
+        """Destroy the object"""
+        self.get_flags()['IN_DESTRUCTION'] = True
+
 
