@@ -1,2 +1,3 @@
 nose
 coverage
+guzzle_sphinx_theme
