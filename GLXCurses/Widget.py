@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from GLXCurses import Object
 from GLXCurses import Style
-from GLXCurses import EventBusClient
+
 
 from datetime import datetime
 import random
@@ -14,10 +14,10 @@ import uuid
 __author__ = 'Tuux'
 
 
-class Widget(Object, EventBusClient):
+class Widget(Object):
     def __init__(self):
         Object.__init__(self)
-        EventBusClient.__init__(self)
+
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Widget'
         # Unique ID it permit to individually identify a widget by example for get_focus get_default

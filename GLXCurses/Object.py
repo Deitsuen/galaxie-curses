@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import uuid
+
+from GLXCurses import EventBusClient
+
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
@@ -8,7 +11,7 @@ __author__ = 'Tuux'
 
 
 # Ref Doc: https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#GObject-struct
-class Object(object):
+class Object(EventBusClient):
     """
     :Description:
 
@@ -21,6 +24,7 @@ class Object(object):
 
     """
     def __init__(self):
+        EventBusClient.__init__(self)
         self.glxc_type = 'GLXCurses.Object'
 
         # Signal
