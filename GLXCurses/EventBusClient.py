@@ -5,6 +5,9 @@
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: the Galaxie Curses Team, all rights reserved
 
+from GLXCurses import MainLoop
+from GLXCurses import Application
+
 
 class EventBusClient(object):
 
@@ -12,24 +15,41 @@ class EventBusClient(object):
         self.event_handlers = dict()
         self.children = list()
 
-    def subscribe(self, event_signal, event_handler):
-        if event_signal not in self.event_handlers:
-            self.event_handlers[event_signal] = list()
+    def emit(self, detailed_signal, args=None):
+        if args is None:
+            args = list()
+        MainLoop().emit(detailed_signal, args)
 
-        self.event_handlers[event_signal].append(event_handler)
+    def connect(self, signal, handler, args=None):
 
-    def unsubscribe(self, event_signal, event_handler):
-        if event_signal in self.event_handlers:
-            self.event_handlers[event_signal].remove(event_handler)
+        if args is None:
+            args = list()
 
-    def handle_and_dispatch_event(self, event_signal, args=None):
+        if signal not in self._get_signal_handlers():
+            self._get_signal_handlers()[signal] = list()
+
+        self._get_signal_handlers()[signal].append(handler)
+
+        if args:
+            self._get_signal_handlers()[signal].append(args)
+
+    def disconnect(self, signal, handler):
+
+        if signal in self._get_signal_handlers():
+            self._get_signal_handlers()[signal].remove(handler)
+
+    def dispatch(self, signal, args=None):
 
         if args is None:
             args = []
 
-        if event_signal in self.event_handlers:
-            for handler in self.event_handlers[event_signal]:
-                handler(self, event_signal, args)
+        if signal in self._get_signal_handlers():
+            for handler in self._get_signal_handlers()[signal]:
+                handler(self, signal, args)
 
         for children in self.children:
-            children['WIDGET'].handle_and_dispatch_event(event_signal, args)
+            children['WIDGET'].dispatch(signal, args)
+
+    def _get_signal_handlers(self):
+        # return Application().event_handlers
+        return self.event_handlers

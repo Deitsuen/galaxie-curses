@@ -96,7 +96,7 @@ class RadioButton(GLXCurses.Widget):
         }
 
         # Subscibtion
-        self.subscribe('MOUSE_EVENT', RadioButton._handle_mouse_event)
+        self.connect('MOUSE_EVENT', RadioButton._handle_mouse_event)
 
     def update_preferred_sizes(self):
         if self.get_text():
@@ -310,7 +310,7 @@ class RadioButton(GLXCurses.Widget):
                         'id': self.get_widget_id()
                     }
                     # EVENT EMIT
-                    GLXCurses.application.emit(self.curses_mouse_states[event], instance)
+                    self.emit(self.curses_mouse_states[event], instance)
             else:
                 self.state['PRELIGHT'] = False
                 return 0

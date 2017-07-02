@@ -98,7 +98,7 @@ class CheckButton(Widget):
             curses.BUTTON_ALT: 'BUTTON_ALT'
         }
 
-        self.subscribe('MOUSE_EVENT', CheckButton._handle_mouse_event)
+        self.connect('MOUSE_EVENT', CheckButton._handle_mouse_event)
 
     def update_preferred_sizes(self):
         if self.get_text():
@@ -316,7 +316,7 @@ class CheckButton(Widget):
                         'id': self.get_widget_id()
                     }
                     # EVENT EMIT
-                    Application().emit(self.curses_mouse_states[event], instance)
+                    self.emit(self.curses_mouse_states[event], instance)
 
             else:
                 # Nothing the better is to clean the pre-light

@@ -152,19 +152,19 @@ class Entry(Widget):
         self.xalign = 0
 
         # Subscibtions
-        self.subscribe('active', Entry._emit_activate_signal(self))
-        self.subscribe('backspace', Entry._emit_backspace_signal(self))
-        self.subscribe('copy-clipboard', Entry._emit_copy_clipboard_signal(self))
-        self.subscribe('cut-clipboard', Entry._emit_cut_clipboard_signal(self))
-        self.subscribe('delete-from-cursor', Entry._emit_delete_from_cursor_signal(self))
-        self.subscribe('icon-press', Entry._emit_icon_press_signal(self))
-        self.subscribe('icon-release', Entry._emit_icon_release_signal(self))
-        self.subscribe('insert-at-cursor', Entry._emit_insert_at_cursor_signal(self))
-        self.subscribe('move-cursor', Entry._emit_move_cursor_signal(self))
-        self.subscribe('paste-clipboard', Entry._emit_paste_clipboard_signal(self))
-        self.subscribe('populate-popup', Entry._emit_populate_popup_signal(self))
-        self.subscribe('preedit-changed', Entry._emit_preedit_changed_signal(self))
-        self.subscribe('toggle-overwrite', Entry._emit_toggle_overwrite_signal(self))
+        self.connect('active', Entry._emit_activate_signal(self))
+        self.connect('backspace', Entry._emit_backspace_signal(self))
+        self.connect('copy-clipboard', Entry._emit_copy_clipboard_signal(self))
+        self.connect('cut-clipboard', Entry._emit_cut_clipboard_signal(self))
+        self.connect('delete-from-cursor', Entry._emit_delete_from_cursor_signal(self))
+        self.connect('icon-press', Entry._emit_icon_press_signal(self))
+        self.connect('icon-release', Entry._emit_icon_release_signal(self))
+        self.connect('insert-at-cursor', Entry._emit_insert_at_cursor_signal(self))
+        self.connect('move-cursor', Entry._emit_move_cursor_signal(self))
+        self.connect('paste-clipboard', Entry._emit_paste_clipboard_signal(self))
+        self.connect('populate-popup', Entry._emit_populate_popup_signal(self))
+        self.connect('preedit-changed', Entry._emit_preedit_changed_signal(self))
+        self.connect('toggle-overwrite', Entry._emit_toggle_overwrite_signal(self))
 
 
         ############

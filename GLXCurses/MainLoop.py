@@ -163,7 +163,7 @@ class MainLoop(object):
         self._set_is_running(False)
         logging.info('Stopping ' + self.__class__.__name__)
 
-    def emit(self, detailed_signal, args=None):
+    def emit(self, signal, args=None):
         """
         Emit a signal, it consist to add the signal structure inside a global event list
 
@@ -179,13 +179,16 @@ class MainLoop(object):
                args
            )
 
-        :param detailed_signal: a string containing the signal name
+        :param signal: a string containing the signal name
         :param args: additional parameters arg1, arg2
         """
         if args is None:
             args = dict()
-        logging.debug(detailed_signal + ' ' + str(args))
-        self.get_event_buffer().insert(0, [detailed_signal, args])
+
+        logging.debug(signal + ' ' + str(args))
+
+        self.get_event_buffer().insert(0, [signal, args])
+
         Application().refresh()
 
     # Internal Method's

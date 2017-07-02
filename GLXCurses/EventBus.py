@@ -56,7 +56,7 @@ class EventBus(object):
                 handler(self, detailed_signal, args)
 
         if self.get_active_window():
-            self.get_active_window().handle_and_dispatch_event(detailed_signal, args)
+            self.get_active_window().dispatch(detailed_signal, args)
 
     def _get_signal_handlers_dict(self):
         return self.event_handlers

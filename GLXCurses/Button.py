@@ -97,7 +97,7 @@ class Button(Widget):
         self.states_list = None
 
         # Subscibtion
-        self.subscribe('MOUSE_EVENT', Button._handle_mouse_event)
+        self.connect('MOUSE_EVENT', Button._handle_mouse_event)
 
     def _handle_mouse_event(self, event_signal, event_args):
         if self.get_sensitive():
@@ -187,8 +187,8 @@ class Button(Widget):
                         'id': self.get_widget_id()
                     }
                     # EVENT EMIT
-                    Application().emit(self.curses_mouse_states[event], instance)
-
+                    #Application().emit(self.curses_mouse_states[event], instance)
+                    self.emit(self.curses_mouse_states[event], instance)
             else:
                 # Nothing the better is to clean the prelight
                 self._set_state_prelight(False)

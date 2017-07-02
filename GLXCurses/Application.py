@@ -3,6 +3,7 @@
 
 import GLXCurses
 from GLXCurses.Utils import glxc_type
+
 import curses
 import sys
 import os
@@ -52,39 +53,40 @@ class EventBus(object):
             args = list()
         GLXCurses.mainloop.emit(detailed_signal, args)
 
-    def connect(self, detailed_signal, handler, args=None):
+    def connect(self, signal, handler, args=None):
         if args is None:
             args = list()
 
         # check if it's all ready connect if not create it
-        if detailed_signal not in self._get_signal_handlers_dict():
-            self._get_signal_handlers_dict()[detailed_signal] = list()
+        if signal not in self._get_signal_handlers():
+            self._get_signal_handlers()[signal] = list()
 
-        self._get_signal_handlers_dict()[detailed_signal].append(handler)
+        self._get_signal_handlers()[signal].append(handler)
 
         if args:
-            self._get_signal_handlers_dict()[detailed_signal].append(args)
+            self._get_signal_handlers()[signal].append(args)
 
             # Test about EventBus
             # GLXCurses.signal.connect(detailed_signal, handler, args)
 
-    def disconnect(self, detailed_signal, handler):
+    def disconnect(self, signal, handler):
 
-        if detailed_signal in self._get_signal_handlers_dict():
-            self._get_signal_handlers_dict()[detailed_signal].remove(handler)
+        if signal in self._get_signal_handlers():
+            self._get_signal_handlers()[signal].remove(handler)
 
-    def dispatch(self, detailed_signal, args=None):
+    def dispatch(self, signal, args=None):
+
         if args is None:
             args = []
 
-        if detailed_signal in self._get_signal_handlers_dict():
-            for handler in self._get_signal_handlers_dict()[detailed_signal]:
-                handler(self, detailed_signal, args)
+        if signal in self._get_signal_handlers():
+            for handler in self._get_signal_handlers()[signal]:
+                handler(self, signal, args)
 
         if GLXCurses.application.get_active_window():
-            GLXCurses.application.get_active_window().handle_and_dispatch_event(detailed_signal, args)
+            GLXCurses.application.get_active_window().dispatch(signal, args)
 
-    def _get_signal_handlers_dict(self):
+    def _get_signal_handlers(self):
         return self.event_handlers
 
 
