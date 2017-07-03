@@ -19,23 +19,46 @@ class EventBusClient(object):
             args = list()
         GLXCurses.mainloop.emit(detailed_signal, args)
 
-    def connect(self, signal, handler, args=None):
+    def connect(self, detailed_signal, handler, args=None):
+        """
+        The connect() method adds a function or method (handler) to the end of the event list
+        for the named detailed_signal but before the default class signal handler.
+        An optional set of parameters may be specified after the handler parameter.
+        These will all be passed to the signal handler when invoked.
 
+        :param detailed_signal: a string containing the signal name
+        :type detailed_signal: str
+        :param handler: a function handler
+        :type handler: handler
+        :param args: additional parameters arg1, arg2
+        :type args: list
+         """
+
+        # If args is still None replace it by a empty list
         if args is None:
             args = list()
 
-        if signal not in self.get_events_list():
-            self.get_events_list()[signal] = list()
+        # If detailed_signal is not in the event list create it
+        if detailed_signal not in self.get_events_list():
+            self.get_events_list()[detailed_signal] = list()
 
-        self.get_events_list()[signal].append(handler)
+        self.get_events_list()[detailed_signal].append(handler)
 
         if args:
-            self.get_events_list()[signal].append(args)
+            self.get_events_list()[detailed_signal].append(args)
 
-    def disconnect(self, signal, handler):
+    def disconnect(self, detailed_signal, handler):
+        """
+        The disconnect() method removes the signal handler with the specified handler
+        from the list of signal handlers for the object.
 
-        if signal in self.get_events_list():
-            self.get_events_list()[signal].remove(handler)
+        :param detailed_signal: a string containing the signal name
+        :type detailed_signal: str
+        :param handler: a function handler
+        :type handler: handler
+        """
+        if detailed_signal in self.get_events_list():
+            self.get_events_list()[detailed_signal].remove(handler)
 
     def dispatch(self, signal, args=None):
 

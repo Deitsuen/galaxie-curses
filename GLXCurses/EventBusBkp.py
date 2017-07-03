@@ -12,6 +12,7 @@ __author__ = 'Tuux'
 # Migration of Mainloop
 ##############################
 
+
 class EventBus(object):
     def __init__(self):
         self.signal_handlers = dict()
@@ -51,6 +52,7 @@ class EventBus(object):
     # These will all be passed to the signal handler when invoked.
     # detailed_signal: a string containing the signal name
     # *args: additional parameters arg1, arg2
+
     def connect(self, detailed_signal, handler, *args):
         if detailed_signal not in self._get_signal_handlers_dict():
             self._get_signal_handlers_dict()[detailed_signal] = {}
