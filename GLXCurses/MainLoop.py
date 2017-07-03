@@ -5,7 +5,8 @@
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 
-from GLXCurses import Application
+import GLXCurses
+
 import curses
 import logging
 
@@ -189,7 +190,7 @@ class MainLoop(object):
 
         self.get_event_buffer().insert(0, [signal, args])
 
-        Application().refresh()
+        GLXCurses.application.refresh()
 
     # Internal Method's
     def _set_is_running(self, boolean):
@@ -223,7 +224,7 @@ class MainLoop(object):
             event = self._pop_last_event()
             while event:
                 # If it have event dispatch it
-                Application().dispatch(event[0], event[1])
+                GLXCurses.application.dispatch(event[0], event[1])
                 # Delete the last event inside teh event list
                 event = self._pop_last_event()
         except:
@@ -235,13 +236,13 @@ class MainLoop(object):
             logging.debug(self.__class__.__name__ + ': Started')
 
             # That normaly the first refresh of the application, it can be considered as the first screen display.
-            Application().refresh()
+            GLXCurses.application.refresh()
 
         # The loop
         while self.is_running():
 
             # Wait for a event
-            input_event = Application().getch()
+            input_event = GLXCurses.application.getch()
             # logging.debug(self.event_buffer)
 
             # Wait for a event
@@ -253,7 +254,7 @@ class MainLoop(object):
 
             # In case it was a graphic event we refresh the screen, ncurse have a optimization mechanism for refrech
             # only character's it need.
-            Application().refresh()
+            GLXCurses.application.refresh()
 
         # Here self.get_started() == False , then the GLXCurse.Mainloop() should be close
-        Application().close()
+        GLXCurses.application.close()

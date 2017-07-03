@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# It script it publish under GNU GENERAL PUBLIC LICENSE
+# http://www.gnu.org/licenses/gpl-3.0.en.html
+# Author: the Galaxie Curses Team, all rights reserved
+
 import GLXCurses
 from GLXCurses.Utils import glxc_type
-
+from GLXCurses.EventBusClient import EventBusClient
 import curses
 import sys
 import os
@@ -14,9 +18,6 @@ import uuid
 locale.setlocale(locale.LC_ALL, '')
 code = locale.getpreferredencoding()
 
-# It script it publish under GNU GENERAL PUBLIC LICENSE
-# http://www.gnu.org/licenses/gpl-3.0.en.html
-# Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 
 __author__ = 'Tuux'
 
@@ -35,10 +36,9 @@ class Singleton(type):
 
 # https://developer.gnome.org/gtk3/stable/GtkApplication.html
 
-class EventBus(object):
-
+class EventBus(EventBusClient):
     def __init__(self):
-        self.event_handlers = dict()
+        EventBusClient.__init__(self)
 
     def adopt(self, orphan):
         """
@@ -48,46 +48,17 @@ class EventBus(object):
         """
         pass
 
-    def emit(self, detailed_signal, args=None):
-        if args is None:
-            args = list()
-        GLXCurses.mainloop.emit(detailed_signal, args)
-
-    def connect(self, signal, handler, args=None):
-        if args is None:
-            args = list()
-
-        # check if it's all ready connect if not create it
-        if signal not in self._get_signal_handlers():
-            self._get_signal_handlers()[signal] = list()
-
-        self._get_signal_handlers()[signal].append(handler)
-
-        if args:
-            self._get_signal_handlers()[signal].append(args)
-
-            # Test about EventBus
-            # GLXCurses.signal.connect(detailed_signal, handler, args)
-
-    def disconnect(self, signal, handler):
-
-        if signal in self._get_signal_handlers():
-            self._get_signal_handlers()[signal].remove(handler)
-
     def dispatch(self, signal, args=None):
 
         if args is None:
             args = []
 
-        if signal in self._get_signal_handlers():
-            for handler in self._get_signal_handlers()[signal]:
+        if signal in self.get_events_list():
+            for handler in self.get_events_list()[signal]:
                 handler(self, signal, args)
 
-        if GLXCurses.application.get_active_window():
+        if Application().get_active_window():
             GLXCurses.application.get_active_window().dispatch(signal, args)
-
-    def _get_signal_handlers(self):
-        return self.event_handlers
 
 
 class Application(EventBus):
