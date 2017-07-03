@@ -9,14 +9,62 @@ import GLXCurses
 
 
 class EventBusClient(object):
+    """
+    :Description:
 
+    The :class:`EventBusClient <GLXCurses.EventBusClient.EventBusClient>` object is The bus it interconnect Widget
+    :class:`Application <GLXCurses.Application.Application>` is a special case where the
+    :func:`Application.dispatch() <GLXCurses.Application.Application.dispatch()>` rewrite the
+    :func:`EventBusClient.dispatch() <GLXCurses.EventBusClient.EventBusClient.dispatch()>`.
+    """
     def __init__(self):
+        """
+        :Attributes Details:
+
+        .. py:attribute:: events_list
+
+          A List it store every event.
+
+             +---------------+-------------------------------+
+             | Type          | :py:data:`events_list`        |
+             +---------------+-------------------------------+
+             | Flags         | Read / Write                  |
+             +---------------+-------------------------------+
+             | Default value | dict()                        |
+             +---------------+-------------------------------+
+
+        .. py:attribute:: children
+
+          A list of children upgraded during a dispatched event.
+
+             +---------------+-------------------------------+
+             | Type          | :py:data:`children`           |
+             +---------------+-------------------------------+
+             | Flags         | Read / Write                  |
+             +---------------+-------------------------------+
+             | Default value | list()                        |
+             +---------------+-------------------------------+
+
+        """
+        # Public attribute
         self.events_list = dict()
         self.children = list()
 
+        # Internal attribute
+
+
     def emit(self, detailed_signal, args=None):
+        """
+        :param detailed_signal: a string containing the signal name
+        :type detailed_signal: str
+        :param args: additional parameters arg1, arg2
+        :type args: list
+        """
+        # If args is still None replace it by a empty list
         if args is None:
             args = list()
+
+        # Emit inside the Mainloop
         GLXCurses.mainloop.emit(detailed_signal, args)
 
     def connect(self, detailed_signal, handler, args=None):
@@ -60,17 +108,34 @@ class EventBusClient(object):
         if detailed_signal in self.get_events_list():
             self.get_events_list()[detailed_signal].remove(handler)
 
-    def dispatch(self, signal, args=None):
-
+    def events_flush(self, detailed_signal, args=None):
         if args is None:
             args = []
 
-        if signal in self.get_events_list():
-            for handler in self.get_events_list()[signal]:
-                handler(self, signal, args)
+        if detailed_signal in self.get_events_list():
+            for handler in self.get_events_list()[detailed_signal]:
+                handler(self, detailed_signal, args)
 
+    def events_dispatch(self, detailed_signal, args=None):
+        """
+        Inform every children about a event and execute a eventual callback
+
+        :param detailed_signal: a string containing the signal name
+        :type detailed_signal: str
+        :param args: additional parameters arg1, arg2
+        :type args: list
+        """
+
+        # If args is still None replace it by a empty list
+        if args is None:
+            args = []
+
+        # Flush internal event
+        self.events_flush(detailed_signal, args)
+
+        # Dispatch to every children
         for children in self.children:
-            children['WIDGET'].dispatch(signal, args)
+            children['WIDGET'].events_dispatch(detailed_signal, args)
 
     def get_events_list(self):
         # return Application().event_handlers

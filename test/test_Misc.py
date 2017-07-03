@@ -14,7 +14,7 @@ sys.path.append(os.path.dirname(current_dir))
 
 
 # Unittest
-class TestWindow(unittest.TestCase):
+class TestMisc(unittest.TestCase):
 
     def setUp(self):
         # Before the test start

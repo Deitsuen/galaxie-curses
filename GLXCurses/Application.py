@@ -40,7 +40,8 @@ class EventBus(EventBusClient):
     def __init__(self):
         EventBusClient.__init__(self)
 
-    def adopt(self, orphan):
+    @staticmethod
+    def adopt(orphan):
         """
         not implemented yet
 
@@ -48,17 +49,15 @@ class EventBus(EventBusClient):
         """
         pass
 
-    def dispatch(self, signal, args=None):
-
+    def events_dispatch(self, detailed_signal, args=None):
         if args is None:
             args = []
 
-        if signal in self.get_events_list():
-            for handler in self.get_events_list()[signal]:
-                handler(self, signal, args)
+        # Flush internal event
+        self.events_flush(detailed_signal, args)
 
         if Application().get_active_window():
-            GLXCurses.application.get_active_window().dispatch(signal, args)
+            GLXCurses.application.get_active_window().events_dispatch(detailed_signal, args)
 
 
 class Application(EventBus):
@@ -189,7 +188,7 @@ class Application(EventBus):
 
 
         """
-        super(Application, self).__init__()
+        EventBus.__init__(self)
         self.glxc_type = 'GLXCurses.Application'
         try:
             # Initialize curses

@@ -18,7 +18,7 @@ import GLXCurses
 
 
 # Unittest
-class TestWindow(unittest.TestCase):
+class TestHSeparator(unittest.TestCase):
 
     def setUp(self):
         # Before the test start

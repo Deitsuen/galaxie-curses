@@ -224,7 +224,7 @@ class MainLoop(object):
             event = self._pop_last_event()
             while event:
                 # If it have event dispatch it
-                GLXCurses.application.dispatch(event[0], event[1])
+                GLXCurses.application.events_dispatch(event[0], event[1])
                 # Delete the last event inside teh event list
                 event = self._pop_last_event()
         except:
