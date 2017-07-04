@@ -6,7 +6,6 @@
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 
 import GLXCurses
-
 import curses
 import logging
 
