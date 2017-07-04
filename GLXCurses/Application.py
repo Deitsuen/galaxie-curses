@@ -49,6 +49,22 @@ class EventBus(EventBusClient):
         """
         pass
 
+    def emit(self, detailed_signal, args=None):
+        """
+        Emit signal in direction to the Mainloop.
+
+        :param detailed_signal: a string containing the signal name
+        :type detailed_signal: str
+        :param args: additional parameters arg1, arg2
+        :type args: list
+        """
+        # If args is still None replace it by a empty list
+        if args is None:
+            args = list()
+
+        # Emit inside the Mainloop
+        GLXCurses.mainloop.emit(detailed_signal, args)
+
     def events_dispatch(self, detailed_signal, args=None):
         if args is None:
             args = []

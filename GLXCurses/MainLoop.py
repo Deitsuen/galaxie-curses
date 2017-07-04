@@ -27,11 +27,11 @@ class MainLoop(object):
     :Description:
 
     The MainLoop is something close to a infinity loop with a start() and stop() method
-     #. Refresh the Application for the frist time
-     #. Start the Loop
-     #. Wait for a Curses events then dispatch events and signals over Application Children's
-     #. Refresh the Application if a event or a signal have been detect
-     #. If MainLoop is stop the Application will close and should be follow by a sys.exit()
+     . Refresh the Application for the first time
+     . Start the Loop
+     . Wait for a Curses events then dispatch events and signals over Application Children's
+     . Refresh the Application if a event or a signal have been detect
+     . If MainLoop is stop the Application will close and should be follow by a sys.exit()
 
     Attributes:
         event_buffer       -- A List, Default Value: list()
@@ -226,6 +226,7 @@ class MainLoop(object):
                 GLXCurses.application.events_dispatch(event[0], event[1])
                 # Delete the last event inside teh event list
                 event = self._pop_last_event()
+
         except:
             pass
 

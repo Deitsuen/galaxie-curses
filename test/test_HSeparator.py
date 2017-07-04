@@ -95,79 +95,79 @@ class TestHSeparator(unittest.TestCase):
         hline.height = 124
         hline.preferred_height = 20
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 42)
+        self.assertEqual(hline._y_offset, 42)
 
         hline.height = None
         hline.preferred_height = None
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 0)
+        self.assertEqual(hline._y_offset, 0)
 
         hline.height = -1
         hline.preferred_height = -1
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 0)
+        self.assertEqual(hline._y_offset, 0)
 
         hline.height = 0
         hline.preferred_height = -0
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 0)
+        self.assertEqual(hline._y_offset, 0)
 
         hline.height = -1000
         hline.preferred_height = -100
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 0)
+        self.assertEqual(hline._y_offset, 0)
 
         # glxc.POS_TOP -> self._set_hseperator_y(0)
         hline._position_type = glxc.POS_TOP
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 0)
+        self.assertEqual(hline._y_offset, 0)
 
         hline.height = None
         hline.preferred_height = None
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 0)
+        self.assertEqual(hline._y_offset, 0)
 
         hline.height = -1
         hline.preferred_height = -1
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 0)
+        self.assertEqual(hline._y_offset, 0)
 
         hline.height = 0
         hline.preferred_height = -0
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 0)
+        self.assertEqual(hline._y_offset, 0)
 
         hline.height = -1000
         hline.preferred_height = -100
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 0)
+        self.assertEqual(hline._y_offset, 0)
 
         # glxc.POS_BOTTOM -> self.get_height() - self.get_preferred_height()
         hline._position_type = glxc.POS_BOTTOM
         hline.height = 62
         hline.preferred_height = 20
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 42)
+        self.assertEqual(hline._y_offset, 42)
 
         hline.height = None
         hline.preferred_height = None
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 0)
+        self.assertEqual(hline._y_offset, 0)
 
         hline.height = -1
         hline.preferred_height = -1
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 0)
+        self.assertEqual(hline._y_offset, 0)
 
         hline.height = 0
         hline.preferred_height = -0
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 0)
+        self.assertEqual(hline._y_offset, 0)
 
         hline.height = -1000
         hline.preferred_height = -100
         hline._check_position_type()
-        self.assertEqual(hline._hseperator_y, 0)
+        self.assertEqual(hline._y_offset, 0)
 
     def test__get_estimated_preferred_width(self):
         """Test VSeparator._get_estimated_preferred_width()"""
@@ -187,29 +187,29 @@ class TestHSeparator(unittest.TestCase):
         """Test HSeparator._set_hseperator_x() and HSeparator._get_hseperator_x()"""
         hline = GLXCurses.HSeparator()
         # call set_decorated() with 0 as argument
-        hline._set_hseperator_x(0)
+        hline._set_x_offset(0)
         # verify we go back 0
-        self.assertEqual(hline._get_hseperator_x(), 0)
+        self.assertEqual(hline._get_x_offset(), 0)
         # call set_decorated() with 0 as argument
-        hline._set_hseperator_x(42)
+        hline._set_x_offset(42)
         # verify we go back 0
-        self.assertEqual(hline._get_hseperator_x(), 42)
+        self.assertEqual(hline._get_x_offset(), 42)
         # test raise TypeError
-        self.assertRaises(TypeError, hline._set_hseperator_x, 'Galaxie')
+        self.assertRaises(TypeError, hline._set_x_offset, 'Galaxie')
 
     def test_set_get_hseperator_y(self):
         """Test HSeparator._set_hseperator_y() and HSeparator._get_hseperator_y()"""
         hline = GLXCurses.HSeparator()
         # call set_decorated() with 0 as argument
-        hline._set_hseperator_y(0)
+        hline._set_y_offset(0)
         # verify we go back 0
-        self.assertEqual(hline._get_hseperator_y(), 0)
+        self.assertEqual(hline._get_y_offset(), 0)
         # call set_decorated() with 0 as argument
-        hline._set_hseperator_y(42)
+        hline._set_y_offset(42)
         # verify we go back 0
-        self.assertEqual(hline._get_hseperator_y(), 42)
+        self.assertEqual(hline._get_y_offset(), 42)
         # test raise TypeError
-        self.assertRaises(TypeError, hline._set_hseperator_y, 'Galaxie')
+        self.assertRaises(TypeError, hline._set_y_offset, 'Galaxie')
 
 if __name__ == '__main__':
     unittest.main()

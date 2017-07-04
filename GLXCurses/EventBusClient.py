@@ -55,6 +55,8 @@ class EventBusClient(object):
 
     def emit(self, detailed_signal, args=None):
         """
+        Every Object emit signal in direction to the Application.
+
         :param detailed_signal: a string containing the signal name
         :type detailed_signal: str
         :param args: additional parameters arg1, arg2
@@ -62,10 +64,10 @@ class EventBusClient(object):
         """
         # If args is still None replace it by a empty list
         if args is None:
-            args = list()
+            args = []
 
         # Emit inside the Mainloop
-        GLXCurses.mainloop.emit(detailed_signal, args)
+        GLXCurses.application.emit(detailed_signal, args)
 
     def connect(self, detailed_signal, handler, args=None):
         """

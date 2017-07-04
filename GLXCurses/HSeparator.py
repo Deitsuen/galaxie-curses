@@ -3,6 +3,7 @@
 import GLXCurses
 import curses
 from GLXCurses import glxc
+from GLXCurses.Utils import clamp_to_zero
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -63,8 +64,8 @@ class HSeparator(GLXCurses.Widget):
         self._position_type = glxc.POS_CENTER
 
         # Internal Widget Setting
-        self._hseperator_x = 0
-        self._hseperator_y = 0
+        self._x_offset = 0
+        self._y_offset = 0
 
     def draw_widget_in_area(self):
         """
@@ -114,10 +115,10 @@ class HSeparator(GLXCurses.Widget):
 
         PositionType: CENTER, TOP, BOTTOM
         """
-        if self.get_position_type() == glxc.POS_CENTER:
+        height = self.get_height()
+        preferred_height = self.get_preferred_height()
 
-            height = self.get_height()
-            preferred_height = self.get_preferred_height()
+        if self.get_position_type() == glxc.POS_CENTER:
 
             # Clamp height
             if height is None:
@@ -146,31 +147,18 @@ class HSeparator(GLXCurses.Widget):
                 final_value = 0
 
             # Finally set the result
-            self._set_hseperator_y(final_value)
+            self._set_y_offset(final_value)
 
         elif self.get_position_type() == glxc.POS_TOP:
-            self._set_hseperator_y(0)
+            self._set_y_offset(0)
 
         elif self.get_position_type() == glxc.POS_BOTTOM:
 
-            height = self.get_height()
-            preferred_height = self.get_preferred_height()
-
             # Clamp height
-            if height is None:
-                estimated_height = 0
-            elif height <= 0:
-                estimated_height = 0
-            else:
-                estimated_height = height
+            estimated_height = clamp_to_zero(height)
 
             # Clamp preferred_height
-            if preferred_height is None:
-                estimated_preferred_height = 0
-            elif self.get_preferred_height() <= 0:
-                estimated_preferred_height = 0
-            else:
-                estimated_preferred_height = preferred_height
+            estimated_preferred_height = clamp_to_zero(preferred_height)
 
             # Make the compute
             final_value = int(estimated_height - estimated_preferred_height)
@@ -180,7 +168,7 @@ class HSeparator(GLXCurses.Widget):
                 final_value = 0
 
             # Finally set the result
-            self._set_hseperator_y(final_value)
+            self._set_y_offset(final_value)
             #self._set_hseperator_y(self.get_height() - self.get_preferred_height())
 
     def _draw_horizontal_separator(self):
@@ -188,8 +176,8 @@ class HSeparator(GLXCurses.Widget):
         if self.get_width() >= self.get_preferred_width():
             for x in range(self.get_x(), self.get_width()):
                 self.get_curses_subwin().insch(
-                    int(self._get_hseperator_y()),
-                    int(self._get_hseperator_x() + x),
+                    int(self._get_y_offset()),
+                    int(self._get_x_offset() + x),
                     curses.ACS_HLINE,
                     self.get_style().get_color_pair(
                         foreground=self.get_style().get_color_text('base', 'STATE_NORMAL'),
@@ -220,7 +208,7 @@ class HSeparator(GLXCurses.Widget):
         estimated_preferred_height += self.get_spacing() * 2
         return estimated_preferred_height
 
-    def _set_hseperator_x(self, number):
+    def _set_x_offset(self, number):
         """
         Set the Horizontal Axe Separator X
 
@@ -228,21 +216,21 @@ class HSeparator(GLXCurses.Widget):
         :type number: int
         """
         if type(number) == int:
-            if self._get_hseperator_x() != number:
-                self._hseperator_x = number
+            if self._get_x_offset() != number:
+                self._x_offset = number
         else:
             raise TypeError(u'>number< is not a int type')
 
-    def _get_hseperator_x(self):
+    def _get_x_offset(self):
         """
         Return Horizontal Axe Separator
 
         :return: hseperator_x value
         :rtype: int
         """
-        return self._hseperator_x
+        return self._x_offset
 
-    def _set_hseperator_y(self, number):
+    def _set_y_offset(self, number):
         """
         Set the Horizontal Axe Separator
 
@@ -250,16 +238,16 @@ class HSeparator(GLXCurses.Widget):
         :type number: int
         """
         if type(number) == int:
-            if self._get_hseperator_y() != number:
-                self._hseperator_y = number
+            if self._get_y_offset() != number:
+                self._y_offset = number
         else:
             raise TypeError(u'>number< is not a int type')
 
-    def _get_hseperator_y(self):
+    def _get_y_offset(self):
         """
         Return Horizontal Axe Separator
 
         :return: hseperator_y value
         :rtype: int
         """
-        return self._hseperator_y
+        return self._y_offset

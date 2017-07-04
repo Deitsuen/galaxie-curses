@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import GLXCurses
+from GLXCurses import glxc
+from GLXCurses.Utils import clamp_to_zero
 import curses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -33,8 +35,8 @@ class RadioButton(GLXCurses.Widget):
         self.set_can_default(1)
         # Internal Widget Setting
         self.text = None
-        self.label_x = 0
-        self.label_y = 0
+        self._x_offset = 0
+        self._y_offset = 0
 
         # Interface
         self.interface_unactivated = '( ) '
@@ -42,21 +44,17 @@ class RadioButton(GLXCurses.Widget):
         self.interface = self.interface_unactivated
 
         # Size management
-        self.set_preferred_height(1)
-        self.update_preferred_sizes()
+        self._update_preferred_sizes()
 
         # Make a Style heritage attribute
         if self.get_style().get_attribute_states():
             self.set_attribute_states(self.get_style().get_attribute_states())
 
         # Justification: LEFT, RIGHT, CENTER
-        self.justification = 'CENTER'
-
-        # Orientation: HORIZONTAL, VERTICAL
-        self.orientation = 'HORIZONTAL'
+        self._justify = glxc.JUSTIFY_CENTER
 
         # PositionType: CENTER, TOP, BOTTOM
-        self.position_type = 'CENTER'
+        self._position_type = glxc.POS_CENTER
 
         # Sensitive
         self.set_sensitive(1)
@@ -98,12 +96,9 @@ class RadioButton(GLXCurses.Widget):
         # Subscibtion
         self.connect('MOUSE_EVENT', RadioButton._handle_mouse_event)
 
-    def update_preferred_sizes(self):
-        if self.get_text():
-            self.preferred_width = 0
-            self.preferred_width += len(self.get_text())
-            self.preferred_width += len(self.interface)
-            self.preferred_width += self.get_spacing() * 2
+    def _update_preferred_sizes(self):
+        self.set_preferred_width(self._get_estimated_preferred_width())
+        self.set_preferred_height(self._get_estimated_preferred_height())
 
     def draw_widget_in_area(self):
         # Check if the text can be display
@@ -119,33 +114,6 @@ class RadioButton(GLXCurses.Widget):
             if text_have_necessary_width and text_have_necessary_height:
                 self.draw_button()
 
-    def check_justification(self):
-        # Check Justification
-        self.label_x = 0
-        if self.get_justify() == 'CENTER':
-            self.label_x = (self.get_width() / 2) - (self.get_preferred_width() / 2)
-        elif self.get_justify() == 'LEFT':
-            self.label_x = 0 + self.get_spacing()
-        elif self.get_justify() == 'RIGHT':
-            self.label_x = self.get_width() - self.get_preferred_width()
-
-        return self.label_x
-
-    def check_position_type(self):
-        # PositionType: CENTER, TOP, BOTTOM
-        self.label_y = 0
-        if self.get_position_type() == 'CENTER':
-            if (self.get_height() / 2) > self.get_preferred_height():
-                self.label_y = (self.get_height() / 2) - self.get_preferred_height()
-            else:
-                self.label_y = 0
-        elif self.get_position_type() == 'TOP':
-            self.label_y = 0
-        elif self.get_position_type() == 'BOTTOM':
-            self.label_y = self.get_height() - self.get_preferred_height()
-
-        return self.label_y
-
     def set_active(self, boolean):
         self.state['ACTIVE'] = bool(boolean)
         self._check_active()
@@ -156,9 +124,9 @@ class RadioButton(GLXCurses.Widget):
 
     def draw_button(self):
         self._check_active()
-        self.update_preferred_sizes()
-        self.label_x = self.check_justification()
-        self.label_y = self.check_position_type()
+        self._update_preferred_sizes()
+        self._check_justify()
+        self._check_position_type()
 
         if not self.get_sensitive():
             self.draw_the_good_button(
@@ -186,8 +154,8 @@ class RadioButton(GLXCurses.Widget):
         # Interface management
         try:
             self.get_curses_subwin().addstr(
-                self.label_y,
-                self.label_x,
+                self._y_offset,
+                self._x_offset,
                 self.interface,
                 color
             )
@@ -197,8 +165,8 @@ class RadioButton(GLXCurses.Widget):
             # Draw the Horizontal Button with Justification and PositionType
             message_to_display = resize_text(self.get_text(), self.get_width(), '~')
             self.get_curses_subwin().addstr(
-                self.label_y,
-                self.label_x + len(self.interface),
+                self._y_offset,
+                self._x_offset + len(self.interface),
                 message_to_display,
                 color
             )
@@ -226,8 +194,8 @@ class RadioButton(GLXCurses.Widget):
             # Be sure we select really the Button
             y -= self.y
             x -= self.x
-            if self.label_y >= y > self.label_y - self.get_preferred_height():
-                if (self.label_x - 1) + len(self.interface) + len(self.get_text()) >= x > (self.label_x - 1):
+            if self._y_offset >= y > self._y_offset - self.get_preferred_height():
+                if (self._x_offset - 1) + len(self.interface) + len(self.get_text()) >= x > (self._x_offset - 1):
                     # We are sure about the button have been clicked
                     self.states_list = '; '.join(state_string for state, state_string
                                                  in self.curses_mouse_states.viewitems()
@@ -318,25 +286,80 @@ class RadioButton(GLXCurses.Widget):
     # Internal curses_subwin functions
     def set_text(self, text):
         self.text = text
-        self.update_preferred_sizes()
+        self._update_preferred_sizes()
 
     def get_text(self):
         return self.text
 
     # Justification: LEFT, RIGHT, CENTER
-    def set_justify(self, justification):
-        self.justification = justification
+    def set_justify(self, justify):
+        """
+        Set the Justify of the Vertical separator
+
+         Justify:
+          - LEFT
+          - CENTER
+          - RIGHT
+
+        :param justify: a Justify
+        :type justify: str
+        """
+        if justify in [glxc.JUSTIFY_LEFT, glxc.JUSTIFY_CENTER, glxc.JUSTIFY_RIGHT]:
+            if self.get_justify() != str(justify).upper():
+                self._justify = str(justify).upper()
+                # When the justify is set update preferred sizes store in Widget class
+                self._update_preferred_sizes()
+        else:
+            raise TypeError(u'PositionType must be LEFT or CENTER or RIGHT')
 
     def get_justify(self):
-        return self.justification
+        """
+        Return the Justify of the CheckButton
+
+         Justify:
+          - LEFT
+          - CENTER
+          - RIGHT
+
+        :return: str
+        """
+        return self._justify
 
     # PositionType: CENTER, TOP, BOTTOM
     def set_position_type(self, position_type):
-        self.position_type = position_type
+        """
+        Set the Position type
+
+        PositionType:
+         .glxc.POS_TOP
+         .glxc.POS_CENTER
+         .glxc.POS_BOTTOM
+
+        :param position_type: a PositionType
+        :type position_type: str
+        """
+        if position_type in [glxc.POS_TOP, glxc.POS_CENTER, glxc.POS_BOTTOM]:
+            if self.get_position_type() != str(position_type).upper():
+                self._position_type = str(position_type).upper()
+                # When the position type is set update preferred sizes store in Widget class
+                self._update_preferred_sizes()
+        else:
+            raise TypeError(u'PositionType must be CENTER or TOP or BOTTOM')
 
     def get_position_type(self):
-        return self.position_type
+        """
+        Return the Position Type
 
+        PositionType:
+         .glxc.POS_TOP
+         .glxc.POS_CENTER
+         .glxc.POS_BOTTOM
+
+        :return: str
+        """
+        return self._position_type
+
+    # Internal
     def _check_active(self):
         if self.state['ACTIVE']:
             self.interface = self.interface_active
@@ -351,5 +374,218 @@ class RadioButton(GLXCurses.Widget):
 
     def _get_state_prelight(self):
         return self.state['PRELIGHT']
+
+    def _check_justify(self):
+        """Check the justification of the X axe"""
+        width = self.get_width()
+        preferred_width = self.get_preferred_width()
+        spacing = self.get_spacing()
+
+        self._set_x_offset(0)
+        if self.get_justify() == glxc.JUSTIFY_CENTER:
+            # Clamp value and impose the center
+            if width is None:
+                estimated_width = 0
+            elif width <= 0:
+                estimated_width = 0
+            elif width == 1:
+                estimated_width = 0
+            else:
+                estimated_width = int(width / 2)
+
+            # Clamp value and impose the center
+            if preferred_width is None:
+                estimated_preferred_width = 0
+            elif preferred_width <= 0:
+                estimated_preferred_width = 0
+            elif preferred_width == 1:
+                estimated_preferred_width = 0
+            else:
+                estimated_preferred_width = int(preferred_width / 2)
+
+            # Make the compute
+            final_value = int(estimated_width - estimated_preferred_width)
+
+            # clamp the result
+            if final_value <= 0:
+                final_value = 0
+
+            # Finally set the value
+            self._set_x_offset(final_value)
+
+        elif self.get_justify() == glxc.JUSTIFY_LEFT:
+            # Clamp estimated_spacing
+            estimated_spacing = clamp_to_zero(spacing)
+
+            # Make the compute
+            final_value = int(estimated_spacing)
+
+            # clamp the result
+            if final_value <= 0:
+                final_value = 0
+
+            # Finally set the value
+            self._set_x_offset(final_value)
+
+        elif self.get_justify() == glxc.JUSTIFY_RIGHT:
+            # Clamp estimated_width
+            estimated_width = clamp_to_zero(width)
+
+            # Clamp preferred_width
+            estimated_preferred_width = clamp_to_zero(preferred_width)
+
+            # Clamp estimated_spacing
+            estimated_spacing = clamp_to_zero(spacing)
+
+            # Make the compute
+            final_value = int(estimated_width - estimated_preferred_width - estimated_spacing)
+
+            # clamp the result
+            if final_value <= 0:
+                final_value = 0
+
+            # Finally set the value
+            self._x_offset = final_value
+
+    def _check_position_type(self):
+        # PositionType: CENTER, TOP, BOTTOM
+        height = self.get_height()
+        preferred_height = self.get_preferred_height()
+
+        if self.get_position_type() == glxc.POS_CENTER:
+            # Clamp height
+            if height is None:
+                estimated_height = 0
+            elif height <= 0:
+                estimated_height = 0
+            elif height == 1:
+                # prevent a 1/2 = float(0.5) case
+                estimated_height = 0
+            else:
+                estimated_height = int(height / 2)
+
+            # Clamp preferred_height
+            if preferred_height is None:
+                estimated_preferred_height = 0
+            elif preferred_height <= 0:
+                estimated_preferred_height = 0
+            elif preferred_height == 1:
+                # prevent a 1/2 = float(0.5) case
+                estimated_preferred_height = 0
+            else:
+                estimated_preferred_height = int(preferred_height / 2)
+
+            # Make teh compute
+            final_value = int(estimated_height - estimated_preferred_height)
+
+            # Clamp the result to a positive
+            if final_value <= 0:
+                final_value = 0
+
+            self._set_y_offset(final_value)
+
+        elif self.get_position_type() == glxc.POS_TOP:
+            self._set_y_offset(0)
+
+        elif self.get_position_type() == glxc.POS_BOTTOM:
+            # Clamp height
+            estimated_height = clamp_to_zero(height)
+
+            # Clamp preferred_height
+            estimated_preferred_height = clamp_to_zero(preferred_height)
+
+            # Make the compute
+            final_value = int(estimated_height - estimated_preferred_height)
+
+            # Clamp the result to a positive
+            if final_value <= 0:
+                final_value = 0
+
+            # Clamp height
+            estimated_height = clamp_to_zero(height)
+
+            # Clamp preferred_height
+            estimated_preferred_height = clamp_to_zero(preferred_height)
+
+            # Make the compute
+            final_value = int(estimated_height - estimated_preferred_height)
+
+            # Clamp the result to a positive
+            if final_value <= 0:
+                final_value = 0
+
+            self._set_y_offset(final_value)
+
+    def _get_estimated_preferred_width(self):
+        """
+        Estimate a preferred width, by consider X Location, allowed width and spacing
+
+        :return: a estimated preferred width
+        :rtype: int
+        """
+        if self.get_text():
+            estimated_preferred_width = 0
+            estimated_preferred_width += len(self.get_text())
+            estimated_preferred_width += len(self.interface)
+            estimated_preferred_width += self.get_spacing() * 2
+        else:
+            estimated_preferred_width = 0
+            estimated_preferred_width += len(self.interface)
+            estimated_preferred_width += self.get_spacing() * 2
+
+        return estimated_preferred_width
+
+    def _get_estimated_preferred_height(self):
+        """
+        Estimate a preferred height, by consider Y Location, and spacing
+
+        :return: a estimated preferred height
+        :rtype: int
+        """
+        estimated_preferred_height = 1
+        estimated_preferred_height += self.get_spacing() * 2
+        return estimated_preferred_height
+
+    def _set_x_offset(self, value=None):
+        """
+        Set _x
+
+        :param value: A value to set to _x attribute
+        :type value: int or None
+        :raise TypeError: when value is not int or None
+        """
+        if type(value) is None or type(value) == int:
+            self._x_offset = value
+        else:
+            raise TypeError(u'>value< must be a int or None type')
+
+    def _get_x_offset(self):
+        """
+        Return the x space add to text for justify computation
+
+        :return: _label_x attribute
+        """
+        return self._x_offset
+
+    def _set_y_offset(self, value=None):
+        """
+        Set _y
+
+        :param value: A value to set to _y attribute
+        :type value: int or None
+        :raise TypeError: when value is not int or None
+        """
+        if type(value) is None or type(value) == int:
+            self._y_offset = value
+        else:
+            raise TypeError(u'>y< must be a int or None type')
+
+    def _get_y_offset(self):
+        """
+        Return the _y space add to text for position computation
+
+        :return: y attribute
+        """
+        return self._y_offset
 
 

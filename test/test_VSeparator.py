@@ -95,57 +95,57 @@ class TestVSeparator(unittest.TestCase):
         vline.width = 124
         vline.preferred_width = 40
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 42)
+        self.assertEqual(vline._x_offset, 42)
 
         vline.width = None
         vline.preferred_width = None
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 0)
+        self.assertEqual(vline._x_offset, 0)
 
         vline.width = -1
         vline.preferred_width = -1
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 0)
+        self.assertEqual(vline._x_offset, 0)
 
         vline.width = 0
         vline.preferred_width = -0
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 0)
+        self.assertEqual(vline._x_offset, 0)
 
         vline.width = -1000
         vline.preferred_width = -100
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 0)
+        self.assertEqual(vline._x_offset, 0)
 
         # glxc.JUSTIFY_LEFT -> self.get_spacing()
         vline._justify = glxc.JUSTIFY_LEFT
         vline.spacing = 24
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 24)
+        self.assertEqual(vline._x_offset, 24)
 
         vline.width = None
         vline.preferred_width = None
         vline.spacing = None
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 0)
+        self.assertEqual(vline._x_offset, 0)
 
         vline.width = -1
         vline.preferred_width = -1
         vline.spacing = -1
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 0)
+        self.assertEqual(vline._x_offset, 0)
 
         vline.width = 0
         vline.preferred_width = 0
         vline.spacing = 0
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 0)
+        self.assertEqual(vline._x_offset, 0)
 
         vline.width = -1000
         vline.preferred_width = -100
         vline.spacing = -10
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 0)
+        self.assertEqual(vline._x_offset, 0)
 
         # glxc.JUSTIFY_RIGHT -> self.get_width() - self.get_preferred_width() - self.get_spacing()
         vline._justify = glxc.JUSTIFY_RIGHT
@@ -153,27 +153,27 @@ class TestVSeparator(unittest.TestCase):
         vline.preferred_width = 80
         vline.spacing = 2
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 42)
+        self.assertEqual(vline._x_offset, 42)
 
         vline.width = None
         vline.preferred_width = None
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 0)
+        self.assertEqual(vline._x_offset, 0)
 
         vline.width = -1
         vline.preferred_width = -1
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 0)
+        self.assertEqual(vline._x_offset, 0)
 
         vline.width = 0
         vline.preferred_width = -0
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 0)
+        self.assertEqual(vline._x_offset, 0)
 
         vline.width = -1000
         vline.preferred_width = -100
         vline._check_justify()
-        self.assertEqual(vline._vseperator_x, 0)
+        self.assertEqual(vline._x_offset, 0)
 
     def test__get_estimated_preferred_width(self):
         """Test VSeparator._get_estimated_preferred_width()"""
@@ -193,29 +193,29 @@ class TestVSeparator(unittest.TestCase):
         """Test VSeparator._set_vseperator_x() and VSeparator._get_vseperator_x()"""
         vline = GLXCurses.VSeparator()
         # call set_decorated() with 0 as argument
-        vline._set_vseperator_x(0)
+        vline._set_x_offset(0)
         # verify we go back 0
-        self.assertEqual(vline._get_vseperator_x(), 0)
+        self.assertEqual(vline._get_x_offset(), 0)
         # call set_decorated() with 0 as argument
-        vline._set_vseperator_x(42)
+        vline._set_x_offset(42)
         # verify we go back 0
-        self.assertEqual(vline._get_vseperator_x(), 42)
+        self.assertEqual(vline._get_x_offset(), 42)
         # test raise TypeError
-        self.assertRaises(TypeError, vline._set_vseperator_x, 'Galaxie')
+        self.assertRaises(TypeError, vline._set_x_offset, 'Galaxie')
 
     def test__set__get_vseperator_y(self):
         """Test VSeparator._set_vseperator_y() and VSeparator._get_vseperator_y()"""
         vline = GLXCurses.VSeparator()
         # call set_decorated() with 0 as argument
-        vline._set_vseperator_y(0)
+        vline._set_y_offset(0)
         # verify we go back 0
-        self.assertEqual(vline._get_vseperator_y(), 0)
+        self.assertEqual(vline._get_y_offset(), 0)
         # call set_decorated() with 0 as argument
-        vline._set_vseperator_y(42)
+        vline._set_y_offset(42)
         # verify we go back 0
-        self.assertEqual(vline._get_vseperator_y(), 42)
+        self.assertEqual(vline._get_y_offset(), 42)
         # test raise TypeError
-        self.assertRaises(TypeError, vline._set_vseperator_y, 'Galaxie')
+        self.assertRaises(TypeError, vline._set_y_offset, 'Galaxie')
 
 if __name__ == '__main__':
     unittest.main()

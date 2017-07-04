@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 from GLXCurses import Widget
 from GLXCurses import glxc
+from GLXCurses.Utils import clamp_to_zero
 import curses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -63,8 +64,8 @@ class VSeparator(Widget):
         self._justify = glxc.JUSTIFY_CENTER
 
         # Internal Widget Setting
-        self._vseperator_x = 0
-        self._vseperator_y = 0
+        self._x_offset = 0
+        self._y_offset = 0
 
     def draw_widget_in_area(self):
         """
@@ -118,11 +119,11 @@ class VSeparator(Widget):
     # Internal
     def _check_justify(self):
         """Check the justification of the X axe"""
+        width = self.get_width()
+        preferred_width = self.get_preferred_width()
+        spacing = self.get_spacing()
+
         if self.get_justify() == glxc.JUSTIFY_CENTER:
-
-            width = self.get_width()
-            preferred_width = self.get_preferred_width()
-
             # Clamp value et impose the center
             if width is None:
                 estimated_width = 0
@@ -151,18 +152,12 @@ class VSeparator(Widget):
                 final_value = 0
 
             # Finally set the value
-            self._set_vseperator_x(final_value)
+            self._set_x_offset(final_value)
 
         elif self.get_justify() == glxc.JUSTIFY_LEFT:
-            spacing = self.get_spacing()
 
             # Clamp estimated_spacing
-            if spacing is None:
-                estimated_spacing = 0
-            elif spacing <= 0:
-                estimated_spacing = 0
-            else:
-                estimated_spacing = spacing
+            estimated_spacing = clamp_to_zero(spacing)
 
             # Make the compute
             final_value = int(estimated_spacing)
@@ -172,37 +167,19 @@ class VSeparator(Widget):
                 final_value = 0
 
             # Finally set the value
-            self._set_vseperator_x(final_value)
+            self._set_x_offset(final_value)
             # self._set_vseperator_x(self.get_spacing())
 
         elif self.get_justify() == glxc.JUSTIFY_RIGHT:
-            width = self.get_width()
-            preferred_width = self.get_preferred_width()
-            spacing = self.get_spacing()
 
             # Clamp estimated_width
-            if width is None:
-                estimated_width = 0
-            elif width <= 0:
-                estimated_width = 0
-            else:
-                estimated_width = width
+            estimated_width = clamp_to_zero(width)
 
             # Clamp preferred_width
-            if preferred_width is None:
-                estimated_preferred_width = 0
-            elif preferred_width <= 0:
-                estimated_preferred_width = 0
-            else:
-                estimated_preferred_width = preferred_width
+            estimated_preferred_width = clamp_to_zero(preferred_width)
 
             # Clamp estimated_spacing
-            if spacing is None:
-                estimated_spacing = 0
-            elif spacing <= 0:
-                estimated_spacing = 0
-            else:
-                estimated_spacing = spacing
+            estimated_spacing = clamp_to_zero(spacing)
 
             # Make the compute
             final_value = int(estimated_width - estimated_preferred_width - estimated_spacing)
@@ -212,16 +189,16 @@ class VSeparator(Widget):
                 final_value = 0
 
             # Finally set the value
-            self._set_vseperator_x(final_value)
+            self._set_x_offset(final_value)
             # self._set_vseperator_x(int(self.get_width() - self.get_preferred_width() - self.get_spacing()))
 
     def _draw_vertical_separator(self):
         """Draw the Vertical Label with Justification and PositionType"""
         if self.get_height() >= 1 + (self.get_spacing() * 2):
-            for y in range(self._get_vseperator_y(), self.get_height() - self.get_spacing()):
+            for y in range(self._get_y_offset(), self.get_height() - self.get_spacing()):
                 self.get_curses_subwin().insch(
-                    int(self._get_vseperator_y() + y),
-                    int(self._get_vseperator_x()),
+                    int(self._get_y_offset() + y),
+                    int(self._get_x_offset()),
                     curses.ACS_VLINE,
                     self.get_style().get_color_pair(
                         foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
@@ -252,7 +229,7 @@ class VSeparator(Widget):
         estimated_preferred_height += self.get_spacing() * 2
         return estimated_preferred_height
 
-    def _set_vseperator_x(self, number):
+    def _set_x_offset(self, number):
         """
         Set the Vertical Axe Separator
 
@@ -260,21 +237,21 @@ class VSeparator(Widget):
         :type number: int
         """
         if type(number) == int:
-            if self._get_vseperator_x() != number:
-                self._vseperator_x = number
+            if self._get_x_offset() != number:
+                self._x_offset = number
         else:
             raise TypeError(u'>number< is not a int type')
 
-    def _get_vseperator_x(self):
+    def _get_x_offset(self):
         """
         Return Vertical Axe Separator
 
-        :return: vseperator_x
+        :return: _x_offset
         :rtype: int
         """
-        return self._vseperator_x
+        return self._x_offset
 
-    def _set_vseperator_y(self, number):
+    def _set_y_offset(self, number):
         """
         Set the Horizontal Axe Separator
 
@@ -282,16 +259,16 @@ class VSeparator(Widget):
         :type number: int
         """
         if type(number) == int:
-            if self._get_vseperator_y() != number:
-                self._vseperator_y = number
+            if self._get_y_offset() != number:
+                self._y_offset = number
         else:
             raise TypeError(u'>number< is not a int type')
 
-    def _get_vseperator_y(self):
+    def _get_y_offset(self):
         """
         Return Horizontal Axe Separator
 
         :return: vseperator_x
         :rtype: int
         """
-        return self._vseperator_y
+        return self._y_offset

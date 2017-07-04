@@ -30,3 +30,22 @@ def resize_text(text, max_width, separator='~'):
         return text_to_return
     else:
         return text
+
+
+def clamp_to_zero(value=None):
+    """
+    Convert any value to positive integer
+
+    :param value: a interger
+    :type value: int
+    :return: int
+    """
+    if type(value) == int or value is None:
+        if value is None:
+            return 0
+        elif value <= 0:
+            return 0
+        else:
+            return value
+    else:
+        raise TypeError(u'>value< must be a int or None type')
