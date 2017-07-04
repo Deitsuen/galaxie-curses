@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
+from GLXCurses import Widget
+from GLXCurses import Application
 from GLXCurses import glxc
 from GLXCurses.Utils import clamp_to_zero
+from GLXCurses.Utils import resize_text
+
 import curses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -11,28 +14,21 @@ import curses
 __author__ = 'Tuux'
 
 
-def resize_text(text, max_width, separator='~'):
-    if max_width < len(text):
-        text_to_return = text[:(max_width / 2) - 1] + separator + text[-max_width / 2:]
-        if len(text_to_return) == 1:
-            text_to_return = text[:1]
-        elif len(text_to_return) == 2:
-            text_to_return = str(text[:1] + text[-1:])
-        elif len(text_to_return) == 3:
-            text_to_return = str(text[:1] + separator + text[-1:])
-        return text_to_return
-    else:
-        return text
-
-
-class RadioButton(GLXCurses.Widget):
+class RadioButton(Widget):
     def __init__(self):
-        GLXCurses.Widget.__init__(self)
-        # Widgets can be named, which allows you to refer to them from a GLXCStyle
+        # Load heritage
+        Widget.__init__(self)
 
+        # It's a GLXCurse Type
+        self.glxc_type = 'GLXCurses.RadioButton'
+
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('RadioButton')
-        self.set_can_focus(1)
-        self.set_can_default(1)
+
+        # Make a Widget Style heritage attribute as local attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
+
         # Internal Widget Setting
         self.text = None
         self._x_offset = 0
@@ -57,6 +53,7 @@ class RadioButton(GLXCurses.Widget):
         self._position_type = glxc.POS_CENTER
 
         # Sensitive
+        self.set_can_default(1)
         self.set_sensitive(1)
         self.set_can_focus(1)
         self.set_is_focus(1)
@@ -96,10 +93,6 @@ class RadioButton(GLXCurses.Widget):
         # Subscibtion
         self.connect('MOUSE_EVENT', RadioButton._handle_mouse_event)
 
-    def _update_preferred_sizes(self):
-        self.set_preferred_width(self._get_estimated_preferred_width())
-        self.set_preferred_height(self._get_estimated_preferred_height())
-
     def draw_widget_in_area(self):
         # Check if the text can be display
         text_have_necessary_width = (self.get_preferred_width() >= 1)
@@ -112,7 +105,7 @@ class RadioButton(GLXCurses.Widget):
             text_have_necessary_width = (self.get_preferred_width() >= 1)
             text_have_necessary_height = (self.get_preferred_height() >= 1)
             if text_have_necessary_width and text_have_necessary_height:
-                self.draw_button()
+                self._draw_button()
 
     def set_active(self, boolean):
         self.state['ACTIVE'] = bool(boolean)
@@ -121,167 +114,6 @@ class RadioButton(GLXCurses.Widget):
     def get_active(self):
         self._check_active()
         return self.state['ACTIVE']
-
-    def draw_button(self):
-        self._check_active()
-        self._update_preferred_sizes()
-        self._check_justify()
-        self._check_position_type()
-
-        if not self.get_sensitive():
-            self.draw_the_good_button(
-                color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_text('bg', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
-                )
-            )
-        elif self.state['PRELIGHT']:
-            self.draw_the_good_button(
-                color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_text('dark', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_text('bg', 'STATE_PRELIGHT')
-                )
-            )
-        elif self.state['NORMAL']:
-            self.draw_the_good_button(
-                color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
-                )
-            )
-
-    def draw_the_good_button(self, color):
-        # Interface management
-        try:
-            self.get_curses_subwin().addstr(
-                self._y_offset,
-                self._x_offset,
-                self.interface,
-                color
-            )
-        except curses.error:
-            pass
-        try:
-            # Draw the Horizontal Button with Justification and PositionType
-            message_to_display = resize_text(self.get_text(), self.get_width(), '~')
-            self.get_curses_subwin().addstr(
-                self._y_offset,
-                self._x_offset + len(self.interface),
-                message_to_display,
-                color
-            )
-        except curses.error:
-            pass
-
-    def enter(self):
-        pass
-
-    def leave(self):
-        pass
-
-    def key_pressed(self, char):
-        if char > 255:
-            return 0  # skip control-characters
-        # if chr(char).upper() == self.LabelButton[self.Underline]:
-        #     return 1
-        else:
-            return 0
-
-    def _handle_mouse_event(self, event_signal, event_args):
-        if self.get_sensitive():
-            # Read the mouse event information's
-            (mouse_event_id, x, y, z, event) = event_args
-            # Be sure we select really the Button
-            y -= self.y
-            x -= self.x
-            if self._y_offset >= y > self._y_offset - self.get_preferred_height():
-                if (self._x_offset - 1) + len(self.interface) + len(self.get_text()) >= x > (self._x_offset - 1):
-                    # We are sure about the button have been clicked
-                    self.states_list = '; '.join(state_string for state, state_string
-                                                 in self.curses_mouse_states.viewitems()
-                                                 if event & state)
-                    # INTERNAL METHOD
-                    # BUTTON1
-                    if event == curses.BUTTON1_PRESSED:
-                        GLXCurses.application.set_is_focus(self)
-                        self._check_active()
-                        self._set_state_prelight(True)
-                    elif event == curses.BUTTON1_RELEASED:
-                        GLXCurses.application.set_is_focus(self)
-                        self._check_active()
-                        self.set_active(not self.get_active())
-                        self._set_state_prelight(False)
-                    if event == curses.BUTTON1_CLICKED:
-                        self.set_active(not self.get_active())
-                        GLXCurses.application.set_is_focus(self)
-                    if event == curses.BUTTON1_DOUBLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
-                    if event == curses.BUTTON1_TRIPLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
-
-                    # BUTTON2
-                    if event == curses.BUTTON2_PRESSED:
-                        GLXCurses.application.set_is_focus(self)
-                        self._check_active()
-                        self._set_state_prelight(True)
-                    elif event == curses.BUTTON2_RELEASED:
-                        self._set_state_prelight(False)
-                        GLXCurses.application.set_is_focus(self)
-                    if event == curses.BUTTON2_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
-                    if event == curses.BUTTON2_DOUBLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
-                    if event == curses.BUTTON2_TRIPLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
-
-                    # BUTTON3
-                    if event == curses.BUTTON3_PRESSED:
-                        GLXCurses.application.set_is_focus(self)
-                        self._check_active()
-                        self._set_state_prelight(True)
-                    elif event == curses.BUTTON3_RELEASED:
-                        self._set_state_prelight(False)
-                        GLXCurses.application.set_is_focus(self)
-                    if event == curses.BUTTON3_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
-                    if event == curses.BUTTON3_DOUBLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
-                    if event == curses.BUTTON3_TRIPLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
-
-                    # BUTTON4
-                    if event == curses.BUTTON4_PRESSED:
-                        GLXCurses.application.set_is_focus(self)
-                        self._check_active()
-                        self._set_state_prelight(True)
-                    elif event == curses.BUTTON4_RELEASED:
-                        self._set_state_prelight(False)
-                        GLXCurses.application.set_is_focus(self)
-                    if event == curses.BUTTON4_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
-                    if event == curses.BUTTON4_DOUBLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
-                    if event == curses.BUTTON4_TRIPLE_CLICKED:
-                        GLXCurses.application.set_is_focus(self)
-
-                    if event == curses.BUTTON_SHIFT:
-                        pass
-                    if event == curses.BUTTON_CTRL:
-                        pass
-                    if event == curses.BUTTON_ALT:
-                        pass
-
-                    # Create a Dict with everything
-                    instance = {
-                        'class': self.__class__.__name__,
-                        'label': self.get_text(),
-                        'id': self.get_widget_id()
-                    }
-                    # EVENT EMIT
-                    self.emit(self.curses_mouse_states[event], instance)
-            else:
-                self.state['PRELIGHT'] = False
-                return 0
 
     # Internal curses_subwin functions
     def set_text(self, text):
@@ -360,6 +192,153 @@ class RadioButton(GLXCurses.Widget):
         return self._position_type
 
     # Internal
+    def _draw_button(self):
+        self._check_active()
+        self._update_preferred_sizes()
+        self._check_justify()
+        self._check_position_type()
+
+        if not self.get_sensitive():
+            self._draw_the_good_button(
+                color=self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('bg', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
+                )
+            )
+        elif self.state['PRELIGHT']:
+            self._draw_the_good_button(
+                color=self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('dark', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_PRELIGHT')
+                )
+            )
+        elif self.state['NORMAL']:
+            self._draw_the_good_button(
+                color=self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
+                )
+            )
+
+    def _draw_the_good_button(self, color):
+        # Interface management
+        try:
+            self.get_curses_subwin().addstr(
+                self._y_offset,
+                self._x_offset,
+                self.interface,
+                color
+            )
+        except curses.error:
+            pass
+        try:
+            # Draw the Horizontal Button with Justification and PositionType
+            message_to_display = resize_text(self.get_text(), self.get_width() - len(self.interface), '~')
+            self.get_curses_subwin().addstr(
+                self._y_offset,
+                self._x_offset + len(self.interface),
+                message_to_display,
+                color
+            )
+        except curses.error:
+            pass
+
+    def _handle_mouse_event(self, event_signal, event_args):
+        if self.get_sensitive():
+            # Read the mouse event information's
+            (mouse_event_id, x, y, z, event) = event_args
+            # Be sure we select really the Button
+            y -= self.y
+            x -= self.x
+            if self._y_offset >= y > self._y_offset - self.get_preferred_height():
+                if (self._x_offset - 1) + len(self.interface) + len(self.get_text()) >= x > (self._x_offset - 1):
+                    # We are sure about the button have been clicked
+                    self.states_list = '; '.join(state_string for state, state_string
+                                                 in self.curses_mouse_states.viewitems()
+                                                 if event & state)
+                    # INTERNAL METHOD
+                    # BUTTON1
+                    if event == curses.BUTTON1_PRESSED:
+                        Application().set_is_focus(self)
+                        self._check_active()
+                        self._set_state_prelight(True)
+                    elif event == curses.BUTTON1_RELEASED:
+                        Application().set_is_focus(self)
+                        self._check_active()
+                        self.set_active(not self.get_active())
+                        self._set_state_prelight(False)
+                    if event == curses.BUTTON1_CLICKED:
+                        self.set_active(not self.get_active())
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON1_DOUBLE_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON1_TRIPLE_CLICKED:
+                        Application().set_is_focus(self)
+
+                    # BUTTON2
+                    if event == curses.BUTTON2_PRESSED:
+                        Application().set_is_focus(self)
+                        self._check_active()
+                        self._set_state_prelight(True)
+                    elif event == curses.BUTTON2_RELEASED:
+                        self._set_state_prelight(False)
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON2_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON2_DOUBLE_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON2_TRIPLE_CLICKED:
+                        Application().set_is_focus(self)
+
+                    # BUTTON3
+                    if event == curses.BUTTON3_PRESSED:
+                        Application().set_is_focus(self)
+                        self._check_active()
+                        self._set_state_prelight(True)
+                    elif event == curses.BUTTON3_RELEASED:
+                        self._set_state_prelight(False)
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON3_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON3_DOUBLE_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON3_TRIPLE_CLICKED:
+                        Application().set_is_focus(self)
+
+                    # BUTTON4
+                    if event == curses.BUTTON4_PRESSED:
+                        Application().set_is_focus(self)
+                        self._check_active()
+                        self._set_state_prelight(True)
+                    elif event == curses.BUTTON4_RELEASED:
+                        self._set_state_prelight(False)
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON4_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON4_DOUBLE_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON4_TRIPLE_CLICKED:
+                        Application().set_is_focus(self)
+
+                    if event == curses.BUTTON_SHIFT:
+                        pass
+                    if event == curses.BUTTON_CTRL:
+                        pass
+                    if event == curses.BUTTON_ALT:
+                        pass
+
+                    # Create a Dict with everything
+                    instance = {
+                        'class': self.__class__.__name__,
+                        'label': self.get_text(),
+                        'id': self.get_widget_id()
+                    }
+                    # EVENT EMIT
+                    self.emit(self.curses_mouse_states[event], instance)
+            else:
+                self.state['PRELIGHT'] = False
+                return 0
+
     def _check_active(self):
         if self.state['ACTIVE']:
             self.interface = self.interface_active
@@ -516,6 +495,10 @@ class RadioButton(GLXCurses.Widget):
 
             self._set_y_offset(final_value)
 
+    def _update_preferred_sizes(self):
+        self.set_preferred_width(self._get_estimated_preferred_width())
+        self.set_preferred_height(self._get_estimated_preferred_height())
+
     def _get_estimated_preferred_width(self):
         """
         Estimate a preferred width, by consider X Location, allowed width and spacing
@@ -587,5 +570,20 @@ class RadioButton(GLXCurses.Widget):
         :return: y attribute
         """
         return self._y_offset
+
+    # Unimplemented
+    def _enter(self):
+        pass
+
+    def _leave(self):
+        pass
+
+    def _key_pressed(self, char):
+        if char > 255:
+            return 0  # skip control-characters
+        # if chr(char).upper() == self.LabelButton[self.Underline]:
+        #     return 1
+        else:
+            return 0
 
 

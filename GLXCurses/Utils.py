@@ -19,7 +19,7 @@ def glxc_type(thing_to_test=None):
 
 
 def resize_text(text, max_width, separator='~'):
-    if max_width < len(text):
+    if max_width <= len(text):
         text_to_return = text[:(max_width / 2) - 1] + separator + text[-max_width / 2:]
         if len(text_to_return) == 1:
             text_to_return = text[:1]
@@ -27,6 +27,8 @@ def resize_text(text, max_width, separator='~'):
             text_to_return = str(text[:1] + text[-1:])
         elif len(text_to_return) == 3:
             text_to_return = str(text[:1] + separator + text[-1:])
+        else:
+            text_to_return = text_to_return
         return text_to_return
     else:
         return text

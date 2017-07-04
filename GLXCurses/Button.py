@@ -4,6 +4,7 @@ from GLXCurses import Widget
 from GLXCurses import Application
 from GLXCurses import glxc
 from GLXCurses.Utils import clamp_to_zero
+from GLXCurses.Utils import resize_text
 import curses
 import logging
 
@@ -11,20 +12,6 @@ import logging
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
-
-
-def resize_text(text, max_width, separator='~'):
-    if max_width < len(text):
-        text_to_return = text[:(max_width / 2) - 1] + separator + text[-max_width / 2:]
-        if len(text_to_return) == 1:
-            text_to_return = text[:1]
-        elif len(text_to_return) == 2:
-            text_to_return = str(text[:1] + text[-1:])
-        elif len(text_to_return) == 3:
-            text_to_return = str(text[:1] + separator + text[-1:])
-        return text_to_return
-    else:
-        return text
 
 
 class Button(Widget):
@@ -42,9 +29,6 @@ class Button(Widget):
         # Make a Widget Style heritage attribute as local attribute
         if self.get_style().get_attribute_states():
             self.set_attribute_states(self.get_style().get_attribute_states())
-
-        self.set_can_focus(1)
-        self.set_can_default(1)
 
         # Internal Widget Setting
         self.text = None
@@ -97,11 +81,174 @@ class Button(Widget):
         }
 
         # Sensitive
+        self.set_can_focus(1)
+        self.set_can_default(1)
         self.set_sensitive(1)
         self.states_list = None
 
         # Subscription
         self.connect('MOUSE_EVENT', Button._handle_mouse_event)
+
+    def draw_widget_in_area(self):
+
+        # Many Thing's
+        # Check if the text can be display
+        text_have_necessary_width = (self.get_preferred_width() >= 1)
+        text_have_necessary_height = (self.get_preferred_height() >= 1)
+        if not text_have_necessary_height or not text_have_necessary_width:
+            return
+
+        if self.get_text():
+
+            # Check if the text can be display
+            text_have_necessary_width = (self.get_preferred_width() >= 1)
+            text_have_necessary_height = (self.get_preferred_height() >= 1)
+            if text_have_necessary_width and text_have_necessary_height:
+                self._draw_button()
+
+    # Internal Widget functions
+    def set_text(self, text):
+        self.text = text
+        self.preferred_width = len(self.get_text())
+
+    def get_text(self):
+        return self.text
+
+    # Justification: LEFT, RIGHT, CENTER
+    def set_justify(self, justify):
+        """
+        Set the Justify of the Vertical separator
+
+         Justify:
+          - LEFT
+          - CENTER
+          - RIGHT
+
+        :param justify: a Justify
+        :type justify: str
+        """
+        if justify in [glxc.JUSTIFY_LEFT, glxc.JUSTIFY_CENTER, glxc.JUSTIFY_RIGHT]:
+            if self.get_justify() != str(justify).upper():
+                self._justify = str(justify).upper()
+                # When the justify is set update preferred sizes store in Widget class
+                self._update_preferred_sizes()
+        else:
+            raise TypeError(u'PositionType must be LEFT or CENTER or RIGHT')
+
+    def get_justify(self):
+        """
+        Return the Justify of the CheckButton
+
+         Justify:
+          - LEFT
+          - CENTER
+          - RIGHT
+
+        :return: str
+        """
+        return self._justify
+
+    # PositionType: CENTER, TOP, BOTTOM
+    def set_position_type(self, position_type):
+        """
+        Set the Position type
+
+        PositionType:
+         .glxc.POS_TOP
+         .glxc.POS_CENTER
+         .glxc.POS_BOTTOM
+
+        :param position_type: a PositionType
+        :type position_type: str
+        """
+        if position_type in [glxc.POS_TOP, glxc.POS_CENTER, glxc.POS_BOTTOM]:
+            if self.get_position_type() != str(position_type).upper():
+                self._position_type = str(position_type).upper()
+                # When the position type is set update preferred sizes store in Widget class
+                self._update_preferred_sizes()
+        else:
+            raise TypeError(u'PositionType must be CENTER or TOP or BOTTOM')
+
+    def get_position_type(self):
+        """
+        Return the Position Type
+
+        PositionType:
+         .glxc.POS_TOP
+         .glxc.POS_CENTER
+         .glxc.POS_BOTTOM
+
+        :return: str
+        """
+        return self._position_type
+
+    # State
+    def get_states(self):
+        return self.states_list
+
+    # Internal
+    def _draw_button(self):
+        self._check_selected()
+        self._update_preferred_sizes()
+        self._check_justify()
+        self._check_position_type()
+
+        if not self.get_sensitive():
+            self._draw_the_good_button(
+                color=self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('bg', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
+                )
+            )
+        elif self.state['PRELIGHT']:
+            self._draw_the_good_button(
+                color=self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('dark', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_PRELIGHT')
+                )
+            )
+        elif self.state['NORMAL']:
+            self._draw_the_good_button(
+                color=self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
+                )
+            )
+
+    def _draw_the_good_button(self, color):
+        try:
+            # Interface management
+            self.get_curses_subwin().addstr(
+                self._y_offset,
+                self._x_offset,
+                self.button_border[:len(self.button_border) / 2],
+                color
+            )
+        except curses.error:
+            pass
+        try:
+
+            # Draw the Horizontal Button with Justification and PositionType
+            message_to_display = resize_text(self.get_text(), self.get_width() - len(self.button_border), '~')
+            self.get_curses_subwin().addstr(
+                self._y_offset,
+                self._x_offset + len(self.button_border) / 2,
+                message_to_display,
+                color
+            )
+        except curses.error:
+            pass
+        try:
+            # Interface management
+            message_to_display = resize_text(self.get_text(), self.get_width() - len(self.button_border), '~')
+            self.get_curses_subwin().insstr(
+                self._y_offset,
+                self._x_offset + (len(self.button_border) / 2) + len(message_to_display),
+                self.button_border[-len(self.button_border) / 2:],
+                color
+            )
+        except curses.error:
+            pass
 
     def _handle_mouse_event(self, event_signal, event_args):
         if self.get_sensitive():
@@ -200,184 +347,6 @@ class Button(Widget):
             logging.debug(self.__class__.__name__ + ': ' + self.get_text() + ' ' + self.get_widget_id() + 'is not '
                                                                                                           'sensitive.')
 
-    def _update_preferred_sizes(self):
-        self.set_preferred_width(self._get_estimated_preferred_width())
-        self.set_preferred_height(self._get_estimated_preferred_height())
-
-    def draw_widget_in_area(self):
-
-        # Many Thing's
-        # Check if the text can be display
-        text_have_necessary_width = (self.get_preferred_width() >= 1)
-        text_have_necessary_height = (self.get_preferred_height() >= 1)
-        if not text_have_necessary_height or not text_have_necessary_width:
-            return
-
-        if self.get_text():
-
-            # Check if the text can be display
-            text_have_necessary_width = (self.get_preferred_width() >= 1)
-            text_have_necessary_height = (self.get_preferred_height() >= 1)
-            if text_have_necessary_width and text_have_necessary_height:
-                self.draw_button()
-
-    def draw_button(self):
-        self._check_selected()
-        self._update_preferred_sizes()
-        self._check_justify()
-        self._check_position_type()
-
-        if not self.get_sensitive():
-            self.draw_the_good_button(
-                color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_text('bg', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
-                )
-            )
-        elif self.state['PRELIGHT']:
-            self.draw_the_good_button(
-                color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_text('dark', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_text('bg', 'STATE_PRELIGHT')
-                )
-            )
-        elif self.state['NORMAL']:
-            self.draw_the_good_button(
-                color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
-                )
-            )
-
-    def draw_the_good_button(self, color):
-        try:
-            # Interface management
-            self.get_curses_subwin().addstr(
-                self._y_offset,
-                self._x_offset,
-                self.button_border[:len(self.button_border) / 2],
-                color
-            )
-        except curses.error:
-            pass
-        try:
-            # Draw the Horizontal Button with Justification and PositionType
-            message_to_display = resize_text(self.get_text(), self.get_width(), '~')
-            self.get_curses_subwin().addstr(
-                self._y_offset,
-                self._x_offset + len(self.button_border) / 2,
-                message_to_display,
-                color
-            )
-        except curses.error:
-            pass
-        try:
-            # Interface management
-            message_to_display = resize_text(self.get_text(), self.get_width(), '~')
-            self.get_curses_subwin().insstr(
-                self._y_offset,
-                self._x_offset + (len(self.button_border) / 2) + len(message_to_display),
-                self.button_border[-len(self.button_border) / 2:],
-                color
-            )
-        except curses.error:
-            pass
-
-    def enter(self):
-        raise NotImplementedError
-
-    def leave(self):
-        raise NotImplementedError
-
-    def key_pressed(self, char):
-        if char > 255:
-            return 0  # skip control-characters
-        # if chr(char).upper() == self.LabelButton[self.Underline]:
-        #     return 1
-        else:
-            return 0
-
-    # Internal Widget functions
-    def set_text(self, text):
-        self.text = text
-        self.preferred_width = len(self.get_text())
-
-    def get_text(self):
-        return self.text
-
-    # Justification: LEFT, RIGHT, CENTER
-    def set_justify(self, justify):
-        """
-        Set the Justify of the Vertical separator
-
-         Justify:
-          - LEFT
-          - CENTER
-          - RIGHT
-
-        :param justify: a Justify
-        :type justify: str
-        """
-        if justify in [glxc.JUSTIFY_LEFT, glxc.JUSTIFY_CENTER, glxc.JUSTIFY_RIGHT]:
-            if self.get_justify() != str(justify).upper():
-                self._justify = str(justify).upper()
-                # When the justify is set update preferred sizes store in Widget class
-                self._update_preferred_sizes()
-        else:
-            raise TypeError(u'PositionType must be LEFT or CENTER or RIGHT')
-
-    def get_justify(self):
-        """
-        Return the Justify of the CheckButton
-
-         Justify:
-          - LEFT
-          - CENTER
-          - RIGHT
-
-        :return: str
-        """
-        return self._justify
-
-    # PositionType: CENTER, TOP, BOTTOM
-    def set_position_type(self, position_type):
-        """
-        Set the Position type
-
-        PositionType:
-         .glxc.POS_TOP
-         .glxc.POS_CENTER
-         .glxc.POS_BOTTOM
-
-        :param position_type: a PositionType
-        :type position_type: str
-        """
-        if position_type in [glxc.POS_TOP, glxc.POS_CENTER, glxc.POS_BOTTOM]:
-            if self.get_position_type() != str(position_type).upper():
-                self._position_type = str(position_type).upper()
-                # When the position type is set update preferred sizes store in Widget class
-                self._update_preferred_sizes()
-        else:
-            raise TypeError(u'PositionType must be CENTER or TOP or BOTTOM')
-
-    def get_position_type(self):
-        """
-        Return the Position Type
-
-        PositionType:
-         .glxc.POS_TOP
-         .glxc.POS_CENTER
-         .glxc.POS_BOTTOM
-
-        :return: str
-        """
-        return self._position_type
-
-    # State
-    def get_states(self):
-        return self.states_list
-
-    # Internal
     def _check_selected(self):
         if self.get_can_focus():
             if Application().get_is_focus() == self.get_widget_id():
@@ -541,6 +510,10 @@ class Button(Widget):
 
             self._set_y_offset(final_value)
 
+    def _update_preferred_sizes(self):
+        self.set_preferred_width(self._get_estimated_preferred_width())
+        self.set_preferred_height(self._get_estimated_preferred_height())
+
     def _get_estimated_preferred_width(self):
         """
         Estimate a preferred width, by consider X Location, allowed width and spacing
@@ -612,3 +585,18 @@ class Button(Widget):
         :return: y attribute
         """
         return self._y_offset
+
+    # Unimplemented
+    def _enter(self):
+        raise NotImplementedError
+
+    def _leave(self):
+        raise NotImplementedError
+
+    def _key_pressed(self, char):
+        if char > 255:
+            return 0  # skip control-characters
+        # if chr(char).upper() == self.LabelButton[self.Underline]:
+        #     return 1
+        else:
+            return 0
