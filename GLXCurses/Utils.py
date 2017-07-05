@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# It script it publish under GNU GENERAL PUBLIC LICENSE
+# http://www.gnu.org/licenses/gpl-3.0.en.html
+# Author: the Galaxie Curses Team, all rights reserved
+
 
 def glxc_type(thing_to_test=None):
     """
@@ -18,11 +22,11 @@ def glxc_type(thing_to_test=None):
         return False
 
 
-def resize_text(text, max_width, separator='~'):
+def resize_text(text='', max_width=0, separator='~'):
     """
     Resize the text , and return a new text
 
-    exemple: return '123~789' for '123456789' where max_width = 7 or 8
+    example: return '123~789' for '123456789' where max_width = 7 or 8
 
     :param text: the original text to resize
     :type text: str
@@ -33,6 +37,15 @@ def resize_text(text, max_width, separator='~'):
     :return: a resize text
     :rtype: str
     """
+    # Try to quit as soon of possible
+    if type(text) != str:
+        raise TypeError(u'>text< must be a str type')
+    if type(max_width) != int:
+        raise TypeError(u'>max_width< must be a int type')
+    if type(separator) != str:
+        raise TypeError(u'>separator< must be a str type')
+
+    # If we are here we haven't quit
     if max_width < len(text):
         if max_width <= 0:
             return str('')
@@ -41,22 +54,23 @@ def resize_text(text, max_width, separator='~'):
         elif max_width == 2:
             return str(text[:1] + text[-1:])
         elif max_width == 3:
-            return str(text[:1] + separator + text[-1:])
+            return str(text[:1] + separator[:1] + text[-1:])
         else:
-            max_width -= len(separator)
-            max_div = int((max_width / 2))
-            return str(text[:max_div] + separator + text[-max_div:])
+            max_width -= len(separator[:1])
+            max_div = int(max_width / 2)
+            return str(text[:max_div] + separator[:1] + text[-max_div:])
     else:
-        return text
+        return str(text)
 
 
 def clamp_to_zero(value=None):
     """
     Convert any value to positive integer
 
-    :param value: a interger
+    :param value: a integer
     :type value: int
-    :return: int
+    :return: a integer
+    :rtype: int
     """
     if type(value) == int or value is None:
         if value is None:

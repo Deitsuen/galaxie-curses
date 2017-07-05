@@ -2,23 +2,15 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from random import randint
-import random
-import string
-
 import sys
 import os
-import uuid
-
-# Require when you haven't GLXCurses as default Package
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(current_dir))
-
 from GLXCurses.Utils import clamp_to_zero
 from GLXCurses.Utils import resize_text
+from GLXCurses.Utils import glxc_type
+from GLXCurses import Window
 
 # Unittest
-class TestStyle(unittest.TestCase):
+class TestUtils(unittest.TestCase):
 
     def setUp(self):
         # Before the test start
@@ -56,6 +48,12 @@ class TestStyle(unittest.TestCase):
         except ValueError:
             pass
 
+    def test_glxc_type(self):
+        """Test Utils.glxc_type()"""
+        self.assertTrue(glxc_type(Window()))
+        self.assertFalse(glxc_type(int()))
+        self.assertFalse(glxc_type())
+
     def test_clamp_to_zero(self):
         """Test Utils.clamp_to_zero()"""
         self.assertEqual(0, clamp_to_zero(None))
@@ -89,4 +87,11 @@ class TestStyle(unittest.TestCase):
         self.assertEqual('1', resize_text(text, width, '~'))
         width = 0
         self.assertEqual('', resize_text(text, width, '~'))
+        width = -1
+        self.assertEqual('', resize_text(text, width, '~'))
+
+        # Test Error
+        self.assertRaises(TypeError, resize_text, (int(), width, '~'))
+        self.assertRaises(TypeError, resize_text, (text, str(), '~'))
+        self.assertRaises(TypeError, resize_text, (text, width, int()))
 
