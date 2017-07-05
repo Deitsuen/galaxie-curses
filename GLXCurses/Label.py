@@ -308,7 +308,7 @@ class Label(GLXCurses.Misc):
         return self.wrap_mode
 
     # Internal
-    def _get_label_x(self):
+    def _get_x_offset(self):
         xalign, _ = self.get_alignment()
         xpadd, _ = self.get_padding()
         value = 0
@@ -326,7 +326,7 @@ class Label(GLXCurses.Misc):
             value -= xpadd
         return value
 
-    def _get_label_y(self):
+    def _get_y_offset(self):
         _, yalign = self.get_alignment()
         _, ypadd = self.get_padding()
 
@@ -363,8 +363,8 @@ class Label(GLXCurses.Misc):
     def _draw_single_line_mode(self):
         try:
             self.get_curses_subwin().addstr(
-                self._get_label_y(),
-                self._get_label_x(),
+                self._get_y_offset(),
+                self._get_x_offset(),
                 self._get_single_line_resided_label_text(),
                 self.get_style().get_color_pair(
                     foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
@@ -383,8 +383,8 @@ class Label(GLXCurses.Misc):
             try:
                 if self.get_max_width_chars() <= -1:
                     self.get_curses_subwin().addstr(
-                        self._get_label_y() + increment,
-                        self._get_label_x(),
+                        self._get_y_offset() + increment,
+                        self._get_x_offset(),
                         self._check_justification(text=line, width=max_width),
                         self.get_style().get_color_pair(
                             foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
@@ -395,9 +395,12 @@ class Label(GLXCurses.Misc):
                     pass
                 else:
                     self.get_curses_subwin().addstr(
-                        self._get_label_y() + increment,
-                        self._get_label_x(),
-                        self._check_justification(text=line, width=self.get_max_width_chars())[:self.get_max_width_chars()],
+                        self._get_y_offset() + increment,
+                        self._get_x_offset(),
+                        self._check_justification(
+                            text=line,
+                            width=self.get_max_width_chars()
+                        )[:self.get_max_width_chars()],
                         self.get_style().get_color_pair(
                             foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
                             background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
@@ -468,9 +471,9 @@ class Label(GLXCurses.Misc):
         elif self.get_justify() == glxc.JUSTIFY_RIGHT:
             return "{0:>{1}}".format(text, width)
         else:
-            self.set_alignment(self._get_label_x(), self._get_label_y())
+            self.set_alignment(self._get_x_offset(), self._get_y_offset())
         return self.text_x
 
     def _check_position_type(self):
-        self.text_y = self._get_label_y()
+        self.text_y = self._get_y_offset()
         return self.text_y
