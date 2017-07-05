@@ -138,6 +138,16 @@ class Window(Bin):
         ###########################
 
     # GLXC Window Functions
+    def new(self):
+        """
+        Creates a new :func:`GLXCurses.Window <GLXCurses.Window.Window>` instance ready to use.
+
+        :return: the new Window
+        :rtype: GLXCurses.Window
+        """
+        self.__init__()
+        return self
+
     def draw_widget_in_area(self):
 
         # Apply the Background color
@@ -284,8 +294,6 @@ class Window(Bin):
         :param application: a Galaxie Curses :class:`Application <GLXCurses.Application.Application>` , as application \
         manager.
         :type   application: GLXCurses.Application or None
-        :return: nothing
-        :rtype: nothing
         :raise TypeError: if ``application`` parameter is not a \
         :class:`Application <GLXCurses.Application.Application>` type
         """

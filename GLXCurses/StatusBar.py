@@ -6,7 +6,6 @@
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 
 from GLXCurses import Widget
-from GLXCurses import Application
 import curses
 import uuid
 import logging
@@ -276,7 +275,7 @@ class StatusBar(Widget):
             'user_data': user_data
         }
         # EVENT EMIT
-        Application().emit('SIGNALS', instance)
+        self.emit('SIGNALS', instance)
 
     def emit_text_pushed(self, context_id, text, user_data=None):
         """
@@ -301,7 +300,7 @@ class StatusBar(Widget):
             'user_data': user_data
         }
         # EVENT EMIT
-        Application().emit('SIGNALS', instance)
+        self.emit('SIGNALS', instance)
 
     # Internal Method's
     def _get_context_id_list(self):
