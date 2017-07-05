@@ -19,17 +19,33 @@ def glxc_type(thing_to_test=None):
 
 
 def resize_text(text, max_width, separator='~'):
-    if max_width <= len(text):
-        text_to_return = text[:(max_width / 2) - 1] + separator + text[-max_width / 2:]
-        if len(text_to_return) == 1:
-            text_to_return = text[:1]
-        elif len(text_to_return) == 2:
-            text_to_return = str(text[:1] + text[-1:])
-        elif len(text_to_return) == 3:
-            text_to_return = str(text[:1] + separator + text[-1:])
+    """
+    Resize the text , and return a new text
+
+    exemple: return '123~789' for '123456789' where max_width = 7 or 8
+
+    :param text: the original text to resize
+    :type text: str
+    :param max_width: the size of the text
+    :type max_width: int
+    :param separator: a separator a in middle of the resize text
+    :type separator: str
+    :return: a resize text
+    :rtype: str
+    """
+    if max_width < len(text):
+        if max_width <= 0:
+            return str('')
+        elif max_width == 1:
+            return str(text[:1])
+        elif max_width == 2:
+            return str(text[:1] + text[-1:])
+        elif max_width == 3:
+            return str(text[:1] + separator + text[-1:])
         else:
-            text_to_return = text_to_return
-        return text_to_return
+            max_width -= len(separator)
+            max_div = int((max_width / 2))
+            return str(text[:max_div] + separator + text[-max_div:])
     else:
         return text
 

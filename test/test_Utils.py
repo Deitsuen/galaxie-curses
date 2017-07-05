@@ -15,7 +15,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(current_dir))
 
 from GLXCurses.Utils import clamp_to_zero
-
+from GLXCurses.Utils import resize_text
 
 # Unittest
 class TestStyle(unittest.TestCase):
@@ -63,3 +63,30 @@ class TestStyle(unittest.TestCase):
         self.assertEqual(0, clamp_to_zero(0))
         self.assertEqual(42, clamp_to_zero(42))
         self.assertRaises(TypeError, clamp_to_zero, float(42.42))
+
+    def test_resize_text(self):
+        """Test Utils.clamp_to_zero()"""
+        text = "123456789"
+        width = 10
+        self.assertEqual(text, resize_text(text, width, '~'))
+        width = 9
+        self.assertEqual(text, resize_text(text, width, '~'))
+        width = 8
+        self.assertEqual('123~789', resize_text(text, width, '~'))
+        width = 7
+        self.assertEqual('123~789', resize_text(text, width, '~'))
+        width = 6
+        self.assertEqual('12~89', resize_text(text, width, '~'))
+        width = 5
+        self.assertEqual('12~89', resize_text(text, width, '~'))
+        width = 4
+        self.assertEqual('1~9', resize_text(text, width, '~'))
+        width = 3
+        self.assertEqual('1~9', resize_text(text, width, '~'))
+        width = 2
+        self.assertEqual('19', resize_text(text, width, '~'))
+        width = 1
+        self.assertEqual('1', resize_text(text, width, '~'))
+        width = 0
+        self.assertEqual('', resize_text(text, width, '~'))
+
