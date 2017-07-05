@@ -102,9 +102,13 @@ class HSeparator(GLXCurses.Widget):
         """
         Return the Position Type of the Horizontal separator
 
-        PositionType: glxc.POS_TOP, glxc.POS_CENTER, glxc.POS_BOTTOM
+        PositionType:
+         .glxc.POS_TOP
+         .glxc.POS_CENTER
+         .glxc.POS_BOTTOM
 
-        :return: str
+        :return: the position type string
+        :rtype: str
         """
         return self._position_type
 
@@ -113,7 +117,10 @@ class HSeparator(GLXCurses.Widget):
         """
         Check the PositionType of the Y axe
 
-        PositionType: CENTER, TOP, BOTTOM
+        PositionType:
+         .glxc.POS_TOP
+         .glxc.POS_CENTER
+         .glxc.POS_BOTTOM
         """
         height = self.get_height()
         preferred_height = self.get_preferred_height()
@@ -169,7 +176,6 @@ class HSeparator(GLXCurses.Widget):
 
             # Finally set the result
             self._set_y_offset(final_value)
-            #self._set_hseperator_y(self.get_height() - self.get_preferred_height())
 
     def _draw_horizontal_separator(self):
         """Draw the Horizontal Separator with PositionType"""

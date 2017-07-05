@@ -45,17 +45,21 @@ class StatusBar(Widget):
     This is done using :func:`GLXCurses.StatusBar.remove() <GLXCurses.StatusBar.StatusBar.remove>`.
     """
     def __init__(self):
+        # Load heritage
         Widget.__init__(self)
+
+        # It's a GLXCurse Type
         self.glxc_type = 'GLXCurses.StatusBar'
+
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('StatusBar')
 
-        # Widget Setting
-        self.statusbar_stack = []
-
-        # Make a Style heritage attribute
+        # Make a Widget Style heritage attribute as local attribute
         if self.get_style().get_attribute_states():
             self.set_attribute_states(self.get_style().get_attribute_states())
 
+        # Widget Setting
+        self.statusbar_stack = []
         self.context_id_dict = dict()
 
     def new(self):
@@ -76,8 +80,8 @@ class StatusBar(Widget):
 
         :param context_description: textual description of what context the new message is being used in
         :type context_description: :py:obj:`str`
-        :return: an context_id
-        :rtype: :py:obj:`int`
+        :return: an context_id generate by uuid.uuid1().int
+        :rtype: long
         """
         if context_description not in self._get_context_id_list():
             self._get_context_id_list()[context_description] = uuid.uuid1().int

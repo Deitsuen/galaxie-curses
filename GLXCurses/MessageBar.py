@@ -46,17 +46,21 @@ class MessageBar(Widget):
     This is done using :func:`GLXCurses.MessageBar.remove() <GLXCurses.MessageBar.StatusBar.remove>`.
     """
     def __init__(self):
+        # Load heritage
         Widget.__init__(self)
+
+        # It's a GLXCurse Type
         self.glxc_type = 'GLXCurses.MessageBar'
+
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('MessageBar')
 
-        # Widget Setting
-        self.messagebar_stack = []
-
-        # Make a Style heritage attribute
+        # Make a Widget Style heritage attribute as local attribute
         if self.get_style().get_attribute_states():
             self.set_attribute_states(self.get_style().get_attribute_states())
 
+        # Widget Setting
+        self.messagebar_stack = []
         self.context_id_dict = dict()
 
     def new(self):
