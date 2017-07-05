@@ -130,25 +130,28 @@ class StatusBar(Widget):
         context id.
 
         :param context_id: a context identifier
-        :type context_id: :py:obj:`int`
+        :type context_id: long
         """
-        if type(context_id) == int:
-            count = 0
-            last_found = None
-            last_element = None
-            for element in self.statusbar_stack:
-                if context_id == element[0]:
-                    last_found = count
-                    last_element = element
-                count += 1
+        # Try to exit as soon of possible
+        if type(context_id) != long:
+            raise TypeError(u'>context_id< must be a long type see get_context_id()')
 
-            if last_found is None:
-                pass
-            else:
-                self.statusbar_stack.pop(last_found)
-                self.emit_text_popped(last_element[0], last_element[2])
+        # If we are here everything look ok
+        count = 0
+        last_found = None
+        last_element = None
+        for element in self.statusbar_stack:
+            if context_id == element[0]:
+                last_found = count
+                last_element = element
+            count += 1
+
+        if last_found is None:
+            pass
         else:
-            raise TypeError(u'>context_id< argument must be a int type')
+            self.statusbar_stack.pop(last_found)
+            self.emit_text_popped(last_element[0], last_element[2])
+
 
     def remove(self, context_id, message_id):
         """

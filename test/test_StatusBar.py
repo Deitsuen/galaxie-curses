@@ -111,6 +111,39 @@ class TestStatusBar(unittest.TestCase):
         self.assertRaises(TypeError, statusbar.push, context_id=str(), text=text_take2)
         self.assertRaises(TypeError, statusbar.push, context_id=context_id, text=float())
 
+    def test_pop(self):
+        """Test StatusBar.pop()"""
+        # create a window instance
+        statusbar = GLXCurses.StatusBar()
+        # Preparation push completely a thing and save every value's
+        context_description_1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        text_1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        context_id_1 = statusbar.get_context_id(context_description=context_description_1)
+        message_id_1 = statusbar.push(context_id=context_id_1, text=text_1)
+
+        # compare last element
+        self.assertEqual(statusbar.statusbar_stack[-1][0], context_id_1)
+        self.assertEqual(statusbar.statusbar_stack[-1][1], text_1)
+        self.assertEqual(statusbar.statusbar_stack[-1][2], message_id_1)
+
+        # Preparation push completely a thing and save every value's
+        context_description_2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        text_2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        context_id_2 = statusbar.get_context_id(context_description=context_description_2)
+        message_id_2 = statusbar.push(context_id=context_id_2, text=text_2)
+
+        # compare last element
+        self.assertEqual(statusbar.statusbar_stack[-1][0], context_id_2)
+        self.assertEqual(statusbar.statusbar_stack[-1][1], text_2)
+        self.assertEqual(statusbar.statusbar_stack[-1][2], message_id_2)
+
+        # POP
+        statusbar.pop(context_id=context_id_2)
+
+        # check if are back to previous element
+        self.assertEqual(statusbar.statusbar_stack[-1][0], context_id_1)
+        self.assertEqual(statusbar.statusbar_stack[-1][1], text_1)
+        self.assertEqual(statusbar.statusbar_stack[-1][2], message_id_1)
 
 
 if __name__ == '__main__':
