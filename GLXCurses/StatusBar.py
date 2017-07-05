@@ -72,39 +72,51 @@ class StatusBar(Widget):
         self.__init__()
         return self
 
-    def get_context_id(self, context_description):
+    def get_context_id(self, context_description='Default'):
         """
         Returns a new context identifier, given a description of the actual context.
 
         .. note: the description is not shown in the UI.
 
-        :param context_description: textual description of what context the new message is being used in
-        :type context_description: :py:obj:`str`
+        :param context_description: textual description of what context the new message is being used in. \
+        Default if none
+        :type context_description: str
         :return: an context_id generate by uuid.uuid1().int
         :rtype: long
+        :raises TypeError: When context_description is not a str
         """
-        if context_description not in self._get_context_id_list():
-            self._get_context_id_list()[context_description] = uuid.uuid1().int
-            logging.debug(
-                "StatusBar CONTEXT CREATION: context_id={0} context_description={1}".format(
-                    self._get_context_id_list()[context_description],
-                    str(context_description)
+        if type(context_description) == str:
+            if context_description not in self._get_context_id_list():
+                self._get_context_id_list()[context_description] = uuid.uuid1().int
+                logging.debug(
+                    "StatusBar CONTEXT CREATION: context_id={0} context_description={1}".format(
+                        self._get_context_id_list()[context_description],
+                        str(context_description)
+                    )
                 )
-            )
 
-        return self._get_context_id_list()[context_description]
+            return self._get_context_id_list()[context_description]
+        else:
+            raise TypeError(u'>context_description< must be a str type')
 
-    def push(self, context_id, text):
+    def push(self, context_id=long, text=str):
         """
         Push a new message onto the StatusBar's stack.
 
         :param context_id: the message’s context id, as returned by get_context_id()
-        :type context_id: :py:obj:`int`
+        :type context_id: long
         :param text: the message to add to the StatusBar
-        :type text: :py:obj:`str`
+        :type text: str
         :return: a message id that can be used with remove().
-        :rtype: :py:obj:`int`
+        :rtype: long
         """
+        # Try to exit as soon of possible
+        if type(context_id) != long:
+            raise TypeError(u'>context_id< must be a long type see get_context_id()')
+        if type(text) != str:
+            raise TypeError(u'>text< must be a str type')
+
+        # If we are here everything look ok
         message_id = uuid.uuid1().int
         self.statusbar_stack.append([context_id, text, message_id])
         self.emit_text_pushed(context_id, text)
@@ -286,11 +298,11 @@ class StatusBar(Widget):
         Is emitted whenever a new message is popped off a StatusBar's stack.
 
         :param context_id: the context id of the relevant message/StatusBar
-        :type context_id: :py:obj:`int`
+        :type context_id: int
         :param text: the message that was just popped
-        :type text: :py:obj:`str`
+        :type text: str
         :param user_data: user data set when the signal handler was connected.
-        :type user_data: :py:obj:`list`
+        :type user_data: list
         """
         if user_data is None:
             user_data = list()

@@ -6,7 +6,6 @@
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 
 from GLXCurses import Widget
-from GLXCurses import Application
 import curses
 import uuid
 import logging
@@ -73,39 +72,50 @@ class MessageBar(Widget):
         self.__init__()
         return self
 
-    def get_context_id(self, context_description):
+    def get_context_id(self, context_description='Default'):
         """
         Returns a new context identifier, given a description of the actual context.
 
         .. note: the description is not shown in the UI.
 
         :param context_description: textual description of what context the new message is being used in
-        :type context_description: :py:obj:`str`
+        :type context_description: str
         :return: an context_id
-        :rtype: :py:obj:`int`
+        :rtype: long
+        :raises TypeError: When context_description is not a str
         """
-        if context_description not in self._get_context_id_list():
-            self._get_context_id_list()[context_description] = uuid.uuid1().int
-            logging.debug(
-                "MessageBar CONTEXT CREATION: context_id={0} context_description={1}".format(
-                    self._get_context_id_list()[context_description],
-                    str(context_description)
+        if type(context_description) == str:
+            if context_description not in self._get_context_id_list():
+                self._get_context_id_list()[context_description] = uuid.uuid1().int
+                logging.debug(
+                    "MessageBar CONTEXT CREATION: context_id={0} context_description={1}".format(
+                        self._get_context_id_list()[context_description],
+                        str(context_description)
+                    )
                 )
-            )
 
-        return self._get_context_id_list()[context_description]
+            return self._get_context_id_list()[context_description]
+        else:
+            raise TypeError(u'>context_description< must be a str type')
 
     def push(self, context_id, text):
         """
         Push a new message onto the MessageBar's stack.
 
         :param context_id: the message’s context id, as returned by get_context_id()
-        :type context_id: :py:obj:`int`
-        :param text: the message to add to the StatusBar
-        :type text: :py:obj:`str`
+        :type context_id: long
+        :param text: the message to add to the MessageBar
+        :type text: str
         :return: a message id that can be used with remove().
-        :rtype: :py:obj:`int`
+        :rtype: long
         """
+        # Try to exit as soon of possible
+        if type(context_id) != long:
+            raise TypeError(u'>context_id< must be a long type see get_context_id()')
+        if type(text) != str:
+            raise TypeError(u'>text< must be a str type')
+
+        # If we are here everything look ok
         message_id = uuid.uuid1().int
         self.messagebar_stack.append([context_id, text, message_id])
         self.emit_text_pushed(context_id, text)
@@ -282,7 +292,7 @@ class MessageBar(Widget):
             'user_data': user_data
         }
         # EVENT EMIT
-        Application().emit('SIGNALS', instance)
+        self.emit('SIGNALS', instance)
 
     def emit_text_pushed(self, context_id, text, user_data=None):
         """
@@ -307,7 +317,7 @@ class MessageBar(Widget):
             'user_data': user_data
         }
         # EVENT EMIT
-        Application().emit('SIGNALS', instance)
+        self.emit('SIGNALS', instance)
 
     # Internal Method's
     def _get_context_id_list(self):

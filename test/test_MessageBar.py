@@ -18,7 +18,7 @@ from GLXCurses.Utils import glxc_type
 
 
 # Unittest
-class TestStatusBar(unittest.TestCase):
+class TestMessageBar(unittest.TestCase):
 
     def setUp(self):
         # Before the test start
@@ -53,65 +53,63 @@ class TestStatusBar(unittest.TestCase):
     # Test
     def test_glxc_type(self):
         """Test StatusBar type"""
-        statusbar = GLXCurses.StatusBar()
-        self.assertTrue(glxc_type(statusbar))
+        messagebar = GLXCurses.MessageBar()
+        self.assertTrue(glxc_type(messagebar))
 
     def test_new(self):
         """Test StatusBar.new()"""
         # create a window instance
-        statusbar = GLXCurses.StatusBar()
+        messagebar = GLXCurses.MessageBar()
         # get the window id
-        statusbar_id_take1 = statusbar.get_widget_id()
+        messagebar_id_take1 = messagebar.get_widget_id()
         # get must be a long
-        self.assertEqual(type(statusbar_id_take1), long)
+        self.assertEqual(type(messagebar_id_take1), long)
         # use new() method
-        statusbar.new()
+        messagebar.new()
         # re get the window id
-        statusbar_id_take2 = statusbar.get_widget_id()
+        messagebar_id_take2 = messagebar.get_widget_id()
         # get must be a long
-        self.assertEqual(type(statusbar_id_take2), long)
+        self.assertEqual(type(messagebar_id_take2), long)
         # id's must be different
-        self.assertNotEqual(statusbar_id_take1, statusbar_id_take2)
+        self.assertNotEqual(messagebar_id_take1, messagebar_id_take2)
 
     def test_get_context_id(self):
-        """Test StatusBar.get_context_id()"""
+        """Test MessageBar.get_context_id()"""
         # create a window instance
-        statusbar = GLXCurses.StatusBar()
+        messagebar = GLXCurses.MessageBar()
         # generate a random string
         context_text = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
         # get the window id
-        statusbar_context_id_take1 = statusbar.get_context_id(context_description=context_text)
+        messagebar_context_id_take1 = messagebar.get_context_id(context_description=context_text)
         # get must be a long
-        self.assertEqual(type(statusbar_context_id_take1), long)
+        self.assertEqual(type(messagebar_context_id_take1), long)
         # test raises
-        self.assertRaises(TypeError, statusbar.get_context_id, context_description=int())
+        self.assertRaises(TypeError, messagebar.get_context_id, context_description=int())
 
     def test_push(self):
-        """Test StatusBar.push()"""
+        """Test MessageBar.push()"""
         # create a window instance
-        statusbar = GLXCurses.StatusBar()
+        messagebar = GLXCurses.MessageBar()
         # generate a random string
         text_take1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
         text_take2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
         # get the window id
-        context_id = statusbar.get_context_id(context_description=text_take1)
+        context_id = messagebar.get_context_id(context_description=text_take1)
         # get stack size
-        stack_len = len(statusbar.statusbar_stack)
+        stack_len = len(messagebar.messagebar_stack)
         # call StatusBar.push() suppose to return a message id
-        message_id = statusbar.push(context_id=context_id, text=text_take2)
+        message_id = messagebar.push(context_id=context_id, text=text_take2)
         # check if returned value is a long type
         self.assertEqual(type(message_id), long)
         # compare stack size suppose to grow
-        self.assertGreater(len(statusbar.statusbar_stack), stack_len)
+        self.assertGreater(len(messagebar.messagebar_stack), stack_len)
         # compare last element
-        self.assertEqual(statusbar.statusbar_stack[-1][0], context_id)
-        self.assertEqual(statusbar.statusbar_stack[-1][1], text_take2)
-        self.assertEqual(statusbar.statusbar_stack[-1][2], message_id)
+        self.assertEqual(messagebar.messagebar_stack[-1][0], context_id)
+        self.assertEqual(messagebar.messagebar_stack[-1][1], text_take2)
+        self.assertEqual(messagebar.messagebar_stack[-1][2], message_id)
         # test raises
-        self.assertRaises(TypeError, statusbar.push, context_id=str(), text=text_take2)
-        self.assertRaises(TypeError, statusbar.push, context_id=context_id, text=float())
-
-
+        self.assertRaises(TypeError, messagebar.push, context_id=str(), text=text_take2)
+        self.assertRaises(TypeError, messagebar.push, context_id=context_id, text=float())
 
 if __name__ == '__main__':
     unittest.main()
