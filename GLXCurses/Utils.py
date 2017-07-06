@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import random
+
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: the Galaxie Curses Team, all rights reserved
@@ -81,3 +83,19 @@ def clamp_to_zero(value=None):
             return value
     else:
         raise TypeError(u'>value< must be a int or None type')
+
+
+def id_generator(size=16, chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'):
+    """
+    Generate a ID
+
+    Default size : 16
+    Default chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
+    :param size: size of the ID number.
+    :type size: int
+    :param chars: list of char
+    :return: a string it represent a unique ID
+    :rtype: unicode
+    """
+    return u''.join(random.choice(chars) for _ in range(size))
