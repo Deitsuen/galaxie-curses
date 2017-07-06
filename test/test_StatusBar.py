@@ -15,7 +15,7 @@ sys.path.append(os.path.dirname(current_dir))
 
 import GLXCurses
 from GLXCurses.Utils import glxc_type
-
+from GLXCurses.Utils import is_valid_id
 
 # Unittest
 class TestStatusBar(unittest.TestCase):
@@ -62,14 +62,14 @@ class TestStatusBar(unittest.TestCase):
         statusbar = GLXCurses.StatusBar()
         # get the window id
         statusbar_id_take1 = statusbar.get_widget_id()
-        # get must be a long
-        self.assertEqual(type(statusbar_id_take1), unicode)
+        # check if returned value is a valid id
+        self.assertTrue(is_valid_id(statusbar_id_take1))
         # use new() method
         statusbar.new()
         # re get the window id
         statusbar_id_take2 = statusbar.get_widget_id()
-        # get must be a long
-        self.assertEqual(type(statusbar_id_take2), unicode)
+        # check if returned value is a valid id
+        self.assertTrue(is_valid_id(statusbar_id_take2))
         # id's must be different
         self.assertNotEqual(statusbar_id_take1, statusbar_id_take2)
 
@@ -81,8 +81,8 @@ class TestStatusBar(unittest.TestCase):
         context_text = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
         # get the window id
         statusbar_context_id_take1 = statusbar.get_context_id(context_description=context_text)
-        # get must be a long
-        self.assertEqual(type(statusbar_context_id_take1), unicode)
+        # check if returned value is a valid id
+        self.assertTrue(is_valid_id(statusbar_context_id_take1))
         # test raises
         self.assertRaises(TypeError, statusbar.get_context_id, context_description=int())
 
@@ -95,12 +95,14 @@ class TestStatusBar(unittest.TestCase):
         text_take2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
         # get the window id
         context_id = statusbar.get_context_id(context_description=text_take1)
+        # check if returned value is a valid id
+        self.assertTrue(is_valid_id(context_id))
         # get stack size
         stack_len = len(statusbar.statusbar_stack)
         # call StatusBar.push() suppose to return a message id
         message_id = statusbar.push(context_id=context_id, text=text_take2)
-        # check if returned value is a long type
-        self.assertEqual(type(message_id), unicode)
+        # check if returned value is a valid id
+        self.assertTrue(is_valid_id(message_id))
         # compare stack size suppose to grow
         self.assertGreater(len(statusbar.statusbar_stack), stack_len)
         # compare last element

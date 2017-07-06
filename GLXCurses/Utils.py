@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import random
+import re
+
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -100,4 +102,26 @@ def id_generator():
         random.randint(0, 255),
         random.randint(0, 255),
         random.randint(0, 255)
-        )
+    )
+
+
+def is_valid_id(value):
+    """
+    Check if it's a valid id
+
+    :param value: a id to verify
+    :return: bool
+    """
+    allowed = re.compile(r"""
+                         (
+                             ^([0-9A-F]{8})$
+                         )
+                         """,
+                         re.VERBOSE | re.IGNORECASE)
+    try:
+        if allowed.match(value) is None:
+            return False
+        else:
+            return True
+    except TypeError:
+        return False

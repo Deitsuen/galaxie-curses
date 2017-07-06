@@ -8,6 +8,7 @@
 import GLXCurses
 from GLXCurses.Utils import glxc_type
 from GLXCurses.EventBusClient import EventBusClient
+from GLXCurses.Utils import id_generator
 import curses
 import sys
 import os
@@ -1134,11 +1135,11 @@ class Application(EventBus):
         :param window_id: a uuid generate by Widget
         :type window_id: unicode
         """
-        if type(window_id) == unicode:
-            if window_id != self._get_active_window_id():
-                self.active_window_id = window_id
-        else:
+        if type(id_generator()) != type(window_id):
             raise TypeError(u'>window_id< is not a unicode type')
+
+        if window_id != self._get_active_window_id():
+            self.active_window_id = window_id
 
     def _get_active_window_id(self):
         """

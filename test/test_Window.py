@@ -14,11 +14,11 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(current_dir))
 
 import GLXCurses
+from GLXCurses.Utils import is_valid_id
 
 
 # Unittest
 class TestWindow(unittest.TestCase):
-
     def setUp(self):
         # Before the test start
         self.application = GLXCurses.Application()
@@ -56,14 +56,14 @@ class TestWindow(unittest.TestCase):
         window = GLXCurses.Window()
         # get the window id
         window_id_take1 = window.get_widget_id()
-        # get must be a long
-        self.assertEqual(type(window_id_take1), unicode)
+        # check if returned value is a valid id
+        self.assertTrue(is_valid_id(window_id_take1))
         # use new() method
         window.new()
         # re get the window id
         window_id_take2 = window.get_widget_id()
-        # get must be a long
-        self.assertEqual(type(window_id_take2), unicode)
+        # check if returned value is a valid id
+        self.assertTrue(is_valid_id(window_id_take2))
         # id's must be different
         self.assertNotEqual(window_id_take1, window_id_take2)
 
@@ -79,6 +79,7 @@ class TestWindow(unittest.TestCase):
         """Test Window.set_application() TypeError"""
         window = GLXCurses.Window()
         self.assertRaises(TypeError, window.set_application, int(42))
+
 
 if __name__ == '__main__':
     unittest.main()

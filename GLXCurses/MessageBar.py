@@ -7,6 +7,7 @@
 
 from GLXCurses import Widget
 from GLXCurses.Utils import id_generator
+from GLXCurses.Utils import is_valid_id
 import curses
 import logging
 
@@ -84,7 +85,7 @@ class MessageBar(Widget):
         :rtype: unicode
         :raises TypeError: When context_description is not a str
         """
-        if type(context_description) != str and type(context_description) != unicode:
+        if type(str()) != type(context_description):
             raise TypeError(u'>context_description< must be a str or unicode type')
 
         if context_description not in self._get_context_id_list():
@@ -110,9 +111,9 @@ class MessageBar(Widget):
         :rtype: unicode
         """
         # Try to exit as soon of possible
-        if type(context_id) != unicode:
+        if not is_valid_id(context_id):
             raise TypeError(u'>context_id< must be a unicode type as returned by MessageBar.get_context_id()')
-        if type(text) != str and type(text) != unicode:
+        if type(text) != str:
             raise TypeError(u'>text< must be a str or unicode type')
 
         # If we are here everything look ok
@@ -132,7 +133,7 @@ class MessageBar(Widget):
         :type context_id: unicode
         """
         # Try to exit as soon of possible
-        if type(context_id) != unicode:
+        if not is_valid_id(context_id):
             raise TypeError(u'>context_id< must be a unicode type see get_context_id()')
 
         # If we are here everything look ok
@@ -162,9 +163,9 @@ class MessageBar(Widget):
         :type message_id: unicode
         """
         # Try to exit as soon of possible
-        if type(context_id) != unicode:
+        if not is_valid_id(context_id):
             raise TypeError(u'>context_id< arguments must be unicode type as returned by MessageBar.get_context_id()')
-        if type(message_id) != unicode:
+        if not is_valid_id(message_id):
             raise TypeError(u'>message_id< arguments must be unicode type as returned by MessageBar.push()')
 
         # If we are here everything look ok
@@ -197,7 +198,7 @@ class MessageBar(Widget):
         :type context_id: unicode
         """
         # Try to exit as soon of possible
-        if type(context_id) != unicode:
+        if not is_valid_id(context_id):
             raise TypeError(u'>context_id< arguments must be unicode type as returned by MessageBar.get_context_id()')
 
         # If we are here everything look ok
