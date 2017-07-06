@@ -114,36 +114,40 @@ class TestMessageBar(unittest.TestCase):
     def test_pop(self):
         """Test StatusBar.pop()"""
         # create a window instance
-        statusbar = GLXCurses.MessageBar()
+        messagebar = GLXCurses.MessageBar()
         # Preparation push completely a thing and save every value's
         context_description_1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
         text_1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
-        context_id_1 = statusbar.get_context_id(context_description=context_description_1)
-        message_id_1 = statusbar.push(context_id=context_id_1, text=text_1)
+        context_id_1 = messagebar.get_context_id(context_description=context_description_1)
+        message_id_1 = messagebar.push(context_id=context_id_1, text=text_1)
 
         # compare last element
-        self.assertEqual(statusbar.messagebar_stack[-1][0], context_id_1)
-        self.assertEqual(statusbar.messagebar_stack[-1][1], text_1)
-        self.assertEqual(statusbar.messagebar_stack[-1][2], message_id_1)
+        self.assertEqual(messagebar.messagebar_stack[-1][0], context_id_1)
+        self.assertEqual(messagebar.messagebar_stack[-1][1], text_1)
+        self.assertEqual(messagebar.messagebar_stack[-1][2], message_id_1)
 
         # Preparation push completely a thing and save every value's
         context_description_2 = u''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
-        text_2 = u''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
-        context_id_2 = statusbar.get_context_id(context_description=context_description_2)
-        message_id_2 = statusbar.push(context_id=context_id_2, text=text_2)
+        text_2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        context_id_2 = messagebar.get_context_id(context_description=context_description_2)
+        message_id_2 = messagebar.push(context_id=context_id_2, text=text_2)
 
         # compare last element
-        self.assertEqual(statusbar.messagebar_stack[-1][0], context_id_2)
-        self.assertEqual(statusbar.messagebar_stack[-1][1], text_2)
-        self.assertEqual(statusbar.messagebar_stack[-1][2], message_id_2)
+        self.assertEqual(messagebar.messagebar_stack[-1][0], context_id_2)
+        self.assertEqual(messagebar.messagebar_stack[-1][1], text_2)
+        self.assertEqual(messagebar.messagebar_stack[-1][2], message_id_2)
 
         # POP
-        statusbar.pop(context_id=context_id_2)
+        messagebar.pop(context_id=context_id_2)
 
         # check if are back to previous element
-        self.assertEqual(statusbar.messagebar_stack[-1][0], context_id_1)
-        self.assertEqual(statusbar.messagebar_stack[-1][1], text_1)
-        self.assertEqual(statusbar.messagebar_stack[-1][2], message_id_1)
+        self.assertEqual(messagebar.messagebar_stack[-1][0], context_id_1)
+        self.assertEqual(messagebar.messagebar_stack[-1][1], text_1)
+        self.assertEqual(messagebar.messagebar_stack[-1][2], message_id_1)
+
+        # test raise
+        self.assertRaises(TypeError, messagebar.pop, context_id=int())
+        self.assertRaises(TypeError, messagebar.pop, )
 
     def test_remove(self):
         """Test StatusBar.remove()"""
@@ -155,7 +159,7 @@ class TestMessageBar(unittest.TestCase):
 
         # Preparation push completely a thing and save every value's
         context_description_1 = u''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
-        text_1 = u''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        text_1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
         context_id_1 = messagebar.get_context_id(context_description=context_description_1)
         message_id_1 = messagebar.push(context_id=context_id_1, text=text_1)
 
@@ -178,6 +182,44 @@ class TestMessageBar(unittest.TestCase):
         self.assertRaises(TypeError, messagebar.remove, context_id=context_id_1, message_id=float())
         self.assertRaises(TypeError, messagebar.remove, context_id=context_id_1)
         self.assertRaises(TypeError, messagebar.remove, message_id=message_id_1)
+
+    def test_remove_all(self):
+        """Test StatusBar.remove_all()"""
+        # create a window instance
+        messagebar = GLXCurses.MessageBar()
+
+        # get stack size
+        stack_len_1 = len(messagebar.messagebar_stack)
+
+        # prepare a context_id
+        context_description_1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        context_id_1 = messagebar.get_context_id(context_description=context_description_1)
+
+        # Preparation push completely a thing and save every value's
+        text_1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        messagebar.push(context_id=context_id_1, text=text_1)
+
+        # compare stack size suppose to grow
+        self.assertGreater(len(messagebar.messagebar_stack), stack_len_1)
+
+        # get stack size
+        stack_len_2 = len(messagebar.messagebar_stack)
+
+        # Preparation push completely a thing and save every value's
+        text_2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        messagebar.push(context_id=context_id_1, text=text_2)
+
+        # compare stack size suppose to grow
+        self.assertGreater(len(messagebar.messagebar_stack), stack_len_2)
+
+        # remove_all
+        messagebar.remove_all(context_id=context_id_1)
+
+        # compare stack size suppose to grow
+        self.assertGreater(len(messagebar.messagebar_stack), stack_len_1)
+
+        # test raises
+        self.assertRaises(TypeError, messagebar.remove_all, context_id=int())
 
 if __name__ == '__main__':
     unittest.main()

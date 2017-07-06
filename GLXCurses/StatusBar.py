@@ -194,29 +194,24 @@ class StatusBar(Widget):
         """
         Forces the removal of all messages from a StatusBar's stack with the exact context_id .
 
-        :param context_id: a context identifier
-        :type context_id: :py:obj:`int`
+        :param context_id: a context identifier, as returned by StatusBar.get_context_id()
+        :type context_id: unicode
         """
-        if type(context_id) == int:
-            for element in self.statusbar_stack:
-                if context_id == element[0]:
-                    self.remove(element[0], element[2])
-        else:
-            raise TypeError(u'>context_id< argument must be a int type')
+        # Try to exit as soon of possible
+        if type(context_id) != unicode:
+            raise TypeError(u'>context_id< arguments must be unicode type as returned by MessageBar.get_context_id()')
 
-    def get_message_area(self):
-        """
-        .. warning:: NOT IMPLEMENTED: **raise NotImplementedError**
-
-        Retrieves the box containing the label widget.
-
-        :return: a Container Box Widget
-        :rtype: GLXCurses.Box
-        """
-        raise NotImplementedError
+        # If we are here everything look ok
+        for element in self.statusbar_stack:
+            if context_id == element[0]:
+                self.remove(element[0], element[2])
 
     def draw(self):
-        # Place the status bar from the end of the screen by look if it have a tool bar before
+        """
+        Place the status bar from the end of the screen by look if it have a toolbar and a statusbar before
+
+        """
+        #
         line_from_max_screen_height = 1
         if self.get_parent()is not None:
             if self.get_parent().toolbar is not None:

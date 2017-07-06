@@ -145,6 +145,10 @@ class TestStatusBar(unittest.TestCase):
         self.assertEqual(statusbar.statusbar_stack[-1][1], text_1)
         self.assertEqual(statusbar.statusbar_stack[-1][2], message_id_1)
 
+        # test raise
+        self.assertRaises(TypeError, statusbar.pop, context_id=int())
+        self.assertRaises(TypeError, statusbar.pop, )
+
     def test_remove(self):
         """Test StatusBar.remove()"""
         # create a window instance
@@ -178,6 +182,44 @@ class TestStatusBar(unittest.TestCase):
         self.assertRaises(TypeError, statusbar.remove, context_id=context_id_1, message_id=float())
         self.assertRaises(TypeError, statusbar.remove, context_id=context_id_1)
         self.assertRaises(TypeError, statusbar.remove, message_id=message_id_1)
+
+    def test_remove_all(self):
+        """Test StatusBar.remove_all()"""
+        # create a window instance
+        statusbar = GLXCurses.StatusBar()
+
+        # get stack size
+        stack_len_1 = len(statusbar.statusbar_stack)
+
+        # prepare a context_id
+        context_description_1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        context_id_1 = statusbar.get_context_id(context_description=context_description_1)
+
+        # Preparation push completely a thing and save every value's
+        text_1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        statusbar.push(context_id=context_id_1, text=text_1)
+
+        # compare stack size suppose to grow
+        self.assertGreater(len(statusbar.statusbar_stack), stack_len_1)
+
+        # get stack size
+        stack_len_2 = len(statusbar.statusbar_stack)
+
+        # Preparation push completely a thing and save every value's
+        text_2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        statusbar.push(context_id=context_id_1, text=text_2)
+
+        # compare stack size suppose to grow
+        self.assertGreater(len(statusbar.statusbar_stack), stack_len_2)
+
+        # remove_all
+        statusbar.remove_all(context_id=context_id_1)
+
+        # compare stack size suppose to grow
+        self.assertGreater(len(statusbar.statusbar_stack), stack_len_1)
+
+        # test raises
+        self.assertRaises(TypeError, statusbar.remove_all, context_id=int())
 
 if __name__ == '__main__':
     unittest.main()
