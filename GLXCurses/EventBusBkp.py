@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import uuid
+
 import logging
+from GLXCurses.Utils import id_generator
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -61,7 +62,7 @@ class EventBus(object):
             'handler': handler,
             'argvs': args
         }
-        handler_id = uuid.uuid1().int
+        handler_id = id_generator()
         self._get_signal_handlers_dict()[detailed_signal][handler_id] = subscription
         logging.info(self.__class__.__name__ + ': ' + str(self._get_signal_handlers_dict()[detailed_signal][handler_id]))
         return handler_id

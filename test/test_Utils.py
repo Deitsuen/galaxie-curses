@@ -10,6 +10,7 @@ from GLXCurses.Utils import glxc_type
 from GLXCurses.Utils import id_generator
 from GLXCurses import Window
 
+
 # Unittest
 class TestUtils(unittest.TestCase):
 
@@ -98,8 +99,8 @@ class TestUtils(unittest.TestCase):
 
     def test_id_generator(self):
         """Test Utils.id_generator()"""
+        id_1 = id_generator()
         for _ in range(1, 10000):
-            id_1 = id_generator()
             id_2 = id_generator()
             self.assertEqual(type(id_1), type(unicode()))
             self.assertEqual(type(id_2), type(unicode()))

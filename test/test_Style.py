@@ -8,7 +8,6 @@ import string
 
 import sys
 import os
-import uuid
 
 # Require when you haven't GLXCurses as default Package
 current_dir = os.path.dirname(os.path.abspath(__file__))

@@ -63,13 +63,13 @@ class TestStatusBar(unittest.TestCase):
         # get the window id
         statusbar_id_take1 = statusbar.get_widget_id()
         # get must be a long
-        self.assertEqual(type(statusbar_id_take1), long)
+        self.assertEqual(type(statusbar_id_take1), unicode)
         # use new() method
         statusbar.new()
         # re get the window id
         statusbar_id_take2 = statusbar.get_widget_id()
         # get must be a long
-        self.assertEqual(type(statusbar_id_take2), long)
+        self.assertEqual(type(statusbar_id_take2), unicode)
         # id's must be different
         self.assertNotEqual(statusbar_id_take1, statusbar_id_take2)
 
@@ -82,7 +82,7 @@ class TestStatusBar(unittest.TestCase):
         # get the window id
         statusbar_context_id_take1 = statusbar.get_context_id(context_description=context_text)
         # get must be a long
-        self.assertEqual(type(statusbar_context_id_take1), long)
+        self.assertEqual(type(statusbar_context_id_take1), unicode)
         # test raises
         self.assertRaises(TypeError, statusbar.get_context_id, context_description=int())
 
@@ -100,7 +100,7 @@ class TestStatusBar(unittest.TestCase):
         # call StatusBar.push() suppose to return a message id
         message_id = statusbar.push(context_id=context_id, text=text_take2)
         # check if returned value is a long type
-        self.assertEqual(type(message_id), long)
+        self.assertEqual(type(message_id), unicode)
         # compare stack size suppose to grow
         self.assertGreater(len(statusbar.statusbar_stack), stack_len)
         # compare last element

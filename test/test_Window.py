@@ -57,13 +57,13 @@ class TestWindow(unittest.TestCase):
         # get the window id
         window_id_take1 = window.get_widget_id()
         # get must be a long
-        self.assertEqual(type(window_id_take1), long)
+        self.assertEqual(type(window_id_take1), unicode)
         # use new() method
         window.new()
         # re get the window id
         window_id_take2 = window.get_widget_id()
         # get must be a long
-        self.assertEqual(type(window_id_take2), long)
+        self.assertEqual(type(window_id_take2), unicode)
         # id's must be different
         self.assertNotEqual(window_id_take1, window_id_take2)
 

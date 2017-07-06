@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from GLXCurses import Application
+from GLXCurses.Utils import id_generator
+
 import sys
-import uuid
+
 import logging
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -41,7 +43,7 @@ class EntryBuffer(object):
         self._min_length_hard_limit = 0
         self._max_length_hard_limit = 65536
         # Unique ID it permit to individually identify a widget by example for get_focus get_default
-        self.id = uuid.uuid1().int
+        self.id = id_generator()
 
     def get_text(self):
         """

@@ -12,7 +12,6 @@ import curses
 import sys
 import os
 import locale
-import uuid
 
 # Locales Setting
 locale.setlocale(locale.LC_ALL, '')
@@ -1133,20 +1132,20 @@ class Application(EventBus):
         Set the active_window_id attribute
 
         :param window_id: a uuid generate by Widget
-        :type window_id: long
+        :type window_id: unicode
         """
-        if str(type(window_id)) == str(type(uuid.uuid1().int)):
+        if type(window_id) == unicode:
             if window_id != self._get_active_window_id():
                 self.active_window_id = window_id
         else:
-            raise TypeError(u'>window_id< is not a long type')
+            raise TypeError(u'>window_id< is not a unicode type')
 
     def _get_active_window_id(self):
         """
         Return the active_window_id attribute
 
         :return: active_window_id attribute
-        :rtype: list
+        :rtype: unicode
         """
         return self.active_window_id
 

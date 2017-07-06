@@ -2,11 +2,12 @@
 # -*- coding: utf-8 -*-
 from GLXCurses import Object
 from GLXCurses import Style
+from GLXCurses.Utils import id_generator
 
 
 from datetime import datetime
 import random
-import uuid
+#import uuid
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -21,8 +22,8 @@ class Widget(Object):
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Widget'
         # Unique ID it permit to individually identify a widget by example for get_focus get_default
-        self.id = uuid.uuid1().int
-
+        # self.id = uuid.uuid1().int
+        self.id = id_generator()
         # Widget Setting
         self.set_flags(self.get_default_flags())
 

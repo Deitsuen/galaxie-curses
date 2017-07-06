@@ -5,9 +5,9 @@ import unittest
 from random import randint
 import random
 import string
-import uuid
 import sys
 import os
+from GLXCurses.Utils import id_generator
 
 from GLXCurses.Utils import glxc_type
 
@@ -489,8 +489,8 @@ class TestApplication(unittest.TestCase):
 
     def test__set_get_active_window_id(self):
         """Test Application._set_active_window_id() and Application._get_active_window_id()"""
-        value1 = uuid.uuid1().int
-        value2 = uuid.uuid1().int
+        value1 = id_generator()
+        value2 = id_generator()
         self.application._set_active_window_id(value1)
         self.assertEqual(self.application._get_active_window_id(), value1)
         self.assertNotEqual(self.application._get_active_window_id(), value2)

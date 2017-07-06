@@ -6,8 +6,8 @@
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 
 from GLXCurses import Widget
+from GLXCurses.Utils import id_generator
 import curses
-import uuid
 import logging
 
 __author__ = 'Tuux'
@@ -86,7 +86,7 @@ class MessageBar(Widget):
         """
         if type(context_description) == str:
             if context_description not in self._get_context_id_list():
-                self._get_context_id_list()[context_description] = uuid.uuid1().int
+                self._get_context_id_list()[context_description] = id_generator()
                 logging.debug(
                     "MessageBar CONTEXT CREATION: context_id={0} context_description={1}".format(
                         self._get_context_id_list()[context_description],
@@ -103,20 +103,20 @@ class MessageBar(Widget):
         Push a new message onto the MessageBar's stack.
 
         :param context_id: the message’s context id, as returned by get_context_id()
-        :type context_id: long
+        :type context_id: unicode
         :param text: the message to add to the MessageBar
         :type text: str
         :return: a message id that can be used with remove().
-        :rtype: long
+        :rtype: unicode
         """
         # Try to exit as soon of possible
-        if type(context_id) != long:
+        if type(context_id) != unicode:
             raise TypeError(u'>context_id< must be a long type see get_context_id()')
         if type(text) != str:
             raise TypeError(u'>text< must be a str type')
 
         # If we are here everything look ok
-        message_id = uuid.uuid1().int
+        message_id = id_generator()
         self.messagebar_stack.append([context_id, text, message_id])
         self.emit_text_pushed(context_id, text)
         return message_id
@@ -129,11 +129,11 @@ class MessageBar(Widget):
         context id.
 
         :param context_id: a context identifier
-        :type context_id: long
+        :type context_id: unicode
         """
         # Try to exit as soon of possible
-        if type(context_id) != long:
-            raise TypeError(u'>context_id< must be a long type see get_context_id()')
+        if type(context_id) != unicode:
+            raise TypeError(u'>context_id< must be a unicode type see get_context_id()')
 
         # If we are here everything look ok
         count = 0

@@ -6,7 +6,7 @@
 # Author: the Galaxie Curses Team, all rights reserved
 
 from GLXCurses import Application
-import uuid
+from GLXCurses.Utils import id_generator
 
 __author__ = u'the Galaxie Curses Project'
 
@@ -128,7 +128,7 @@ class Adjustment(object):
         self.value = float(0.0)
 
         # Internal
-        self.id = uuid.uuid1().int
+        self.id = id_generator()
 
         self.two = None
         self.average = None
