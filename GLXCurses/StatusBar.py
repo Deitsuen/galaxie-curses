@@ -103,18 +103,18 @@ class StatusBar(Widget):
         """
         Push a new message onto the StatusBar's stack.
 
-        :param context_id: the message’s context id, as returned by get_context_id()
+        :param context_id: a context identifier, as returned by StatusBar.get_context_id()
         :type context_id: unicode
         :param text: the message to add to the StatusBar
-        :type text: str
-        :return: a message id that can be used with remove().
+        :type text: str or unicode
+        :return: a message identifier that can be used with StatusBar.remove().
         :rtype: unicode
         """
         # Try to exit as soon of possible
         if type(context_id) != unicode:
-            raise TypeError(u'>context_id< must be a unicode type see get_context_id()')
-        if type(text) != str:
-            raise TypeError(u'>text< must be a str type')
+            raise TypeError(u'>context_id< must be a unicode type as returned by StatusBar.get_context_id()')
+        if type(text) != str and type(text) != unicode:
+            raise TypeError(u'>text< must be a str or unicode type')
 
         # If we are here everything look ok
         message_id = id_generator()
@@ -129,12 +129,12 @@ class StatusBar(Widget):
         Note that this may not change the displayed message, if the message at the top of the stack has a different
         context id.
 
-        :param context_id: a context identifier
+        :param context_id: a context identifier, as returned by StatusBar.get_context_id()
         :type context_id: unicode
         """
         # Try to exit as soon of possible
         if type(context_id) != unicode:
-            raise TypeError(u'>context_id< must be a unicode type see get_context_id()')
+            raise TypeError(u'>context_id< must be a unicode type as returned by StatusBar.get_context_id()')
 
         # If we are here everything look ok
         count = 0
@@ -157,34 +157,38 @@ class StatusBar(Widget):
         Forces the removal of a message from a StatusBar’s stack.
         The exact **context_id** and **message_id** must be specified.
 
-        :param context_id: a context identifier
+        :param context_id: a context identifier, as returned by StatusBar.get_context_id()
         :type context_id: unicode
         :param message_id: a message identifier, as returned by StatusBar.push()
-        :type message_id: :py:obj:`int`
+        :type message_id: unicode
         """
-        if type(context_id) == int and type(message_id) == int:
-            count = 0
-            last_found = None
-            last_element = None
-            for element in self.statusbar_stack:
-                if context_id == element[0] and message_id == element[2]:
-                    last_found = count
-                    last_element = element
-                count += 1
-            if last_found is None:
-                pass
-            else:
-                logging.debug(
-                    "StatusBar REMOVE: index={0} context_id={1} text={2} message_id={3}".format(
-                        str(last_found),
-                        str(last_element[0]),
-                        str(last_element[1]),
-                        str(last_element[2])
-                    )
-                )
-                self.statusbar_stack.pop(last_found)
+        # Try to exit as soon of possible
+        if type(context_id) != unicode:
+            raise TypeError(u'>context_id< arguments must be unicode type as returned by StatusBar.get_context_id()')
+        if type(message_id) != unicode:
+            raise TypeError(u'>message_id< arguments must be unicode type as returned by StatusBar.push()')
+
+        # If we are here everything look ok
+        count = 0
+        last_found = None
+        last_element = None
+        for element in self.statusbar_stack:
+            if context_id == element[0] and message_id == element[2]:
+                last_found = count
+                last_element = element
+            count += 1
+        if last_found is None:
+            pass
         else:
-            raise TypeError(u'>context_id< and >message_id< arguments must be int type')
+            logging.debug(
+                "StatusBar REMOVE: index={0} context_id={1} text={2} message_id={3}".format(
+                    str(last_found),
+                    str(last_element[0]),
+                    str(last_element[1]),
+                    str(last_element[2])
+                )
+            )
+            self.statusbar_stack.pop(last_found)
 
     def remove_all(self, context_id):
         """

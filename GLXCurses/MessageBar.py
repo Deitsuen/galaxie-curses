@@ -72,48 +72,48 @@ class MessageBar(Widget):
         self.__init__()
         return self
 
-    def get_context_id(self, context_description='Default'):
+    def get_context_id(self, context_description=u'Default'):
         """
         Returns a new context identifier, given a description of the actual context.
 
         .. note: the description is not shown in the UI.
 
         :param context_description: textual description of what context the new message is being used in
-        :type context_description: str
-        :return: an context_id
-        :rtype: long
+        :type context_description: str or unicode
+        :return: an context_id generate by id_generator
+        :rtype: unicode
         :raises TypeError: When context_description is not a str
         """
-        if type(context_description) == str:
-            if context_description not in self._get_context_id_list():
-                self._get_context_id_list()[context_description] = id_generator()
-                logging.debug(
-                    "MessageBar CONTEXT CREATION: context_id={0} context_description={1}".format(
-                        self._get_context_id_list()[context_description],
-                        str(context_description)
-                    )
+        if type(context_description) != str and type(context_description) != unicode:
+            raise TypeError(u'>context_description< must be a str or unicode type')
+
+        if context_description not in self._get_context_id_list():
+            self._get_context_id_list()[context_description] = id_generator()
+            logging.debug(
+                "MessageBar CONTEXT CREATION: context_id={0} context_description={1}".format(
+                    self._get_context_id_list()[context_description],
+                    str(context_description)
                 )
+            )
 
-            return self._get_context_id_list()[context_description]
-        else:
-            raise TypeError(u'>context_description< must be a str type')
+        return self._get_context_id_list()[context_description]
 
-    def push(self, context_id, text):
+    def push(self, context_id=unicode, text=str):
         """
         Push a new message onto the MessageBar's stack.
 
-        :param context_id: the message’s context id, as returned by get_context_id()
+        :param context_id: a context identifier, as returned by MessageBar.get_context_id()
         :type context_id: unicode
         :param text: the message to add to the MessageBar
-        :type text: str
-        :return: a message id that can be used with remove().
+        :type text: str or str
+        :return: a message identifier that can be used with MessageBar.remove().
         :rtype: unicode
         """
         # Try to exit as soon of possible
         if type(context_id) != unicode:
-            raise TypeError(u'>context_id< must be a long type see get_context_id()')
-        if type(text) != str:
-            raise TypeError(u'>text< must be a str type')
+            raise TypeError(u'>context_id< must be a unicode type as returned by MessageBar.get_context_id()')
+        if type(text) != str and type(text) != unicode:
+            raise TypeError(u'>text< must be a str or unicode type')
 
         # If we are here everything look ok
         message_id = id_generator()
@@ -153,44 +153,48 @@ class MessageBar(Widget):
 
     def remove(self, context_id, message_id):
         """
-        Forces the removal of a message from a StatusBar’s stack.
+        Forces the removal of a message from a MessageBar’s stack.
         The exact **context_id** and **message_id** must be specified.
 
-        :param context_id: a context identifier
-        :type context_id: :py:obj:`int`
-        :param message_id: a message identifier, as returned by StatusBar.push()
-        :type message_id: :py:obj:`int`
+        :param context_id: a context identifier, as returned by MessageBar.get_context_id()
+        :type context_id: unicode
+        :param message_id: a message identifier, as returned by MessageBar.push()
+        :type message_id: unicode
         """
-        if type(context_id) == int and type(message_id) == int:
-            count = 0
-            last_found = None
-            last_element = None
-            for element in self.messagebar_stack:
-                if context_id == element[0] and message_id == element[2]:
-                    last_found = count
-                    last_element = element
-                count += 1
-            if last_found is None:
-                pass
-            else:
-                logging.debug(
-                    "StatusBar REMOVE: index={0} context_id={1} text={2} message_id={3}".format(
-                        str(last_found),
-                        str(last_element[0]),
-                        str(last_element[1]),
-                        str(last_element[2])
-                    )
-                )
-                self.messagebar_stack.pop(last_found)
+        # Try to exit as soon of possible
+        if type(context_id) != unicode:
+            raise TypeError(u'>context_id< arguments must be unicode type as returned by MessageBar.get_context_id()')
+        if type(message_id) != unicode:
+            raise TypeError(u'>message_id< arguments must be unicode type as returned by MessageBar.push()')
+
+        # If we are here everything look ok
+        count = 0
+        last_found = None
+        last_element = None
+        for element in self.messagebar_stack:
+            if context_id == element[0] and message_id == element[2]:
+                last_found = count
+                last_element = element
+            count += 1
+        if last_found is None:
+            pass
         else:
-            raise TypeError(u'>context_id< and >message_id< arguments must be int type')
+            logging.debug(
+                "MessageBar REMOVE: index={0} context_id={1} text={2} message_id={3}".format(
+                    str(last_found),
+                    str(last_element[0]),
+                    str(last_element[1]),
+                    str(last_element[2])
+                )
+            )
+            self.messagebar_stack.pop(last_found)
 
     def remove_all(self, context_id):
         """
         Forces the removal of all messages from a StatusBar's stack with the exact context_id .
 
         :param context_id: a context identifier
-        :type context_id: :py:obj:`int`
+        :type context_id: unicode
         """
         if type(context_id) == int:
             for element in self.messagebar_stack:

@@ -85,17 +85,19 @@ def clamp_to_zero(value=None):
         raise TypeError(u'>value< must be a int or None type')
 
 
-def id_generator(size=16, chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'):
+def id_generator():
     """
-    Generate a ID
+    Generate a ID like u'E59E8457' , 2 chars by two chars it's a random HEX
 
-    Default size : 16
-    Default chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+    Default size : 8
+    Default chars: 'ABCDEF0123456789'
 
-    :param size: size of the ID number.
-    :type size: int
-    :param chars: list of char
     :return: a string it represent a unique ID
     :rtype: unicode
     """
-    return u''.join(random.choice(chars) for _ in range(size))
+    return u'%02x%02x%02x%02x'.upper() % (
+        random.randint(0, 255),
+        random.randint(0, 255),
+        random.randint(0, 255),
+        random.randint(0, 255)
+        )

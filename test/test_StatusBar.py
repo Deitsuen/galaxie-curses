@@ -145,6 +145,39 @@ class TestStatusBar(unittest.TestCase):
         self.assertEqual(statusbar.statusbar_stack[-1][1], text_1)
         self.assertEqual(statusbar.statusbar_stack[-1][2], message_id_1)
 
+    def test_remove(self):
+        """Test StatusBar.remove()"""
+        # create a window instance
+        statusbar = GLXCurses.StatusBar()
+
+        # get stack size
+        stack_len = len(statusbar.statusbar_stack)
+
+        # Preparation push completely a thing and save every value's
+        context_description_1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        text_1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
+        context_id_1 = statusbar.get_context_id(context_description=context_description_1)
+        message_id_1 = statusbar.push(context_id=context_id_1, text=text_1)
+
+        # compare last element
+        self.assertEqual(statusbar.statusbar_stack[-1][0], context_id_1)
+        self.assertEqual(statusbar.statusbar_stack[-1][1], text_1)
+        self.assertEqual(statusbar.statusbar_stack[-1][2], message_id_1)
+
+        # compare stack size suppose to grow
+        self.assertGreater(len(statusbar.statusbar_stack), stack_len)
+
+        # remove
+        statusbar.remove(context_id=context_id_1, message_id=message_id_1)
+
+        # compare stack size suppose to grow
+        self.assertEqual(len(statusbar.statusbar_stack), stack_len)
+
+        # test raises
+        self.assertRaises(TypeError, statusbar.remove, context_id=int(), message_id=message_id_1)
+        self.assertRaises(TypeError, statusbar.remove, context_id=context_id_1, message_id=float())
+        self.assertRaises(TypeError, statusbar.remove, context_id=context_id_1)
+        self.assertRaises(TypeError, statusbar.remove, message_id=message_id_1)
 
 if __name__ == '__main__':
     unittest.main()

@@ -100,10 +100,14 @@ class TestUtils(unittest.TestCase):
     def test_id_generator(self):
         """Test Utils.id_generator()"""
         id_1 = id_generator()
-        for _ in range(1, 10000):
+        self.assertEqual(type(id_1), type(unicode()))
+        # max_iteration = 10000000 - Take 185.928s on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
+        # max_iteration = 1000000  - Take 19.109s  on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
+        # max_iteration = 100000   - Take 2.154    on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
+        # max_iteration = 10000    - Take 0.515    on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
+
+        max_iteration = 10000
+        for _ in range(1, max_iteration):
             id_2 = id_generator()
-            self.assertEqual(type(id_1), type(unicode()))
             self.assertEqual(type(id_2), type(unicode()))
             self.assertNotEqual(id_1, id_2)
-
-
