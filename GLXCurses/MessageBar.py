@@ -98,7 +98,7 @@ class MessageBar(Widget):
 
         return self._get_context_id_list()[context_description]
 
-    def push(self, context_id=unicode, text=str):
+    def push(self, context_id, text):
         """
         Push a new message onto the MessageBar's stack.
 

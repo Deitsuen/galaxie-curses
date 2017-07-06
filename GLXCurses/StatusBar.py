@@ -99,7 +99,7 @@ class StatusBar(Widget):
         else:
             raise TypeError(u'>context_description< must be a str type')
 
-    def push(self, context_id=unicode, text=str):
+    def push(self, context_id, text):
         """
         Push a new message onto the StatusBar's stack.
 

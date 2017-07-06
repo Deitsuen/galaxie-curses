@@ -100,14 +100,6 @@ GLXCurses.EntryBuffer module
     :undoc-members:
     :show-inheritance:
 
-GLXCurses.EventBus module
--------------------------
-
-.. automodule:: GLXCurses.EventBus
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 GLXCurses.EventBusBkp module
 ----------------------------
 
