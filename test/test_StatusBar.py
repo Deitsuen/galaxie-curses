@@ -145,7 +145,6 @@ class TestStatusBar(unittest.TestCase):
         # test raises
         self.assertRaises(TypeError, statusbar.remove, context_id=int(), message_id=message_id_1)
         self.assertRaises(TypeError, statusbar.remove, context_id=context_id_1, message_id=float())
-        self.assertRaises(TypeError, statusbar.remove, context_id=context_id_1)
         self.assertRaises(TypeError, statusbar.remove, message_id=message_id_1)
 
     def test_remove_all(self):
@@ -186,5 +185,3 @@ class TestStatusBar(unittest.TestCase):
         # test raises
         self.assertRaises(TypeError, statusbar.remove_all, context_id=int())
 
-if __name__ == '__main__':
-    unittest.main()

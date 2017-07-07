@@ -57,10 +57,14 @@ class TestStyle(unittest.TestCase):
         # Check if fg='WHITE', bg='BLUE' return a value > 0
         self.assertGreater(self.style.get_color_pair(foreground='WHITE', background='BLUE'), 0)
 
+        # Check if fg='RED', bg='BLUE' return a value > 0
+        self.assertGreater(self.style.get_color_pair(foreground='RED', background='BLUE'), 0)
+
     def test_set_get_attribute_states(self):
         """Test Style.get_attribute_states()"""
         # Load a valid Style
         self.style.set_attribute_states(self.style.get_default_attribute_states())
+
         # Load the Valid Style
         attribute_states = self.style.get_attribute_states()
         # Check first level dictionary
@@ -73,6 +77,11 @@ class TestStyle(unittest.TestCase):
             for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
                 # Check if the key value is a string
                 self.assertEqual(type(attribute_states[attribute][state]), type(str()))
+
+        # Try to change style
+        attribute_states = self.style.get_default_attribute_states()
+        attribute_states['text_fg']['STATE_NORMAL'] = 'YELLOW'
+        self.style.set_attribute_states(attribute_states)
 
         # Check if not a dictionary
         self.assertRaises(TypeError, self.style.set_attribute_states, float(randint(1, 42)))
@@ -95,6 +104,14 @@ class TestStyle(unittest.TestCase):
         attribute_states['white'] = dict()
         self.assertRaises(KeyError, self.style.set_attribute_states, attribute_states)
 
+        attribute_states = self.style.get_attribute_states()
+        attribute_states['text_fg'] = list()
+        self.assertRaises(TypeError, self.style.set_attribute_states, attribute_states)
+
+        attribute_states = self.style.get_default_attribute_states()
+        attribute_states['text_fg']['STATE_NORMAL'] = int(42)
+        self.assertRaises(TypeError, self.style.set_attribute_states, attribute_states)
+
     # Internal Method test
     # Curses colors
     def test__get__set_allowed_fg_colors(self):
@@ -102,9 +119,6 @@ class TestStyle(unittest.TestCase):
         tested_colors_list = ['BLACK', 'WHITE']
         self.style._set_allowed_fg_colors(allowed_fg_colors=tested_colors_list)
         self.assertEqual(tested_colors_list, self.style._get_allowed_fg_colors())
-
-    def test__set_allowed_fg_colors_raise(self):
-        """Test Style raise TypeError of _set_curses_colors()"""
         self.assertRaises(TypeError, self.style._set_allowed_fg_colors, float(randint(1, 42)))
 
     def test__gen_allowed_fg_colors(self):
@@ -119,6 +133,26 @@ class TestStyle(unittest.TestCase):
         self.assertEqual(type(list()), type(self.style._get_allowed_fg_colors()))
         # The curses_colors_list should not be a empty list
         self.assertGreater(len(self.style._get_allowed_fg_colors()), len(list()))
+
+    def test__get__set_allowed_bg_colors(self):
+        """Test Style curses colors internal list 'get' and 'set' method's"""
+        tested_colors_list = ['BLACK', 'WHITE']
+        self.style._set_allowed_bg_colors(allowed_bg_colors=tested_colors_list)
+        self.assertEqual(tested_colors_list, self.style._get_allowed_bg_colors())
+        self.assertRaises(TypeError, self.style._set_allowed_bg_colors, float(randint(1, 42)))
+
+    def test__gen_allowed_bg_colors(self):
+        """Test Style allowed background colors list generation method"""
+        # Set a empty list as curses colors
+        self.style._set_allowed_bg_colors(allowed_bg_colors=list())
+        # The curses_colors_list should be empty
+        self.assertEqual(list(), self.style._get_allowed_bg_colors())
+        # Generate the curses colors list
+        self.style._gen_allowed_bg_colors()
+        # The curses_colors_list should still be a list type
+        self.assertEqual(type(list()), type(self.style._get_allowed_bg_colors()))
+        # The curses_colors_list should not be a empty list
+        self.assertGreater(len(self.style._get_allowed_bg_colors()), len(list()))
 
     # Curses Colors pairs
     def test__get__set_curses_colors_pairs(self):
@@ -143,6 +177,3 @@ class TestStyle(unittest.TestCase):
         self.assertEqual(type(list()), type(self.style._get_text_pairs()))
         # The curses_colors_list should not be a empty list
         self.assertGreater(len(self.style._get_text_pairs()), len(list()))
-
-if __name__ == '__main__':
-    unittest.main()

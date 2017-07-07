@@ -32,11 +32,16 @@ class TestBin(unittest.TestCase):
         # chek if it's None
         self.assertEqual(self.bin.get_child(), None)
         # Create a child
-        child = GLXCurses.Bin()
+        child1 = GLXCurses.Bin()
+        child2 = GLXCurses.Bin()
         # Add the child
-        self.bin.add(child)
+        self.bin.add(child1)
         # We must have the child inside the child list
-        self.assertEqual(self.bin.get_child()['WIDGET'], child)
+        self.assertEqual(self.bin.get_child()['WIDGET'], child1)
+        # Add the child
+        self.bin.add(child2)
+        # We must have the child inside the child list
+        self.assertEqual(self.bin.get_child()['WIDGET'], child2)
         # Reset to None for be sur it remove the child
         self.bin.add(None)
         # We must have the None ins the child list
@@ -47,6 +52,3 @@ class TestBin(unittest.TestCase):
     def test_get_child(self):
         """Test Bin.get_child()"""
         self.assertEqual(self.bin.get_child(), None)
-
-if __name__ == '__main__':
-    unittest.main()

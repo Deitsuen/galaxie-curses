@@ -53,7 +53,3 @@ class TestWindow(unittest.TestCase):
         """Test Window.set_application() TypeError"""
         window = GLXCurses.Window()
         self.assertRaises(TypeError, window.set_application, int(42))
-
-
-if __name__ == '__main__':
-    unittest.main()

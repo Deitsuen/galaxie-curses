@@ -207,11 +207,7 @@ class Style(object):
             pairs = self._get_text_pairs().index(
                 str(foreground).upper() + '/' + str(background).upper()
             )
-            try:
-                return curses.color_pair(pairs)
-            # if it have a error back to a pair number 0, suppose to be WHITE/BLACK
-            except ValueError:
-                return curses.color_pair(0)
+            return curses.color_pair(pairs)
 
     def get_color_text(self, attribute='base', state='STATE_NORMAL'):
         """
@@ -239,25 +235,25 @@ class Style(object):
         """
         # Try to found a way to not be execute
         # Check first level dictionary
-        if type(attribute_states) == dict:
-            # For each key's
-            for attribute in ['text_fg', 'bg', 'light', 'dark', 'mid', 'text', 'base', 'black', 'white']:
-                # Check if the key value is a dictionary
+        if type(attribute_states) != dict:
+            raise TypeError('"attribute_states" is not a dictionary')
+
+        # For each key's
+        for attribute in ['text_fg', 'bg', 'light', 'dark', 'mid', 'text', 'base', 'black', 'white']:
+            # Check if the key value is a dictionary
+            try:
+                if type(attribute_states[attribute]) != dict:
+                    raise TypeError('"attribute_states" key is not a dict')
+            except KeyError:
+                raise KeyError('"attribute_states" is not a Galaxie Curses Style')
+            # For each key value, in that case a sub dictionary
+            for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
+                # Check if the key value is a string
                 try:
-                    if type(attribute_states[attribute]) != dict:
-                        raise TypeError(u'>attribute_states< is not a dictionary')
+                    if type(attribute_states[attribute][state]) != str:
+                        raise TypeError('"attribute_states" key is not a str')
                 except KeyError:
-                    raise KeyError(u'>attribute_states< is not a Galaxie Curses Style')
-                # For each key value, in that case a sub dictionary
-                for state in ['STATE_NORMAL', 'STATE_ACTIVE', 'STATE_PRELIGHT', 'STATE_SELECTED', 'STATE_INSENSITIVE']:
-                    # Check if the key value is a string
-                    try:
-                        if type(attribute_states[attribute][state]) != str:
-                            raise TypeError(u'>attribute_states< key is not a str')
-                    except KeyError:
-                        raise KeyError(u'>attribute_states< is not a Galaxie Curses Style')
-        else:
-            raise TypeError(u'>attribute_states< is not a dictionary')
+                    raise KeyError('"attribute_states" is not a Galaxie Curses Style')
 
         # If it haven't quit that ok
         if attribute_states != self.get_attribute_states():
@@ -274,32 +270,6 @@ class Style(object):
         return self.attribute_states
 
     # Internal
-    def _set_curses_native_colormap(self, curses_native_colormap_dict=None):
-        """
-        Internal method for set ``_curses_native_colormap`` attribute
-
-        :param curses_native_colormap_dict: A list of color name
-        :type curses_native_colormap_dict: list
-        :raise TypeError: if ``curses_native_colormap_dict`` parameter is not a :py:data:`dict` type
-        """
-        if curses_native_colormap_dict is None:
-            curses_native_colormap_dict = dict()
-        if type(curses_native_colormap_dict) == dict:
-            if curses_native_colormap_dict != self._get_curses_native_colormap():
-                self._curses_native_colormap = curses_native_colormap_dict
-                # Can emit modification signal here
-        else:
-            raise TypeError(u'>curses_native_colormap_dict< argument must be a dict type')
-
-    def _get_curses_native_colormap(self):
-        """
-        Internal method for return ``_curses_native_colormap`` attribute
-
-        :return the _curses_native_colormap attribute
-        :rtype: dict
-        """
-        return self._curses_native_colormap
-
     def _get_allowed_fg_colors(self):
         """
         Internal method for return ``_allowed_fg_colors`` attribute
@@ -317,12 +287,11 @@ class Style(object):
         :type allowed_fg_colors: list
         :raise TypeError: if ``allowed_fg_colors`` parameter is not a :py:data:`list` type
         """
-        if type(allowed_fg_colors) == list:
-            if allowed_fg_colors != self._get_allowed_fg_colors():
-                self._allowed_fg_colors = allowed_fg_colors
-                # Can emit modification signal here
-        else:
-            raise TypeError(u'>allowed_fg_colors< argument must be a list type')
+        if type(allowed_fg_colors) != list:
+            raise TypeError('"allowed_fg_colors" argument must be a list type')
+        if allowed_fg_colors != self._get_allowed_fg_colors():
+            self._allowed_fg_colors = allowed_fg_colors
+            # Can emit modification signal here
 
     def _gen_allowed_fg_colors(self):
         """
@@ -363,12 +332,12 @@ class Style(object):
         :type allowed_bg_colors: list
         :raise TypeError: if ``allowed_bg_colors`` parameter is not a :py:data:`list` type
         """
-        if type(allowed_bg_colors) == list:
-            if allowed_bg_colors != self._get_allowed_bg_colors():
-                self._allowed_bg_colors = allowed_bg_colors
-                # Can emit modification signal here
-        else:
-            raise TypeError(u'>allowed_bg_colors< argument must be a list type')
+        if type(allowed_bg_colors) != list:
+            raise TypeError('"allowed_bg_colors" argument must be a list type')
+
+        if allowed_bg_colors != self._get_allowed_bg_colors():
+            self._allowed_bg_colors = allowed_bg_colors
+            # Can emit modification signal here
 
     def _gen_allowed_bg_colors(self):
         """
@@ -445,8 +414,6 @@ class Style(object):
         for background in self._get_allowed_bg_colors():
             if str(background).upper() == 'BLACK':
                 bg = curses.COLOR_BLACK
-            elif str(background).upper() == 'GRAY':
-                bg = curses.COLOR_WHITE
             elif str(background).upper() == 'WHITE':
                 bg = curses.COLOR_WHITE
             elif str(background).upper() == 'BLUE':
@@ -459,20 +426,14 @@ class Style(object):
                 bg = curses.COLOR_CYAN
             elif str(background).upper() == 'GREEN':
                 bg = curses.COLOR_GREEN
-            elif str(background).upper() == 'ORANGE':
-                bg = curses.COLOR_YELLOW
             elif str(background).upper() == 'YELLOW':
                 bg = curses.COLOR_YELLOW
-            elif str(background).upper() == 'PINK':
-                bg = curses.COLOR_RED
 
             # For each foreground colors
             for foreground in self._get_allowed_fg_colors():
                 # And each background colors
                 if str(foreground).upper() == 'BLACK':
                     fg = curses.COLOR_BLACK
-                elif str(foreground).upper() == 'GRAY':
-                    fg = curses.COLOR_WHITE
                 elif str(foreground).upper() == 'WHITE':
                     fg = curses.COLOR_WHITE
                 elif str(foreground).upper() == 'BLUE':
@@ -485,12 +446,8 @@ class Style(object):
                     fg = curses.COLOR_CYAN
                 elif str(foreground).upper() == 'GREEN':
                     fg = curses.COLOR_GREEN
-                elif str(foreground).upper() == 'ORANGE':
-                    fg = curses.COLOR_YELLOW
                 elif str(foreground).upper() == 'YELLOW':
                     fg = curses.COLOR_YELLOW
-                elif str(foreground).upper() == 'PINK':
-                    fg = curses.COLOR_RED
 
                 # Curses pair provisioning it have a index it match with the _get_text_pairs list index
                 # Generate a colors pair like 'WHITE/RED'.

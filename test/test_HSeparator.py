@@ -188,6 +188,3 @@ class TestHSeparator(unittest.TestCase):
         self.assertEqual(hline._get_y_offset(), 42)
         # test raise TypeError
         self.assertRaises(TypeError, hline._set_y_offset, 'Galaxie')
-
-if __name__ == '__main__':
-    unittest.main()

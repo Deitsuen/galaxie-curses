@@ -194,6 +194,3 @@ class TestVSeparator(unittest.TestCase):
         self.assertEqual(vline._get_y_offset(), 42)
         # test raise TypeError
         self.assertRaises(TypeError, vline._set_y_offset, 'Galaxie')
-
-if __name__ == '__main__':
-    unittest.main()

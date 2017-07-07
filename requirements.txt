@@ -1,5 +1,3 @@
-nose
-coverage
 nose2
 cov-core
 guzzle_sphinx_theme

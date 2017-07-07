@@ -58,9 +58,9 @@ class TestUtils(unittest.TestCase):
         self.assertEqual('', resize_text(text, width, '~'))
 
         # Test Error
-        self.assertRaises(TypeError, resize_text, (int(), width, '~'))
-        self.assertRaises(TypeError, resize_text, (text, str(), '~'))
-        self.assertRaises(TypeError, resize_text, (text, width, int()))
+        self.assertRaises(TypeError, resize_text, text=text, max_width=width, separator=int(42))
+        self.assertRaises(TypeError, resize_text, text=text, max_width='coucou', separator='~')
+        self.assertRaises(TypeError, resize_text, text=int(42), max_width=width, separator='~')
 
     def test_id_generator(self):
         """Test Utils.id_generator()"""

@@ -182,6 +182,3 @@ class TestMessageBar(unittest.TestCase):
 
         # test raises
         self.assertRaises(TypeError, messagebar.remove_all, context_id=int())
-
-if __name__ == '__main__':
-    unittest.main()

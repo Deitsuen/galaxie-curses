@@ -44,11 +44,11 @@ def resize_text(text='', max_width=0, separator='~'):
     """
     # Try to quit as soon of possible
     if type(text) != str:
-        raise TypeError(u'>text< must be a str type')
+        raise TypeError('"text" must be a str type')
     if type(max_width) != int:
-        raise TypeError(u'>max_width< must be a int type')
+        raise TypeError('"max_width" must be a int type')
     if type(separator) != str:
-        raise TypeError(u'>separator< must be a str type')
+        raise TypeError('"separator" must be a str type')
 
     # If we are here we haven't quit
     if max_width < len(text):
