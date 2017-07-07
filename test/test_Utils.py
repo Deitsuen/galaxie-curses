@@ -103,12 +103,12 @@ class TestUtils(unittest.TestCase):
         id_1 = new_id()
         self.assertTrue(is_valid_id(id_1))
         self.assertEqual(len(id_1), 8)
-        # max_iteration = 10000000 - Take 185.928s on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
-        # max_iteration = 1000000  - Take 19.109s  on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
-        # max_iteration = 100000   - Take 2.154    on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
-        # max_iteration = 10000    - Take 0.515    on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
+        # max_iteration = 10000000 - Take 99.114s  on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
+        # max_iteration = 1000000  - Take 9.920s   on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
+        # max_iteration = 100000   - Take 0.998s   on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
+        # max_iteration = 10000    - Take 0.108s   on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
 
-        max_iteration = 100000
+        max_iteration = 10000
         for _ in range(1, max_iteration):
             id_2 = new_id()
             self.assertEqual(len(id_2), 8)

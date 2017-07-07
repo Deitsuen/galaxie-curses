@@ -105,9 +105,9 @@ class TestMessageBar(unittest.TestCase):
         # compare stack size suppose to grow
         self.assertGreater(len(messagebar.messagebar_stack), stack_len)
         # compare last element
-        self.assertEqual(messagebar.messagebar_stack[-1][0], context_id)
-        self.assertEqual(messagebar.messagebar_stack[-1][1], text_take2)
-        self.assertEqual(messagebar.messagebar_stack[-1][2], message_id)
+        self.assertEqual(messagebar.messagebar_stack[-1]['context_id'], context_id)
+        self.assertEqual(messagebar.messagebar_stack[-1]['message_id'], message_id)
+        self.assertEqual(messagebar.messagebar_stack[-1]['text'], text_take2)
         # test raises
         self.assertRaises(TypeError, messagebar.push, context_id=str(), text=text_take2)
         self.assertRaises(TypeError, messagebar.push, context_id=context_id, text=float())
@@ -123,10 +123,9 @@ class TestMessageBar(unittest.TestCase):
         message_id_1 = messagebar.push(context_id=context_id_1, text=text_1)
 
         # compare last element
-        self.assertEqual(messagebar.messagebar_stack[-1][0], context_id_1)
-        self.assertEqual(messagebar.messagebar_stack[-1][1], text_1)
-        self.assertEqual(messagebar.messagebar_stack[-1][2], message_id_1)
-
+        self.assertEqual(messagebar.messagebar_stack[-1]['context_id'], context_id_1)
+        self.assertEqual(messagebar.messagebar_stack[-1]['message_id'], message_id_1)
+        self.assertEqual(messagebar.messagebar_stack[-1]['text'], text_1)
         # Preparation push completely a thing and save every value's
         context_description_2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
         text_2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
@@ -134,17 +133,17 @@ class TestMessageBar(unittest.TestCase):
         message_id_2 = messagebar.push(context_id=context_id_2, text=text_2)
 
         # compare last element
-        self.assertEqual(messagebar.messagebar_stack[-1][0], context_id_2)
-        self.assertEqual(messagebar.messagebar_stack[-1][1], text_2)
-        self.assertEqual(messagebar.messagebar_stack[-1][2], message_id_2)
+        self.assertEqual(messagebar.messagebar_stack[-1]['context_id'], context_id_2)
+        self.assertEqual(messagebar.messagebar_stack[-1]['message_id'], message_id_2)
+        self.assertEqual(messagebar.messagebar_stack[-1]['text'], text_2)
 
         # POP
         messagebar.pop(context_id=context_id_2)
 
         # check if are back to previous element
-        self.assertEqual(messagebar.messagebar_stack[-1][0], context_id_1)
-        self.assertEqual(messagebar.messagebar_stack[-1][1], text_1)
-        self.assertEqual(messagebar.messagebar_stack[-1][2], message_id_1)
+        self.assertEqual(messagebar.messagebar_stack[-1]['context_id'], context_id_1)
+        self.assertEqual(messagebar.messagebar_stack[-1]['message_id'], message_id_1)
+        self.assertEqual(messagebar.messagebar_stack[-1]['text'], text_1)
 
         # test raise
         self.assertRaises(TypeError, messagebar.pop, context_id=int())
@@ -165,9 +164,9 @@ class TestMessageBar(unittest.TestCase):
         message_id_1 = messagebar.push(context_id=context_id_1, text=text_1)
 
         # compare last element
-        self.assertEqual(messagebar.messagebar_stack[-1][0], context_id_1)
-        self.assertEqual(messagebar.messagebar_stack[-1][1], text_1)
-        self.assertEqual(messagebar.messagebar_stack[-1][2], message_id_1)
+        self.assertEqual(messagebar.messagebar_stack[-1]['context_id'], context_id_1)
+        self.assertEqual(messagebar.messagebar_stack[-1]['message_id'], message_id_1)
+        self.assertEqual(messagebar.messagebar_stack[-1]['text'], text_1)
 
         # compare stack size suppose to grow
         self.assertGreater(len(messagebar.messagebar_stack), stack_len)

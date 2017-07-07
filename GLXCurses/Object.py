@@ -92,7 +92,6 @@ class Object(EventBusClient):
         """
         return self.flags
 
-
     @staticmethod
     def get_default_flags():
         flags = dict()

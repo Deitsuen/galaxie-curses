@@ -90,15 +90,20 @@ def clamp_to_zero(value=None):
 
 def new_id():
     """
-    Generate a ID like u'E59E8457' , 2 chars by two chars it's a random HEX
+    Generate a ID like u'E59E8457' , two chars by two chars it's a random HEX
 
     Default size : 8
     Default chars: 'ABCDEF0123456789'
 
+    max_iteration = 10000000 - Take 99.114s  on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
+    max_iteration = 1000000  - Take 9.920s   on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
+    max_iteration = 100000   - Take 0.998s   on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
+    max_iteration = 10000    - Take 0.108s   on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
+
     :return: a string it represent a unique ID
-    :rtype: unicode
+    :rtype: str
     """
-    return u'%02x%02x%02x%02x'.upper() % (
+    return '%02x%02x%02x%02x'.upper() % (
         random.randint(0, 255),
         random.randint(0, 255),
         random.randint(0, 255),

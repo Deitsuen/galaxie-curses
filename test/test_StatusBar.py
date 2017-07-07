@@ -106,9 +106,10 @@ class TestStatusBar(unittest.TestCase):
         # compare stack size suppose to grow
         self.assertGreater(len(statusbar.statusbar_stack), stack_len)
         # compare last element
-        self.assertEqual(statusbar.statusbar_stack[-1][0], context_id)
-        self.assertEqual(statusbar.statusbar_stack[-1][1], text_take2)
-        self.assertEqual(statusbar.statusbar_stack[-1][2], message_id)
+        self.assertEqual(statusbar.statusbar_stack[-1]['context_id'], context_id)
+        self.assertEqual(statusbar.statusbar_stack[-1]['message_id'], message_id)
+        self.assertEqual(statusbar.statusbar_stack[-1]['text'], text_take2)
+
         # test raises
         self.assertRaises(TypeError, statusbar.push, context_id=str(), text=text_take2)
         self.assertRaises(TypeError, statusbar.push, context_id=context_id, text=float())
@@ -124,9 +125,9 @@ class TestStatusBar(unittest.TestCase):
         message_id_1 = statusbar.push(context_id=context_id_1, text=text_1)
 
         # compare last element
-        self.assertEqual(statusbar.statusbar_stack[-1][0], context_id_1)
-        self.assertEqual(statusbar.statusbar_stack[-1][1], text_1)
-        self.assertEqual(statusbar.statusbar_stack[-1][2], message_id_1)
+        self.assertEqual(statusbar.statusbar_stack[-1]['context_id'], context_id_1)
+        self.assertEqual(statusbar.statusbar_stack[-1]['message_id'], message_id_1)
+        self.assertEqual(statusbar.statusbar_stack[-1]['text'], text_1)
 
         # Preparation push completely a thing and save every value's
         context_description_2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
@@ -135,17 +136,17 @@ class TestStatusBar(unittest.TestCase):
         message_id_2 = statusbar.push(context_id=context_id_2, text=text_2)
 
         # compare last element
-        self.assertEqual(statusbar.statusbar_stack[-1][0], context_id_2)
-        self.assertEqual(statusbar.statusbar_stack[-1][1], text_2)
-        self.assertEqual(statusbar.statusbar_stack[-1][2], message_id_2)
+        self.assertEqual(statusbar.statusbar_stack[-1]['context_id'], context_id_2)
+        self.assertEqual(statusbar.statusbar_stack[-1]['message_id'], message_id_2)
+        self.assertEqual(statusbar.statusbar_stack[-1]['text'], text_2)
 
         # POP
         statusbar.pop(context_id=context_id_2)
 
         # check if are back to previous element
-        self.assertEqual(statusbar.statusbar_stack[-1][0], context_id_1)
-        self.assertEqual(statusbar.statusbar_stack[-1][1], text_1)
-        self.assertEqual(statusbar.statusbar_stack[-1][2], message_id_1)
+        self.assertEqual(statusbar.statusbar_stack[-1]['context_id'], context_id_1)
+        self.assertEqual(statusbar.statusbar_stack[-1]['message_id'], message_id_1)
+        self.assertEqual(statusbar.statusbar_stack[-1]['text'], text_1)
 
         # test raise
         self.assertRaises(TypeError, statusbar.pop, context_id=int())
@@ -166,9 +167,9 @@ class TestStatusBar(unittest.TestCase):
         message_id_1 = statusbar.push(context_id=context_id_1, text=text_1)
 
         # compare last element
-        self.assertEqual(statusbar.statusbar_stack[-1][0], context_id_1)
-        self.assertEqual(statusbar.statusbar_stack[-1][1], text_1)
-        self.assertEqual(statusbar.statusbar_stack[-1][2], message_id_1)
+        self.assertEqual(statusbar.statusbar_stack[-1]['context_id'], context_id_1)
+        self.assertEqual(statusbar.statusbar_stack[-1]['message_id'], message_id_1)
+        self.assertEqual(statusbar.statusbar_stack[-1]['text'], text_1)
 
         # compare stack size suppose to grow
         self.assertGreater(len(statusbar.statusbar_stack), stack_len)

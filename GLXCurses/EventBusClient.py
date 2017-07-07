@@ -52,7 +52,6 @@ class EventBusClient(object):
 
         # Internal attribute
 
-
     def emit(self, detailed_signal, args=None):
         """
         Every Object emit signal in direction to the Application.

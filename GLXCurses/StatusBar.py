@@ -60,7 +60,7 @@ class StatusBar(Widget):
             self.set_attribute_states(self.get_style().get_attribute_states())
 
         # Widget Setting
-        self.statusbar_stack = []
+        self.statusbar_stack = list()
         self.context_id_dict = dict()
 
     def new(self):
@@ -82,45 +82,54 @@ class StatusBar(Widget):
         :param context_description: textual description of what context the new message is being used in. \
         Default if none
         :type context_description: str
-        :return: an context_id generate by id_generator
-        :rtype: unicode
+        :return: an context_id generate by Utils.new_id()
+        :rtype: str
         :raises TypeError: When context_description is not a str
         """
-        if type(context_description) == str:
-            if context_description not in self._get_context_id_list():
-                self._get_context_id_list()[context_description] = new_id()
-                logging.debug(
-                    "StatusBar CONTEXT CREATION: context_id={0} context_description={1}".format(
-                        self._get_context_id_list()[context_description],
-                        str(context_description)
-                    )
-                )
+        # Try to exit as soon of possible
+        if type(context_description) != str:
+            raise TypeError('"context_description" must be a str type')
 
-            return self._get_context_id_list()[context_description]
-        else:
-            raise TypeError(u'>context_description< must be a str type')
+        # If we are here everything look ok
+        if context_description not in self._get_context_id_list():
+            self._get_context_id_list()[context_description] = new_id()
+            logging.debug(
+                "StatusBar CONTEXT CREATION: context_id={0} context_description={1}".format(
+                    self._get_context_id_list()[context_description],
+                    str(context_description)
+                )
+            )
+
+        return self._get_context_id_list()[context_description]
 
     def push(self, context_id, text):
         """
         Push a new message onto the StatusBar's stack.
 
         :param context_id: a context identifier, as returned by StatusBar.get_context_id()
-        :type context_id: unicode
+        :type context_id: str
         :param text: the message to add to the StatusBar
-        :type text: str or unicode
+        :type text: str
         :return: a message identifier that can be used with StatusBar.remove().
-        :rtype: unicode
+        :rtype: str
         """
         # Try to exit as soon of possible
         if not is_valid_id(context_id):
-            raise TypeError(u'>context_id< must be a unicode type as returned by StatusBar.get_context_id()')
+            raise TypeError('"context_id" must be a unicode type as returned by StatusBar.get_context_id()')
         if type(text) != str:
-            raise TypeError(u'>text< must be a str or unicode type')
+            raise TypeError('"text" must be a str or unicode type')
 
         # If we are here everything look ok
         message_id = new_id()
-        self.statusbar_stack.append([context_id, text, message_id])
+
+        message_info = dict()
+        message_info['context_id'] = context_id
+        message_info['message_id'] = message_id
+        message_info['text'] = text
+
+        self._get_statusbar_stack().append(message_info)
         self.emit_text_pushed(context_id, text)
+
         return message_id
 
     def pop(self, context_id):
@@ -131,18 +140,18 @@ class StatusBar(Widget):
         context id.
 
         :param context_id: a context identifier, as returned by StatusBar.get_context_id()
-        :type context_id: unicode
+        :type context_id: str
         """
         # Try to exit as soon of possible
         if not is_valid_id(context_id):
-            raise TypeError(u'>context_id< must be a unicode type as returned by StatusBar.get_context_id()')
+            raise TypeError('"context_id" must be a unicode type as returned by StatusBar.get_context_id()')
 
         # If we are here everything look ok
         count = 0
         last_found = None
         last_element = None
-        for element in self.statusbar_stack:
-            if context_id == element[0]:
+        for element in self._get_statusbar_stack():
+            if context_id == element['context_id']:
                 last_found = count
                 last_element = element
             count += 1
@@ -150,8 +159,8 @@ class StatusBar(Widget):
         if last_found is None:
             pass
         else:
-            self.statusbar_stack.pop(last_found)
-            self.emit_text_popped(last_element[0], last_element[2])
+            self._get_statusbar_stack().pop(last_found)
+            self.emit_text_popped(last_element['context_id'], last_element['text'])
 
     def remove(self, context_id, message_id):
         """
@@ -159,22 +168,22 @@ class StatusBar(Widget):
         The exact **context_id** and **message_id** must be specified.
 
         :param context_id: a context identifier, as returned by StatusBar.get_context_id()
-        :type context_id: unicode
+        :type context_id: str
         :param message_id: a message identifier, as returned by StatusBar.push()
-        :type message_id: unicode
+        :type message_id: str
         """
         # Try to exit as soon of possible
         if not is_valid_id(context_id):
-            raise TypeError(u'>context_id< arguments must be unicode type as returned by StatusBar.get_context_id()')
-        if type(new_id()) != type(message_id):
-            raise TypeError(u'>message_id< arguments must be unicode type as returned by StatusBar.push()')
+            raise TypeError('"context_id" arguments must be unicode type as returned by StatusBar.get_context_id()')
+        if not is_valid_id(message_id):
+            raise TypeError('"message_id" arguments must be unicode type as returned by StatusBar.push()')
 
         # If we are here everything look ok
         count = 0
         last_found = None
         last_element = None
-        for element in self.statusbar_stack:
-            if context_id == element[0] and message_id == element[2]:
+        for element in self._get_statusbar_stack():
+            if context_id == element['context_id'] and message_id == element['message_id']:
                 last_found = count
                 last_element = element
             count += 1
@@ -182,30 +191,30 @@ class StatusBar(Widget):
             pass
         else:
             logging.debug(
-                "StatusBar REMOVE: index={0} context_id={1} text={2} message_id={3}".format(
+                "StatusBar REMOVE: index={0} context_id={1} message_id={2} text={3}".format(
                     str(last_found),
-                    str(last_element[0]),
-                    str(last_element[1]),
-                    str(last_element[2])
+                    str(last_element['context_id']),
+                    str(last_element['message_id']),
+                    str(last_element['text'])
                 )
             )
-            self.statusbar_stack.pop(last_found)
+            self._get_statusbar_stack().pop(last_found)
 
     def remove_all(self, context_id):
         """
         Forces the removal of all messages from a StatusBar's stack with the exact context_id .
 
         :param context_id: a context identifier, as returned by StatusBar.get_context_id()
-        :type context_id: unicode
+        :type context_id: str
         """
         # Try to exit as soon of possible
         if not is_valid_id(context_id):
-            raise TypeError(u'>context_id< arguments must be unicode type as returned by MessageBar.get_context_id()')
+            raise TypeError('"context_id" arguments must be unicode type as returned by MessageBar.get_context_id()')
 
         # If we are here everything look ok
-        for element in self.statusbar_stack:
-            if context_id == element[0]:
-                self.remove(element[0], element[2])
+        for element in self._get_statusbar_stack():
+            if context_id == element['context_id']:
+                self.remove(element['context_id'], element['message_id'])
 
     def draw(self):
         """
@@ -248,8 +257,8 @@ class StatusBar(Widget):
             )
 
         # If it have something inside the StatusBar stack they display it but care about the display size
-        if len(self.statusbar_stack):
-            message_to_display = self.statusbar_stack[-1][1]
+        if len(self._get_statusbar_stack()):
+            message_to_display = self._get_statusbar_stack()[-1]['text']
             if not len(message_to_display) <= self.get_width() - 1:
                 start, end = message_to_display[:self.get_width() - 1], message_to_display[self.get_width() - 1:]
                 self.curses_subwin.addstr(
@@ -269,17 +278,17 @@ class StatusBar(Widget):
                     str(message_to_display)
                 )
 
-    # Siganles
+    # signals
     def emit_text_popped(self, context_id, text, user_data=None):
         """
         Is emitted whenever a new message is popped off a StatusBar's stack.
 
         :param context_id: the context id of the relevant message/StatusBar
-        :type context_id: :py:obj:`int`
+        :type context_id: str
         :param text: the message that was just popped
-        :type text: :py:obj:`str`
+        :type text: str
         :param user_data: user data set when the signal handler was connected.
-        :type user_data: :py:obj:`list`
+        :type user_data: list or None
         """
         if user_data is None:
             user_data = list()
@@ -300,7 +309,7 @@ class StatusBar(Widget):
         Is emitted whenever a new message is popped off a StatusBar's stack.
 
         :param context_id: the context id of the relevant message/StatusBar
-        :type context_id: int
+        :type context_id: str
         :param text: the message that was just popped
         :type text: str
         :param user_data: user data set when the signal handler was connected.
@@ -322,5 +331,19 @@ class StatusBar(Widget):
 
     # Internal Method's
     def _get_context_id_list(self):
+        """
+        Return context_id_dict attribute
+
+        :return: context_id_dict attribute
+        :rtype: dict
+        """
         return self.context_id_dict
 
+    def _get_statusbar_stack(self):
+        """
+        Return statusbar_stack attribute
+
+        :return: statusbar_stack attribute
+        :rtype: list
+        """
+        return self.statusbar_stack
