@@ -108,7 +108,7 @@ class TestUtils(unittest.TestCase):
         # max_iteration = 100000   - Take 2.154    on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
         # max_iteration = 10000    - Take 0.515    on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
 
-        max_iteration = 10000
+        max_iteration = 100000
         for _ in range(1, max_iteration):
             id_2 = new_id()
             self.assertEqual(len(id_2), 8)
