@@ -26,36 +26,10 @@ class TestStyle(unittest.TestCase):
         # The component to test
         self.style = GLXCurses.Style()
 
-        # Display thing that because curses have flush the screen
-        rows, columns = os.popen('stty size', 'r').read().split()
-        self.columns = int(columns)
-        self.width = self.columns - 7
-        try:
-            sys.stdout.write('\r')
-            sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.columns))
-            sys.stdout.flush()
-        except ValueError:
-            pass
-
     def tearDown(self):
         # When the test is finish
         # Require for ask to curse to clean up it
         self.application.close()
-
-        # Display thing that because curses have flush the screen
-        try:
-            sys.stdout.write('\r')
-            sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.width))
-            sys.stdout.write(' ')
-            sys.stdout.write('[ ')
-            sys.stdout.write('\033[92m')
-            sys.stdout.write('OK')
-            sys.stdout.write('\033[0m')
-            sys.stdout.write(' ]')
-            sys.stdout.write('\n\r')
-            sys.stdout.flush()
-        except ValueError:
-            pass
 
     # Tests
     def test_get_default_attribute_states(self):

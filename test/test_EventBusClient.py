@@ -17,33 +17,6 @@ sys.path.append(os.path.dirname(current_dir))
 # Unittest
 class TestEventBusClient(unittest.TestCase):
 
-    def setUp(self):
-        # Before the test start
-        rows, columns = os.popen('stty size', 'r').read().split()
-        self.columns = int(columns)
-        self.width = self.columns - 7
-        try:
-            sys.stdout.write('\r')
-            sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.columns))
-            sys.stdout.flush()
-        except ValueError:
-            pass
-
-    def tearDown(self):
-        try:
-            sys.stdout.write('\r')
-            sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.width))
-            sys.stdout.write(' ')
-            sys.stdout.write('[ ')
-            sys.stdout.write('\033[92m')
-            sys.stdout.write('OK')
-            sys.stdout.write('\033[0m')
-            sys.stdout.write(' ]')
-            sys.stdout.write('\n\r')
-            sys.stdout.flush()
-        except ValueError:
-            pass
-
     # Test
     def test_glxc_type(self):
         """Test EventBus Type"""

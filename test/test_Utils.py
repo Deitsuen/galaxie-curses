@@ -15,42 +15,6 @@ from GLXCurses import Window
 # Unittest
 class TestUtils(unittest.TestCase):
 
-    def setUp(self):
-        # Before the test start
-        # Require for init the screen
-
-        # The component to test
-
-        # Display thing that because curses have flush the screen
-        rows, columns = os.popen('stty size', 'r').read().split()
-        self.columns = int(columns)
-        self.width = self.columns - 7
-        try:
-            sys.stdout.write('\r')
-            sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.columns))
-            sys.stdout.flush()
-        except ValueError:
-            pass
-
-    def tearDown(self):
-        # When the test is finish
-        # Require for ask to curse to clean up it
-
-        # Display thing that because curses have flush the screen
-        try:
-            sys.stdout.write('\r')
-            sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.width))
-            sys.stdout.write(' ')
-            sys.stdout.write('[ ')
-            sys.stdout.write('\033[92m')
-            sys.stdout.write('OK')
-            sys.stdout.write('\033[0m')
-            sys.stdout.write(' ]')
-            sys.stdout.write('\n\r')
-            sys.stdout.flush()
-        except ValueError:
-            pass
-
     def test_glxc_type(self):
         """Test Utils.glxc_type()"""
         self.assertTrue(glxc_type(Window()))

@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from random import randint
-import random
-import string
-
 import sys
 import os
 
@@ -22,32 +18,10 @@ class TestWindow(unittest.TestCase):
     def setUp(self):
         # Before the test start
         self.application = GLXCurses.Application()
-        rows, columns = os.popen('stty size', 'r').read().split()
-        self.columns = int(columns)
-        self.width = self.columns - 7
-        try:
-            sys.stdout.write('\r')
-            sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.columns))
-            sys.stdout.flush()
-        except ValueError:
-            pass
 
     def tearDown(self):
         # When the test is finish
         self.application.close()
-        try:
-            sys.stdout.write('\r')
-            sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.width))
-            sys.stdout.write(' ')
-            sys.stdout.write('[ ')
-            sys.stdout.write('\033[92m')
-            sys.stdout.write('OK')
-            sys.stdout.write('\033[0m')
-            sys.stdout.write(' ]')
-            sys.stdout.write('\n\r')
-            sys.stdout.flush()
-        except ValueError:
-            pass
 
     # Test
     def test_new(self):

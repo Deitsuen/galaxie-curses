@@ -2,18 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-from random import randint
 import random
 import string
-
-import sys
-import os
-
-# Require when you haven't GLXBob as default Package
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(current_dir))
-
-import GLXCurses
+from GLXCurses import MessageBar
 from GLXCurses.Utils import glxc_type
 from GLXCurses.Utils import is_valid_id
 
@@ -21,46 +12,16 @@ from GLXCurses.Utils import is_valid_id
 # Unittest
 class TestMessageBar(unittest.TestCase):
 
-    def setUp(self):
-        # Before the test start
-        self.application = GLXCurses.Application()
-        rows, columns = os.popen('stty size', 'r').read().split()
-        self.columns = int(columns)
-        self.width = self.columns - 7
-        try:
-            sys.stdout.write('\r')
-            sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.columns))
-            sys.stdout.flush()
-        except ValueError:
-            pass
-
-    def tearDown(self):
-        # When the test is finish
-        self.application.close()
-        try:
-            sys.stdout.write('\r')
-            sys.stdout.write('{:{width}.{width}}'.format(self.shortDescription(), width=self.width))
-            sys.stdout.write(' ')
-            sys.stdout.write('[ ')
-            sys.stdout.write('\033[92m')
-            sys.stdout.write('OK')
-            sys.stdout.write('\033[0m')
-            sys.stdout.write(' ]')
-            sys.stdout.write('\n\r')
-            sys.stdout.flush()
-        except ValueError:
-            pass
-
     # Test
     def test_glxc_type(self):
         """Test StatusBar type"""
-        messagebar = GLXCurses.MessageBar()
+        messagebar = MessageBar()
         self.assertTrue(glxc_type(messagebar))
 
     def test_new(self):
         """Test StatusBar.new()"""
         # create a window instance
-        messagebar = GLXCurses.MessageBar()
+        messagebar = MessageBar()
         # get the window id
         messagebar_id_take1 = messagebar.get_widget_id()
         # check if returned value is a valid id
@@ -77,7 +38,7 @@ class TestMessageBar(unittest.TestCase):
     def test_get_context_id(self):
         """Test MessageBar.get_context_id()"""
         # create a window instance
-        messagebar = GLXCurses.MessageBar()
+        messagebar = MessageBar()
         # generate a random string
         context_text = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
         # get the window id
@@ -90,7 +51,7 @@ class TestMessageBar(unittest.TestCase):
     def test_push(self):
         """Test MessageBar.push()"""
         # create a window instance
-        messagebar = GLXCurses.MessageBar()
+        messagebar = MessageBar()
         # generate a random string
         text_take1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
         text_take2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
@@ -115,7 +76,7 @@ class TestMessageBar(unittest.TestCase):
     def test_pop(self):
         """Test StatusBar.pop()"""
         # create a window instance
-        messagebar = GLXCurses.MessageBar()
+        messagebar = MessageBar()
         # Preparation push completely a thing and save every value's
         context_description_1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
         text_1 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
@@ -126,6 +87,7 @@ class TestMessageBar(unittest.TestCase):
         self.assertEqual(messagebar.messagebar_stack[-1]['context_id'], context_id_1)
         self.assertEqual(messagebar.messagebar_stack[-1]['message_id'], message_id_1)
         self.assertEqual(messagebar.messagebar_stack[-1]['text'], text_1)
+
         # Preparation push completely a thing and save every value's
         context_description_2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
         text_2 = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(8))
@@ -152,7 +114,7 @@ class TestMessageBar(unittest.TestCase):
     def test_remove(self):
         """Test StatusBar.remove()"""
         # create a window instance
-        messagebar = GLXCurses.MessageBar()
+        messagebar = MessageBar()
 
         # get stack size
         stack_len = len(messagebar.messagebar_stack)
@@ -186,7 +148,7 @@ class TestMessageBar(unittest.TestCase):
     def test_remove_all(self):
         """Test StatusBar.remove_all()"""
         # create a window instance
-        messagebar = GLXCurses.MessageBar()
+        messagebar = MessageBar()
 
         # get stack size
         stack_len_1 = len(messagebar.messagebar_stack)
