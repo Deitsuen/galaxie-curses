@@ -7,7 +7,7 @@ import os
 from GLXCurses.Utils import clamp_to_zero
 from GLXCurses.Utils import resize_text
 from GLXCurses.Utils import glxc_type
-from GLXCurses.Utils import id_generator
+from GLXCurses.Utils import new_id
 from GLXCurses.Utils import is_valid_id
 from GLXCurses import Window
 
@@ -100,7 +100,7 @@ class TestUtils(unittest.TestCase):
 
     def test_id_generator(self):
         """Test Utils.id_generator()"""
-        id_1 = id_generator()
+        id_1 = new_id()
         self.assertTrue(is_valid_id(id_1))
         self.assertEqual(len(id_1), 8)
         # max_iteration = 10000000 - Take 185.928s on Intel(R) Core(TM) i7-2860QM CPU @ 2.50GHz
@@ -110,12 +110,12 @@ class TestUtils(unittest.TestCase):
 
         max_iteration = 10000
         for _ in range(1, max_iteration):
-            id_2 = id_generator()
+            id_2 = new_id()
             self.assertEqual(len(id_2), 8)
             self.assertNotEqual(id_1, id_2)
 
     def test_is_valid_id(self):
         """Test Utils.is_valid_id()"""
-        id_1 = id_generator()
+        id_1 = new_id()
         self.assertTrue(is_valid_id(id_1))
         self.assertFalse(is_valid_id(42))

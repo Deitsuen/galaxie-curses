@@ -6,7 +6,7 @@
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 
 from GLXCurses import Widget
-from GLXCurses.Utils import id_generator
+from GLXCurses.Utils import new_id
 from GLXCurses.Utils import is_valid_id
 import curses
 import logging
@@ -89,7 +89,7 @@ class MessageBar(Widget):
             raise TypeError(u'>context_description< must be a str or unicode type')
 
         if context_description not in self._get_context_id_list():
-            self._get_context_id_list()[context_description] = id_generator()
+            self._get_context_id_list()[context_description] = new_id()
             logging.debug(
                 "MessageBar CONTEXT CREATION: context_id={0} context_description={1}".format(
                     self._get_context_id_list()[context_description],
@@ -117,7 +117,7 @@ class MessageBar(Widget):
             raise TypeError(u'>text< must be a str or unicode type')
 
         # If we are here everything look ok
-        message_id = id_generator()
+        message_id = new_id()
         self.messagebar_stack.append([context_id, text, message_id])
         self.emit_text_pushed(context_id, text)
         return message_id

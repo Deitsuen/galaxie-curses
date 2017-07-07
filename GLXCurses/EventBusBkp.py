@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from GLXCurses.Utils import id_generator
+from GLXCurses.Utils import new_id
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -62,7 +62,7 @@ class EventBus(object):
             'handler': handler,
             'argvs': args
         }
-        handler_id = id_generator()
+        handler_id = new_id()
         self._get_signal_handlers_dict()[detailed_signal][handler_id] = subscription
         logging.info(self.__class__.__name__ + ': ' + str(self._get_signal_handlers_dict()[detailed_signal][handler_id]))
         return handler_id

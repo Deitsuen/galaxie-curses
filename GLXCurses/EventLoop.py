@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from GLXCurses.Utils import id_generator
+from GLXCurses.Utils import new_id
 
 
 class MyEventBus(object):
@@ -46,7 +46,7 @@ class MyEventBus(object):
             'handler': handler,
             'argvs': args
         }
-        handler_id = id_generator()
+        handler_id = new_id()
         self._get_signal_handlers_dict()[detailed_signal][handler_id] = subscription
         return handler_id
 

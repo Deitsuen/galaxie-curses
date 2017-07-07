@@ -87,7 +87,7 @@ def clamp_to_zero(value=None):
         raise TypeError(u'>value< must be a int or None type')
 
 
-def id_generator():
+def new_id():
     """
     Generate a ID like u'E59E8457' , 2 chars by two chars it's a random HEX
 

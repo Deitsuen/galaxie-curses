@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from GLXCurses import Object
 from GLXCurses import Style
-from GLXCurses.Utils import id_generator
+from GLXCurses.Utils import new_id
 
 
 from datetime import datetime
@@ -23,7 +23,7 @@ class Widget(Object):
         self.name = 'Widget'
         # Unique ID it permit to individually identify a widget by example for get_focus get_default
         # self.id = uuid.uuid1().int
-        self.id = id_generator()
+        self.id = new_id()
         # Widget Setting
         self.set_flags(self.get_default_flags())
 
