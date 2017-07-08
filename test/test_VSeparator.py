@@ -97,9 +97,8 @@ class TestVSeparator(unittest.TestCase):
 
         # glxc.JUSTIFY_LEFT -> self.get_spacing()
         vline._justify = glxc.JUSTIFY_LEFT
-        vline.spacing = 24
         vline._check_justify()
-        self.assertEqual(vline._x_offset, 24)
+        self.assertEqual(vline._x_offset, 0)
 
         vline.width = None
         vline.preferred_width = None
@@ -129,9 +128,8 @@ class TestVSeparator(unittest.TestCase):
         vline._justify = glxc.JUSTIFY_RIGHT
         vline.width = 124
         vline.preferred_width = 80
-        vline.spacing = 2
         vline._check_justify()
-        self.assertEqual(vline._x_offset, 42)
+        self.assertEqual(vline._x_offset, 44)
 
         vline.width = None
         vline.preferred_width = None
@@ -156,16 +154,14 @@ class TestVSeparator(unittest.TestCase):
     def test__get_estimated_preferred_width(self):
         """Test VSeparator._get_estimated_preferred_width()"""
         vline = GLXCurses.VSeparator()
-        vline.spacing = 20
-        self.assertEqual(vline._get_estimated_preferred_width(), 41)
+        self.assertEqual(vline._get_estimated_preferred_width(), 1)
 
     def test__get_estimated_preferred_height(self):
         """Test VSeparator._get_estimated_preferred_height()"""
         vline = GLXCurses.VSeparator()
         vline.y = 20
         vline.height = 20
-        vline.spacing = 20
-        self.assertEqual(vline._get_estimated_preferred_height(), 80)
+        self.assertEqual(vline._get_estimated_preferred_height(), 40)
 
     def test__set__get_vseperator_x(self):
         """Test VSeparator._set_vseperator_x() and VSeparator._get_vseperator_x()"""

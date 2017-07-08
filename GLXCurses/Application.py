@@ -6,9 +6,9 @@
 # Author: the Galaxie Curses Team, all rights reserved
 
 import GLXCurses
-from GLXCurses.Utils import glxc_type
 from GLXCurses.EventBusClient import EventBusClient
 from GLXCurses.Utils import new_id
+from GLXCurses.Utils import glxc_type
 import curses
 import sys
 import os

@@ -97,10 +97,16 @@ class Frame(Bin):
               +----------------+-------------------------------------------+
 
         """
+        # Load heritage
         Bin.__init__(self)
+
+        # It's a GLXCurse Type
+        self.glxc_type = 'GLXCurses.Frame'
+
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('Frame')
 
-        # Make a Style heritage attribute
+        # Make a Widget Style heritage attribute as local attribute
         if self.get_style().get_attribute_states():
             self.set_attribute_states(self.get_style().get_attribute_states())
 

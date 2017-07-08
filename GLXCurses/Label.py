@@ -27,9 +27,18 @@ def resize_text(text, max_width, separator='~'):
 
 class Label(GLXCurses.Misc):
     def __init__(self):
+        # Load heritage
         GLXCurses.Misc.__init__(self)
+
+        # It's a GLXCurse Type
+        self.glxc_type = 'GLXCurses.Label'
+
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('Label')
+
+        # Make a Widget Style heritage attribute as local attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
         # Label Properties
         # The current position of the insertion cursor in chars. Allowed values: >= 0. Default value: 0
@@ -115,10 +124,6 @@ class Label(GLXCurses.Misc):
         # Size management
         self.set_preferred_height(1)
         self.update_preferred_sizes()
-
-        # Make a Style heritage attribute
-        if self.get_style().get_attribute_states():
-            self.set_attribute_states(self.get_style().get_attribute_states())
 
     ###########
     # Methods #
@@ -223,7 +228,7 @@ class Label(GLXCurses.Misc):
             preferred_height = 1
 
             preferred_width += len(self.get_text())
-            preferred_width += (self.get_spacing() + self._get_imposed_spacing()) * 2
+            preferred_width += self._get_imposed_spacing() * 2
 
             self.set_preferred_height(preferred_height)
             self.set_preferred_width(preferred_width)

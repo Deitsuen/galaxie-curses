@@ -89,7 +89,6 @@ if __name__ == '__main__':
     label3.set_max_width_chars(10)
 
     progressbar1 = GLXCurses.ProgressBar()
-    progressbar1.set_spacing(0)
     progressbar1.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
     progressbar1.set_text(value)
@@ -100,7 +99,6 @@ if __name__ == '__main__':
     progressbar1.set_inverted(0)
 
     progressbar2 = GLXCurses.ProgressBar()
-    progressbar2.set_spacing(0)
     progressbar2.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar2.get_value(), '%')
     progressbar2.set_text(value)
@@ -111,7 +109,6 @@ if __name__ == '__main__':
     progressbar2.set_inverted(0)
 
     progressbar3 = GLXCurses.ProgressBar()
-    progressbar3.set_spacing(0)
     progressbar3.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar3.get_value(), '%')
     progressbar3.set_text(value)
@@ -122,7 +119,6 @@ if __name__ == '__main__':
     progressbar3.set_inverted(0)
 
     progressbar4 = GLXCurses.ProgressBar()
-    progressbar4.set_spacing(0)
     progressbar4.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar4.get_value(), '%')
     progressbar4.set_text(value)
@@ -133,7 +129,6 @@ if __name__ == '__main__':
     progressbar4.set_inverted(1)
 
     progressbar5 = GLXCurses.ProgressBar()
-    progressbar5.set_spacing(0)
     progressbar5.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar5.get_value(), '%')
     progressbar5.set_text(value)
@@ -144,7 +139,6 @@ if __name__ == '__main__':
     progressbar5.set_inverted(1)
 
     progressbar6 = GLXCurses.ProgressBar()
-    progressbar6.set_spacing(0)
     progressbar6.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar6.get_value(), '%')
     progressbar6.set_text(value)
@@ -155,7 +149,6 @@ if __name__ == '__main__':
     progressbar6.set_inverted(1)
 
     progressbar7 = GLXCurses.ProgressBar()
-    progressbar7.set_spacing(0)
     progressbar7.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar7.get_value(), '%')
     progressbar7.set_text(value)
@@ -166,7 +159,6 @@ if __name__ == '__main__':
     progressbar7.set_inverted(0)
 
     progressbar8 = GLXCurses.ProgressBar()
-    progressbar8.set_spacing(0)
     progressbar8.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar8.get_value(), '%')
     progressbar8.set_text(value)
@@ -177,7 +169,6 @@ if __name__ == '__main__':
     progressbar8.set_inverted(0)
 
     progressbar9 = GLXCurses.ProgressBar()
-    progressbar9.set_spacing(0)
     progressbar9.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
     progressbar9.set_text(value)
@@ -188,7 +179,6 @@ if __name__ == '__main__':
     progressbar9.set_inverted(0)
 
     progressbar10 = GLXCurses.ProgressBar()
-    progressbar10.set_spacing(0)
     progressbar10.set_value(0)
     value = '{0:}{1:}'.format(progressbar10.get_value(), '%')
     progressbar10.set_text(value)
@@ -199,7 +189,6 @@ if __name__ == '__main__':
     progressbar10.set_inverted(1)
 
     progressbar11 = GLXCurses.ProgressBar()
-    progressbar11.set_spacing(0)
     progressbar11.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar11.get_value(), '%')
     progressbar11.set_text(value)
@@ -210,7 +199,6 @@ if __name__ == '__main__':
     progressbar11.set_inverted(1)
 
     progressbar12 = GLXCurses.ProgressBar()
-    progressbar12.set_spacing(0)
     progressbar12.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar12.get_value(), '%')
     progressbar12.set_text(value)
@@ -281,7 +269,6 @@ if __name__ == '__main__':
     hbox_buttons.pack_end(frame_for_check_button)
 
     HSepartor = GLXCurses.HSeparator()
-    HSepartor.set_spacing(0)
     # VSepartor.set_position_type('center')
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
@@ -307,6 +294,7 @@ if __name__ == '__main__':
     hbox_progress_widgets.pack_end(vbox_progress)
     hbox_progress_widgets.pack_end(hbox_progress)
 
+    hbox_progress.set_spacing(1)
     hbox_progress.pack_end(progressbar1)
     hbox_progress.pack_end(progressbar2)
     hbox_progress.pack_end(progressbar3)

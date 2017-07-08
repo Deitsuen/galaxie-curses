@@ -193,25 +193,24 @@ class HSeparator(GLXCurses.Widget):
 
     def _get_estimated_preferred_width(self):
         """
-        Estimate a preferred width, by consider X Location, allowed width and spacing
+        Estimate a preferred width, by consider X Location, allowed width
 
         :return: a estimated preferred width
         :rtype: int
         """
         estimated_preferred_width = self.get_x()
         estimated_preferred_width += self.get_width()
-        estimated_preferred_width += self.get_spacing() * 2
         return estimated_preferred_width
 
-    def _get_estimated_preferred_height(self):
+    @staticmethod
+    def _get_estimated_preferred_height():
         """
-        Estimate a preferred height, by consider Y Location, and spacing
+        Estimate a preferred height, by consider Y Location
 
         :return: a estimated preferred height
         :rtype: int
         """
         estimated_preferred_height = 1
-        estimated_preferred_height += self.get_spacing() * 2
         return estimated_preferred_height
 
     def _set_x_offset(self, number):

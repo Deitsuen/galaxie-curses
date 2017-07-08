@@ -36,7 +36,6 @@ class Widget(Object):
 
         # Widget
         self.curses_subwin = None
-        self.spacing = 0
         self.imposed_spacing = 0
         self.widget_decorated = False
 
@@ -242,12 +241,6 @@ class Widget(Object):
 
     def get_origin(self):
         return self.get_curses_subwin().getbegyx()
-
-    def set_spacing(self, spacing):
-        self.spacing = spacing
-
-    def get_spacing(self):
-        return self.spacing
 
     def set_decorated(self, decorated):
         self.widget_decorated = decorated
@@ -460,7 +453,7 @@ class Widget(Object):
             self.y, self.x = self.get_parent().get_curses_subwin().getbegyx()
 
             # Check if the Parent have decoration add and 1 to spacing in case
-            padding = self.get_spacing()
+            padding = 0
             if self.get_parent().get_decorated():
                 padding += self.get_parent().get_border_width()
 

@@ -44,6 +44,20 @@ class Constants(object):
     def BASELINE_POSITION_BOTTOM():
         """Align the baseline at the bottom"""
         return 'BASELINE_POSITION_BOTTOM'
+    ###################
+    # Orientation     #
+    ###################
+    # Represents the orientation of widgets and other objects which can be switched between
+    # horizontal and vertical orientation on the fly, like ToolBar
+    @constant
+    def ORIENTATION_HORIZONTAL():
+        """The element is in horizontal orientation."""
+        return 'ORIENTATION_HORIZONTAL'
+
+    @constant
+    def ORIENTATION_VERTICAL():
+        """The element is in vertical orientation."""
+        return 'ORIENTATION_VERTICAL'
     ###########################
     # Container  PackType     #
     ###########################

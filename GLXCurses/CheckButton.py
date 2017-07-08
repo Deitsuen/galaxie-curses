@@ -363,7 +363,6 @@ class CheckButton(Widget):
         """Check the justification of the X axe"""
         width = self.get_width()
         preferred_width = self.get_preferred_width()
-        spacing = self.get_spacing()
 
         self._set_x_offset(0)
         if self.get_justify() == glxc.JUSTIFY_CENTER:
@@ -398,18 +397,8 @@ class CheckButton(Widget):
             self._set_x_offset(final_value)
 
         elif self.get_justify() == glxc.JUSTIFY_LEFT:
-            # Clamp estimated_spacing
-            estimated_spacing = clamp_to_zero(spacing)
 
-            # Make the compute
-            final_value = int(estimated_spacing)
-
-            # clamp the result
-            if final_value <= 0:
-                final_value = 0
-
-            # Finally set the value
-            self._set_x_offset(final_value)
+            self._set_x_offset(0)
 
         elif self.get_justify() == glxc.JUSTIFY_RIGHT:
             # Clamp estimated_width
@@ -418,11 +407,8 @@ class CheckButton(Widget):
             # Clamp preferred_width
             estimated_preferred_width = clamp_to_zero(preferred_width)
 
-            # Clamp estimated_spacing
-            estimated_spacing = clamp_to_zero(spacing)
-
             # Make the compute
-            final_value = int(estimated_width - estimated_preferred_width - estimated_spacing)
+            final_value = int(estimated_width - estimated_preferred_width)
 
             # clamp the result
             if final_value <= 0:
@@ -506,7 +492,7 @@ class CheckButton(Widget):
 
     def _get_estimated_preferred_width(self):
         """
-        Estimate a preferred width, by consider X Location, allowed width and spacing
+        Estimate a preferred width, by consider X Location, allowed width
 
         :return: a estimated preferred width
         :rtype: int
@@ -515,23 +501,20 @@ class CheckButton(Widget):
             estimated_preferred_width = 0
             estimated_preferred_width += len(self.get_text())
             estimated_preferred_width += len(self.interface)
-            estimated_preferred_width += self.get_spacing() * 2
         else:
             estimated_preferred_width = 0
             estimated_preferred_width += len(self.interface)
-            estimated_preferred_width += self.get_spacing() * 2
 
         return estimated_preferred_width
 
     def _get_estimated_preferred_height(self):
         """
-        Estimate a preferred height, by consider Y Location, and spacing
+        Estimate a preferred height, by consider Y Location
 
         :return: a estimated preferred height
         :rtype: int
         """
         estimated_preferred_height = 1
-        estimated_preferred_height += self.get_spacing() * 2
         return estimated_preferred_height
 
     def _set_x_offset(self, value=None):

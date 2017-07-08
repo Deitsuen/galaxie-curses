@@ -7,8 +7,10 @@
 
 from GLXCurses import Container
 from GLXCurses import glxc
+from GLXCurses.Utils import glxc_type
+from GLXCurses.Utils import clamp_to_zero
 
-
+# https://developer.gnome.org/gtk3/stable/GtkBox.html
 class Box(Container):
     """
     :Description:
@@ -122,17 +124,42 @@ class Box(Container):
         # Child Attributes
         self.expend = False
         self.fill = True
+        self.orientation = glxc.ORIENTATION_HORIZONTAL
         self.pack_type = glxc.PACK_START
         self.padding = 0
         self.position = 0
+        self.spacing = 0
 
-    def pack_start(self, child, expand=True, fill=True, padding=0):
+        # orientation
+
+    def new(self, orientation=glxc.ORIENTATION_HORIZONTAL, spacing=None):
+        """
+        Creates a new :class:`Box <GLXCurses.Box.Box>`.
+        
+        :param orientation: the box’s orientation. Default: ORIENTATION_HORIZONTAL
+        :type orientation: Orientation
+        :param spacing: the number of characters to place by default between children. Default: 0
+        :type spacing: int or None
+        :return: a new :class:`Box <GLXCurses.Box.Box>`.
+        """
+        if orientation not in [glxc.ORIENTATION_HORIZONTAL, glxc.ORIENTATION_VERTICAL]:
+            raise TypeError('"orientation" must be glxc.ORIENTATION_HORIZONTAL or glxc.ORIENTATION_VERTICAL')
+        if spacing is not None:
+            if type(spacing) != int:
+                raise TypeError('"spacing" must be int type or None')
+
+        self.__init__()
+        self.set_spacing(clamp_to_zero(spacing))
+        self.orientation = orientation
+        return self
+
+    def pack_start(self, child=None, expand=True, fill=True, padding=None):
         """
         Adds child to :class:`Box <GLXCurses.Box.Box>` , packed with reference to the start of
         :class:`Box <GLXCurses.Box.Box>`.
 
         :param child: the widget to be added to :class:`Box <GLXCurses.Box.Box>`
-        :type child: :class:`Widget <GLXCurses.Widget.Widget>`
+        :type child: a GLXCures Object
         :param expand: ``True`` if the new child is to be given extra space allocated to \
         `Box <GLXCurses.Box.Box>`. The extra space will be divided evenly between all children that use this option
         :type expand: bool
@@ -145,36 +172,38 @@ class Box(Container):
         :param padding: extra space in characters to put between this child and its neighbors, over and above \
         the global amount specified by :py:attr:`spacing` attribute. If child is a widget at one of the reference \
         ends of box , then padding pixels are also put between child and the reference edge of box
-        :type padding: int
+        :type padding: int or None
         """
         # Try to exit as soon of possible
+        if not glxc_type(child):
+            raise TypeError('"child" argument must be a GLXCurses object type')
         if type(expand) != bool:
-            raise TypeError('">expand" argument must be a bool')
+            raise TypeError('"expand" argument must be a bool')
         if type(fill) != bool:
             raise TypeError('"fill" argument must be a bool')
-        if type(padding) != int and padding < 0:
-            raise TypeError('"fill" padding must be a positive int')
+        if padding is not None:
+            if type(padding) != int:
+                raise TypeError('"spacing" must be int type or None')
 
-        # Except the child everything look OK , then
+        # If we are here everything look ok
         # Create a dict for store information's about packing
-        # We'll store it as a list elment later
         child_info = dict()
         child_info['widget'] = child
         child_info['expand'] = expand
         child_info['fill'] = fill
-        child_info['padding'] = padding
+        child_info['padding'] = clamp_to_zero(padding)
 
         self.get_children().insert(0, child_info)
 
         self.emit_pack_start(data=child_info)
 
-    def pack_end(self, child, expand=True, fill=True, padding=0):
+    def pack_end(self, child=None, expand=True, fill=True, padding=None):
         """
         Adds child to :class:`Box <GLXCurses.Box.Box>` , packed with reference to the end of
         :class:`Box <GLXCurses.Box.Box>`.
 
         :param child: the widget to be added to :class:`Box <GLXCurses.Box.Box>`
-        :type child: :class:`Widget <GLXCurses.Widget.Widget>`
+        :type child: a GLXCures Object
         :param expand: ``True`` if the new child is to be given extra space allocated to \
         `Box <GLXCurses.Box.Box>`. The extra space will be divided evenly between all children that use this option
         :type expand: bool
@@ -187,35 +216,32 @@ class Box(Container):
         :param padding: extra space in characters to put between this child and its neighbors, over and above \
         the global amount specified by :py:attr:`spacing` attribute. If child is a widget at one of the reference ends \
         of box , then padding pixels are also put between child and the reference edge of box
-        :type padding: bool
+        :type padding: int or None
         """
         # Try to exit as soon of possible
+        if not glxc_type(child):
+            raise TypeError('"child" argument must be a GLXCurses object type')
         if type(expand) != bool:
-            raise TypeError('"expand" argument must be a bool')
+            raise TypeError('"expand" argument must be a bool type')
         if type(fill) != bool:
-            raise TypeError('"fill" argument must be a bool')
-        if type(padding) != int and padding < 0:
-            raise TypeError('"fill" padding must be a positive int')
+            raise TypeError('"fill" argument must be a bool type')
+        if padding is not None:
+            if type(padding) != int:
+                raise TypeError('"spacing" must be int type or None')
 
-        # Except the child everything look OK , then
+        # If we are here everything look ok
         # Create a dict for store information's about packing
         child_info = dict()
         child_info['widget'] = child
         child_info['expand'] = expand
         child_info['fill'] = fill
-        child_info['padding'] = padding
+        child_info['padding'] = clamp_to_zero(padding)
 
         self.get_children().append(child_info)
 
         self.emit_pack_end(data=child_info)
 
-    def pack_start_defaults(self, widget):
-        pass
-
-    def pack_end_defaults(self, widget):
-        pass
-
-    def set_homogeneous(self, homogeneous):
+    def set_homogeneous(self, homogeneous=True):
         """
         Sets the :py:attr:`homogeneous` attribute of :class:`Box <GLXCurses.Box.Box>`, controlling whether or not all
         children of :class:`Box <GLXCurses.Box.Box>` are given equal space in the box.
@@ -235,6 +261,31 @@ class Box(Container):
         :rtype: bool
         """
         return self.homogeneous
+
+    def set_spacing(self, spacing=None):
+        """
+        Sets the “spacing” property of box , which is the number of characters to place between children of box .
+
+        :param spacing: the number of character to put between children
+        :type spacing: int or None
+        """
+        # Try to exit as soon of possible
+        if spacing is not None:
+            if type(spacing) != int:
+                raise TypeError('"spacing" must be int type or None')
+
+        spacing = clamp_to_zero(spacing)
+        if spacing != self.get_spacing():
+            self.spacing = spacing
+
+    def get_spacing(self):
+        """
+        Gets the value set by :func:`Box.set_spacing() <GLXCurses.Box.Box.set_spacing>`.
+
+        :return: spacing between children
+        :rtype: int
+        """
+        return self.spacing
 
     def reorder_child(self, child, position):
         """
@@ -303,7 +354,7 @@ class Box(Container):
         instance = {
             'class': self.__class__.__name__,
             'type': 'pack-end',
-            'id': self.id,
+            'id': self.get_widget_id(),
             'data': data
         }
         # EVENT EMIT
@@ -323,7 +374,7 @@ class Box(Container):
         instance = {
             'class': self.__class__.__name__,
             'type': 'pack-start',
-            'id': self.id,
+            'id': self.get_widget_id(),
             'data': data
         }
         # EVENT EMIT

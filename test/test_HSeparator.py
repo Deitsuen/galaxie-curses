@@ -152,14 +152,12 @@ class TestHSeparator(unittest.TestCase):
         hline = GLXCurses.HSeparator()
         hline.x = 20
         hline.width = 20
-        hline.spacing = 20
-        self.assertEqual(hline._get_estimated_preferred_width(), 80)
+        self.assertEqual(hline._get_estimated_preferred_width(), 40)
 
     def test__get_estimated_preferred_height(self):
         """Test VSeparator._get_estimated_preferred_height()"""
         hline = GLXCurses.HSeparator()
-        hline.spacing = 20
-        self.assertEqual(hline._get_estimated_preferred_height(), 41)
+        self.assertEqual(hline._get_estimated_preferred_height(), 1)
 
     def test_set_get_hseperator_x(self):
         """Test HSeparator._set_hseperator_x() and HSeparator._get_hseperator_x()"""

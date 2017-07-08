@@ -276,7 +276,7 @@ class Entry(Widget):
         :return: A list of information X, Y and Size Width, Height . returned information are the complet allowed area,
         :rtype: List(X, Y , Width, Height)
         """
-        padding = self.get_spacing()
+        padding = 0
         self.get_height() - (padding * 2),
         self.get_width() - (padding * 2),
         self.get_y() + padding,
