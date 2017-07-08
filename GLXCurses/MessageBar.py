@@ -127,7 +127,7 @@ class MessageBar(Widget):
         message_info['text'] = text
 
         self._get_messagebar_stack().append(message_info)
-        self.emit_text_pushed(context_id, text)
+        self._emit_text_pushed(context_id, text)
         return message_id
 
     def pop(self, context_id):
@@ -158,7 +158,7 @@ class MessageBar(Widget):
             pass
         else:
             self._get_messagebar_stack().pop(last_found)
-            self.emit_text_popped(last_element['context_id'], last_element['text'])
+            self._emit_text_popped(last_element['context_id'], last_element['text'])
 
     def remove(self, context_id, message_id):
         """
@@ -277,7 +277,7 @@ class MessageBar(Widget):
                 )
 
     # Siganles
-    def emit_text_popped(self, context_id, text, user_data=None):
+    def _emit_text_popped(self, context_id, text, user_data=None):
         """
         Is emitted whenever a new message is popped off a StatusBar's stack.
 
@@ -302,7 +302,7 @@ class MessageBar(Widget):
         # EVENT EMIT
         self.emit('SIGNALS', instance)
 
-    def emit_text_pushed(self, context_id, text, user_data=None):
+    def _emit_text_pushed(self, context_id, text, user_data=None):
         """
         Is emitted whenever a new message is popped off a StatusBar's stack.
 
@@ -315,6 +315,7 @@ class MessageBar(Widget):
         """
         if user_data is None:
             user_data = list()
+
         # Create a Dict with everything
         instance = {
             'class': self.__class__.__name__,

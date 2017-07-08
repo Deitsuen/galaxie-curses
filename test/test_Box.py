@@ -57,6 +57,7 @@ class TestBox(unittest.TestCase):
         self.assertEqual(False, box1.get_children()[0]['expand'])
         self.assertEqual(False, box1.get_children()[0]['fill'])
         self.assertEqual(2, box1.get_children()[0]['padding'])
+        self.assertEqual(glxc.PACK_START, box1.get_children()[-1]['pack_type'])
 
     def test_pack_end(self):
         """Test Box.pack_end()"""
@@ -83,12 +84,226 @@ class TestBox(unittest.TestCase):
         self.assertEqual(False, box1.get_children()[-1]['expand'])
         self.assertEqual(False, box1.get_children()[-1]['fill'])
         self.assertEqual(2, box1.get_children()[-1]['padding'])
+        self.assertEqual(glxc.PACK_END, box1.get_children()[-1]['pack_type'])
 
     def test_set_get_homogeneous(self):
         """Test Box.set_homogeneous() and Box.get_homogeneous()"""
-        box1 = Box()
+        box1 = Box().new()
 
         box1.set_homogeneous(False)
         self.assertFalse(box1.get_homogeneous())
         box1.set_homogeneous(True)
         self.assertTrue(box1.get_homogeneous())
+
+        self.assertRaises(TypeError, box1.set_homogeneous, 'Galaxie')
+
+    def test_set_get_spacing(self):
+        """Test Box.set_spacing() and Box.get_spacing()"""
+        box1 = Box().new()
+        box1.set_spacing(1)
+        self.assertEqual(1, box1.get_spacing())
+        box1.set_spacing(2)
+        self.assertEqual(2, box1.get_spacing())
+        box1.set_spacing()
+        self.assertEqual(0, box1.get_spacing())
+
+        self.assertRaises(TypeError, box1.set_spacing, 'Galaxie')
+
+    def test_reorder_child(self):
+        """Test Box.reorder_child()"""
+        # create box
+        box1 = Box().new()
+
+        # create child box
+        box2 = Box().new()
+        box3 = Box().new()
+        box4 = Box().new()
+        box5 = Box().new()
+
+        # add 3 children
+        box1.pack_end(box2)
+        box1.pack_end(box3)
+        box1.pack_end(box4)
+
+        # check if we have our 3 children in the good order
+        self.assertEqual(3, len(box1.get_children()))
+        self.assertEqual(box2, box1.get_children()[0]['widget'])
+        self.assertEqual(box3, box1.get_children()[1]['widget'])
+        self.assertEqual(box4, box1.get_children()[2]['widget'])
+
+        # try to reorder
+        box1.reorder_child(child=box2, position=2)
+        box1.reorder_child(child=box5, position=2)
+
+        # check if we have our 3 children in the good order
+        self.assertEqual(3, len(box1.get_children()))
+        self.assertEqual(box3, box1.get_children()[0]['widget'])
+        self.assertEqual(box4, box1.get_children()[1]['widget'])
+        self.assertEqual(box2, box1.get_children()[2]['widget'])
+
+        # try to reorder
+        box1.reorder_child(child=box2, position=-1)
+        self.assertEqual(3, len(box1.get_children()))
+        # self.assertEqual(box4, box1.get_children()[0]['widget'])
+        # self.assertEqual(box2, box1.get_children()[1]['widget'])
+        # self.assertEqual(box3, box1.get_children()[2]['widget'])
+
+        # check raises
+        self.assertRaises(TypeError, box1.reorder_child, child=int(42), position=2)
+        self.assertRaises(TypeError, box1.reorder_child, child=box2, position="Galaxie")
+
+    def test_query_child_packing(self):
+        """Test Box.query_child_packing()"""
+        # create box
+        box1 = Box().new()
+
+        # create child box
+        box2 = Box().new()
+        box3 = Box().new()
+        box4 = Box().new()
+
+        # add children
+        box1.pack_end(box2)
+        box1.pack_start(box3)
+
+        # query
+        child1_packing = box1.query_child_packing(child=box2)
+        child2_packing = box1.query_child_packing(child=box3)
+
+        # return None the widget is not a child
+        child3_packing = box1.query_child_packing(child=box4)
+        self.assertEqual(type(None), type(child3_packing))
+
+        # check if we have a dict as return
+        self.assertEqual(type(dict()), type(child1_packing))
+        self.assertEqual(type(dict()), type(child2_packing))
+
+        # check pack
+        self.assertEqual(glxc.PACK_END, child1_packing['pack_type'])
+        self.assertEqual(glxc.PACK_START, child2_packing['pack_type'])
+
+        self.assertRaises(TypeError, box1.query_child_packing, child=int(42))
+
+    def test_set_child_packing(self):
+        """Test Box.set_child_packing()"""
+        # create box
+        box1 = Box().new()
+
+        # create child box
+        box2 = Box().new()
+
+        # add children
+        box1.pack_end(child=box2, expand=False, fill=False, padding=4)
+
+        # query
+        child1_packing = box1.query_child_packing(child=box2)
+
+        # check if we have a dict as return
+        self.assertEqual(type(dict()), type(child1_packing))
+
+        # check pack
+        self.assertEqual(box2, child1_packing['widget'])
+        self.assertEqual(False, child1_packing['expand'])
+        self.assertEqual(False, child1_packing['fill'])
+        self.assertEqual(4, child1_packing['padding'])
+        self.assertEqual(glxc.PACK_END, child1_packing['pack_type'])
+
+        # set child_packing
+        box1.set_child_packing(child=box2, expand=True, fill=True, padding=2, pack_type=glxc.PACK_START)
+
+        # query
+        child1_packing = box1.query_child_packing(child=box2)
+
+        # check if we have a dict as return
+        self.assertEqual(type(dict()), type(child1_packing))
+
+        # check pack
+        self.assertEqual(box2, child1_packing['widget'])
+        self.assertEqual(True, child1_packing['expand'])
+        self.assertEqual(True, child1_packing['fill'])
+        self.assertEqual(2, child1_packing['padding'])
+        self.assertEqual(glxc.PACK_START, child1_packing['pack_type'])
+
+        # check raise
+        # bad child
+        self.assertRaises(
+            TypeError,
+            box1.set_child_packing,
+            child=None,
+            expand=True,
+            fill=True,
+            padding=2,
+            pack_type=glxc.PACK_START
+        )
+        # bad expand
+        self.assertRaises(
+            TypeError,
+            box1.set_child_packing,
+            child=box2,
+            expand="Galaxie",
+            fill=True,
+            padding=2,
+            pack_type=glxc.PACK_START
+        )
+        # bad fill
+        self.assertRaises(
+            TypeError,
+            box1.set_child_packing,
+            child=box2,
+            expand=True,
+            fill="Galaxie",
+            padding=2,
+            pack_type=glxc.PACK_START
+        )
+        # bad padding
+        self.assertRaises(
+            TypeError,
+            box1.set_child_packing,
+            child=box2,
+            expand=True,
+            fill=True,
+            padding="Galaxie",
+            pack_type=glxc.PACK_START
+        )
+        # bad pack_type
+        self.assertRaises(
+            TypeError,
+            box1.set_child_packing,
+            child=box2,
+            expand=True,
+            fill=True,
+            padding=2,
+            pack_type="Galaxie"
+        )
+
+    def test__emit_reorder_child(self):
+        """Test Box._emit_reorder_child()"""
+        box1 = Box().new()
+
+        data = dict()
+        data['Galaxie'] = 42
+
+        box1._emit_reorder_child(data=data)
+        box1._emit_reorder_child(data=None)
+
+    def test__emit_pack_end(self):
+        """Test Box._emit_pack_end()"""
+        box1 = Box().new()
+
+        data = dict()
+        data['Galaxie'] = 42
+
+        box1._emit_pack_end(data=data)
+        box1._emit_pack_end(data=None)
+
+    def test__emit_pack_start(self):
+        """Test Box._emit_pack_start()"""
+        box1 = Box().new()
+
+        data = dict()
+        data['Galaxie'] = 42
+
+        box1._emit_pack_start(data=data)
+        box1._emit_pack_start(data=None)
+
+

@@ -10,6 +10,7 @@ from GLXCurses import glxc
 from GLXCurses.Utils import glxc_type
 from GLXCurses.Utils import clamp_to_zero
 
+
 # https://developer.gnome.org/gtk3/stable/GtkBox.html
 class Box(Container):
     """
@@ -17,10 +18,9 @@ class Box(Container):
 
     The :class:`Box <GLXCurses.Box.Box>` widget organizes child widgets into a rectangular area.
     """
-
     def __init__(self):
         """
-        :Attributes Details:
+        **Attributes Details**
 
         .. py:attribute:: base_position
 
@@ -141,6 +141,8 @@ class Box(Container):
         :param spacing: the number of characters to place by default between children. Default: 0
         :type spacing: int or None
         :return: a new :class:`Box <GLXCurses.Box.Box>`.
+        :raise TypeError: if ``orientation`` is not glxc.ORIENTATION_HORIZONTAL or glxc.ORIENTATION_VERTICAL
+        :raise TypeError: if ``spacing`` is not int type or None
         """
         if orientation not in [glxc.ORIENTATION_HORIZONTAL, glxc.ORIENTATION_VERTICAL]:
             raise TypeError('"orientation" must be glxc.ORIENTATION_HORIZONTAL or glxc.ORIENTATION_VERTICAL')
@@ -173,6 +175,11 @@ class Box(Container):
         the global amount specified by :py:attr:`spacing` attribute. If child is a widget at one of the reference \
         ends of box , then padding pixels are also put between child and the reference edge of box
         :type padding: int or None
+        :raise TypeError: if ``child`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
+        :raise TypeError: if ``expand`` is not bool type
+        :raise TypeError: if ``fill`` is not bool type
+        :raise TypeError: if ``padding`` is not int or None
         """
         # Try to exit as soon of possible
         if not glxc_type(child):
@@ -192,10 +199,11 @@ class Box(Container):
         child_info['expand'] = expand
         child_info['fill'] = fill
         child_info['padding'] = clamp_to_zero(padding)
+        child_info['pack_type'] = glxc.PACK_START
 
         self.get_children().insert(0, child_info)
 
-        self.emit_pack_start(data=child_info)
+        self._emit_pack_start(data=child_info)
 
     def pack_end(self, child=None, expand=True, fill=True, padding=None):
         """
@@ -217,6 +225,11 @@ class Box(Container):
         the global amount specified by :py:attr:`spacing` attribute. If child is a widget at one of the reference ends \
         of box , then padding pixels are also put between child and the reference edge of box
         :type padding: int or None
+        :raise TypeError: if ``child`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
+        :raise TypeError: if ``expand`` is not bool type
+        :raise TypeError: if ``fill`` is not bool type
+        :raise TypeError: if ``padding`` is not int or None
         """
         # Try to exit as soon of possible
         if not glxc_type(child):
@@ -236,10 +249,11 @@ class Box(Container):
         child_info['expand'] = expand
         child_info['fill'] = fill
         child_info['padding'] = clamp_to_zero(padding)
+        child_info['pack_type'] = glxc.PACK_END
 
         self.get_children().append(child_info)
 
-        self.emit_pack_end(data=child_info)
+        self._emit_pack_end(data=child_info)
 
     def set_homogeneous(self, homogeneous=True):
         """
@@ -248,7 +262,11 @@ class Box(Container):
 
         :param homogeneous: ``True`` to create equal allotments, ``False`` for variable allotments
         :type homogeneous: bool
+        :raise TypeError: if ``homogeneous`` is not bool type
         """
+        if type(homogeneous) != bool:
+            raise TypeError('"homogeneous" argument must be a bool type')
+
         self.homogeneous = bool(homogeneous)
 
     def get_homogeneous(self):
@@ -267,13 +285,15 @@ class Box(Container):
         Sets the “spacing” property of box , which is the number of characters to place between children of box .
 
         :param spacing: the number of character to put between children
-        :type spacing: int or None
+        :raise TypeError: if ``spacing`` is not int type or None
         """
         # Try to exit as soon of possible
+
         if spacing is not None:
             if type(spacing) != int:
                 raise TypeError('"spacing" must be int type or None')
 
+        # If we are here everything look ok
         spacing = clamp_to_zero(spacing)
         if spacing != self.get_spacing():
             self.spacing = spacing
@@ -301,26 +321,89 @@ class Box(Container):
         :type child: :class:`Widget <GLXCurses.Widget.Widget>`
         :param position: the new position for :py:obj:`child` in the list of children of \
         :class:`Box <GLXCurses.Box.Box>`, starting from 0. If negative, indicates the end of the list.
-        :type position: list.index()
+        :type position: int
+        :raise TypeError: if ``position`` is not int type
+        :raise TypeError: if ``child`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
         """
-        self.get_children().remove(child)
+        # Try to exit as soon of possible
+        if not glxc_type(child):
+            raise TypeError('"child" argument must be a GLXCurses object type')
+        if type(position) != int:
+            raise TypeError('"position" must be int type')
 
-        # If negative, indicates the end of the list
-        if position < 0:
-            self.get_children().append(child)
+        # If we are here everything look ok
+        count = 0
+        last_found = None
+        last_element = None
+        for children in self.get_children():
+            if child == children['widget']:
+                last_found = count
+                last_element = children
+            count += 1
+
+        if last_found is None:
+            pass
         else:
-            self.get_children().insert(position, child)
+            self.get_children().pop(last_found)
+            if position < 0:
+                self.get_children().append(last_element)
+            else:
+                self.get_children().insert(position, last_element)
+
+            # Emit a signal
+            child_info = dict()
+            child_info['widget'] = last_element['widget']
+            child_info['expand'] = last_element['expand']
+            child_info['fill'] = last_element['fill']
+            child_info['padding'] = last_element['padding']
+            child_info['pack_type'] = last_element['pack_type']
+            child_info['pos_src'] = last_found
+            child_info['pos_dst'] = position
+            self._emit_reorder_child(data=child_info)
 
     def query_child_packing(self, child):
         """
-        Obtains information about how child is packed into box .
+        Obtains information about how child is packed into box or None if child is not found
 
-        :param child: the :class:`Widget <GLXCurses.Widget.Widget>` of the :py:obj:`child` to query
-        :type child: :class:`Widget <GLXCurses.Widget.Widget>`
+        **Return Key's:**
+         widget: the Widget of the child to query
+         expand: expand child property.
+         fill: fill child property
+         padding: padding child property.
+         pack_type: pack-type child property
+
+        :param child: the Widget of to query
+        :type child: a Galaxie Widget
         :return: information about how child is packed into box
-        :rtype: tuple(:py:attr:`expand`, :py:attr:`fill`, :py:attr:`padding`, :py:attr:`pack_type`)
+        :rtype: dict or None
+        :raise TypeError: if ``child`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
         """
-        raise NotImplementedError
+        # Try to exit as soon of possible
+        if not glxc_type(child):
+            raise TypeError('"child" argument must be a GLXCurses object type')
+
+        # If we are here everything look ok
+        count = 0
+        last_found = None
+        last_element = None
+        for children in self.get_children():
+            if child == children['widget']:
+                last_found = count
+                last_element = children
+            count += 1
+
+        if last_found is None:
+            return None
+        else:
+            child_info = dict()
+            child_info['widget'] = last_element['widget']
+            child_info['expand'] = last_element['expand']
+            child_info['fill'] = last_element['fill']
+            child_info['padding'] = last_element['padding']
+            child_info['pack_type'] = last_element['pack_type']
+            return child_info
 
     def set_child_packing(self, child, expand, fill, padding, pack_type):
         """
@@ -336,11 +419,63 @@ class Box(Container):
         :type padding: int
         :param pack_type: the new value of the pack-type child property
         :type pack_type: :py:const:`PackType`
+        :raise TypeError: if ``child`` is not bool type
+        :raise TypeError: if ``expand`` is not bool type
+        :raise TypeError: if ``padding`` is not int or None
+        :raise TypeError: if ``pack_type`` is not glxc.PACK_START or glxc.PACK_END
         """
-        raise NotImplementedError
+        # Try to exit as soon of possible
+        if not glxc_type(child):
+            raise TypeError('"child" argument must be a GLXCurses object type')
+        if type(expand) != bool:
+            raise TypeError('"expand" argument must be a bool type')
+        if type(fill) != bool:
+            raise TypeError('"fill" argument must be a bool type')
+        if padding is not None:
+            if type(padding) != int:
+                raise TypeError('"padding" must be int type or None')
+        if pack_type not in [glxc.PACK_START, glxc.PACK_END]:
+            raise TypeError('"pack_type" must be glxc.PACK_START or glxc.PACK_END type')
+
+        # If we are here everything look ok
+        count = 0
+        last_found = None
+        last_element = None
+        for children in self.get_children():
+            if child == children['widget']:
+                last_found = count
+                last_element = children
+            count += 1
+
+        if last_element is not None:
+            last_element['widget'] = child
+            last_element['expand'] = expand
+            last_element['fill'] = fill
+            last_element['padding'] = padding
+            last_element['pack_type'] = pack_type
 
     # Internal
-    def emit_pack_end(self, data=None):
+    def _emit_reorder_child(self, data=None):
+        """
+        Is emitted whenever a new child is pack_end on the Box.
+
+        :param data: user data, what you want store
+        :type data: dict
+        """
+        if data is None:
+            data = dict()
+
+        # Create a Dict with everything
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'reorder_child',
+            'id': self.get_widget_id(),
+            'data': data
+        }
+        # EVENT EMIT
+        self.emit('SIGNALS', instance)
+
+    def _emit_pack_end(self, data=None):
         """
         Is emitted whenever a new child is pack_end on the Box.
 
@@ -360,7 +495,7 @@ class Box(Container):
         # EVENT EMIT
         self.emit('SIGNALS', instance)
 
-    def emit_pack_start(self, data=None):
+    def _emit_pack_start(self, data=None):
         """
         Is emitted whenever a new child is pack_start on the Box.
 

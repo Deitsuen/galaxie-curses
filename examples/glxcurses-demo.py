@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+
 # Require when you haven't GLXCurses as default Package
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(current_dir))
@@ -44,10 +45,10 @@ if __name__ == '__main__':
 
     # Create a Label
     label1 = GLXCurses.Label()
-    #qlabel1.set_justify('RIGHT')
+    # qlabel1.set_justify('RIGHT')
     label1.set_text('RED WITH BACKGROUND GREEN')
     label1.override_color('RED')
-    #label1.override_background_color('GREEN')
+    # label1.override_background_color('GREEN')
     label1.set_line_wrap_mode('WRAP_CHAR')
     label1.set_text('How does it work?\n'
                     '   Well, the reduce\n'
@@ -63,7 +64,7 @@ if __name__ == '__main__':
                     )
 
     label2 = GLXCurses.Label()
-    #label2.set_justify('CENTER')
+    # label2.set_justify('CENTER')
     label2.set_text('How does it work?\n'
                     '   Well, the reduce\n'
                     '* A Quick Guide to GPLv3\n'
@@ -82,7 +83,7 @@ if __name__ == '__main__':
 
     label3 = GLXCurses.Label()
     label3.set_alignment(0.5, 1.0)
-    #label3.set_justify('RIGHT')
+    # label3.set_justify('RIGHT')
     label3.set_text_with_mnemonic('CY_AN WITH BACKGROUND NORMAL')
     label3.override_color('CYAN')
     label3.set_single_line_mode(1)
@@ -287,7 +288,7 @@ if __name__ == '__main__':
     hbox.pack_end(vbox1)
 
     hbox_progress_widgets = GLXCurses.HBox()
-    hbox_progress_widgets.set_spacing(1)
+    hbox_progress_widgets.set_spacing(0)
     hbox_progress = GLXCurses.HBox()
     vbox_progress = GLXCurses.VBox()
 
@@ -334,6 +335,7 @@ if __name__ == '__main__':
     messagebar = GLXCurses.MessageBar()
     message_context_id = messagebar.get_context_id("message")
     messagebar.push(message_context_id, 'Welcome to Galaxie Curses demonstration')
+
 
     def on_resize(self, event_signal, *event_args):
         message_text = ''
@@ -390,21 +392,24 @@ if __name__ == '__main__':
         val = '{0:}{1:}'.format(progressbar12.get_value(), '%')
         progressbar12.set_text(val)
 
-        #app.refresh()
+        # app.refresh()
+
 
     def on_destroy():
         logging.debug('==> onDestroy')
         statusbar.push(context_id, 'A Incredible Emiter thing')
 
+
     def handle_up_button_clicked():
         logging.debug('handleUpButtonClicked')
         current = progressbar10.get_value()
-        progressbar10.set_value(current+1)
+        progressbar10.set_value(current + 1)
         val = '{0:}{1:}'.format(progressbar10.get_value(), '%')
         progressbar10.set_text(val)
 
+
     def handle_keys(self, event_signal, *event_args):
-        logging.debug('HANDLE KEY: '+str(event_args[0]))
+        logging.debug('HANDLE KEY: ' + str(event_args[0]))
 
         if event_args[0] == curses.KEY_F5:
             app.set_is_focus(Button1)
@@ -417,6 +422,7 @@ if __name__ == '__main__':
             # Everything have a end, the main loop too ...
             GLXCurses.mainloop.quit()
 
+
     def on_click(self, event_signal, event_args=None):
 
         if event_args is None:
@@ -424,22 +430,29 @@ if __name__ == '__main__':
 
         if event_args['id'] == Button1.get_widget_id():
             current = progressbar9.get_value()
-            progressbar9.set_value(current+1)
+            progressbar9.set_value(current + 1)
             val = '{0:}{1:}'.format(progressbar9.get_value(), '%')
             progressbar9.set_text(val)
             statusbar.push(context_id, 'Increase progress bar to value: ' + val)
+            vbox_progress.reorder_child(progressbar9, 4)
 
         if event_args['id'] == Button2.get_widget_id():
             current = progressbar9.get_value()
-            progressbar9.set_value(current-1)
+            progressbar9.set_value(current - 1)
             val = '{0:}{1:}'.format(progressbar9.get_value(), '%')
             progressbar9.set_text(val)
             statusbar.push(context_id, 'Decrease progress bar to value: ' + val)
+            vbox_progress.reorder_child(progressbar9, 3)
 
         if event_args['id'] == Button3.get_widget_id():
             statusbar.push(context_id, 'Stopping every operation\'s')
             # Everything have a end, the main loop too ...
             GLXCurses.mainloop.quit()
+
+
+    def on_signals(self, event_signal, event_args=None):
+        if event_args['data']['type'] == 'reorder_child':
+            statusbar.push(context_id, 'Reorder child: ' + event_args['data']['widget'])
 
     # Add Everything inside the Application
     app.add_menubar(menu)
@@ -449,6 +462,7 @@ if __name__ == '__main__':
     app.add_toolbar(toolbar)
 
     # Signals
+    #app.connect('SIGNALS', on_signals)
     app.connect('RESIZE', on_resize)
     app.connect('BUTTON1_CLICKED', on_click, )
     app.connect('BUTTON1_RELEASED', on_click)

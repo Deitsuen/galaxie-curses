@@ -128,7 +128,7 @@ class StatusBar(Widget):
         message_info['text'] = text
 
         self._get_statusbar_stack().append(message_info)
-        self.emit_text_pushed(context_id, text)
+        self._emit_text_pushed(context_id, text)
 
         return message_id
 
@@ -160,7 +160,7 @@ class StatusBar(Widget):
             pass
         else:
             self._get_statusbar_stack().pop(last_found)
-            self.emit_text_popped(last_element['context_id'], last_element['text'])
+            self._emit_text_popped(last_element['context_id'], last_element['text'])
 
     def remove(self, context_id, message_id):
         """
@@ -279,7 +279,7 @@ class StatusBar(Widget):
                 )
 
     # signals
-    def emit_text_popped(self, context_id, text, user_data=None):
+    def _emit_text_popped(self, context_id, text, user_data=None):
         """
         Is emitted whenever a new message is popped off a StatusBar's stack.
 
@@ -304,7 +304,7 @@ class StatusBar(Widget):
         # EVENT EMIT
         self.emit('SIGNALS', instance)
 
-    def emit_text_pushed(self, context_id, text, user_data=None):
+    def _emit_text_pushed(self, context_id, text, user_data=None):
         """
         Is emitted whenever a new message is popped off a StatusBar's stack.
 
