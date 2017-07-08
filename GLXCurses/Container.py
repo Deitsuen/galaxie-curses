@@ -42,7 +42,18 @@ class Container(Widget):
     """
 
     def __init__(self):
+        # Load heritage
         Widget.__init__(self)
+
+        # It's a GLXCurse Type
+        self.glxc_type = 'GLXCurses.Container'
+
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
+        self.set_name('Container')
+
+        # Make a Widget Style heritage attribute as local attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
         # Properties
         # Can be used to add a new child to the container.

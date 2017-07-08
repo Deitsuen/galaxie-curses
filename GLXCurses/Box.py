@@ -18,6 +18,7 @@ class Box(Container):
 
     The :class:`Box <GLXCurses.Box.Box>` widget organizes child widgets into a rectangular area.
     """
+
     def __init__(self):
         """
         **Attributes Details**
