@@ -17,6 +17,7 @@ def constant(f):
 
     return property(fget, fset)
 
+
 # https://developer.gnome.org/gtk3/stable/gtk3-Standard-Enumerations.html
 class Constants(object):
     """Contant declaration"""
@@ -27,9 +28,9 @@ class Constants(object):
     # BaselinePosition        #
     ###########################
     # Whenever a container has some form of natural row it may align children in that row along a common typographical
-    # baseline. If the amount of verical space in the row is taller than the total requested height of the
+    # baseline. If the amount of vertical space in the row is taller than the total requested height of the
     # baseline-aligned children then it can use a GtkBaselinePosition to select where to put the baseline inside the
-    # extra availible space.
+    # extra available space.
     @constant
     def BASELINE_POSITION_TOP():
         """Align the baseline at the top"""
@@ -44,6 +45,12 @@ class Constants(object):
     def BASELINE_POSITION_BOTTOM():
         """Align the baseline at the bottom"""
         return 'BASELINE_POSITION_BOTTOM'
+
+    @constant
+    def BaselinePosition():
+        """Align the baseline at the bottom"""
+        return ['BASELINE_POSITION_TOP', 'BASELINE_POSITION_CENTER', 'BASELINE_POSITION_BOTTOM']
+
     ###################
     # Orientation     #
     ###################

@@ -276,6 +276,33 @@ class TestBox(unittest.TestCase):
             pack_type="Galaxie"
         )
 
+    def test_set_get_baseline_position(self):
+        """Test Box.set_baseline_position() and Box.get_baseline_position()"""
+        box1 = Box().new()
+        box1.set_baseline_position(glxc.BASELINE_POSITION_BOTTOM)
+        self.assertEqual(box1.get_baseline_position(), glxc.BASELINE_POSITION_BOTTOM)
+
+        self.assertRaises(TypeError, box1.set_baseline_position, 42)
+
+    def test_set_get_center_widget(self):
+        """Test Box.set_center_widget() and Box.get_center_widget()"""
+        box1 = Box().new()
+        box2 = Box().new()
+
+        box1.set_center_widget(box2)
+        self.assertEqual(box1.get_center_widget(), box2)
+
+        box1.set_center_widget(None)
+        self.assertEqual(box1.get_center_widget(), None)
+
+        box1.set_center_widget(box2)
+        self.assertEqual(box1.get_center_widget(), box2)
+
+        box1.set_center_widget()
+        self.assertEqual(box1.get_center_widget(), None)
+
+        self.assertRaises(TypeError, box1.set_center_widget, 42)
+
     def test__emit_reorder_child(self):
         """Test Box._emit_reorder_child()"""
         box1 = Box().new()

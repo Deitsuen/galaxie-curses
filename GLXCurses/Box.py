@@ -117,20 +117,11 @@ class Box(Container):
             self.set_attribute_states(self.get_style().get_attribute_states())
 
         # Attributes
-        self.base_position = glxc.BASELINE_POSITION_CENTER
-        self.base_position = None
-        self.homogeneous = False
-
-        # Child Attributes
-        self.expend = False
-        self.fill = True
         self.orientation = glxc.ORIENTATION_HORIZONTAL
-        self.pack_type = glxc.PACK_START
-        self.padding = 0
-        self.position = 0
+        self.homogeneous = False
         self.spacing = 0
-
-        # orientation
+        self.baseline_position = glxc.BASELINE_POSITION_CENTER
+        self.center_widget = None
 
     def new(self, orientation=glxc.ORIENTATION_HORIZONTAL, spacing=None):
         """
@@ -438,14 +429,10 @@ class Box(Container):
             raise TypeError('"pack_type" must be glxc.PACK_START or glxc.PACK_END type')
 
         # If we are here everything look ok
-        count = 0
-        last_found = None
         last_element = None
         for children in self.get_children():
             if child == children['widget']:
-                last_found = count
                 last_element = children
-            count += 1
 
         if last_element is not None:
             last_element['widget'] = child
@@ -453,6 +440,58 @@ class Box(Container):
             last_element['fill'] = fill
             last_element['padding'] = padding
             last_element['pack_type'] = pack_type
+
+    def set_baseline_position(self, position):
+        """
+        Sets the baseline position of a box. This affects only horizontal boxes with at least one
+        baseline aligned child. If there is more vertical space available than requested,
+        and the baseline is not allocated by the parent then position is used to allocate the baseline wrt
+        the extra space available.
+
+        :param position: a BaselinePosition
+        :type position: BaselinePosition
+        :raise TypeError: if ``position`` is not
+        a glxc.BASELINE_POSITION_BOTTOM, glxc.BASELINE_POSITION_CENTER, glxc.BASELINE_POSITION_TOP
+        """
+        if position not in glxc.BaselinePosition:
+            raise TypeError('"position" must be a glxc.BaselinePosition')
+
+        if self.get_baseline_position() != position:
+            self.baseline_position = position
+
+    def get_baseline_position(self):
+        """
+        Gets the value set by :func:`Box.set_baseline_position() <GLXCurses.Box.Box.set_baseline_position>`.
+
+        :return: a BaselinePosition
+        :rtype: BaselinePosition
+        """
+        return self.baseline_position
+
+    def set_center_widget(self, widget=None):
+        """
+        Sets a center widget; that is a child widget that will be centered with respect to the full width of the box,
+        even if the children at either side take up different amounts of space.
+
+        :param widget: the :class:`Widget <GLXCurses.Widget.Widget>` of the child to set
+        :type widget: :class:`Widget <GLXCurses.Widget.Widget>` or None
+        :raise TypeError: if ``widget`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>` or None
+        """
+        if widget is not None:
+            if not glxc_type(widget):
+                raise TypeError('"widget" argument must be a GLXCurses object type')
+
+        if self.get_center_widget() != widget:
+            self.center_widget = widget
+
+    def get_center_widget(self):
+        """
+        Retrieves the center widget of the box.
+
+        :return: the center widget or None in case no center widget is set.
+        """
+        return self.center_widget
 
     # Internal
     def _emit_reorder_child(self, data=None):
