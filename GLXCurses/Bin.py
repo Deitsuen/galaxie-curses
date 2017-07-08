@@ -57,15 +57,15 @@ class Bin(Container):
         if glxc_type(child) or child is None:
             if child is not None:
                 if self.get_child() is not None:
-                    self.get_child()['WIDGET'].set_parent(None)
+                    self.get_child()['widget'].set_parent(None)
 
                 # The added widget recive a parent
                 child.set_parent(self)
 
                 child_info = dict()
-                child_info['WIDGET'] = child
-                child_info['TYPE'] = child.glxc_type
-                child_info['ID'] = child.get_widget_id()
+                child_info['widget'] = child
+                child_info['type'] = child.glxc_type
+                child_info['id'] = child.get_widget_id()
 
                 # The parent recive a new child
                 self.child = child_info
@@ -74,7 +74,7 @@ class Bin(Container):
                 self._emit_add_signal()
             else:
                 if self.get_child() is not None:
-                    self.get_child()['WIDGET'].set_parent(None)
+                    self.get_child()['widget'].set_parent(None)
                 self.child = None
         else:
             raise TypeError(u'>style< is not a GLXCurses.Style type or None')

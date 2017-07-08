@@ -2,15 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import unittest
-
-import sys
-import os
-
-# Require when you haven't GLXBob as default Package
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(current_dir))
-
-import GLXCurses
+from GLXCurses import Bin
 
 
 # Unittest
@@ -18,7 +10,7 @@ class TestBin(unittest.TestCase):
 
     def setUp(self):
         # Before the test start
-        self.bin = GLXCurses.Bin()
+        self.bin = Bin()
 
     # Test
     def test_destroy(self):
@@ -32,16 +24,16 @@ class TestBin(unittest.TestCase):
         # chek if it's None
         self.assertEqual(self.bin.get_child(), None)
         # Create a child
-        child1 = GLXCurses.Bin()
-        child2 = GLXCurses.Bin()
+        child1 = Bin()
+        child2 = Bin()
         # Add the child
         self.bin.add(child1)
         # We must have the child inside the child list
-        self.assertEqual(self.bin.get_child()['WIDGET'], child1)
+        self.assertEqual(self.bin.get_child()['widget'], child1)
         # Add the child
         self.bin.add(child2)
         # We must have the child inside the child list
-        self.assertEqual(self.bin.get_child()['WIDGET'], child2)
+        self.assertEqual(self.bin.get_child()['widget'], child2)
         # Reset to None for be sur it remove the child
         self.bin.add(None)
         # We must have the None ins the child list

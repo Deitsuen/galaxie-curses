@@ -192,7 +192,7 @@ class Widget(Object):
 
     def adopt(self, orphan):
         child_info = dict()
-        child_info['WIDGET'] = orphan
+        child_info['widget'] = orphan
         self.children.append(child_info)
 
     def set_parent(self, parent):

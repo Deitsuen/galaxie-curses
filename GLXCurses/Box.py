@@ -3,13 +3,10 @@
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
-# Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
+# Author: the Galaxie Curses Team, all rights reserved
 
 from GLXCurses import Container
-from GLXCurses import Application
 from GLXCurses import glxc
-
-__author__ = 'Tuux'
 
 
 class Box(Container):
@@ -18,6 +15,7 @@ class Box(Container):
 
     The :class:`Box <GLXCurses.Box.Box>` widget organizes child widgets into a rectangular area.
     """
+
     def __init__(self):
         """
         :Attributes Details:
@@ -103,13 +101,23 @@ class Box(Container):
               :Allowed values: >= -1
               :Default value: 0
         """
+        # Load heritage
         Container.__init__(self)
+
+        # It's a GLXCurse Type
+        self.glxc_type = 'GLXCurses.Box'
+
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
+        self.set_name('Box')
+
+        # Make a Widget Style heritage attribute as local attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
         # Attributes
         self.base_position = glxc.BASELINE_POSITION_CENTER
         self.base_position = None
         self.homogeneous = False
-        self.spacing = 0
 
         # Child Attributes
         self.expend = False
@@ -137,28 +145,28 @@ class Box(Container):
         :param padding: extra space in characters to put between this child and its neighbors, over and above \
         the global amount specified by :py:attr:`spacing` attribute. If child is a widget at one of the reference \
         ends of box , then padding pixels are also put between child and the reference edge of box
-        :type padding: bool
+        :type padding: int
         """
         # Try to exit as soon of possible
         if type(expand) != bool:
-            raise TypeError(u'>expand< argument must be a bool')
-        elif type(fill) != bool:
-            raise TypeError(u'>fill< argument must be a bool')
-        elif type(padding) != int and padding < 0:
-            raise TypeError(u'>fill< padding must be a positive int')
-        else:
-            # Except the child everything look OK , then
-            # Create a dict for store information's about packing
-            # We'll store it as a list elment later
-            child_info = dict()
-            child_info['WIDGET'] = child
-            child_info['EXPAND'] = expand
-            child_info['FILL'] = fill
-            child_info['PADDING'] = padding
+            raise TypeError('">expand" argument must be a bool')
+        if type(fill) != bool:
+            raise TypeError('"fill" argument must be a bool')
+        if type(padding) != int and padding < 0:
+            raise TypeError('"fill" padding must be a positive int')
 
-            self.get_children().insert(0, child_info)
+        # Except the child everything look OK , then
+        # Create a dict for store information's about packing
+        # We'll store it as a list elment later
+        child_info = dict()
+        child_info['widget'] = child
+        child_info['expand'] = expand
+        child_info['fill'] = fill
+        child_info['padding'] = padding
 
-            self._emit_pack_start_signal()
+        self.get_children().insert(0, child_info)
+
+        self.emit_pack_start(data=child_info)
 
     def pack_end(self, child, expand=True, fill=True, padding=0):
         """
@@ -183,24 +191,23 @@ class Box(Container):
         """
         # Try to exit as soon of possible
         if type(expand) != bool:
-            raise TypeError(u'>expand< argument must be a bool')
-        elif type(fill) != bool:
-            raise TypeError(u'>fill< argument must be a bool')
-        elif type(padding) != int and padding < 0:
-            raise TypeError(u'>fill< padding must be a positive int')
-        else:
-            # Except the child everything look OK , then
-            # Create a dict for store information's about packing
-            # We'll store it as a list elment later
-            child_info = dict()
-            child_info['WIDGET'] = child
-            child_info['EXPAND'] = expand
-            child_info['FILL'] = fill
-            child_info['PADDING'] = padding
+            raise TypeError('"expand" argument must be a bool')
+        if type(fill) != bool:
+            raise TypeError('"fill" argument must be a bool')
+        if type(padding) != int and padding < 0:
+            raise TypeError('"fill" padding must be a positive int')
 
-            self.get_children().append(child_info)
+        # Except the child everything look OK , then
+        # Create a dict for store information's about packing
+        child_info = dict()
+        child_info['widget'] = child
+        child_info['expand'] = expand
+        child_info['fill'] = fill
+        child_info['padding'] = padding
 
-            self._emit_pack_end_signal()
+        self.get_children().append(child_info)
+
+        self.emit_pack_end(data=child_info)
 
     def pack_start_defaults(self, widget):
         pass
@@ -228,25 +235,6 @@ class Box(Container):
         :rtype: bool
         """
         return self.homogeneous
-
-    def get_spacing(self):
-        """
-        Gets the value set by :func:`Box.set_spacing() <GLXCurses.Box.Box.set_spacing>`.
-
-        :return: spacing between children
-        :rtype: int
-        """
-        return self.spacing
-
-    def set_spacing(self, spacing):
-        """
-        Sets the "spacing" attribute of :class:`Box <GLXCurses.Box.Box>`, which is the number of character to place
-        between children of :class:`Box <GLXCurses.Box.Box>`.
-
-        :param spacing: the number of char to put between children
-        :type spacing: int
-        """
-        self.spacing = int(spacing)
 
     def reorder_child(self, child, position):
         """
@@ -301,24 +289,42 @@ class Box(Container):
         raise NotImplementedError
 
     # Internal
-    def _emit_pack_end_signal(self):
+    def emit_pack_end(self, data=None):
+        """
+        Is emitted whenever a new child is pack_end on the Box.
+
+        :param data: user data, what you want store
+        :type data: dict
+        """
+        if data is None:
+            data = dict()
+
         # Create a Dict with everything
         instance = {
             'class': self.__class__.__name__,
             'type': 'pack-end',
             'id': self.id,
-            'user_data': self.get_children()[-1]
+            'data': data
         }
         # EVENT EMIT
-        Application().emit('SIGNALS', instance)
+        self.emit('SIGNALS', instance)
 
-    def _emit_pack_start_signal(self):
+    def emit_pack_start(self, data=None):
+        """
+        Is emitted whenever a new child is pack_start on the Box.
+
+        :param data: user data, what you want store
+        :type data: dict
+        """
+        if data is None:
+            data = dict
+
         # Create a Dict with everything
         instance = {
             'class': self.__class__.__name__,
             'type': 'pack-start',
             'id': self.id,
-            'user_data': self.get_children()[0]
+            'data': data
         }
         # EVENT EMIT
-        Application().emit('SIGNALS', instance)
+        self.emit('SIGNALS', instance)

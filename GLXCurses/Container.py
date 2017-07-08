@@ -100,7 +100,7 @@ class Container(Widget):
         # The added widget recive a parent
         widget.parent = self
         child_info = dict()
-        child_info['WIDGET'] = widget
+        child_info['widget'] = widget
 
         # The parent recive a new child
         self.child = child_info

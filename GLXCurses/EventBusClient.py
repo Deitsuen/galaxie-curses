@@ -52,21 +52,21 @@ class EventBusClient(object):
 
         # Internal attribute
 
-    def emit(self, detailed_signal, args=None):
+    def emit(self, detailed_signal, data=None):
         """
         Every Object emit signal in direction to the Application.
 
         :param detailed_signal: a string containing the signal name
         :type detailed_signal: str
-        :param args: additional parameters arg1, arg2
-        :type args: list
+        :param data: additional parameters arg1, arg2
+        :type data: dict
         """
         # If args is still None replace it by a empty list
-        if args is None:
-            args = []
+        if data is None:
+            data = dict()
 
         # Emit inside the Mainloop
-        GLXCurses.application.emit(detailed_signal, args)
+        GLXCurses.application.emit(detailed_signal, data)
 
     def connect(self, detailed_signal, handler, args=None):
         """
@@ -136,7 +136,7 @@ class EventBusClient(object):
 
         # Dispatch to every children
         for children in self.children:
-            children['WIDGET'].events_dispatch(detailed_signal, args)
+            children['widget'].events_dispatch(detailed_signal, args)
 
     def get_events_list(self):
         # return Application().event_handlers

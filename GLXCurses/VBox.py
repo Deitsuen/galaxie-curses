@@ -38,21 +38,21 @@ class VBox(Box):
                     # Check if that the first element
                     if index == 0:
                         sub_win = self.get_curses_subwin().subwin(
-                            devised_box_size - children['WIDGET'].get_spacing(),
-                            self.get_width() - children['WIDGET'].get_spacing() * 2,
-                            self.get_y() + children['WIDGET'].get_spacing(),
-                            self.get_x() + children['WIDGET'].get_spacing()
+                            devised_box_size - children['widget'].get_spacing(),
+                            self.get_width() - children['widget'].get_spacing() * 2,
+                            self.get_y() + children['widget'].get_spacing(),
+                            self.get_x() + children['widget'].get_spacing()
                         )
-                        total_vertical_spacing += children['WIDGET'].get_spacing()
+                        total_vertical_spacing += children['widget'].get_spacing()
                     # Normal
                     elif 1 <= index <= len(self.get_children())-2:
                         sub_win = self.get_curses_subwin().subwin(
-                            devised_box_size - (children['WIDGET'].get_spacing() / 2),
-                            self.get_width() - children['WIDGET'].get_spacing() * 2,
-                            self.get_y() + (devised_box_size * index) + (children['WIDGET'].get_spacing() / 2),
-                            self.get_x() + children['WIDGET'].get_spacing()
+                            devised_box_size - (children['widget'].get_spacing() / 2),
+                            self.get_width() - children['widget'].get_spacing() * 2,
+                            self.get_y() + (devised_box_size * index) + (children['widget'].get_spacing() / 2),
+                            self.get_x() + children['widget'].get_spacing()
                         )
-                        total_vertical_spacing += children['WIDGET'].get_spacing() / 2
+                        total_vertical_spacing += children['widget'].get_spacing() / 2
                     # Check if that the last element
                     else:
                         last_element_vertical_size = self.get_height()
@@ -61,14 +61,14 @@ class VBox(Box):
                         try:
                             sub_win = self.get_curses_subwin().subwin(
                                     last_element_vertical_size,
-                                    self.get_width() - children['WIDGET'].get_spacing() * 2,
+                                    self.get_width() - children['widget'].get_spacing() * 2,
                                     self.get_y() + (devised_box_size * index),
-                                    self.get_x() + children['WIDGET'].get_spacing()
+                                    self.get_x() + children['widget'].get_spacing()
                             )
                         except curses.error:
                             pass
                     index += 1
 
                     # Drawing
-                    children['WIDGET'].set_curses_subwin(sub_win)
-                    children['WIDGET'].draw_widget_in_area()
+                    children['widget'].set_curses_subwin(sub_win)
+                    children['widget'].draw_widget_in_area()

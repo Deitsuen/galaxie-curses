@@ -741,7 +741,7 @@ class Application(EventBus):
             # create a dictionary structure for add it to windows list
             self._add_child_to_windows_list(window)
             # Make the last added element active
-            self._set_active_window(self._get_windows_list()[-1]['WIDGET'])
+            self._set_active_window(self._get_windows_list()[-1]['widget'])
         else:
             raise TypeError(u'>window< is not a GLXCurses.Window type')
 
@@ -765,14 +765,14 @@ class Application(EventBus):
             count = 0
             last_found = None
             for child in self._get_windows_list():
-                if child['ID'] == window.get_widget_id():
+                if child['id'] == window.get_widget_id():
                     last_found = count
                 count += 1
 
             if last_found is not None:
                 self._get_windows_list().pop(last_found)
                 if len(self._get_windows_list()) - 1 >= 0:
-                    self._set_active_window(self._get_windows_list()[-1]['WIDGET'])
+                    self._set_active_window(self._get_windows_list()[-1]['widget'])
         else:
             raise TypeError(u'>window< is not a GLXCurses.Window type')
 
@@ -1123,9 +1123,9 @@ class Application(EventBus):
         :type window: GLXCurses.Window
         """
         child_info = dict()
-        child_info['WIDGET'] = window
-        child_info['TYPE'] = window.glxc_type
-        child_info['ID'] = window.get_widget_id()
+        child_info['widget'] = window
+        child_info['type'] = window.glxc_type
+        child_info['id'] = window.get_widget_id()
         self._get_windows_list().append(child_info)
 
     def _set_active_window_id(self, window_id):
@@ -1173,8 +1173,8 @@ class Application(EventBus):
         # Search for the good window id to display
         windows_to_display = None
         for child in self._get_windows_list():
-            if child['ID'] == self._get_active_window_id():
-                windows_to_display = child['WIDGET']
+            if child['id'] == self._get_active_window_id():
+                windows_to_display = child['widget']
 
         # If a active window is found
         if windows_to_display is not None:

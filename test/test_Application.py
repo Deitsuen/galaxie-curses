@@ -316,7 +316,7 @@ class TestApplication(unittest.TestCase):
         the_last_children_on_list = self.application._get_windows_list()[-1]
 
         # the last list element must contain the same reference to our window
-        self.assertEqual(the_last_children_on_list['WIDGET'], self.window)
+        self.assertEqual(the_last_children_on_list['widget'], self.window)
 
         # check if the application is the parent of our window
         self.assertEqual(self.window.get_parent(), self.application)
