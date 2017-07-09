@@ -120,10 +120,11 @@ class EventBusClient(object):
         self.events_flush(detailed_signal, args)
 
         # Dispatch to every children and child
-        if hasattr(self, 'children'):
-            if bool(self.children):
-                for children in self.children:
-                    children['widget'].events_dispatch(detailed_signal, args)
+        if self.__class__.__name__ in ['VBox', 'HBox', 'Box']:
+            if hasattr(self, 'children'):
+                if bool(self.children):
+                    for children in self.children:
+                        children['widget'].events_dispatch(detailed_signal, args)
         else:
             if hasattr(self, 'child'):
                 if bool(self.child):

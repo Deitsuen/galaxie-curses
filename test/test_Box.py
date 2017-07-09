@@ -307,11 +307,20 @@ class TestBox(unittest.TestCase):
         """Test Box._emit_reorder_child()"""
         box1 = Box().new()
 
-        data = dict()
-        data['Galaxie'] = 42
+        child_properties = {
+            'expand': True,
+            'fill': True,
+            'padding': 0,
+            'pack_type': glxc.PACK_END
+        }
 
-        box1._emit_reorder_child(data=data)
-        box1._emit_reorder_child(data=None)
+        child_info = {
+            'widget': box1,
+            'properties': child_properties
+        }
+
+        box1._emit_reorder_child(data=child_info)
+        self.assertRaises(KeyError, box1._emit_pack_end, data=None)
 
     def test__emit_pack_end(self):
         """Test Box._emit_pack_end()"""
@@ -330,7 +339,6 @@ class TestBox(unittest.TestCase):
         }
 
         box1._emit_pack_end(data=child_info)
-
         self.assertRaises(KeyError, box1._emit_pack_end, data=None)
 
     def test__emit_pack_start(self):

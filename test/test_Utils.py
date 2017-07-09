@@ -9,6 +9,8 @@ from GLXCurses.Utils import resize_text
 from GLXCurses.Utils import glxc_type
 from GLXCurses.Utils import new_id
 from GLXCurses.Utils import is_valid_id
+from GLXCurses.Utils import merge_dicts
+
 from GLXCurses import Window
 
 
@@ -83,3 +85,26 @@ class TestUtils(unittest.TestCase):
         id_1 = new_id()
         self.assertTrue(is_valid_id(id_1))
         self.assertFalse(is_valid_id(42))
+
+    def test_(self):
+        """Test Utils.merge_dicts()"""
+        result_wanted1 = {
+            'a': 4,
+            'b': 2
+        }
+        value1 = {
+            'a': 4
+        }
+        value2 = {
+            'b': 2
+        }
+        self.assertEqual(result_wanted1, merge_dicts(value1, value2))
+        value1 = {
+            'a': 0,
+            'b': 0
+        }
+        value2 = {
+            'a': 4,
+            'b': 2
+        }
+        self.assertEqual(value2, merge_dicts(value1, value2))

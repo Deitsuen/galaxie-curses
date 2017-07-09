@@ -331,6 +331,8 @@ class Box(Container):
         :param position: the new position for :py:obj:`child` in the list of children of \
         :class:`Box <GLXCurses.Box.Box>`, starting from 0. If negative, indicates the end of the list.
         :type position: int
+        :raise TypeError: if ``child`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
         :raise TypeError: if ``position`` is not int type
         :raise TypeError: if ``child`` is not a GLXCurses type as tested by \
         :func:`glxc_type() <GLXCurses.Utils.glxc_type>`

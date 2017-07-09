@@ -8,7 +8,7 @@
 from GLXCurses import Widget
 from GLXCurses import glxc
 from GLXCurses.Utils import glxc_type
-
+from GLXCurses.Utils import merge_dicts
 
 # Reference Document: https://developer.gnome.org/gtk3/stable/GtkContainer.html
 class Container(Widget):
@@ -308,21 +308,54 @@ class Container(Widget):
 
         :param child: a widget which is a child of container
         :type child: A GLXCurses object
-        :param properties: property to set
+        :param properties: properties to set
         :type properties: dict
+        :raise TypeError: if ``child`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
         """
         # Try to exit as soon of possible
         if not glxc_type(child):
             raise TypeError('"child" argument must be a GLXCurses object type')
         if properties:
-            raise TypeError('"child_property" argument must be a dict type')
+            raise TypeError('"properties" argument must be a dict type')
 
         # If we are here everything look ok
+        child['properties'] = merge_dicts(child['properties'], properties)
 
+    def child_get(self, child):
+        """
+        Gets the values of one or more child properties for child and container .
 
+        :param child: a widget which is a child of container
+        :type child: A GLXCurses object
+        :return: properties of the child or None if child not found
+        :rtype: dict or None
+        :raise TypeError: if ``child`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
+        """
+        # Try to exit as soon of possible
+        if not glxc_type(child):
+            raise TypeError('"child" argument must be a GLXCurses object type')
 
-    def child_get(self, child, first_prop_name, additional_property):
-        pass
+        # If we are here everything look ok
+        if self.__class__.__name__ in ['VBox', 'HBox', 'Box']:
+            if bool(self.get_children()):
+                count = 0
+                last_found = None
+                for children in self.get_children():
+                    if child == children['widget']:
+                        last_found = count
+                    count += 1
+                if last_found is not None:
+                    return self.get_children()[last_found]['properties']
+                else:
+                    return None
+        else:
+            if bool(self.child):
+                if self.child['widget'] == child:
+                    return self.child['properties']
+                else:
+                    return None
 
     def child_set_property(self, child, property_name, value):
         pass
