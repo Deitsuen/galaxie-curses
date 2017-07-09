@@ -54,10 +54,10 @@ class TestBox(unittest.TestCase):
         self.assertEqual(type(dict()), type(box1.get_children()[0]))
 
         self.assertEqual(box3, box1.get_children()[0]['widget'])
-        self.assertEqual(False, box1.get_children()[0]['property']['expand'])
-        self.assertEqual(False, box1.get_children()[0]['property']['fill'])
-        self.assertEqual(2, box1.get_children()[0]['property']['padding'])
-        self.assertEqual(glxc.PACK_START, box1.get_children()[-1]['property']['pack_type'])
+        self.assertEqual(False, box1.get_children()[0]['properties']['expand'])
+        self.assertEqual(False, box1.get_children()[0]['properties']['fill'])
+        self.assertEqual(2, box1.get_children()[0]['properties']['padding'])
+        self.assertEqual(glxc.PACK_START, box1.get_children()[-1]['properties']['pack_type'])
 
     def test_pack_end(self):
         """Test Box.pack_end()"""
@@ -81,10 +81,10 @@ class TestBox(unittest.TestCase):
         self.assertEqual(type(dict()), type(box1.get_children()[-1]))
 
         self.assertEqual(box3, box1.get_children()[-1]['widget'])
-        self.assertEqual(False, box1.get_children()[-1]['property']['expand'])
-        self.assertEqual(False, box1.get_children()[-1]['property']['fill'])
-        self.assertEqual(2, box1.get_children()[-1]['property']['padding'])
-        self.assertEqual(glxc.PACK_END, box1.get_children()[-1]['property']['pack_type'])
+        self.assertEqual(False, box1.get_children()[-1]['properties']['expand'])
+        self.assertEqual(False, box1.get_children()[-1]['properties']['fill'])
+        self.assertEqual(2, box1.get_children()[-1]['properties']['padding'])
+        self.assertEqual(glxc.PACK_END, box1.get_children()[-1]['properties']['pack_type'])
 
     def test_set_get_homogeneous(self):
         """Test Box.set_homogeneous() and Box.get_homogeneous()"""
@@ -179,8 +179,8 @@ class TestBox(unittest.TestCase):
         self.assertEqual(type(dict()), type(child2_packing))
 
         # check pack
-        self.assertEqual(glxc.PACK_END, child1_packing['property']['pack_type'])
-        self.assertEqual(glxc.PACK_START, child2_packing['property']['pack_type'])
+        self.assertEqual(glxc.PACK_END, child1_packing['properties']['pack_type'])
+        self.assertEqual(glxc.PACK_START, child2_packing['properties']['pack_type'])
 
         self.assertRaises(TypeError, box1.query_child_packing, child=int(42))
 
@@ -203,10 +203,10 @@ class TestBox(unittest.TestCase):
 
         # check pack
         self.assertEqual(box2, child1_packing['widget'])
-        self.assertEqual(False, child1_packing['property']['expand'])
-        self.assertEqual(False, child1_packing['property']['fill'])
-        self.assertEqual(4, child1_packing['property']['padding'])
-        self.assertEqual(glxc.PACK_END, child1_packing['property']['pack_type'])
+        self.assertEqual(False, child1_packing['properties']['expand'])
+        self.assertEqual(False, child1_packing['properties']['fill'])
+        self.assertEqual(4, child1_packing['properties']['padding'])
+        self.assertEqual(glxc.PACK_END, child1_packing['properties']['pack_type'])
 
         # set child_packing
         box1.set_child_packing(child=box2, expand=True, fill=True, padding=2, pack_type=glxc.PACK_START)
@@ -219,10 +219,10 @@ class TestBox(unittest.TestCase):
 
         # check pack
         self.assertEqual(box2, child1_packing['widget'])
-        self.assertEqual(True, child1_packing['property']['expand'])
-        self.assertEqual(True, child1_packing['property']['fill'])
-        self.assertEqual(2, child1_packing['property']['padding'])
-        self.assertEqual(glxc.PACK_START, child1_packing['property']['pack_type'])
+        self.assertEqual(True, child1_packing['properties']['expand'])
+        self.assertEqual(True, child1_packing['properties']['fill'])
+        self.assertEqual(2, child1_packing['properties']['padding'])
+        self.assertEqual(glxc.PACK_START, child1_packing['properties']['pack_type'])
 
         # check raise
         # bad child
@@ -317,7 +317,7 @@ class TestBox(unittest.TestCase):
         """Test Box._emit_pack_end()"""
         box1 = Box().new()
 
-        child_property = {
+        child_properties = {
             'expand': True,
             'fill': True,
             'padding': 0,
@@ -326,7 +326,7 @@ class TestBox(unittest.TestCase):
 
         child_info = {
             'widget': box1,
-            'property': child_property
+            'properties': child_properties
         }
 
         box1._emit_pack_end(data=child_info)
@@ -337,7 +337,7 @@ class TestBox(unittest.TestCase):
         """Test Box._emit_pack_start()"""
         box1 = Box().new()
 
-        child_property = {
+        child_properties = {
             'expand': True,
             'fill': True,
             'padding': 0,
@@ -346,7 +346,7 @@ class TestBox(unittest.TestCase):
 
         child_info = {
             'widget': box1,
-            'property': child_property
+            'properties': child_properties
         }
 
         box1._emit_pack_start(data=child_info)

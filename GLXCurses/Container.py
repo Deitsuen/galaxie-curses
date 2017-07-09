@@ -122,7 +122,7 @@ class Container(Widget):
         # The added widget receive a parent
         widget.set_parent(self)
 
-        child_property = {
+        child_properties = {
             'position': 0
         }
 
@@ -130,7 +130,7 @@ class Container(Widget):
             'widget': widget,
             'type': widget.glxc_type,
             'id': widget.get_widget_id(),
-            'property': child_property
+            'properties': child_properties
         }
 
         # The parent receive a new child
@@ -302,15 +302,23 @@ class Container(Widget):
     def child_type(self):
         pass
 
-    def child_set(self, child, **kwargs):
+    def child_set(self, child, properties=None):
         """
         Sets one or more child properties for child and container .
 
         :param child: a widget which is a child of container
         :type child: A GLXCurses object
-        :param property: property to set
-        :type property: dict
+        :param properties: property to set
+        :type properties: dict
         """
+        # Try to exit as soon of possible
+        if not glxc_type(child):
+            raise TypeError('"child" argument must be a GLXCurses object type')
+        if properties:
+            raise TypeError('"child_property" argument must be a dict type')
+
+        # If we are here everything look ok
+
 
 
     def child_get(self, child, first_prop_name, additional_property):
@@ -332,7 +340,7 @@ class Container(Widget):
             instance = {
                 'widget': ' '.join([self.__class__.__name__, self.id]),
                 'child': ' '.join([data['widget'].__class__.__name__, data['widget'].id]),
-                'child_property': data['property']
+                'child_properties': data['properties']
             }
             # EVENT EMIT
             self.emit('ADD', instance)
