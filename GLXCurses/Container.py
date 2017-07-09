@@ -76,8 +76,8 @@ class Container(Widget):
         # If True the container had its focus chain explicitly set
         self.has_focus_chain = False
 
-        # Subscibtions
-        #self.subscribe('add', self._emit_add_signal())
+        # Subscriptions
+        # self.subscribe('add', self._emit_add_signal())
         # self.subscribe('check-resize', Container._emit_check_resize_signal(self))
         # self.subscribe('remove', Container._emit_remove_signal(self))
         # self.subscribe('set-focus-child', Container._emit_set_focus_child_signal(self))
@@ -184,22 +184,28 @@ class Container(Widget):
                         if callable(getattr(widget, 'unparent')):
                             widget.unparent()
 
-    def add_with_properties(self, widget, first_prop_name, null_terminated_list=None):
+    def add_with_properties(self, widget, properties=None):
         """
         Adds widget to container , setting child properties at the same time. See GLXCurses.Container.add() and
         GLXCurses.Container.child_set() for more details.
 
         :param widget: a widget to be placed inside container
-        :param first_prop_name: the name of the first child property to set
-        :param null_terminated_list: a NULL-terminated list of property names and values, starting with first_prop_name
-        :type widget: GLXCurses.Widget
-        :type first_prop_name: str
-        :type null_terminated_list: list()
+        :type widget: GLXCurses Widget
+        :param properties: properties to set
+        :type properties: dict
+        :raise TypeError: if ``widget`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
+        :raise TypeError: if ``properties`` is not a dict type
         """
-        if null_terminated_list is None:
-            null_terminated_list = list()
+        # Try to exit as soon of possible
+        if not glxc_type(widget):
+            raise TypeError('"widget" argument must be a GLXCurses object type')
+        if type(properties) != dict:
+            raise TypeError('"properties" argument must be a dict type')
+
+        # If we are here everything look ok
         self.add(widget)
-        self.child_set(widget, first_prop_name, null_terminated_list)
+        self.child_set(widget, properties)
 
     def get_resize_mode(self):
         """
@@ -322,6 +328,7 @@ class Container(Widget):
         :type properties: dict
         :raise TypeError: if ``child`` is not a GLXCurses type as tested by \
         :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
+        :raise TypeError: if ``properties`` is not a dict type
         """
         # Try to exit as soon of possible
         if not glxc_type(child):
