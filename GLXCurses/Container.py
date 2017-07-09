@@ -10,6 +10,7 @@ from GLXCurses import glxc
 from GLXCurses.Utils import glxc_type
 from GLXCurses.Utils import merge_dicts
 
+
 # Reference Document: https://developer.gnome.org/gtk3/stable/GtkContainer.html
 class Container(Widget):
     """
@@ -262,7 +263,7 @@ class Container(Widget):
         """
         raise NotImplementedError
 
-    def foreach(self, callback, callback_data):
+    def foreach(self, callback, *callback_data):
         """
         Invokes callback on each non-internal child of container . See GLXCurses.Container.forall() for details on
         what constitutes an “internal” child. For all practical purposes, this function should iterate over precisely
@@ -273,8 +274,16 @@ class Container(Widget):
         :param callback: a callback.
         :param callback_data: callback user data
         """
-        for widget in self.child:
-            widget.refresh()
+        # Dispatch to every children and child
+        if self.__class__.__name__ in glxc.CHILDREN_CONTAINER:
+            if hasattr(self, 'children'):
+                if bool(self.children):
+                    for children in self.children:
+                        children['widget'].callback(*callback_data)
+        else:
+            if hasattr(self, 'child'):
+                if bool(self.child):
+                    self.child['widget'].callback(*callback_data)
 
     def forall(self, callback, callback_data):
         pass
@@ -494,7 +503,10 @@ class Container(Widget):
     # Internal
     def _emit_add_signal(self, data=None):
         """
-        Emit the **add** signal, all widget it have subcribe to it signal will be in touch
+        Emit the **add** signal, all widget it have subscribe to it signal will be in touch
+
+        :param data: the object information which received the signal
+        :type data: dict
         """
         if data is not None:
             # Create a Dict with everything
@@ -506,32 +518,59 @@ class Container(Widget):
             # EVENT EMIT
             self.emit('ADD', instance)
 
-    def _emit_check_resize_signal(self, user_data=None):
+    def _emit_check_resize_signal(self, data=None):
         """
+        Emit the **check_resize** signal, all widget it have subscribe to it signal will be in touch
 
-        :param user_data: the object which received the signal
+        :param data: the object information which received the signal
+        :type data: dict
         """
-        if user_data is None:
-            user_data = list()
-        pass
+        if data is not None:
+            # Create a Dict with everything
+            instance = {
+                'widget': ' '.join([self.__class__.__name__, self.id]),
+                'child': ' '.join([data['widget'].__class__.__name__, data['widget'].id]),
+                'child_properties': data['properties']
+            }
 
-    def _emit_remove_signal(self, user_data=None):
-        """
+            # EVENT EMIT
+            self.emit('check_resize'.upper(), instance)
 
-        :param user_data: the object which received the signal
+    def _emit_remove_signal(self, data=None):
         """
-        if user_data is None:
-            user_data = list()
-        pass
+        Emit the **remove** signal, all widget it have subscribe to it signal will be in touch
 
-    def _emit_set_focus_child_signal(self, user_data=None):
+        :param data: the object information which received the signal
+        :type data: dict
         """
+        if data is not None:
+            # Create a Dict with everything
+            instance = {
+                'widget': ' '.join([self.__class__.__name__, self.id]),
+                'child': ' '.join([data['widget'].__class__.__name__, data['widget'].id]),
+                'child_properties': data['properties']
+            }
 
-        :param user_data: the object which received the signal
+            # EVENT EMIT
+            self.emit('remove'.upper(), instance)
+
+    def _emit_set_focus_child_signal(self, data=None):
         """
-        if user_data is None:
-            user_data = list()
-        pass
+        Emit the **set_focus_child** signal, all widget it have subscribe to it signal will be in touch
+
+        :param data: the object information which received the signal
+        :type data: dict
+        """
+        if data is not None:
+            # Create a Dict with everything
+            instance = {
+                'widget': ' '.join([self.__class__.__name__, self.id]),
+                'child': ' '.join([data['widget'].__class__.__name__, data['widget'].id]),
+                'child_properties': data['properties']
+            }
+
+            # EVENT EMIT
+            self.emit('set_focus_child'.upper(), instance)
 
     def _get_child(self):
         return self.child
