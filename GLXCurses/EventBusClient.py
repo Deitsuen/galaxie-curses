@@ -6,6 +6,7 @@
 # Author: the Galaxie Curses Team, all rights reserved
 
 import GLXCurses
+from GLXCurses import glxc
 
 
 class EventBusClient(object):
@@ -104,7 +105,7 @@ class EventBusClient(object):
 
     def events_dispatch(self, detailed_signal, args=None):
         """
-        Inform every children about a event and execute a eventual callback
+        Inform every children or child about a event and execute a eventual callback
 
         :param detailed_signal: a string containing the signal name
         :type detailed_signal: str
@@ -120,7 +121,7 @@ class EventBusClient(object):
         self.events_flush(detailed_signal, args)
 
         # Dispatch to every children and child
-        if self.__class__.__name__ in ['VBox', 'HBox', 'Box']:
+        if self.__class__.__name__ in glxc.CHILDREN_CONTAINER:
             if hasattr(self, 'children'):
                 if bool(self.children):
                     for children in self.children:

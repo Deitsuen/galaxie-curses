@@ -352,4 +352,9 @@ class Constants(object):
         """The feature is at the bottom edge."""
         return 'BOTTOM'
 
+    @constant
+    def CHILDREN_CONTAINER():
+        """Container it use children list and not single child list"""
+        return ['VBox', 'HBox', 'Box']
+
 glxc = Constants()

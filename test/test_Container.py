@@ -69,8 +69,13 @@ class TestBin(unittest.TestCase):
         container.remove(child2)
         self.assertEqual(container._get_child(), None)
 
+        # Test type error
+        self.assertRaises(TypeError, container.remove, int())
+        self.assertRaises(TypeError, container.remove)
+        self.assertRaises(TypeError, container.remove, child2, int())
+
     def test_child_get(self):
-        """Test Container.remove()"""
+        """Test Container.child_get()"""
         # Use Container as main container (single child)
         # create our tested container
         container = Container()
@@ -114,5 +119,166 @@ class TestBin(unittest.TestCase):
         # check if we receive a dict type
         self.assertEqual(type(container_to_test.child_get(child_to_test1)), type(dict()))
 
+        # Test type error
+        self.assertRaises(TypeError, container.child_get, int())
+        self.assertRaises(TypeError, container.child_get)
 
+    def test_child_set(self):
+        """Test Container.child_set()"""
+        # Use Container as main container (single child)
+        # create our tested container
+        container = Container()
+
+        # Create a child
+        child1 = Container()
+        child2 = Container()
+
+        # Add the child and test
+        container.add(child1)
+        added_properties = {'Galaxie': 42.42}
+
+        # use child set
+        old_properties = container._get_child()['properties']
+        container.child_set(child1, added_properties)
+        new_properties = container._get_child()['properties']
+
+        # check result
+        self.assertGreater(len(new_properties), len(old_properties))
+        self.assertEqual(
+            type(float()),
+            type(container._get_child()['properties']['Galaxie'])
+        )
+
+        # Use Box as main container (multiple child)
+        # create our tested container
+        container_to_test = Box()
+
+        # Create a child
+        child_to_test1 = Container()
+
+        # Add the child and test
+        container_to_test.pack_start(child_to_test1)
+
+        old_properties = container_to_test.get_children()[0]['properties']
+        container_to_test.child_set(child_to_test1, added_properties)
+        new_properties = container_to_test.get_children()[0]['properties']
+
+        # check result
+        self.assertGreater(len(new_properties), len(old_properties))
+        self.assertEqual(
+            type(float()),
+            type(container._get_child()['properties']['Galaxie'])
+        )
+
+        # raise error
+        self.assertRaises(TypeError, container.child_set, int())
+        self.assertRaises(TypeError, container.child_set)
+        self.assertRaises(TypeError, container.child_set, child2, int())
+        self.assertRaises(TypeError, container.child_set, child2)
+
+    def test_child_set_property(self):
+        """Test Container.child_set_property()"""
+        # Use Container as main container (single child)
+        # create our tested container
+        container = Container()
+
+        # Create a child
+        child1 = Container()
+        child2 = Container()
+
+        # Add the child and test
+        container.add(child1)
+
+        # use child set
+        old_properties = container._get_child()['properties']
+        container.child_set_property(child1, property_name='Galaxie', value=42.42)
+        new_properties = container._get_child()['properties']
+
+        # check result
+        self.assertGreater(len(new_properties), len(old_properties))
+        self.assertEqual(
+            type(float()),
+            type(container._get_child()['properties']['Galaxie'])
+        )
+
+        # Use Box as main container (multiple child)
+        # create our tested container
+        container_to_test = Box()
+
+        # Create a child
+        child_to_test1 = Container()
+
+        # Add the child and test
+        container_to_test.pack_start(child_to_test1)
+
+        old_properties = container_to_test.get_children()[0]['properties']
+        container_to_test.child_set_property(child_to_test1, property_name='Galaxie', value=42.42)
+        new_properties = container_to_test.get_children()[0]['properties']
+
+        # check result
+        self.assertGreater(len(new_properties), len(old_properties))
+        self.assertEqual(
+            type(float()),
+            type(container._get_child()['properties']['Galaxie'])
+        )
+
+        # check raise
+        self.assertRaises(TypeError, container.child_set_property, int())
+        self.assertRaises(TypeError, container.child_set_property)
+        self.assertRaises(TypeError, container.child_set_property, child2, int())
+        self.assertRaises(TypeError, container.child_set_property, child2)
+        self.assertRaises(TypeError, container.child_set_property, child2, 'Galaxie', None)
+        self.assertRaises(TypeError, container.child_set_property, child2, 'Galaxie')
+
+    def test_child_get_property(self):
+        """Test Container.child_get_property()"""
+        # Use Container as main container (single child)
+        # create our tested container
+        container = Container()
+
+        # Create a child
+        child1 = Container()
+        child2 = Container()
+
+        # Add the child and test
+        container.add(child1)
+
+        # use child set
+        container.child_set_property(child1, property_name='Galaxie', value=42.00)
+        old_properties = container.child_get_property(child1, 'Galaxie')
+        container.child_set_property(child1, property_name='Galaxie', value=42.42)
+        new_properties = container.child_get_property(child1, 'Galaxie')
+
+        # check result
+        self.assertGreater(new_properties, old_properties)
+        self.assertEqual(
+            type(float()),
+            type(container.child_get_property(child1, 'Galaxie'))
+        )
+
+        # Use Box as main container (multiple child)
+        # create our tested container
+        container_to_test = Box()
+
+        # Create a child
+        child_to_test1 = Container()
+
+        # Add the child and test
+        container_to_test.pack_start(child_to_test1)
+
+        container_to_test.child_set_property(child_to_test1, property_name='Galaxie', value=42.00)
+        old_properties = container_to_test.child_get_property(child_to_test1, 'Galaxie')
+        container_to_test.child_set_property(child_to_test1, property_name='Galaxie', value=42.42)
+        new_properties = container_to_test.child_get_property(child_to_test1, 'Galaxie')
+
+        # check result
+        self.assertGreater(new_properties, old_properties)
+        self.assertEqual(
+            type(float()),
+            type(container_to_test.child_get_property(child_to_test1, 'Galaxie'))
+        )
+
+        # check raise
+        self.assertRaises(TypeError, container.child_get_property, int())
+        self.assertRaises(TypeError, container.child_get_property)
 

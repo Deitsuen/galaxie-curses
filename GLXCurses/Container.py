@@ -109,6 +109,8 @@ class Container(Widget):
 
         :param widget: a current child of container
         :type widget: GLXCurses Widget
+        :raise TypeError: if ``widget`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
         """
         # Try to exit as soon of possible
         if not glxc_type(widget):
@@ -153,26 +155,34 @@ class Container(Widget):
 
         :param widget: a current child of container
         :type widget: GLXCurses Widget
+        :raise TypeError: if ``widget`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
         """
-        if hasattr(self, 'children'):
-            if bool(self.children):
-                count = 0
-                last_found = None
-                for children in self.get_children():
-                    if widget == children['widget']:
-                        last_found = count
-                    count += 1
-                if last_found is not None:
-                    self.get_children().pop(last_found)
-                    if callable(getattr(widget, 'unparent')):
-                        widget.unparent()
+        # Try to exit as soon of possible
+        if not glxc_type(widget):
+            raise TypeError('"widget" argument must be a GLXCurses object type')
 
-        if hasattr(self, 'child'):
-            if bool(self.child):
-                if self.child['widget'] == widget:
-                    self.child = None
-                    if callable(getattr(widget, 'unparent')):
-                        widget.unparent()
+        # If we are here everything look ok
+        if self.__class__.__name__ in glxc.CHILDREN_CONTAINER:
+            if hasattr(self, 'children'):
+                if bool(self.children):
+                    count = 0
+                    last_found = None
+                    for children in self.get_children():
+                        if widget == children['widget']:
+                            last_found = count
+                        count += 1
+                    if last_found is not None:
+                        self.get_children().pop(last_found)
+                        if callable(getattr(widget, 'unparent')):
+                            widget.unparent()
+        else:
+            if hasattr(self, 'child'):
+                if bool(self.child):
+                    if self.child['widget'] == widget:
+                        self.child = None
+                        if callable(getattr(widget, 'unparent')):
+                            widget.unparent()
 
     def add_with_properties(self, widget, first_prop_name, null_terminated_list=None):
         """
@@ -316,11 +326,30 @@ class Container(Widget):
         # Try to exit as soon of possible
         if not glxc_type(child):
             raise TypeError('"child" argument must be a GLXCurses object type')
-        if properties:
+        if type(properties) != dict:
             raise TypeError('"properties" argument must be a dict type')
 
         # If we are here everything look ok
-        child['properties'] = merge_dicts(child['properties'], properties)
+        if self.__class__.__name__ in glxc.CHILDREN_CONTAINER:
+            if bool(self.get_children()):
+                count = 0
+                last_found = None
+                for children in self.get_children():
+                    if child == children['widget']:
+                        last_found = count
+                    count += 1
+                if last_found is not None:
+                    self.get_children()[last_found]['properties'] = merge_dicts(
+                        self.get_children()[last_found]['properties'],
+                        properties
+                    )
+        else:
+            if bool(self.child):
+                if self.child['widget'] == child:
+                    self.child['properties'] = merge_dicts(
+                        self.child['properties'],
+                        properties
+                    )
 
     def child_get(self, child):
         """
@@ -338,7 +367,7 @@ class Container(Widget):
             raise TypeError('"child" argument must be a GLXCurses object type')
 
         # If we are here everything look ok
-        if self.__class__.__name__ in ['VBox', 'HBox', 'Box']:
+        if self.__class__.__name__ in glxc.CHILDREN_CONTAINER:
             if bool(self.get_children()):
                 count = 0
                 last_found = None
@@ -349,19 +378,111 @@ class Container(Widget):
                 if last_found is not None:
                     return self.get_children()[last_found]['properties']
                 else:
+                    # the child is not found
                     return None
         else:
             if bool(self.child):
                 if self.child['widget'] == child:
                     return self.child['properties']
                 else:
+                    # the child is not found
                     return None
 
-    def child_set_property(self, child, property_name, value):
-        pass
+    def child_set_property(self, child, property_name=None, value=None):
+        """
+        Sets a child property for child and container .
 
-    def child_get_property(self, child, property_name):
-        pass
+        :param child: a widget which is a child of container
+        :type child: a GLXCures Object
+        :param property_name: the name of the property to set
+        :type property_name: str
+        :param value: the value to set the property to
+        :type value: everything except None
+        :raise TypeError: if ``child`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
+        :raise TypeError: if ``property_name`` is not str type
+        :raise TypeError: if ``value`` is None type
+        """
+        # Try to exit as soon of possible
+        if not glxc_type(child):
+            raise TypeError('"child" argument must be a GLXCurses object type')
+        if type(property_name) != str:
+            raise TypeError('"property_name" argument must be a str type')
+        if value is None:
+            raise TypeError('"value" argument cant be a None type')
+
+        # If we are here everything look ok
+        property_to_set = {
+            property_name: value
+        }
+        if self.__class__.__name__ in glxc.CHILDREN_CONTAINER:
+            if bool(self.get_children()):
+                count = 0
+                last_found = None
+                for children in self.get_children():
+                    if child == children['widget']:
+                        last_found = count
+                    count += 1
+                if last_found is not None:
+                    self.get_children()[last_found]['properties'] = merge_dicts(
+                        self.get_children()[last_found]['properties'],
+                        property_to_set
+                    )
+        else:
+            if bool(self.child):
+                if self.child['widget'] == child:
+                    self.child['properties'] = merge_dicts(
+                        self.child['properties'],
+                        property_to_set
+                    )
+
+    def child_get_property(self, child, property_name=None):
+        """
+        Gets the value of a child property for child and container .
+
+        :param child: a widget which is a child of container
+        :type child: a GLXCures Object
+        :param property_name: the name of the property to set
+        :type property_name: str
+        :raise TypeError: if ``child`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
+        :raise TypeError: if ``property_name`` is not str type
+        """
+        # Try to exit as soon of possible
+        if not glxc_type(child):
+            raise TypeError('"child" argument must be a GLXCurses object type')
+        if type(property_name) != str:
+            raise TypeError('"property_name" argument must be a str type')
+
+        # If we are here everything look ok
+        if self.__class__.__name__ in glxc.CHILDREN_CONTAINER:
+            if bool(self.get_children()):
+                count = 0
+                last_found = None
+                for children in self.get_children():
+                    if child == children['widget']:
+                        last_found = count
+                    count += 1
+                if last_found is not None:
+                    try:
+                        return self.get_children()[last_found]['properties'][property_name]
+                    except KeyError:
+                        # the property is not found
+                        return None
+                else:
+                    # the child is not found
+                    return None
+        else:
+            if bool(self.child):
+                if self.child['widget'] == child:
+                    try:
+                        return self.child['properties'][property_name]
+                    except KeyError:
+                        # the property is not found
+                        return None
+                else:
+                    # the child is not found
+                    return None
 
     # Internal
     def _emit_add_signal(self, data=None):
