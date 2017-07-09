@@ -123,7 +123,7 @@ class Container(Widget):
         widget.set_parent(self)
 
         child_property = {
-
+            'position': 0
         }
 
         child_info = {
@@ -137,7 +137,7 @@ class Container(Widget):
         self.child = child_info
 
         # Try to emit add signal
-        self._emit_add_signal()
+        self._emit_add_signal(child_info)
 
     def remove(self, widget):
         """
@@ -323,19 +323,19 @@ class Container(Widget):
         pass
 
     # Internal
-    def _emit_add_signal(self):
+    def _emit_add_signal(self, data=None):
         """
         Emit the **add** signal, all widget it have subcribe to it signal will be in touch
         """
-        # Create a Dict with everything
-        instance = {
-            'class': self.__class__.__name__,
-            'type': 'add',
-            'id': self.id,
-            'user_data': self._get_child()
-        }
-        # EVENT EMIT
-        self.emit('ADD', instance)
+        if data is not None:
+            # Create a Dict with everything
+            instance = {
+                'widget': ' '.join([self.__class__.__name__, self.id]),
+                'child': ' '.join([data['widget'].__class__.__name__, data['widget'].id]),
+                'child_property': data['property']
+            }
+            # EVENT EMIT
+            self.emit('ADD', instance)
 
     def _emit_check_resize_signal(self, user_data=None):
         """

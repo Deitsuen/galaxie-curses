@@ -317,20 +317,40 @@ class TestBox(unittest.TestCase):
         """Test Box._emit_pack_end()"""
         box1 = Box().new()
 
-        data = dict()
-        data['Galaxie'] = 42
+        child_property = {
+            'expand': True,
+            'fill': True,
+            'padding': 0,
+            'pack_type': glxc.PACK_END
+        }
 
-        box1._emit_pack_end(data=data)
-        box1._emit_pack_end(data=None)
+        child_info = {
+            'widget': box1,
+            'property': child_property
+        }
+
+        box1._emit_pack_end(data=child_info)
+
+        self.assertRaises(KeyError, box1._emit_pack_end, data=None)
 
     def test__emit_pack_start(self):
         """Test Box._emit_pack_start()"""
         box1 = Box().new()
 
-        data = dict()
-        data['Galaxie'] = 42
+        child_property = {
+            'expand': True,
+            'fill': True,
+            'padding': 0,
+            'pack_type': glxc.PACK_END
+        }
 
-        box1._emit_pack_start(data=data)
-        box1._emit_pack_start(data=None)
+        child_info = {
+            'widget': box1,
+            'property': child_property
+        }
+
+        box1._emit_pack_start(data=child_info)
+
+        self.assertRaises(TypeError, box1._emit_pack_start, data=None)
 
 

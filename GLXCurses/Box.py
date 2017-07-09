@@ -190,7 +190,8 @@ class Box(Container):
             'expand': expand,
             'fill': fill,
             'padding': clamp_to_zero(padding),
-            'pack_type': glxc.PACK_START
+            'pack_type': glxc.PACK_START,
+            'position': 0
         }
 
         child_info = {
@@ -201,8 +202,8 @@ class Box(Container):
         }
 
         self.get_children().insert(0, child_info)
-
-        self._emit_pack_start(data=child_info)
+        self._upgrade_child_position()
+        self._emit_pack_start(data=self.get_children()[0])
 
     def pack_end(self, child=None, expand=True, fill=True, padding=None):
         """
@@ -248,7 +249,8 @@ class Box(Container):
             'expand': expand,
             'fill': fill,
             'padding': clamp_to_zero(padding),
-            'pack_type': glxc.PACK_END
+            'pack_type': glxc.PACK_END,
+            'position': len(self.get_children())
         }
 
         child_info = {
@@ -259,8 +261,8 @@ class Box(Container):
         }
 
         self.get_children().append(child_info)
-
-        self._emit_pack_end(data=child_info)
+        self._upgrade_child_position()
+        self._emit_pack_end(data=self.get_children()[-1])
 
     def set_homogeneous(self, homogeneous=True):
         """
@@ -357,14 +359,15 @@ class Box(Container):
                 self.get_children().append(last_element)
             else:
                 self.get_children().insert(position, last_element)
-
+            self._upgrade_child_position()
             # DEBUG
             # Emit a signal
             child_property = {
                 'expand': last_element['property']['expand'],
                 'fill': last_element['property']['fill'],
                 'padding': last_element['property']['padding'],
-                'pack_type': last_element['property']['pack_type']
+                'pack_type': last_element['property']['pack_type'],
+                'position': position
             }
 
             child_info = {
@@ -374,8 +377,6 @@ class Box(Container):
                 'property': child_property
             }
 
-            child_info['property']['pos_src'] = last_found
-            child_info['property']['pos_dst'] = position
             self._emit_reorder_child(data=child_info)
 
     def query_child_packing(self, child):
@@ -558,13 +559,12 @@ class Box(Container):
 
         # Create a Dict with everything
         instance = {
-            'class': self.__class__.__name__,
-            'type': 'pack-end',
-            'id': self.get_widget_id(),
-            'data': data
+            'widget': ' '.join([self.__class__.__name__, self.id]),
+            'child': ' '.join([data['widget'].__class__.__name__, data['widget'].id]),
+            'child_property': data['property']
         }
         # EVENT EMIT
-        self.emit('SIGNALS', instance)
+        self.emit('PACK_END', instance)
 
     def _emit_pack_start(self, data=None):
         """
@@ -578,10 +578,28 @@ class Box(Container):
 
         # Create a Dict with everything
         instance = {
-            'class': self.__class__.__name__,
-            'type': 'pack-start',
-            'id': self.get_widget_id(),
-            'data': data
+            'widget': ' '.join([self.__class__.__name__, self.id]),
+            'child': ' '.join([data['widget'].__class__.__name__, data['widget'].id]),
+            'child_property': data['property']
         }
         # EVENT EMIT
-        self.emit('SIGNALS', instance)
+        self.emit('PACK_START', instance)
+
+    def _upgrade_child_position(self):
+        """After have reorder widget position update position property of all children"""
+        if bool(self.get_children()):
+            count = 0
+            for children in self.get_children():
+                if children['property']['position'] != count:
+                    position_info = {
+                        'widget': ' '.join([self.__class__.__name__, self.id]),
+                        'child': ' '.join([children['widget'].__class__.__name__, children['widget'].id]),
+                        'before': children['property']['position'],
+                        'after': count
+                    }
+                    children['property']['position'] = count
+                    # Debug
+                    self.emit('UPDATE_POSITION', position_info)
+                count += 1
+
+
