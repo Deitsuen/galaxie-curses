@@ -149,8 +149,8 @@ class Frame(Bin):
 
         # Check widgets to display
         if bool(self.get_child()):
-            self.get_child()['widget'].set_style(self.get_style())
-            self.get_child()['widget'].draw()
+            self.get_child().set_style(self.get_style())
+            self.get_child().draw()
 
         # Create a box and add the name of the windows like a king, who trust that !!!
         self.get_curses_subwin().box()

@@ -31,7 +31,7 @@ class Object(EventBusClient):
         # self.blocked_handler = list()
         # self.blocked_function = list()
         # self.data = dict()
-
+        self.children = list()
         # init
         self.flags = self.get_default_flags()
 

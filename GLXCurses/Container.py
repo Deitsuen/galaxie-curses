@@ -1,12 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from GLXCurses import Widget
-from GLXCurses import glxc
-from GLXCurses import Application
+
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
-# Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
-__author__ = 'Tuux'
+# Author: the Galaxie Curses Team, all rights reserved
+
+from GLXCurses import Widget
+from GLXCurses import glxc
+from GLXCurses.Utils import glxc_type
 
 
 # Reference Document: https://developer.gnome.org/gtk3/stable/GtkContainer.html
@@ -88,7 +89,7 @@ class Container(Widget):
     def get_border_width(self):
         return self.border_width
 
-    def add(self, widget):
+    def add(self, widget=None):
         """
         Adds widget to container .
 
@@ -106,15 +107,32 @@ class Container(Widget):
         you (should not) place the same widget inside two different containers.
 
         :param widget: a current child of container
-        :type widget: GLXCurses.Widget
+        :type widget: GLXCurses Widget or None
         """
-        # The added widget recive a parent
-        widget.parent = self
-        child_info = dict()
-        child_info['widget'] = widget
+        if glxc_type(widget) or widget is None:
+            if widget is not None:
+                if self._get_child() is not None:
+                    self._get_child()['widget'].set_parent(None)
 
-        # The parent recive a new child
-        self.child = child_info
+                # The added widget recive a parent
+                widget.set_parent(self)
+
+                child_info = dict()
+                child_info['widget'] = widget
+                child_info['type'] = widget.glxc_type
+                child_info['id'] = widget.get_widget_id()
+
+                # The parent recive a new child
+                self.child = child_info
+
+                # Try to emit add signal
+                self._emit_add_signal()
+            else:
+                if self._get_child() is not None:
+                    self._get_child()['widget'].set_parent(None)
+                self.child = None
+        else:
+            raise TypeError(u'>widget< is not a GLXCurses object type or None')
 
         # Try to emit add signal
         self._emit_add_signal()
@@ -135,7 +153,7 @@ class Container(Widget):
         :type widget: GLXCurses.Widget
         """
         if self.child:
-            if self.child.id == widget.get_widget_id():
+            if self.child['widget'].id == widget.get_widget_id():
                 self.child = None
                 widget.set_visible(False)
             else:
@@ -291,7 +309,7 @@ class Container(Widget):
             'class': self.__class__.__name__,
             'type': 'add',
             'id': self.id,
-            'user_data': self.get_children()[0]
+            'user_data': self._get_child()
         }
         # EVENT EMIT
         self.emit('SIGNALS', instance)
@@ -322,3 +340,6 @@ class Container(Widget):
         if user_data is None:
             user_data = list()
         pass
+
+    def _get_child(self):
+        return self.child

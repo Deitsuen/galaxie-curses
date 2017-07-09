@@ -33,24 +33,9 @@ class EventBusClient(object):
              | Default value | dict()                        |
              +---------------+-------------------------------+
 
-        .. py:attribute:: children
-
-          A list of children upgraded during a dispatched event.
-
-             +---------------+-------------------------------+
-             | Type          | :py:data:`children`           |
-             +---------------+-------------------------------+
-             | Flags         | Read / Write                  |
-             +---------------+-------------------------------+
-             | Default value | list()                        |
-             +---------------+-------------------------------+
-
         """
         # Public attribute
         self.events_list = dict()
-        self.children = list()
-
-        # Internal attribute
 
     def emit(self, detailed_signal, data=None):
         """
@@ -134,9 +119,15 @@ class EventBusClient(object):
         # Flush internal event
         self.events_flush(detailed_signal, args)
 
-        # Dispatch to every children
-        for children in self.children:
-            children['widget'].events_dispatch(detailed_signal, args)
+        # Dispatch to every children and child
+        if hasattr(self, 'children'):
+            if bool(self.children):
+                for children in self.children:
+                    children['widget'].events_dispatch(detailed_signal, args)
+
+        if hasattr(self, 'child'):
+            if bool(self.child):
+                self.child['widget'].events_dispatch(detailed_signal, args)
 
     def get_events_list(self):
         # return Application().event_handlers

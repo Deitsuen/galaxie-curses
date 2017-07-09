@@ -3,10 +3,9 @@
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
-# Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
+# Author: the Galaxie Curses Team, all rights reserved
 
 from GLXCurses import Container
-from GLXCurses.Utils import glxc_type
 
 __author__ = 'Tuux'
 
@@ -24,60 +23,19 @@ class Bin(Container):
      * :class:`ScrolledWindow <GLXCurses.ScrolledWindow.ScrolledWindow>`
 
     """
-
-    def destroy(self):
-        """
-        Destroys a widget.
-
-        When a widget is destroyed all references it holds on other objects will be released:
-
-        * if the widget is inside a container, it will be removed from its parent
-        * if the widget is a container, all its children will be destroyed, recursively
-        * if the widget is a top level, it will be removed from the list of top level widgets \
-        that :class:`Application <GLXCurses.Application.Application>` maintains internally
-
-        :raise NotImplementedError: Method or function hasn't been implemented yet.
-        """
-        raise NotImplementedError
-
     def __init__(self):
+        # Load heritage
         Container.__init__(self)
+
+        # It's a GLXCurse Type
         self.glxc_type = 'GLXCurses.Bin'
+
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('Bin')
 
-        self.child = None
-
-    def add(self, child=None):
-        """
-        Add a widget as child, only if the :class:`Bin <GLXCurses.Bin.Bin>` haven't any child
-
-        :param child: A child
-        :type child: GLXCurses Type
-        """
-        if glxc_type(child) or child is None:
-            if child is not None:
-                if self.get_child() is not None:
-                    self.get_child()['widget'].set_parent(None)
-
-                # The added widget recive a parent
-                child.set_parent(self)
-
-                child_info = dict()
-                child_info['widget'] = child
-                child_info['type'] = child.glxc_type
-                child_info['id'] = child.get_widget_id()
-
-                # The parent recive a new child
-                self.child = child_info
-
-                # Try to emit add signal
-                self._emit_add_signal()
-            else:
-                if self.get_child() is not None:
-                    self.get_child()['widget'].set_parent(None)
-                self.child = None
-        else:
-            raise TypeError(u'>style< is not a GLXCurses.Style type or None')
+        # Make a Widget Style heritage attribute as local attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
     def get_child(self):
         """
@@ -87,7 +45,10 @@ class Bin(Container):
         The returned widget does not have a reference added, so you do not need to unref it.
 
         :return: child widget of the :class:`Bin <GLXCurses.Bin.Bin>`
-        :rtype: :class:`Box <GLXCurses.Box.Box>` or :py:obj:`None`
+        :rtype: a GLXCurses object or None
         """
-        return self.child
+        if bool(self.child):
+            return self.child['widget']
+        else:
+            return None
 
