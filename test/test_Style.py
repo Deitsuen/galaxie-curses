@@ -3,9 +3,6 @@
 
 import unittest
 from random import randint
-import random
-import string
-
 import sys
 import os
 

@@ -208,11 +208,26 @@ class Widget(Object):
         self.set_style(self.get_parent().get_style())
 
     def unchild(self, orphan):
-        self.children.pop(self.children.index(orphan))
+
+        if hasattr(self, 'children'):
+            if bool(self.children):
+                count = 0
+                last_found = None
+                for children in self.get_children():
+                    if orphan == children['widget']:
+                        last_found = count
+                    count += 1
+                if last_found is not None:
+                    self.get_children().pop(last_found)
+
+        if hasattr(self, 'child'):
+            if bool(self.child):
+                if self.child['widget'] == orphan:
+                    self.child = None
 
     def unparent(self):
-        self.parent.unchild(self)
-        self.parent = None
+        self.get_parent().unchild(self)
+        self.set_parent(None)
         self.set_style(self.style_backup)
 
     def get_parent_spacing(self):

@@ -57,6 +57,7 @@ class Container(Widget):
             self.set_attribute_states(self.get_style().get_attribute_states())
 
         # Properties
+
         # Can be used to add a new child to the container.
         self.child = None
         # Specify how resize events are handled.
@@ -107,32 +108,28 @@ class Container(Widget):
         you (should not) place the same widget inside two different containers.
 
         :param widget: a current child of container
-        :type widget: GLXCurses Widget or None
+        :type widget: GLXCurses Widget
         """
-        if glxc_type(widget) or widget is None:
-            if widget is not None:
-                if self._get_child() is not None:
-                    self._get_child()['widget'].set_parent(None)
+        # Try to exit as soon of possible
+        if not glxc_type(widget):
+            raise TypeError('"widget" argument must be a GLXCurses object type')
 
-                # The added widget recive a parent
-                widget.set_parent(self)
+        # If we are here everything look ok
+        if bool(self._get_child()):
+            if callable(getattr(self._get_child()['widget'], 'unparent')):
+                self._get_child()['widget'].unparent()
 
-                child_info = dict()
-                child_info['widget'] = widget
-                child_info['type'] = widget.glxc_type
-                child_info['id'] = widget.get_widget_id()
+        # The added widget receive a parent
+        widget.set_parent(self)
 
-                # The parent recive a new child
-                self.child = child_info
+        child_info = {
+            'widget': widget,
+            'type': widget.glxc_type,
+            'id': widget.get_widget_id(),
+        }
 
-                # Try to emit add signal
-                self._emit_add_signal()
-            else:
-                if self._get_child() is not None:
-                    self._get_child()['widget'].set_parent(None)
-                self.child = None
-        else:
-            raise TypeError(u'>widget< is not a GLXCurses object type or None')
+        # The parent receive a new child
+        self.child = child_info
 
         # Try to emit add signal
         self._emit_add_signal()
@@ -150,14 +147,27 @@ class Container(Widget):
         will remove it from the container and help break any circular reference count cycles.
 
         :param widget: a current child of container
-        :type widget: GLXCurses.Widget
+        :type widget: GLXCurses Widget
         """
-        if self.child:
-            if self.child['widget'].id == widget.get_widget_id():
-                self.child = None
-                widget.set_visible(False)
-            else:
-                pass
+        if hasattr(self, 'children'):
+            if bool(self.children):
+                count = 0
+                last_found = None
+                for children in self.get_children():
+                    if widget == children['widget']:
+                        last_found = count
+                    count += 1
+                if last_found is not None:
+                    self.get_children().pop(last_found)
+                    if callable(getattr(widget, 'unparent')):
+                        widget.unparent()
+
+        if hasattr(self, 'child'):
+            if bool(self.child):
+                if self.child['widget'] == widget:
+                    self.child = None
+                    if callable(getattr(widget, 'unparent')):
+                        widget.unparent()
 
     def add_with_properties(self, widget, first_prop_name, null_terminated_list=None):
         """
@@ -343,3 +353,6 @@ class Container(Widget):
 
     def _get_child(self):
         return self.child
+
+    def _set_child(self, child=None):
+        self.child = child
