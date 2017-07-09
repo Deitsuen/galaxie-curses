@@ -122,10 +122,15 @@ class Container(Widget):
         # The added widget receive a parent
         widget.set_parent(self)
 
+        child_property = {
+
+        }
+
         child_info = {
             'widget': widget,
             'type': widget.glxc_type,
             'id': widget.get_widget_id(),
+            'property': child_property
         }
 
         # The parent receive a new child
@@ -297,8 +302,16 @@ class Container(Widget):
     def child_type(self):
         pass
 
-    def child_set(self, child, first_prop_name, first_prop_value, additional_property):
-        pass
+    def child_set(self, child, **kwargs):
+        """
+        Sets one or more child properties for child and container .
+
+        :param child: a widget which is a child of container
+        :type child: A GLXCurses object
+        :param property: property to set
+        :type property: dict
+        """
+
 
     def child_get(self, child, first_prop_name, additional_property):
         pass

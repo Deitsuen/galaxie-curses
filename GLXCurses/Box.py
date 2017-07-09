@@ -186,12 +186,19 @@ class Box(Container):
 
         # If we are here everything look ok
         # Create a dict for store information's about packing
-        child_info = dict()
-        child_info['widget'] = child
-        child_info['expand'] = expand
-        child_info['fill'] = fill
-        child_info['padding'] = clamp_to_zero(padding)
-        child_info['pack_type'] = glxc.PACK_START
+        child_property = {
+            'expand': expand,
+            'fill': fill,
+            'padding': clamp_to_zero(padding),
+            'pack_type': glxc.PACK_START
+        }
+
+        child_info = {
+            'widget': child,
+            'type': child.glxc_type,
+            'id': child.get_widget_id(),
+            'property': child_property
+        }
 
         self.get_children().insert(0, child_info)
 
@@ -236,12 +243,20 @@ class Box(Container):
 
         # If we are here everything look ok
         # Create a dict for store information's about packing
-        child_info = dict()
-        child_info['widget'] = child
-        child_info['expand'] = expand
-        child_info['fill'] = fill
-        child_info['padding'] = clamp_to_zero(padding)
-        child_info['pack_type'] = glxc.PACK_END
+
+        child_property = {
+            'expand': expand,
+            'fill': fill,
+            'padding': clamp_to_zero(padding),
+            'pack_type': glxc.PACK_END
+        }
+
+        child_info = {
+            'widget': child,
+            'type': child.glxc_type,
+            'id': child.get_widget_id(),
+            'property': child_property
+        }
 
         self.get_children().append(child_info)
 
@@ -343,15 +358,24 @@ class Box(Container):
             else:
                 self.get_children().insert(position, last_element)
 
+            # DEBUG
             # Emit a signal
-            child_info = dict()
-            child_info['widget'] = last_element['widget']
-            child_info['expand'] = last_element['expand']
-            child_info['fill'] = last_element['fill']
-            child_info['padding'] = last_element['padding']
-            child_info['pack_type'] = last_element['pack_type']
-            child_info['pos_src'] = last_found
-            child_info['pos_dst'] = position
+            child_property = {
+                'expand': last_element['property']['expand'],
+                'fill': last_element['property']['fill'],
+                'padding': last_element['property']['padding'],
+                'pack_type': last_element['property']['pack_type']
+            }
+
+            child_info = {
+                'widget': last_element['widget'],
+                'type': last_element['widget'].glxc_type,
+                'id': last_element['widget'].get_widget_id(),
+                'property': child_property
+            }
+
+            child_info['property']['pos_src'] = last_found
+            child_info['property']['pos_dst'] = position
             self._emit_reorder_child(data=child_info)
 
     def query_child_packing(self, child):
@@ -389,12 +413,19 @@ class Box(Container):
         if last_found is None:
             return None
         else:
-            child_info = dict()
-            child_info['widget'] = last_element['widget']
-            child_info['expand'] = last_element['expand']
-            child_info['fill'] = last_element['fill']
-            child_info['padding'] = last_element['padding']
-            child_info['pack_type'] = last_element['pack_type']
+            child_property = {
+                'expand': last_element['property']['expand'],
+                'fill': last_element['property']['fill'],
+                'padding': last_element['property']['padding'],
+                'pack_type': last_element['property']['pack_type']
+            }
+
+            child_info = {
+                'widget': last_element['widget'],
+                'type': last_element['widget'].glxc_type,
+                'id': last_element['widget'].get_widget_id(),
+                'property': child_property
+            }
             return child_info
 
     def set_child_packing(self, child, expand, fill, padding, pack_type):
@@ -437,10 +468,10 @@ class Box(Container):
 
         if last_element is not None:
             last_element['widget'] = child
-            last_element['expand'] = expand
-            last_element['fill'] = fill
-            last_element['padding'] = padding
-            last_element['pack_type'] = pack_type
+            last_element['property']['expand'] = expand
+            last_element['property']['fill'] = fill
+            last_element['property']['padding'] = padding
+            last_element['property']['pack_type'] = pack_type
 
     def set_baseline_position(self, position):
         """

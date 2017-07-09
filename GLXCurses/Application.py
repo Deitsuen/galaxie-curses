@@ -1122,10 +1122,17 @@ class Application(EventBus):
         :param window: a Window to add on children windows list
         :type window: GLXCurses.Window
         """
-        child_info = dict()
-        child_info['widget'] = window
-        child_info['type'] = window.glxc_type
-        child_info['id'] = window.get_widget_id()
+        child_property = {
+
+        }
+
+        child_info = {
+            'widget': window,
+            'type': window.glxc_type,
+            'id': window.get_widget_id(),
+            'property': child_property
+        }
+
         self._get_windows_list().append(child_info)
 
     def _set_active_window_id(self, window_id):
