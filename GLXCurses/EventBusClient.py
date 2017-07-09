@@ -124,10 +124,10 @@ class EventBusClient(object):
             if bool(self.children):
                 for children in self.children:
                     children['widget'].events_dispatch(detailed_signal, args)
-
-        if hasattr(self, 'child'):
-            if bool(self.child):
-                self.child['widget'].events_dispatch(detailed_signal, args)
+        else:
+            if hasattr(self, 'child'):
+                if bool(self.child):
+                    self.child['widget'].events_dispatch(detailed_signal, args)
 
     def get_events_list(self):
         # return Application().event_handlers

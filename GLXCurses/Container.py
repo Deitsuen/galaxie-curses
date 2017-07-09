@@ -312,7 +312,7 @@ class Container(Widget):
             'user_data': self._get_child()
         }
         # EVENT EMIT
-        self.emit('SIGNALS', instance)
+        self.emit('ADD', instance)
 
     def _emit_check_resize_signal(self, user_data=None):
         """
