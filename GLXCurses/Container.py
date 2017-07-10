@@ -77,6 +77,10 @@ class Container(Widget):
         # If True the container had its focus chain explicitly set
         self.has_focus_chain = False
 
+        # Internal
+        self._focus_vadjustment = None
+        self._focus_hadjustment = None
+
         # Subscriptions
         # self.subscribe('add', self._emit_add_signal())
         # self.subscribe('check-resize', Container._emit_check_resize_signal(self))
@@ -309,17 +313,73 @@ class Container(Widget):
     def get_focus_child(self):
         pass
 
-    def set_focus_vadjustment(self, adjustment):
-        pass
-
     def get_focus_vadjustment(self):
-        pass
+        """
+        Retrieves the vertical focus adjustment for the container. See \
+        :func:`Container.set_focus_vadjustment() <GLXCurses.Container.Container.set_focus_vadjustment()>`.
 
-    def set_focus_hadjustment(self, adjustment):
-        pass
+        :return: the vertical focus adjustment, or :py:data:`None` if none has been set.
+        :rtype: :class:`Adjustment() <GLXCurses.Adjustment.Adjustment()>` or :py:data:`None`
+        """
+        return self._focus_vadjustment
+
+    def set_focus_vadjustment(self, adjustment=None):
+        """
+        Hooks up an adjustment to focus handling in a container, so when a child of the container is focused,
+        the adjustment is scrolled to show that widget. This function sets the vertical alignment.
+        See scrolled_window_get_vadjustment() for a typical way of obtaining the adjustment and
+        :func:`Container.set_focus_hadjustment() <GLXCurses.Container.Container.set_focus_hadjustment()>`
+        for setting the horizontal adjustment.
+
+        The adjustments have to be in character units and in the same coordinate system as the allocation for
+        immediate children of the container.
+
+        :param adjustment: an adjustment which should be adjusted when the focus is \
+        moved among the descendants of ``container``
+        :type adjustment: :class:`Adjustment() <GLXCurses.Adjustment.Adjustment()>` or :py:data:`None`
+        :raise TypeError: if ``adjustment`` is not a :class:`Adjustment() <GLXCurses.Adjustment.Adjustment()>`
+        """
+        # Try to exit as soon of possible
+        if not glxc_type(adjustment) or adjustment is None:
+            if adjustment.glxc_type != 'GLXCurses.Adjustment':
+                raise TypeError('"adjustment" argument must be a GLXCurses.Adjustment')
+
+        # If we are here everything look ok
+        self._focus_vadjustment = adjustment
 
     def get_focus_hadjustment(self):
-        pass
+        """
+        Retrieves the horizontal focus adjustment for the container. See \
+        :func:`Container.set_focus_hadjustment() <GLXCurses.Container.Container.set_focus_hadjustment()>`.
+
+        :return: the horizontal focus adjustment, or :py:data:`None` if none has been set.
+        :rtype: :class:`Adjustment() <GLXCurses.Adjustment.Adjustment()>` or :py:data:`None`
+        """
+        return self._focus_hadjustment
+
+    def set_focus_hadjustment(self, adjustment):
+        """
+        Hooks up an adjustment to focus handling in a container, so when a child of the container is focused,
+        the adjustment is scrolled to show that widget. This function sets the horizontal alignment.
+        See scrolled_window_get_hadjustment() for a typical way of obtaining the adjustment and
+        :func:`Container.set_focus_vadjustment() <GLXCurses.Container.Container.set_focus_vadjustment()>`
+        for setting the vertical adjustment.
+
+        The adjustments have to be in pixel units and in the same coordinate system as the allocation for immediate
+        children of the container.
+
+        :param adjustment: an adjustment which should be adjusted when the focus is \
+        moved among the descendants of ``container``
+        :type adjustment: :class:`Adjustment() <GLXCurses.Adjustment.Adjustment()>` or :py:data:`None`
+        :raise TypeError: if ``adjustment`` is not a :class:`Adjustment() <GLXCurses.Adjustment.Adjustment()>`
+        """
+        # Try to exit as soon of possible
+        if not glxc_type(adjustment) or adjustment is None:
+            if adjustment.glxc_type != 'GLXCurses.Adjustment':
+                raise TypeError('"adjustment" argument must be a GLXCurses.Adjustment')
+
+        # If we are here everything look ok
+        self._focus_hadjustment = adjustment
 
     def resize_children(self):
         pass

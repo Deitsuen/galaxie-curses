@@ -119,6 +119,12 @@ class Adjustment(object):
               +---------------+-------------------------------+
 
         """
+        # It's a GLXCurse Type
+        self.glxc_type = 'GLXCurses.Adjustment'
+
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
+        self.name = 'Box'
+
         self.lower = float(0.0)
         self.page_increment = float(0.0)
         self.page_size = float(0.0)
