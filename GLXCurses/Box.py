@@ -485,7 +485,7 @@ class Box(Container):
 
         :param position: a BaselinePosition
         :type position: BaselinePosition
-        :raise TypeError: if ``position`` is not
+        :raise TypeError: if ``position`` is not \
         a glxc.BASELINE_POSITION_BOTTOM, glxc.BASELINE_POSITION_CENTER, glxc.BASELINE_POSITION_TOP
         """
         if position not in glxc.BaselinePosition:
