@@ -324,8 +324,66 @@ class Container(Widget):
     def resize_children(self):
         pass
 
-    def child_type(self):
-        pass
+    def child_type(self, container):
+        """
+        Returns the type of the children supported by the container.
+
+        Note that this may return ``None`` to indicate that no more children can be added,
+        e.g. for a Paned which already has two children.
+
+        Note that this may return ``-1`` to indicate ``container`` is not found
+
+        :param container:
+        :return: the type of children
+        :rtype: str , None or -1
+        :raise TypeError: if ``child`` is not a GLXCurses type as tested by \
+        :func:`glxc_type() <GLXCurses.Utils.glxc_type>`
+        """
+        # Try to exit as soon of possible
+        if not glxc_type(container):
+            raise TypeError('"container" argument must be a GLXCurses object type')
+
+        # If we are here everything look ok
+        if self.__class__.__name__ in glxc.CHILDREN_CONTAINER:
+            if bool(self.get_children()):
+                count = 0
+                last_found = None
+                for children in self.get_children():
+                    if container == children['widget']:
+                        last_found = count
+                    count += 1
+                if last_found is not None:
+                    if self.get_children()[last_found]['widget'].__class__.__name__ in glxc.CHILDREN_CONTAINER:
+                        return self.get_children()[last_found]['widget'].glxc_type
+                    else:
+                        if not bool(self.get_children()[last_found]['widget'].child):
+                            return self.get_children()[last_found]['widget'].glxc_type
+                        else:
+                            # no more space in the container
+                            return None
+                else:
+                    # the child is not found
+                    return -1
+            else:
+                # the child is not found that because it have no child in the child list
+                return -1
+        else:
+            if bool(self.child):
+                if self.child['widget'] == container:
+                    if self.child['widget'].__class__.__name__ in glxc.CHILDREN_CONTAINER:
+                        return self.child['widget'].glxc_type
+                    else:
+                        if not bool(self.child['widget'].child):
+                            return self.child['widget'].glxc_type
+                        else:
+                            # no more space in the container
+                            return None
+                else:
+                    # the child is not found
+                    return -1
+            else:
+                # the child is not found that because it have no child in the child list
+                return -1
 
     def child_set(self, child, properties=None):
         """

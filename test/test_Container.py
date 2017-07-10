@@ -74,6 +74,64 @@ class TestBin(unittest.TestCase):
         self.assertRaises(TypeError, container.remove)
         self.assertRaises(TypeError, container.remove, child2, int())
 
+    def test_child_type(self):
+        """Test Container.child-type"""
+        # create our tested container
+        container = Container()
+
+        # child
+        box1 = Box()
+        box2 = Box()
+
+        cont1 = Container()
+        cont2 = Container()
+
+        # The container haven't it self as child then waiting -1
+        self.assertEqual(container.child_type(container), -1)
+
+        container.add(box1)
+        # when it work normally
+        self.assertEqual(container.child_type(box1), 'GLXCurses.Box')
+
+        box1.pack_start(cont1)
+        # when it work normally
+        self.assertEqual(box1.child_type(cont1), 'GLXCurses.Container')
+
+        cont1.add(box2)
+        # cont1 have no more child space
+        self.assertEqual(box1.child_type(cont1), None)
+
+        # yes it work
+        box2.add(cont2)
+        self.assertEqual(box2.child_type(cont2), 'GLXCurses.Container')
+        self.assertEqual(box2.child_type(cont1), -1)
+        # change for a single child
+        ###########################
+        # create our tested container
+        container = Container()
+
+        # child
+        box1 = Box()
+        box2 = Box()
+
+        cont1 = Container()
+        cont2 = Container()
+
+        # The container haven't it self as child then waiting -1
+        self.assertEqual(container.child_type(container), -1)
+
+        container.add(cont1)
+        # when it work normally
+        self.assertEqual(container.child_type(cont1), 'GLXCurses.Container')
+        self.assertEqual(container.child_type(cont2), -1)
+
+        cont1.add(box1)
+        # Should have no space
+        self.assertEqual(container.child_type(cont1), None)
+
+        box1.pack_start(box2)
+        self.assertEqual(cont1.child_type(box1), 'GLXCurses.Box')
+
     def test_child_get(self):
         """Test Container.child_get()"""
         # Use Container as main container (single child)
