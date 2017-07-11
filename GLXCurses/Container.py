@@ -289,6 +289,17 @@ class Container(Widget):
                 if bool(self.child):
                     self.child['widget'].callback(*callback_data)
 
+    def get_children(self):
+        """
+        Returns the container’s non-internal children. See
+        :func:`Container.forall() <GLXCurses.Container.Container.forall()>`
+        for details on what constitutes an "internal" child.
+
+        :return: a newly-allocated list of the container’s non-internal children.
+        :rtype: list
+        """
+        return self.children
+
     def forall(self, callback, callback_data):
         pass
 
@@ -362,10 +373,6 @@ class Container(Widget):
         else:
             self._focus_vadjustment = None
 
-
-
-
-
     def get_focus_hadjustment(self):
         """
         Retrieves the horizontal focus adjustment for the container. See \
@@ -415,8 +422,8 @@ class Container(Widget):
         else:
             self._focus_hadjustment = None
 
-    def resize_children(self):
-        pass
+    # def resize_children(self):
+    #     pass
 
     def child_type(self, container):
         """

@@ -355,11 +355,17 @@ class Constants(object):
     @constant
     def CHILDREN_CONTAINER():
         """Container it use children list and not single child list"""
-        return ['VBox', 'HBox', 'Box']
+        return ['VBox',
+                'HBox',
+                'Box'
+                ]
 
     @constant
     def CHILD_CONTAINER():
         """Container it use children list and not single child list"""
-        return ['Bin', 'Frame', 'Window', 'Application']
+        return ['Bin',
+                'Frame',
+                'Window',
+                'Application']
 
 glxc = Constants()

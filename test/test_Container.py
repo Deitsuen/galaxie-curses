@@ -98,6 +98,19 @@ class TestBin(unittest.TestCase):
         self.assertRaises(TypeError, container.add_with_properties, int())
         self.assertRaises(TypeError, container.add_with_properties, child1, int())
 
+    def test_get_children(self):
+        """Test Container.get_children()"""
+        # prepare container
+        container = Container()
+        # it's a list
+        self.assertEqual(type(container.get_children()), type(list()))
+        # prepare a children
+        box1 = Box()
+        box2 = Box()
+
+        box1.pack_start(box2)
+        self.assertEqual(box1.get_children()[0]['widget'], box2)
+
     def test_set_get_focus_vadjustment(self):
         """Test Container.set_focus_vadjustment() and Container.get_focus_vadjustment()"""
         # prepare container
@@ -168,7 +181,7 @@ class TestBin(unittest.TestCase):
         self.assertEqual(box1.child_type(cont1), None)
 
         # yes it work
-        box2.add(cont2)
+        box2.pack_start(cont2)
         self.assertEqual(box2.child_type(cont2), 'GLXCurses.Container')
         self.assertEqual(box2.child_type(cont1), -1)
         # change for a single child

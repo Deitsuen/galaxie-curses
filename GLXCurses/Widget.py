@@ -169,9 +169,6 @@ class Widget(Object):
     def get_child_visible(self):
         return self.set_visible
 
-    def get_children(self):
-        return self.children
-
     def get_parent(self):
         if self.parent:
             return self.parent
@@ -195,9 +192,11 @@ class Widget(Object):
         self.parent = parent
 
     def adopt(self, orphan):
-        child_info = dict()
-        child_info['widget'] = orphan
-        self.children.append(child_info)
+        if hasattr(self, 'get_children'):
+            pass
+            # child_info = dict()
+            # child_info['widget'] = orphan
+            # self.get_children().append(child_info)
 
     def set_parent(self, parent):
 
@@ -214,8 +213,8 @@ class Widget(Object):
 
     def unchild(self, orphan):
 
-        if hasattr(self, 'children'):
-            if bool(self.children):
+        if hasattr(self, 'get_children'):
+            if bool(self.get_children()):
                 count = 0
                 last_found = None
                 for children in self.get_children():
