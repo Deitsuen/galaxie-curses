@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# It script it publish under GNU GENERAL PUBLIC LICENSE
+# http://www.gnu.org/licenses/gpl-3.0.en.html
+# Author: the Galaxie Curses Team, all rights reserved
+
 import unittest
 from GLXCurses import Container
 from GLXCurses import Adjustment
@@ -11,7 +15,6 @@ from GLXCurses.Utils import is_valid_id
 
 # Unittest
 class TestBin(unittest.TestCase):
-
     # Test
     def test_type(self):
         """Test Container type"""
@@ -136,7 +139,6 @@ class TestBin(unittest.TestCase):
         # test raise
         self.assertRaises(TypeError, container.set_focus_hadjustment, int())
         self.assertRaises(TypeError, container.set_focus_hadjustment, box)
-
 
     def test_child_type(self):
         """Test Container.child-type"""
@@ -360,7 +362,6 @@ class TestBin(unittest.TestCase):
 
         # Create a child
         child1 = Container()
-        child2 = Container()
 
         # Add the child and test
         container.add(child1)
@@ -403,4 +404,3 @@ class TestBin(unittest.TestCase):
         # check raise
         self.assertRaises(TypeError, container.child_get_property, int())
         self.assertRaises(TypeError, container.child_get_property)
-
