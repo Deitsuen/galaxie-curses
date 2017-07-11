@@ -125,6 +125,9 @@ class Adjustment(object):
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Box'
 
+        # Unique ID it permit to individually identify a widget by example for get_focus get_default
+        self.id = new_id()
+
         self.lower = float(0.0)
         self.page_increment = float(0.0)
         self.page_size = float(0.0)
@@ -132,9 +135,6 @@ class Adjustment(object):
         self.minimum_increment = float(0.0)
         self.upper = float(0.0)
         self.value = float(0.0)
-
-        # Internal
-        self.id = new_id()
 
         self.two = None
         self.average = None

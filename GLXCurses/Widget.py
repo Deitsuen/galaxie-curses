@@ -17,13 +17,18 @@ __author__ = 'Tuux'
 
 class Widget(Object):
     def __init__(self):
+        # Load heritage
         Object.__init__(self)
+
+        # It's a GLXCurse Type
+        self.glxc_type = 'GLXCurses.Widget'
 
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Widget'
+
         # Unique ID it permit to individually identify a widget by example for get_focus get_default
-        # self.id = uuid.uuid1().int
         self.id = new_id()
+
         # Widget Setting
         self.set_flags(self.get_default_flags())
 

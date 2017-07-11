@@ -340,12 +340,31 @@ class Container(Widget):
         :raise TypeError: if ``adjustment`` is not a :class:`Adjustment() <GLXCurses.Adjustment.Adjustment()>`
         """
         # Try to exit as soon of possible
-        if not glxc_type(adjustment) or adjustment is None:
-            if adjustment.glxc_type != 'GLXCurses.Adjustment':
-                raise TypeError('"adjustment" argument must be a GLXCurses.Adjustment')
+        if adjustment is not None and not glxc_type(adjustment):
+            raise TypeError('"adjustment" argument must be a GLXCurses object type')
 
-        # If we are here everything look ok
-        self._focus_vadjustment = adjustment
+        if adjustment is not None and adjustment.glxc_type != 'GLXCurses.Adjustment':
+            raise TypeError('"adjustment" argument must be a GLXCurses.Adjustment')
+
+        if adjustment is not None:
+            # prepare adjustment storing system
+            adjustment_properties = {
+
+            }
+
+            adjustment_info = {
+                'widget': adjustment,
+                'type': adjustment.glxc_type,
+                'id': adjustment.id,
+                'properties': adjustment_properties
+            }
+            self._focus_vadjustment = adjustment_info
+        else:
+            self._focus_vadjustment = None
+
+
+
+
 
     def get_focus_hadjustment(self):
         """
@@ -374,12 +393,27 @@ class Container(Widget):
         :raise TypeError: if ``adjustment`` is not a :class:`Adjustment() <GLXCurses.Adjustment.Adjustment()>`
         """
         # Try to exit as soon of possible
-        if not glxc_type(adjustment) or adjustment is None:
-            if adjustment.glxc_type != 'GLXCurses.Adjustment':
-                raise TypeError('"adjustment" argument must be a GLXCurses.Adjustment')
+        if adjustment is not None and not glxc_type(adjustment):
+            raise TypeError('"adjustment" argument must be a GLXCurses object type')
 
-        # If we are here everything look ok
-        self._focus_hadjustment = adjustment
+        if adjustment is not None and adjustment.glxc_type != 'GLXCurses.Adjustment':
+            raise TypeError('"adjustment" argument must be a GLXCurses.Adjustment')
+
+        if adjustment is not None:
+            # prepare adjustment storing system
+            adjustment_properties = {
+
+            }
+
+            adjustment_info = {
+                'widget': adjustment,
+                'type': adjustment.glxc_type,
+                'id': adjustment.id,
+                'properties': adjustment_properties
+            }
+            self._focus_hadjustment = adjustment_info
+        else:
+            self._focus_hadjustment = None
 
     def resize_children(self):
         pass

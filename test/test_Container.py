@@ -3,8 +3,10 @@
 
 import unittest
 from GLXCurses import Container
+from GLXCurses import Adjustment
 from GLXCurses import Box
 from GLXCurses.Utils import glxc_type
+from GLXCurses.Utils import is_valid_id
 
 
 # Unittest
@@ -73,6 +75,68 @@ class TestBin(unittest.TestCase):
         self.assertRaises(TypeError, container.remove, int())
         self.assertRaises(TypeError, container.remove)
         self.assertRaises(TypeError, container.remove, child2, int())
+
+    def test_add_with_properties(self):
+        """Test Container.add_with_property()"""
+        container = Container()
+        # Create a child
+        child1 = Container()
+        # prepare a property
+        child_properties = {
+            'position': 0,
+            'Galaxie': 42
+        }
+        # Add the child
+        container.add_with_properties(child1, properties=child_properties)
+        # We must have the child inside the child list
+        self.assertEqual(container._get_child()['widget'], child1)
+        self.assertEqual(container._get_child()['properties']['Galaxie'], 42)
+        # Test type error
+        self.assertRaises(TypeError, container.add_with_properties, int())
+        self.assertRaises(TypeError, container.add_with_properties, child1, int())
+
+    def test_set_get_focus_vadjustment(self):
+        """Test Container.set_focus_vadjustment() and Container.get_focus_vadjustment()"""
+        # prepare container
+        container = Container()
+        # prepare children
+        adjustment = Adjustment()
+        box = Box()
+        # set
+        container.set_focus_vadjustment(adjustment=adjustment)
+        # get
+        self.assertEqual(container.get_focus_vadjustment()['widget'], adjustment)
+        self.assertTrue(is_valid_id(container.get_focus_vadjustment()['id']))
+        self.assertEqual(type(container.get_focus_vadjustment()['properties']), type(dict()))
+        # set None
+        container.set_focus_vadjustment(adjustment=None)
+        # get None
+        self.assertEqual(container.get_focus_vadjustment(), None)
+        # test raise
+        self.assertRaises(TypeError, container.set_focus_vadjustment, int())
+        self.assertRaises(TypeError, container.set_focus_vadjustment, box)
+
+    def test_set_get_focus_hadjustment(self):
+        """Test Container.set_focus_hadjustment() and Container.get_focus_hadjustment()"""
+        # prepare container
+        container = Container()
+        # prepare children
+        adjustment = Adjustment()
+        box = Box()
+        # set
+        container.set_focus_hadjustment(adjustment=adjustment)
+        # get
+        self.assertEqual(container.get_focus_hadjustment()['widget'], adjustment)
+        self.assertTrue(is_valid_id(container.get_focus_hadjustment()['id']))
+        self.assertEqual(type(container.get_focus_hadjustment()['properties']), type(dict()))
+        # set None
+        container.set_focus_hadjustment(adjustment=None)
+        # get None
+        self.assertEqual(container.get_focus_hadjustment(), None)
+        # test raise
+        self.assertRaises(TypeError, container.set_focus_hadjustment, int())
+        self.assertRaises(TypeError, container.set_focus_hadjustment, box)
+
 
     def test_child_type(self):
         """Test Container.child-type"""
