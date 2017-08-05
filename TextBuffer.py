@@ -108,14 +108,14 @@ class TextBuffer(object):
         self.insert(text, int(choice_position))
 
         if int(choice_position) >= self.noposition:
-            self.insert(text, int(choice_position))
-            print "This insertion on the position {} is success".format(choice_position)
+            print "This insertion on the position {} is a success".format(choice_position)
             print self.buffer
+
         elif int(choice_position) < self.noposition:
             self.buffer.remove(text)
             print "This insertion on the position {} is not available " \
                   "retry with a another position available".format(choice_position)
-
+            print self.buffer
 
 if __name__ == '__main__':
     textbuffer = TextBuffer()
