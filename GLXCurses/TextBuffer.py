@@ -55,6 +55,7 @@ class TextBuffer(object):
 
         :return  number of characters in the buffer
         """
+        
         return len(str(self.buffer))
 
     def text_buffer_get_tag_table(self):
@@ -73,6 +74,7 @@ class TextBuffer(object):
         :param self.text: UTF-8 format text to insert
         :param iter: a position in the buffer
         """
+        
         self.iter = iter
 
         lenght_of_byte = len(text)
@@ -91,8 +93,10 @@ class TextBuffer(object):
         """
         The insert_at_cursor() method is a convenience method that calls the insert() method,
         using the current cursor position as the insertion point.
-        :param text: UTF-8 format text to insert
+       
+       :param text: UTF-8 format text to insert
         """
+        
         print self.insert(self.iter, text)
 
     def emit_insert_text(self):
@@ -127,8 +131,10 @@ class TextBuffer(object):
         if the insertion results from a user action (is interactive).
         view_edit indicates the editability of text that doesn't have a tag affecting editability applied to it.
         Typically the result of view_get_editable() method is appropriate here.
-        :param text: some UTF-8 text
+       
+       :param text: some UTF-8 text
         """
+        
         self.iter_insert_interactive = iter
         self.insert(int(iter), text)
 
@@ -156,6 +162,7 @@ class TextBuffer(object):
         :param start: a position in a TextBuffer
         :param end: another position in the same buffer as start
         """
+        
         text = deepcopy(self.table[start])
         tag = deepcopy(self.table[end])
         if tag not in self.tag_table:
@@ -170,6 +177,7 @@ class TextBuffer(object):
         but does nothing if the insertion point isn’t editable.
         The view_edit() method indicates whether the text is editable at iter if no tags enclosing iter affect editability.
         Typically the result of gtk_text_view_get_editable() is appropriate here.
+       
         :param start: a position in a TextBuffer
         :param end: another position in the same buffer as start
         :param iter: a position in a textbuffer
