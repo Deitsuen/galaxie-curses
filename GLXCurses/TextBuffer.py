@@ -203,6 +203,35 @@ class TextBuffer(object):
                   "retry with a another position available".format(position)
             print self.buffer
 
+    def insert_with_tags(self, iter, text, tags):
+        """
+        The insert_with_tags() method inserts the specified text into the textbuffer at the location specified by iter,
+        applying any optional tags following the first two parameters to the newly-inserted text.
+        This method is a convenience method that is equivalent to calling the insert() method,
+        then the apply_tag() method on the inserted text.
+
+        :param iter: a position in the buffer
+        :param text: UTF-8 text
+        :param tags: one or more optional Tag objects to apply to text
+        :return:
+        """
+        lenght_of_byte = len(text)
+        if lenght_of_byte == -1:
+            self.text = None
+            self.buffer.insert(iter, text)
+            self.emit_insert_text()
+
+        elif tags == 'bold':
+            text_tag_apply = "*{}*".format(text)
+            self.buffer.insert(iter, text_tag_apply)
+            self.emit_insert_text()
+            print self.buffer
+
+        else:
+            self.buffer.insert(iter, text)
+            self.emit_insert_text()
+            print self.buffer
+
 if __name__ == '__main__':
     textbuffer = TextBuffer()
     # print ("Text:      :" + str(textbuffer.get_char_count()))
@@ -212,5 +241,6 @@ if __name__ == '__main__':
     # print textbuffer.insert_range_interactive(textbuffer.buffer, 1, 0)
     # print textbuffer.insert_range(textbuffer.buffer, 1, 0)
     # print textbuffer.insert_interactive(1, "toto")
-    print textbuffer.view_edit()
-    print textbuffer.insert_range_interactive(textbuffer.buffer, 4, 1, 0)
+    # print textbuffer.insert_range_interactive(textbuffer.buffer, 4, 1, 0)
+    # print textbuffer.view_edit()
+    print textbuffer.insert_with_tags(4, "lala", "bold")
