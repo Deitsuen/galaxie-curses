@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
+import os
 import sys
+
+# Require when you haven't GLXCurses as default Package
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(current_dir))
+import GLXCurses
 import curses
 import logging
 from random import randint
@@ -22,7 +27,7 @@ if __name__ == '__main__':
     app.set_name('Galaxie-Curse Demo')
 
     # Create a Menu
-    menu = GLXCurses.MenuModel()
+    menu = GLXCurses.MenuBar()
     menu.app_info_label = app.get_name()
 
     # Create a Window
@@ -40,10 +45,10 @@ if __name__ == '__main__':
 
     # Create a Label
     label1 = GLXCurses.Label()
-    #qlabel1.set_justify('RIGHT')
+    # qlabel1.set_justify('RIGHT')
     label1.set_text('RED WITH BACKGROUND GREEN')
     label1.override_color('RED')
-    #label1.override_background_color('GREEN')
+    # label1.override_background_color('GREEN')
     label1.set_line_wrap_mode('WRAP_CHAR')
     label1.set_text('How does it work?\n'
                     '   Well, the reduce\n'
@@ -59,7 +64,7 @@ if __name__ == '__main__':
                     )
 
     label2 = GLXCurses.Label()
-    #label2.set_justify('CENTER')
+    # label2.set_justify('CENTER')
     label2.set_text('How does it work?\n'
                     '   Well, the reduce\n'
                     '* A Quick Guide to GPLv3\n'
@@ -78,14 +83,13 @@ if __name__ == '__main__':
 
     label3 = GLXCurses.Label()
     label3.set_alignment(0.5, 1.0)
-    #label3.set_justify('RIGHT')
+    # label3.set_justify('RIGHT')
     label3.set_text_with_mnemonic('CY_AN WITH BACKGROUND NORMAL')
     label3.override_color('CYAN')
     label3.set_single_line_mode(1)
     label3.set_max_width_chars(10)
 
     progressbar1 = GLXCurses.ProgressBar()
-    progressbar1.set_spacing(0)
     progressbar1.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar1.get_value(), '%')
     progressbar1.set_text(value)
@@ -96,7 +100,6 @@ if __name__ == '__main__':
     progressbar1.set_inverted(0)
 
     progressbar2 = GLXCurses.ProgressBar()
-    progressbar2.set_spacing(0)
     progressbar2.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar2.get_value(), '%')
     progressbar2.set_text(value)
@@ -107,7 +110,6 @@ if __name__ == '__main__':
     progressbar2.set_inverted(0)
 
     progressbar3 = GLXCurses.ProgressBar()
-    progressbar3.set_spacing(0)
     progressbar3.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar3.get_value(), '%')
     progressbar3.set_text(value)
@@ -118,7 +120,6 @@ if __name__ == '__main__':
     progressbar3.set_inverted(0)
 
     progressbar4 = GLXCurses.ProgressBar()
-    progressbar4.set_spacing(0)
     progressbar4.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar4.get_value(), '%')
     progressbar4.set_text(value)
@@ -129,7 +130,6 @@ if __name__ == '__main__':
     progressbar4.set_inverted(1)
 
     progressbar5 = GLXCurses.ProgressBar()
-    progressbar5.set_spacing(0)
     progressbar5.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar5.get_value(), '%')
     progressbar5.set_text(value)
@@ -140,7 +140,6 @@ if __name__ == '__main__':
     progressbar5.set_inverted(1)
 
     progressbar6 = GLXCurses.ProgressBar()
-    progressbar6.set_spacing(0)
     progressbar6.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar6.get_value(), '%')
     progressbar6.set_text(value)
@@ -151,7 +150,6 @@ if __name__ == '__main__':
     progressbar6.set_inverted(1)
 
     progressbar7 = GLXCurses.ProgressBar()
-    progressbar7.set_spacing(0)
     progressbar7.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar7.get_value(), '%')
     progressbar7.set_text(value)
@@ -162,7 +160,6 @@ if __name__ == '__main__':
     progressbar7.set_inverted(0)
 
     progressbar8 = GLXCurses.ProgressBar()
-    progressbar8.set_spacing(0)
     progressbar8.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar8.get_value(), '%')
     progressbar8.set_text(value)
@@ -173,7 +170,6 @@ if __name__ == '__main__':
     progressbar8.set_inverted(0)
 
     progressbar9 = GLXCurses.ProgressBar()
-    progressbar9.set_spacing(0)
     progressbar9.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar9.get_value(), '%')
     progressbar9.set_text(value)
@@ -184,7 +180,6 @@ if __name__ == '__main__':
     progressbar9.set_inverted(0)
 
     progressbar10 = GLXCurses.ProgressBar()
-    progressbar10.set_spacing(0)
     progressbar10.set_value(0)
     value = '{0:}{1:}'.format(progressbar10.get_value(), '%')
     progressbar10.set_text(value)
@@ -195,7 +190,6 @@ if __name__ == '__main__':
     progressbar10.set_inverted(1)
 
     progressbar11 = GLXCurses.ProgressBar()
-    progressbar11.set_spacing(0)
     progressbar11.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar11.get_value(), '%')
     progressbar11.set_text(value)
@@ -206,7 +200,6 @@ if __name__ == '__main__':
     progressbar11.set_inverted(1)
 
     progressbar12 = GLXCurses.ProgressBar()
-    progressbar12.set_spacing(0)
     progressbar12.set_value(randint(0, 100))
     value = '{0:}{1:}'.format(progressbar12.get_value(), '%')
     progressbar12.set_text(value)
@@ -277,7 +270,6 @@ if __name__ == '__main__':
     hbox_buttons.pack_end(frame_for_check_button)
 
     HSepartor = GLXCurses.HSeparator()
-    HSepartor.set_spacing(0)
     # VSepartor.set_position_type('center')
     # Creat two Vertical Box contener
     vbox1 = GLXCurses.VBox()
@@ -296,13 +288,14 @@ if __name__ == '__main__':
     hbox.pack_end(vbox1)
 
     hbox_progress_widgets = GLXCurses.HBox()
-    hbox_progress_widgets.set_spacing(1)
+    hbox_progress_widgets.set_spacing(0)
     hbox_progress = GLXCurses.HBox()
     vbox_progress = GLXCurses.VBox()
 
     hbox_progress_widgets.pack_end(vbox_progress)
     hbox_progress_widgets.pack_end(hbox_progress)
 
+    hbox_progress.set_spacing(1)
     hbox_progress.pack_end(progressbar1)
     hbox_progress.pack_end(progressbar2)
     hbox_progress.pack_end(progressbar3)
@@ -322,7 +315,7 @@ if __name__ == '__main__':
     win1.add(hbox)
 
     # Creat a Status Bar
-    toolbar = GLXCurses.Toolbar()
+    toolbar = GLXCurses.ToolBar()
     toolbar.button_list = [
         'Help',
         'Normal',
@@ -336,7 +329,13 @@ if __name__ == '__main__':
         'Quit'
     ]
 
-    statusbar = GLXCurses.Statusbar()
+    statusbar = GLXCurses.StatusBar()
+    context_id = statusbar.get_context_id("example")
+
+    messagebar = GLXCurses.MessageBar()
+    message_context_id = messagebar.get_context_id("message")
+    messagebar.push(message_context_id, 'Welcome to Galaxie Curses demonstration')
+
 
     def on_resize(self, event_signal, *event_args):
         message_text = ''
@@ -393,21 +392,24 @@ if __name__ == '__main__':
         val = '{0:}{1:}'.format(progressbar12.get_value(), '%')
         progressbar12.set_text(val)
 
-        #app.refresh()
+        # app.refresh()
+
 
     def on_destroy():
         logging.debug('==> onDestroy')
-        statusbar.push('A Incredible Emiter thing')
+        statusbar.push(context_id, 'A Incredible Emiter thing')
+
 
     def handle_up_button_clicked():
         logging.debug('handleUpButtonClicked')
         current = progressbar10.get_value()
-        progressbar10.set_value(current+1)
+        progressbar10.set_value(current + 1)
         val = '{0:}{1:}'.format(progressbar10.get_value(), '%')
         progressbar10.set_text(val)
 
+
     def handle_keys(self, event_signal, *event_args):
-        logging.debug('HANDLE KEY: '+str(event_args[0]))
+        logging.debug('HANDLE KEY: ' + str(event_args[0]))
 
         if event_args[0] == curses.KEY_F5:
             app.set_is_focus(Button1)
@@ -418,7 +420,8 @@ if __name__ == '__main__':
         # Keyboard temporary thing
         if event_args[0] == curses.KEY_F10 or event_args[0] == ord('q'):
             # Everything have a end, the main loop too ...
-            app.stop()
+            GLXCurses.mainloop.quit()
+
 
     def on_click(self, event_signal, event_args=None):
 
@@ -427,37 +430,46 @@ if __name__ == '__main__':
 
         if event_args['id'] == Button1.get_widget_id():
             current = progressbar9.get_value()
-            progressbar9.set_value(current+1)
+            progressbar9.set_value(current + 1)
             val = '{0:}{1:}'.format(progressbar9.get_value(), '%')
             progressbar9.set_text(val)
-            statusbar.push('Increase progress bar to value: ' + val)
+            statusbar.push(context_id, 'Increase progress bar to value: ' + val)
+            vbox_progress.reorder_child(progressbar9, 4)
 
         if event_args['id'] == Button2.get_widget_id():
             current = progressbar9.get_value()
-            progressbar9.set_value(current-1)
+            progressbar9.set_value(current - 1)
             val = '{0:}{1:}'.format(progressbar9.get_value(), '%')
             progressbar9.set_text(val)
-            statusbar.push('Decrease progress bar to value: ' + val)
+            statusbar.push(context_id, 'Decrease progress bar to value: ' + val)
+            vbox_progress.reorder_child(progressbar9, 3)
 
         if event_args['id'] == Button3.get_widget_id():
-            statusbar.push('Stopping every operation\'s')
+            statusbar.push(context_id, 'Stopping every operation\'s')
             # Everything have a end, the main loop too ...
-            app.stop()
+            GLXCurses.mainloop.quit()
+
+
+    def on_signals(self, event_signal, event_args=None):
+        if event_args['data']['type'] == 'reorder_child':
+            statusbar.push(context_id, 'Reorder child: ' + event_args['data']['widget'])
 
     # Add Everything inside the Application
     app.add_menubar(menu)
     app.add_window(win1)
+    app.add_messagebar(messagebar)
     app.add_statusbar(statusbar)
     app.add_toolbar(toolbar)
 
     # Signals
+    #app.connect('SIGNALS', on_signals)
     app.connect('RESIZE', on_resize)
     app.connect('BUTTON1_CLICKED', on_click, )
     app.connect('BUTTON1_RELEASED', on_click)
     app.connect('CURSES', handle_keys)
 
     # Main loop
-    app.start()
+    GLXCurses.mainloop.run()
 
     # THE END
     sys.exit(0)

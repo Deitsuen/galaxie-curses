@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import uuid
+
 import logging
+from GLXCurses.Utils import new_id
 
 
 class MyEventBus(object):
-
     def __init__(self):
         self.event_buffer = list()
         # Signal
@@ -46,7 +46,7 @@ class MyEventBus(object):
             'handler': handler,
             'argvs': args
         }
-        handler_id = uuid.uuid1().int
+        handler_id = new_id()
         self._get_signal_handlers_dict()[detailed_signal][handler_id] = subscription
         return handler_id
 
@@ -112,6 +112,7 @@ class MyEventBus(object):
             pass
 
     def pop_last_event(self):
+        # noinspection PyBroadException
         try:
             if len(self.event_buffer) > 0:
                 return self.event_buffer.pop()
@@ -120,8 +121,10 @@ class MyEventBus(object):
 
     # detailed_signal: a string containing the signal name
     # *args: additional parameters arg1, arg2
-    def emit(self, detailed_signal, args = []):
-        logging.debug('MyEventBus:emit '+str(detailed_signal)+' - '+str(args))
+    def emit(self, detailed_signal, args=None):
+        if args is None:
+            args = list()
+        logging.debug('MyEventBus:emit ' + str(detailed_signal) + ' - ' + str(args))
         self.event_buffer.insert(0, [detailed_signal, args])
 
     def dispatch(self, event_signal, event_args):
@@ -129,11 +132,13 @@ class MyEventBus(object):
             if subscription == event_signal:
                 for id, infos in infos.iteritems():
                     if id not in self._get_blocked_handler():
-                        if self._get_signal_handlers_dict()[subscription][id]['handler'] not in self._get_blocked_function():
+                        if self._get_signal_handlers_dict()[subscription][id]['handler'] not \
+                                in self._get_blocked_function():
                             if len(event_args):
                                 self._get_signal_handlers_dict()[subscription][id]['handler'](event_args)
                             else:
                                 self._get_signal_handlers_dict()[subscription][id]['handler']()
+
     # Internal Function
     def _reset(self):
         # All subscribers will be cleared.

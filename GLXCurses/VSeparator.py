@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
+from GLXCurses import Widget
+from GLXCurses import glxc
+from GLXCurses.Utils import clamp_to_zero
 import curses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -9,91 +11,247 @@ import curses
 __author__ = 'Tuux'
 
 
-def resize_text(text, max_width, separator='~'):
-    if max_width < len(text):
-        text_to_return = text[:(max_width / 2) - 1] + separator + text[-max_width / 2:]
-        if len(text_to_return) == 1:
-            text_to_return = text[:1]
-        elif len(text_to_return) == 2:
-            text_to_return = str(text[:1] + text[-1:])
-        elif len(text_to_return) == 3:
-            text_to_return = str(text[:1] + separator + text[-1:])
-        return text_to_return
-    else:
-        return text
-
-
-class VSeparator(GLXCurses.Widget):
+class VSeparator(Widget):
     def __init__(self):
-        GLXCurses.Widget.__init__(self)
+        """
+        The GLXCurses.HSeparator widget is a horizontal separator, used to visibly separate the widgets within a \
+        window. It displays a horizontal line.
+
+        :Property's Details:
+
+        .. py:data:: name
+
+            The widget can be named, which allows you to refer to them from a GLXCurses.Style
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`str`                |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | HSeparator                    |
+              +---------------+-------------------------------+
+
+        .. py:data:: Justify
+
+            Justify: CENTER, LEFT, RIGHT
+
+              +---------------+-------------------------------+
+              | Type          | :py:data:`Justify`            |
+              +---------------+-------------------------------+
+              | Flags         | Read / Write                  |
+              +---------------+-------------------------------+
+              | Default value | CENTER                        |
+              +---------------+-------------------------------+
+
+        """
+        # Load heritage
+        Widget.__init__(self)
+
+        # It's a GLXCurse Type
+        self.glxc_type = 'GLXCurses.VSeparator'
+
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('VSeparator')
 
-        # Internal Widget Setting
-        self.vseperator_x = 0
-        self.vseperator_y = self.get_spacing()
+        # Make a Widget Style heritage attribute as local attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
         # Size management
-        #self.set_preferred_height(1)
-
-        # Make a Style heritage attribute
-        if self.style.attribute:
-            self.attribute = self.style.attribute
+        self.set_preferred_width(1)
 
         # Justification: LEFT, RIGHT, CENTER
-        self.justification = 'CENTER'
+        self._justify = glxc.JUSTIFY_CENTER
 
-        self.update_preferred_sizes()
+        # Internal Widget Setting
+        self._x_offset = 0
+        self._y_offset = 0
 
     def draw_widget_in_area(self):
+        """
+        Call by the \
+        :func:`Widget.draw() <GLXCurses.Widget.Widget.draw()>` method each time the \
+        :class:`MainLoop <GLXCurses.MainLoop.MainLoop>` call a \
+        :func:`Application.refresh() <GLXCurses.Application.Application.refresh()>`
+        """
+        self.set_preferred_width(self._get_estimated_preferred_width())
+        self.set_preferred_height(self._get_estimated_preferred_height())
+        self._check_justify()
+        if self.get_height() >= 1:
+            if self.get_width() >= 1:
+                self._draw_vertical_separator()
 
-        if (self.get_height() >= 1 + (self.get_spacing() * 2)) and (self.get_width() >= 1 + (self.get_spacing() * 2)):
-            self.vseperator_x = self.check_justification()
-            self.draw_vertical_separator()
-
-    def check_justification(self):
-        # Check Justification
-        if self.get_justify() == 'CENTER':
-            self.vseperator_x = (self.get_width() / 2) - (self.get_preferred_width() / 2)
-        elif self.get_justify() == 'LEFT':
-            self.vseperator_x = 0 + self.get_spacing()
-        elif self.get_justify() == 'RIGHT':
-            self.vseperator_x = self.get_width() - self.get_preferred_width() - self.get_spacing()
-        return self.vseperator_x
-
-    def get_attr(self, elem, state):
-        return self.attribute[elem][state]
-
-    def draw_vertical_separator(self):
-        # Draw the Vertical Label with Justification and PositionType
-        if self.get_height() >= 1 + (self.get_spacing() * 2):
-            increment = 0
-            for y in range(self.vseperator_y, self.get_height() - self.get_spacing()):
-                self.get_curses_subwin().insch(
-                    self.vseperator_y + increment,
-                    self.vseperator_x,
-                    curses.ACS_VLINE,
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('text', 'STATE_NORMAL'),
-                        bg=self.get_attr('bg', 'STATE_NORMAL'))
-                    )
-                )
-                increment += 1
-
-    def update_preferred_sizes(self):
-        preferred_height = 0
-        preferred_width = 1
-        preferred_height += self.get_height() - (self.get_spacing() * 2)
-        self.set_preferred_height(preferred_height)
-        self.set_preferred_width(preferred_width)
-
-    # Internal curses_subwin functions
     # Justification: LEFT, RIGHT, CENTER
-    def set_justify(self, justification):
-        self.justification = str(justification).upper()
-        self.update_preferred_sizes()
+    def set_justify(self, justify):
+        """
+        Set the Justify of the Vertical separator
+
+         Justify:
+          - LEFT
+          - CENTER
+          - RIGHT
+
+        :param justify: a Justify
+        :type justify: str
+        """
+        if justify in [glxc.JUSTIFY_LEFT, glxc.JUSTIFY_CENTER, glxc.JUSTIFY_RIGHT]:
+            if self.get_justify() != str(justify).upper():
+                self._justify = str(justify).upper()
+                # When the justify is set update preferred sizes store in Widget class
+                self.set_preferred_width(self._get_estimated_preferred_width())
+                self.set_preferred_height(self._get_estimated_preferred_height())
+        else:
+            raise TypeError(u'PositionType must be LEFT or CENTER or RIGHT')
 
     def get_justify(self):
-        return self.justification
+        """
+        Return the Justify of the Vertical separator
 
+         Justify:
+          - LEFT
+          - CENTER
+          - RIGHT
 
+        :return: str
+        """
+        return self._justify
+
+    # Internal
+    def _check_justify(self):
+        """Check the justification of the X axe"""
+        width = self.get_width()
+        preferred_width = self.get_preferred_width()
+
+        if self.get_justify() == glxc.JUSTIFY_CENTER:
+            # Clamp value et impose the center
+            if width is None:
+                estimated_width = 0
+            elif width <= 0:
+                estimated_width = 0
+            elif width == 1:
+                estimated_width = 0
+            else:
+                estimated_width = int(width / 2)
+
+            # Clamp value et impose the center
+            if preferred_width is None:
+                estimated_preferred_width = 0
+            elif preferred_width <= 0:
+                estimated_preferred_width = 0
+            elif preferred_width == 1:
+                estimated_preferred_width = 0
+            else:
+                estimated_preferred_width = int(preferred_width / 2)
+
+            # Make the compute
+            final_value = int(estimated_width - estimated_preferred_width)
+
+            # clamp the result
+            if final_value <= 0:
+                final_value = 0
+
+            # Finally set the value
+            self._set_x_offset(final_value)
+
+        elif self.get_justify() == glxc.JUSTIFY_LEFT:
+
+            # Finally set the value
+            self._set_x_offset(0)
+
+        elif self.get_justify() == glxc.JUSTIFY_RIGHT:
+
+            # Clamp estimated_width
+            estimated_width = clamp_to_zero(width)
+
+            # Clamp preferred_width
+            estimated_preferred_width = clamp_to_zero(preferred_width)
+
+            # Make the compute
+            final_value = int(estimated_width - estimated_preferred_width)
+
+            # clamp the result
+            if final_value <= 0:
+                final_value = 0
+
+            # Finally set the value
+            self._set_x_offset(final_value)
+
+    def _draw_vertical_separator(self):
+        """Draw the Vertical Label with Justification and PositionType"""
+        if self.get_height() >= 1:
+            for y in range(self._get_y_offset(), self.get_height()):
+                self.get_curses_subwin().insch(
+                    int(self._get_y_offset() + y),
+                    int(self._get_x_offset()),
+                    curses.ACS_VLINE,
+                    self.get_style().get_color_pair(
+                        foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
+                        background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
+                    )
+                )
+
+    def _get_estimated_preferred_width(self):
+        """
+        Estimate a preferred width, by consider X Location, allowed width
+
+        :return: a estimated preferred width
+        :rtype: int
+        """
+        estimated_preferred_width = 1
+        return estimated_preferred_width
+
+    def _get_estimated_preferred_height(self):
+        """
+        Estimate a preferred height, by consider Y Location
+
+        :return: a estimated preferred height
+        :rtype: int
+        """
+        estimated_preferred_height = self.get_y()
+        estimated_preferred_height += self.get_height()
+
+        return estimated_preferred_height
+
+    def _set_x_offset(self, number):
+        """
+        Set the Vertical Axe Separator
+
+        :param number: the new value of vseperator_x
+        :type number: int
+        """
+        if type(number) == int:
+            if self._get_x_offset() != number:
+                self._x_offset = number
+        else:
+            raise TypeError(u'>number< is not a int type')
+
+    def _get_x_offset(self):
+        """
+        Return Vertical Axe Separator
+
+        :return: _x_offset
+        :rtype: int
+        """
+        return self._x_offset
+
+    def _set_y_offset(self, number):
+        """
+        Set the Horizontal Axe Separator
+
+        :param number: the new value of vseperator_x
+        :type number: int
+        """
+        if type(number) == int:
+            if self._get_y_offset() != number:
+                self._y_offset = number
+        else:
+            raise TypeError(u'>number< is not a int type')
+
+    def _get_y_offset(self):
+        """
+        Return Horizontal Axe Separator
+
+        :return: vseperator_x
+        :rtype: int
+        """
+        return self._y_offset

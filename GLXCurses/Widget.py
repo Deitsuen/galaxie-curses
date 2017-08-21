@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
-import uuid
+from GLXCurses import Object
+from GLXCurses import Style
+from GLXCurses.Utils import new_id
+
+
+from datetime import datetime
+import random
+#import uuid
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -9,18 +15,22 @@ import uuid
 __author__ = 'Tuux'
 
 
-class Widget(GLXCurses.Object):
+class Widget(Object):
     def __init__(self):
-        GLXCurses.Object.__init__(self)
+        # Load heritage
+        Object.__init__(self)
+
+        # It's a GLXCurse Type
+        self.glxc_type = 'GLXCurses.Widget'
+
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.name = 'Widget'
+
         # Unique ID it permit to individually identify a widget by example for get_focus get_default
-        self.id = uuid.uuid1().int
+        self.id = new_id()
 
         # Widget Setting
-        self.set_flags()
-
-        self.event_handlers = dict()
+        self.set_flags(self.get_default_flags())
 
         self.state = dict()
         self.state['NORMAL'] = True
@@ -28,16 +38,16 @@ class Widget(GLXCurses.Object):
         self.state['PRELIGHT'] = False
         self.state['SELECTED'] = False
         self.state['INSENSITIVE'] = False
-        self.children = list()
+
         # Widget
         self.curses_subwin = None
-        self.spacing = 0
         self.imposed_spacing = 0
         self.widget_decorated = False
 
         # Widget Parent
+        # Set the Application
         self.screen = None
-        self.attribute = None
+        self.attribute_states = None
 
         # Size Management
         self.screen_height = 0
@@ -114,7 +124,8 @@ class Widget(GLXCurses.Object):
         # Each Widget come with it own Style by default
         # It can receive parent Style() or a new Style() during a set_parent() / un_parent() call
         # GLXCApplication is a special case where it have no parent, it role is to impose it own style to each Widget
-        self.style = GLXCurses.Style()
+        self.style = Style()
+
         self.style_backup = None
 
         # Sets the text of tooltip to be the given string.
@@ -130,6 +141,8 @@ class Widget(GLXCurses.Object):
         self.window = None
 
     # Common Widget mandatory
+    def destroy(self):
+        self.unparent()
 
     # Screen
     def get_screen_height(self):
@@ -156,9 +169,6 @@ class Widget(GLXCurses.Object):
     def get_child_visible(self):
         return self.set_visible
 
-    def get_children(self):
-        return self.children
-
     def get_parent(self):
         if self.parent:
             return self.parent
@@ -182,7 +192,11 @@ class Widget(GLXCurses.Object):
         self.parent = parent
 
     def adopt(self, orphan):
-        self.children.append(orphan)
+        if hasattr(self, 'get_children'):
+            pass
+            # child_info = dict()
+            # child_info['widget'] = orphan
+            # self.get_children().append(child_info)
 
     def set_parent(self, parent):
 
@@ -191,9 +205,6 @@ class Widget(GLXCurses.Object):
 
         self.get_parent().adopt(self)
 
-        # POUR MO
-        # self.set_application(self.get_parent().get_application())
-
         # Widget start with own Style, and will use the Style of it parent when it add to a contener
         # GLXCApplication Widget is a special case where it parent is it self.
 
@@ -201,11 +212,26 @@ class Widget(GLXCurses.Object):
         self.set_style(self.get_parent().get_style())
 
     def unchild(self, orphan):
-        self.children.pop(self.children.index(orphan))
+
+        if hasattr(self, 'get_children'):
+            if bool(self.get_children()):
+                count = 0
+                last_found = None
+                for children in self.get_children():
+                    if orphan == children['widget']:
+                        last_found = count
+                    count += 1
+                if last_found is not None:
+                    self.get_children().pop(last_found)
+
+        if hasattr(self, 'child'):
+            if bool(self.child):
+                if self.child['widget'] == orphan:
+                    self.child = None
 
     def unparent(self):
-        self.parent.unchild(self)
-        self.parent = None
+        self.get_parent().unchild(self)
+        self.set_parent(None)
         self.set_style(self.style_backup)
 
     def get_parent_spacing(self):
@@ -235,12 +261,6 @@ class Widget(GLXCurses.Object):
     def get_origin(self):
         return self.get_curses_subwin().getbegyx()
 
-    def set_spacing(self, spacing):
-        self.spacing = spacing
-
-    def get_spacing(self):
-        return self.spacing
-
     def set_decorated(self, decorated):
         self.widget_decorated = decorated
 
@@ -259,10 +279,10 @@ class Widget(GLXCurses.Object):
 
     # Name management use for GLXCStyle color's
     def override_color(self, color):
-        self.get_style().attribute['text']['STATE_NORMAL'] = str(color).upper()
+        self.get_style().get_attribute_states()['text']['STATE_NORMAL'] = str(color).upper()
 
     def override_background_color(self, color):
-        self.get_style().attribute['bg']['STATE_NORMAL'] = str(color).upper()
+        self.get_style().get_attribute_states()['bg']['STATE_NORMAL'] = str(color).upper()
 
     # Size management
     def get_width(self):
@@ -308,6 +328,13 @@ class Widget(GLXCurses.Object):
     # Sets the sensitivity of a curses_subwin.
     # A curses_subwin is sensitive if the user can interact with it. Insensitive widgets are “grayed out”
     # and the user can’t interact with them.
+
+    def set_attribute_states(self, attribute_states):
+        self.attribute_states = attribute_states
+
+    def get_attribute_states(self):
+        return self.attribute_states
+
     # Properties
     def set_app_paintable(self, boolean):
         self.flags['APP_PAINTABLE'] = bool(boolean)
@@ -440,33 +467,37 @@ class Widget(GLXCurses.Object):
 
     # DRAW
     def draw(self):
-        self.height, self.width = self.get_parent().get_curses_subwin().getmaxyx()
-        self.y, self.x = self.get_parent().get_curses_subwin().getbegyx()
+        try:
+            self.height, self.width = self.get_parent().get_curses_subwin().getmaxyx()
+            self.y, self.x = self.get_parent().get_curses_subwin().getbegyx()
 
-        # Check if the Parent have decoration add and 1 to spacing in case
-        padding = self.get_spacing()
-        if self.get_parent().get_decorated():
-            padding += self.get_parent().get_border_width()
+            # Check if the Parent have decoration add and 1 to spacing in case
+            padding = 0
+            if self.get_parent().get_decorated():
+                padding += self.get_parent().get_border_width()
 
-        min_size_width = (padding * 2) + 1
-        min_size_height = (padding * 2) + 1
+            min_size_width = (padding * 2) + 1
+            min_size_height = (padding * 2) + 1
 
-        height_ok = self.get_height() >= min_size_height
-        width_ok = self.get_width() >= min_size_width
+            height_ok = self.get_height() >= min_size_height
+            width_ok = self.get_width() >= min_size_width
 
-        if not height_ok or not width_ok:
-            return
+            if not height_ok or not width_ok:
+                return
 
-        drawing_area = self.get_parent().get_curses_subwin().subwin(
-            self.get_height() - (padding * 2),
-            self.get_width() - (padding * 2),
-            self.get_y() + padding,
-            self.get_x() + padding
-        )
+            drawing_area = self.get_parent().get_curses_subwin().subwin(
+                self.get_height() - (padding * 2),
+                self.get_width() - (padding * 2),
+                self.get_y() + padding,
+                self.get_x() + padding
+            )
 
-        self.set_curses_subwin(drawing_area)
-        if (self.get_height() > self.preferred_height) and (self.get_width() > self.preferred_width):
-            self.draw_widget_in_area()
+            self.set_curses_subwin(drawing_area)
+            if (self.get_height() > self.preferred_height) and (self.get_width() > self.preferred_width):
+                self.draw_widget_in_area()
+
+        except AttributeError:
+            pass
 
     # Selection and Focus
 
@@ -478,22 +509,4 @@ class Widget(GLXCurses.Object):
         self.imposed_spacing = int(spacing)
 
     # Signal management Client part
-    def subscribe(self, event_signal, event_handler):
-        if event_signal not in self.event_handlers:
-            self.event_handlers[event_signal] = list()
 
-        self.event_handlers[event_signal].append(event_handler)
-
-    def unsubscribe(self, event_signal, event_handler):
-        if event_signal in self.event_handlers:
-            self.event_handlers[event_signal].remove(event_handler)
-
-    def handle_and_dispatch_event(self, event_signal, args=None):
-        if args is None:
-            args = []
-        if event_signal in self.event_handlers:
-            for handler in self.event_handlers[event_signal]:
-                handler(self, event_signal, args)
-
-        for child in self.children:
-            child.handle_and_dispatch_event(event_signal, args)

@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 import sys
-
+# Require when you haven't GLXCurses as default Package
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(current_dir))
 import GLXCurses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -25,12 +28,15 @@ if __name__ == '__main__':
     frame1.set_spacing(1)
     frame1.set_label_align(0.5, 0.0)
 
+    hbox1 = GLXCurses.HBox()
+
+    frame1.add(hbox1)
     win_main.add(frame1)
 
     def handle_keys(self, event_signal, *event_args):
         if event_args[0] == ord('q'):
             # Everything have a end, the main loop too ...
-            app.stop()
+            GLXCurses.mainloop.quit()
 
     # Add Everything inside the Application
     app.add_window(win_main)
@@ -39,7 +45,7 @@ if __name__ == '__main__':
     app.connect('CURSES', handle_keys)
 
     # Main loop start
-    app.start()
+    GLXCurses.mainloop.run()
 
     # THE END
     sys.exit(0)

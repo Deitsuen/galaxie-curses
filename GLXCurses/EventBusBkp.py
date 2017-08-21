@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import uuid
+
 import logging
+from GLXCurses.Utils import new_id
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
+
+##############################
+# Migration of Mainloop
+##############################
 
 
 class EventBus(object):
@@ -21,6 +26,14 @@ class EventBus(object):
     # key : a string used as the key
     # data : a Python object that is the value to be associated with the key
     def get_data(self, key):
+        """
+        The get_data() method returns the Python object associated with the specified key or
+        None if there is no data associated with the key or if there is no key associated with the object.
+
+
+        :param key:
+        :return:
+        """
         if key not in self._get_data_dict():
             return None
         elif not len(self._get_data_dict()[key]):
@@ -40,6 +53,7 @@ class EventBus(object):
     # These will all be passed to the signal handler when invoked.
     # detailed_signal: a string containing the signal name
     # *args: additional parameters arg1, arg2
+
     def connect(self, detailed_signal, handler, *args):
         if detailed_signal not in self._get_signal_handlers_dict():
             self._get_signal_handlers_dict()[detailed_signal] = {}
@@ -48,7 +62,7 @@ class EventBus(object):
             'handler': handler,
             'argvs': args
         }
-        handler_id = uuid.uuid1().int
+        handler_id = new_id()
         self._get_signal_handlers_dict()[detailed_signal][handler_id] = subscription
         logging.info(self.__class__.__name__ + ': ' + str(self._get_signal_handlers_dict()[detailed_signal][handler_id]))
         return handler_id
@@ -206,4 +220,4 @@ if __name__ == '__main__':
     # # Data
     event_bus.set_data('coucou', 'lavieestbellemec')
     if event_bus.get_data('coucou'):
-        print event_bus.get_data('coucou')
+        print(event_bus.get_data('coucou'))

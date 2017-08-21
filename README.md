@@ -1,121 +1,111 @@
-# galaxie-curses
-Galaxie ncurses API, is a height level API for ncuses library. The target is Dialog Windows for Print, Browser File, Color selection, like GTK or QT Dialog.
-That API is use for Galaxie Applications.
+[![Build Status](https://travis-ci.org/Tuuux/galaxie-curses.svg?branch=master)](https://travis-ci.org/Tuuux/galaxie-curses)
+Galaxie Curses, ToolKit
+=======================
+- - - -
+<p align="center">
+<img src="https://raw.githubusercontent.com/Tuuux/galaxie-curses/master/docs/source/images/logo_galaxie.png">
+</p>
 
-First show the example file: glxcurses-demo.py
+The Project
+-----------
+**Galaxie Curses** is a free software ToolKit for the NCurses API.
+It can be consider as a text based implementation of the famous GTK+ Library.
 
-```
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-import GLXCurses
-import sys
-import curses
-import logging
+Originally the project have start in 2016 when the author Jérôme.O have start to learn Python.
 
-# It script it publish under GNU GENERAL PUBLIC LICENSE
-# http://www.gnu.org/licenses/gpl-3.0.en.html
-# Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
-__author__ = 'Tuux'
+The Mission
+-----------
+Provide a Text Based ToolKit with powerfull high level Widget (Select Color, Printer Dialog, FileSelector).
 
-if __name__ == '__main__':
-    logging.basicConfig(filename='/tmp/galaxie-curses.log',
-                        level=logging.DEBUG,
-                        format='%(asctime)s, %(levelname)s, %(message)s')
-    logging.info('Started glxcurses-demo')
+During lot of years the main stream was to provide big computer with big GUI Toolkit,
+unfortunately almost nobody have care about ultra low profile computer and we are now in a situation where no mature
+ToolKit is ready to use on **pen computer**. Time's change then it's time to change the world ...
+
+The goal of the version 1.0 will be to create a application like Midnight-Commander with **GLXCurses**.
+
+Midnight-Commander: https://midnight-commander.org
+
+Example
+-------
+
+```python
+    #!/usr/bin/env python
+    # -*- coding: utf-8 -*-
+    import GLXCurses
 
     # Create the main Application
     app = GLXCurses.Application()
-    app.set_name('GLXCurses Buttons Demo')
+    app.set_name('Galaxie-Curse Container Demo')
 
-    # Create a Menu
-    menu = GLXCurses.MenuModel()
-    menu.app_info_label = app.get_name()
-
-    # Create Buttons
-    Button1 = GLXCurses.Button()
-    Button1.set_text('Button')
-
-    RadioButton1 = GLXCurses.RadioButton()
-    RadioButton1.set_text('RadioButton')
-
-    CheckButton1 = GLXCurses.CheckButton()
-    CheckButton1.set_text('CheckButton')
-
-    # Create a new Horizontal Box contener
-    hbox = GLXCurses.HBox()
-    hbox.set_spacing(1)
-
-    hbox.pack_end(Button1)
-    hbox.pack_end(RadioButton1)
-    hbox.pack_end(CheckButton1)
-
-    # Create a Horizontal Separator and a Label
-    hline = GLXCurses.HSeparator()
-
-    label_press_q = GLXCurses.Label()
-    label_press_q.set_text('Press "q" key to exit ...')
-    label_press_q.set_alignment(0.5, 0.3)
-    label_press_q.override_color('yellow')
-
-    # Create a main Vertical Box
-    vbox_main = GLXCurses.VBox()
-    vbox_main.pack_end(hline)
-    vbox_main.pack_end(hbox)
-    vbox_main.pack_end(hline)
-    vbox_main.pack_end(label_press_q)
-
-    # Create the main Window
+    # Create a Window
     win_main = GLXCurses.Window()
-    win_main.add(vbox_main)
 
-    # Create a Status Bar
-    statusbar = GLXCurses.Statusbar()
+    # Create a Frame
+    frame1 = GLXCurses.Frame()
+    frame1.set_label('A Container Frame')
 
-    def handle_keys(self, event_signal, *event_args):
-        logging.debug('HANDLE KEY: '+str(event_args[0]))
+    # Add the frame to the main window
+    win_main.add(frame1)
 
-        if event_args[0] == curses.KEY_F5:
-            app.set_is_focus(Button1)
-
-        if event_args[0] == curses.KEY_F6:
-            Button1.set_sensitive(not Button1.get_sensitive())
-
-        # Keyboard temporary thing
-        if event_args[0] == ord('q'):
-            # Everything have a end, the main loop too ...
-            app.stop()
-
-    def on_click(self, event_signal, event_args=None):
-        if event_args is None:
-            event_args = dict()
-        statusbar.push('')
-        if event_args['id'] == Button1.get_widget_id():
-            statusbar.push(event_args['label'] + ' ' + event_signal)
-        if event_args['id'] == RadioButton1.get_widget_id():
-            if RadioButton1.get_active():
-                statusbar.push(RadioButton1.get_text() + ' ' + 'is active')
-            else:
-                statusbar.push(RadioButton1.get_text() + ' ' + 'is not active')
-
-        if event_args['id'] == CheckButton1.get_widget_id():
-            if CheckButton1.get_active():
-                statusbar.push(CheckButton1.get_text() + ' ' + 'is active')
-            else:
-                statusbar.push(CheckButton1.get_text() + ' ' + 'is not active')
-
-    # Add Everything inside the Application
-    app.add_menubar(menu)
+    # Add the main window inside the application
     app.add_window(win_main)
-    app.add_statusbar(statusbar)
+
+    # The super function call when press keys
+    def handle_keys(self, event_signal, *event_args):
+        if event_args[0] == ord('q'):
+            # Key "q" was pressed
+            GLXCurses.mainloop.quit()
+
     # Signal
-    app.connect('BUTTON1_CLICKED', on_click)
-    app.connect('BUTTON1_RELEASED', on_click)
     app.connect('CURSES', handle_keys)
-    # Main loop
-    app.start()
 
-    # THE END
-    sys.exit(0)
-
-
+    # Main loop start
+    GLXCurses.mainloop.run()
 ```
+More examples can be found here: https://github.com/Tuuux/galaxie-curses/tree/master/examples
+
+Features
+--------
+* MainLoop
+* Signal
+* Application Class
+* Component like Button, Container, ProgressBar
+* Have GTK+ design as roadmap
+* Auto Rezize
+* Minimize NCurses crash
+* Common thing for a text based graphic interface tool kit :)
+
+Contribute
+----------
+The GTK+ v3 documentation is our model: https://developer.gnome.org/gtk3/stable/
+
+- Issue Tracker: https://github.com/Tuuux/galaxie-curses/issues
+- Source Code: https://github.com/Tuuux/galaxie-curses
+
+Documentations
+--------------
+
+[![Documentation Status](https://readthedocs.org/projects/galaxie-curses/badge/?version=latest)](http://galaxie-curses.readthedocs.io/?badge=latest)
+Readthedocs link: http://galaxie-curses.readthedocs.io
+
+Note for GTK+ Project Developer's
+---------------------------------
+I'm really confuse about the big copy/past i making from the GTK+ documentation during the creation of
+the Galaxie-Curses documentation, that because english is not my primary language and i'm a bit limited for make a
+ToolKit documentation without that ...
+Consider that actual documentation of Galaxie-Curse as the better i can do and it
+include to copy/past large parts of the GTK+ documentation. (sorry about that)
+
+As you probably see **Galaxie-Curses** is a Text Based **GTK+** like, then the GTK+ Doc is the **roadmap**.
+
+Thanks
+------
+All **Galaxie** API is develop with **pycharm** as IDE from **JetBrains** 
+link: https://www.jetbrains.com
+
+JetBrains graciously provide to us licenses for **pycharm profesional**
+
+License
+-------
+GNU GENERAL PUBLIC LICENSE Version 3
+https://github.com/Tuuux/galaxie-curses/blob/master/LICENSE

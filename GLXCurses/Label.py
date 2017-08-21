@@ -27,9 +27,18 @@ def resize_text(text, max_width, separator='~'):
 
 class Label(GLXCurses.Misc):
     def __init__(self):
+        # Load heritage
         GLXCurses.Misc.__init__(self)
+
+        # It's a GLXCurse Type
+        self.glxc_type = 'GLXCurses.Label'
+
         # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('Label')
+
+        # Make a Widget Style heritage attribute as local attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
         # Label Properties
         # The current position of the insertion cursor in chars. Allowed values: >= 0. Default value: 0
@@ -115,10 +124,6 @@ class Label(GLXCurses.Misc):
         # Size management
         self.set_preferred_height(1)
         self.update_preferred_sizes()
-
-        # Make a Style heritage attribute
-        if self.style.attribute:
-            self.attribute = self.style.attribute
 
     ###########
     # Methods #
@@ -223,7 +228,7 @@ class Label(GLXCurses.Misc):
             preferred_height = 1
 
             preferred_width += len(self.get_text())
-            preferred_width += (self.get_spacing() + self._get_imposed_spacing()) * 2
+            preferred_width += self._get_imposed_spacing() * 2
 
             self.set_preferred_height(preferred_height)
             self.set_preferred_width(preferred_width)
@@ -308,7 +313,7 @@ class Label(GLXCurses.Misc):
         return self.wrap_mode
 
     # Internal
-    def _get_label_x(self):
+    def _get_x_offset(self):
         xalign, _ = self.get_alignment()
         xpadd, _ = self.get_padding()
         value = 0
@@ -326,7 +331,7 @@ class Label(GLXCurses.Misc):
             value -= xpadd
         return value
 
-    def _get_label_y(self):
+    def _get_y_offset(self):
         _, yalign = self.get_alignment()
         _, ypadd = self.get_padding()
 
@@ -363,12 +368,12 @@ class Label(GLXCurses.Misc):
     def _draw_single_line_mode(self):
         try:
             self.get_curses_subwin().addstr(
-                self._get_label_y(),
-                self._get_label_x(),
+                self._get_y_offset(),
+                self._get_x_offset(),
                 self._get_single_line_resided_label_text(),
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                    bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                 )
             )
         except curses.error:
@@ -383,24 +388,27 @@ class Label(GLXCurses.Misc):
             try:
                 if self.get_max_width_chars() <= -1:
                     self.get_curses_subwin().addstr(
-                        self._get_label_y() + increment,
-                        self._get_label_x(),
+                        self._get_y_offset() + increment,
+                        self._get_x_offset(),
                         self._check_justification(text=line, width=max_width),
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                            bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                        self.get_style().get_color_pair(
+                            foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                         )
                     )
                 elif self.get_max_width_chars() == 0:
                     pass
                 else:
                     self.get_curses_subwin().addstr(
-                        self._get_label_y() + increment,
-                        self._get_label_x(),
-                        self._check_justification(text=line, width=self.get_max_width_chars())[:self.get_max_width_chars()],
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_style().get_attr('text', 'STATE_NORMAL'),
-                            bg=self.get_style().get_attr('bg', 'STATE_NORMAL'))
+                        self._get_y_offset() + increment,
+                        self._get_x_offset(),
+                        self._check_justification(
+                            text=line,
+                            width=self.get_max_width_chars()
+                        )[:self.get_max_width_chars()],
+                        self.get_style().get_color_pair(
+                            foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                         )
                     )
             except curses.error:
@@ -468,9 +476,9 @@ class Label(GLXCurses.Misc):
         elif self.get_justify() == glxc.JUSTIFY_RIGHT:
             return "{0:>{1}}".format(text, width)
         else:
-            self.set_alignment(self._get_label_x(), self._get_label_y())
+            self.set_alignment(self._get_x_offset(), self._get_y_offset())
         return self.text_x
 
     def _check_position_type(self):
-        self.text_y = self._get_label_y()
+        self.text_y = self._get_y_offset()
         return self.text_y

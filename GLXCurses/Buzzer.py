@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import time
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -12,23 +11,46 @@ __author__ = 'Tuux'
 # http://www.tonalsoft.com/enc/number/12edo.aspx
 
 try:
+    # noinspection PyUnresolvedReferences
     import winsound
 
-    def playsound(frequency, duration):
+    def play_sound(frequency, duration):
         winsound.Beep(frequency, duration)
+
 except ImportError:
     import os
 
 
-    def playsound(frequency, duration):
+    def play_sound(frequency, duration):
+        """
+        Play a sound via the Buzzer of the computer
+
+        :param frequency: frequence in Hertz (HZ) of the note to play
+        :type frequency: int
+        :param duration: how many time we play the note in Millisecond (ms)
+        :type duration: int
+        """
         # apt-get install beep
         os.system('beep -f %s -l %s' % (frequency, duration))
 
 
 class Buzzer(object):
+    """
+    :Description:
+
+    The famous buzzer class, why not implement a wireless protocol with the buzzer ?
+
+    .. py:attribute:: tempo
+
+           Beats per minute (bpm) is a unit typically used as a measure of tempo
+
+              :Type: :py:data:`float`
+              :Flags: Read / Write
+              :Default value: 110.0
+    """
     def __init__(self):
         #
-        self.tempo = 110
+        self.tempo = 110.0
 
         # Set Notes
         self.midi_notes = list()
@@ -194,40 +216,126 @@ class Buzzer(object):
         self.midi_notes.append([5,  127, 'G',     12543.8539514160,  -6.9000000])
 
     def get_tempo(self):
-        return self.tempo
+        """
+        Get the tempo attribute
 
-    def set_tempo(self, tempo=110):
+        :return: tempo attribute value is in BPM
+        :rtype: float
+        """
+        return float(self.tempo)
+
+    def set_tempo(self, tempo=110.0):
+        """
+        Set the tempo attribute
+
+        :param tempo: tempo value in BPM
+        :type tempo: float
+        """
         self.tempo = float(tempo)
 
     def get_tempo_to_ms(self):
-        return 60000 / self.get_tempo()
+        """
+        Get actual tempo value in Millisecond (ms)
+
+        :return: tempo value in ms
+        :rtype: int
+        """
+        return int(60000 / self.get_tempo())
 
     def get_croche(self):
-        return self.get_tempo_to_ms() / 2
+        """
+        Get the **Croche** it consist to devise the tempo by 2
+
+        :return: tempo value div by 2 in Millisecond (ms)
+        :rtype: int
+        """
+        return int(self.get_tempo_to_ms() / 2)
 
     def get_double_croche(self):
-        return self.get_tempo_to_ms() / 4
+        """
+        Get the **Double Croche** it consist to devise the tempo by 4
+
+        :return: tempo value div by 4 in Millisecond (ms)
+        :rtype: int
+        """
+        return int(self.get_tempo_to_ms() / 4)
 
     def get_triple_croche(self):
+        """
+        Get the **Triple Croche** it consist to devise the tempo by 8
+
+        :return: tempo value div by 8 in Millisecond (ms)
+        :rtype: int
+        """
         return self.get_tempo_to_ms() / 8
 
     def get_blanche(self):
-        return self.get_tempo_to_ms() * 2
+        """
+        Get the **Blanche** it consist to multiply the tempo by 2
+
+        :return: tempo value div by 2 in Millisecond (ms)
+        :rtype: int
+        """
+        return int(self.get_tempo_to_ms() * 2)
 
     def get_triolet(self):
-        return self.get_tempo_to_ms() / 3
+        """
+        Get the **Triolet** it consist to multiply the tempo by 3
+
+        :return: tempo value div by 3 in Millisecond (ms)
+        :rtype: int
+        """
+        return int(self.get_tempo_to_ms() / 3)
 
     def get_notes(self):
+        """
+        Get MIDI notes list , each item contain a list as container
+
+        **Notes Structure:**
+        list(Octave, Midi_Note_Number, Note_Name, Frequency_Hz, Absolute_Cents)
+
+        .. code: python
+
+           self.midi_notes = list()
+           self.midi_notes.append([1,  72, 'C',      523.2511306012, -5.700])
+
+        :return: the entrie midi note list
+        :rtype: list(list(),list(),list())
+        """
         return self.midi_notes
 
-    def get_ms_to_tempo(self, ms):
-        return 60000 / ms
+    @staticmethod
+    def get_ms_to_tempo(ms):
+        """
+        Get the conversion of a ms value to a tempo value
+
+        :param ms: tempo value in Millisecond (ms)
+        :type ms: int
+        :return: 60000 divised by Millisecond (ms) value
+        :rtype: float
+        """
+        return float(60000 / ms)
 
     def get_tempo_to_hertz(self):
-        return self.get_tempo() / 60
+        """
+        Get the conversion of the tempo in BPM to the frequency in Hz
 
-    def get_hertz_to_ms(self, hz):
-        return (1 / hz) * 1000
+        :return: tempo divised by 60
+        :rtype: int
+        """
+        return int(self.get_tempo() / 60)
+
+    @staticmethod
+    def get_hertz_to_ms(hz):
+        """
+        Get the conversion of a **Hz** value to a **ms** value
+
+        :param hz: frequence in Hertz (**Hz**)
+        :type hz: int
+        :return: the duration of the period frequency in ms (**ms**)
+        :rtype: int
+        """
+        return int((1 / hz) * 1000)
 
 if __name__ == '__main__':
     buzzer = Buzzer()
@@ -240,7 +348,7 @@ if __name__ == '__main__':
                 line += ' '
                 line += str(note[1])
                 print (line)
-                playsound(int(note[3]), buzzer.get_triple_croche())
+                play_sound(int(note[3]), buzzer.get_triple_croche())
 
         for note in reversed(buzzer.get_notes()):
             if note[3] > 50:
@@ -249,7 +357,4 @@ if __name__ == '__main__':
                 line += ' '
                 line += str(note[1])
                 print (line)
-                playsound(int(note[3]), buzzer.get_triple_croche())
-
-
-
+                play_sound(int(note[3]), buzzer.get_triple_croche())

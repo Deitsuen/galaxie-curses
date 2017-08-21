@@ -1,28 +1,32 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
-import curses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
-# Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
-__author__ = 'Tuux'
+# Author: the Galaxie Curses Team, all rights reserved
+import GLXCurses
+import curses
 
 
-class MenuModel(GLXCurses.Widget):
+class MenuBar(GLXCurses.Widget):
     def __init__(self):
         GLXCurses.Widget.__init__(self)
-        self.set_name('MenuModel')
+        self.glxc_type = 'GLXCurses.MenuBar'
+        self.set_name('MenuBar')
 
         # Internal Widget Setting
         self.app_info_label = None
 
         # Make a Style heritage attribute
-        if self.get_style().attribute:
-            self.attribute = self.get_style().attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
-    def draw(self):
+    def draw_widget_in_area(self):
+        """
+        White the menubar to the screen, the location is imposed to top left corner
+        """
         app_info_label = self.app_info_label
+
         drawing_area = self.get_screen().subwin(
             0,
             0,
@@ -36,16 +40,16 @@ class MenuModel(GLXCurses.Widget):
                     0,
                     0,
                     str(' ' * (self.get_width() - 1)),
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('dark', 'STATE_NORMAL'),
-                        bg=self.get_attr('light', 'STATE_NORMAL'))
+                    self.get_style().get_color_pair(
+                        foreground=self.get_style().get_color_text('dark', 'STATE_NORMAL'),
+                        background=self.get_style().get_color_text('light', 'STATE_NORMAL')
                     )
                 )
             self.get_curses_subwin().bkgdset(
                     ord(' '),
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('dark', 'STATE_NORMAL'),
-                        bg=self.get_attr('light', 'STATE_NORMAL'))
+                    self.get_style().get_color_pair(
+                        foreground=self.get_style().get_color_text('dark', 'STATE_NORMAL'),
+                        background=self.get_style().get_color_text('light', 'STATE_NORMAL')
                     )
                 )
         if self.app_info_label:
@@ -55,22 +59,19 @@ class MenuModel(GLXCurses.Widget):
                         0,
                         (self.get_width() - 1) - len(str(app_info_label[:-1])),
                         app_info_label[:-1],
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('dark', 'STATE_NORMAL'),
-                            bg=self.get_attr('light', 'STATE_NORMAL'))
+                        self.get_style().get_color_pair(
+                            foreground=self.get_style().get_color_text('dark', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_text('light', 'STATE_NORMAL')
                         )
                     )
                     self.get_curses_subwin().insstr(
                         0,
                         self.get_width() - 1,
                         app_info_label[-1:],
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('dark', 'STATE_NORMAL'),
-                            bg=self.get_attr('light', 'STATE_NORMAL'))
+                        self.get_style().get_color_pair(
+                            foreground=self.get_style().get_color_text('dark', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_text('light', 'STATE_NORMAL')
                         )
                     )
                 except curses.error:
                     pass
-
-    def get_attr(self, elem, state):
-        return self.attribute[elem][state]

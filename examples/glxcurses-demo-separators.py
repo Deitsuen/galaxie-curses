@@ -1,9 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
+import os
 import sys
+# Require when you haven't GLXCurses as default Package
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(current_dir))
+import GLXCurses
 import curses
 import logging
+from GLXCurses import glxc
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -21,7 +26,7 @@ if __name__ == '__main__':
     app.set_name('GLXCurses Buttons Demo')
 
     # Create a Menu
-    menu = GLXCurses.MenuModel()
+    menu = GLXCurses.MenuBar()
     menu.app_info_label = app.get_name()
 
     # Create Buttons
@@ -34,16 +39,29 @@ if __name__ == '__main__':
     CheckButton1 = GLXCurses.CheckButton()
     CheckButton1.set_text('CheckButton')
 
+    # Create a Horizontal Separator and a Label
+    hline1 = GLXCurses.HSeparator()
+    hline1.set_position_type('BOTTOM')
+    hline2 = GLXCurses.HSeparator()
+    hline2.set_position_type('TOP')
+
+    vline1 = GLXCurses.VSeparator()
+    vline2 = GLXCurses.VSeparator()
+    vline2.set_justify('LEFT')
+    vline1.set_justify('RIGHT')
+
     # Create a new Horizontal Box contener
     hbox = GLXCurses.HBox()
     hbox.set_spacing(1)
 
     hbox.pack_end(Button1)
+    hbox.pack_end(vline1)
     hbox.pack_end(RadioButton1)
+    hbox.pack_end(vline2)
     hbox.pack_end(CheckButton1)
 
-    # Create a Horizontal Separator and a Label
-    hline = GLXCurses.HSeparator()
+
+    vline3 = GLXCurses.VSeparator()
 
     label_press_q = GLXCurses.Label()
     label_press_q.set_text('Press "q" key to exit ...')
@@ -52,9 +70,9 @@ if __name__ == '__main__':
 
     # Create a main Vertical Box
     vbox_main = GLXCurses.VBox()
-    vbox_main.pack_end(hline)
+    vbox_main.pack_end(hline1)
     vbox_main.pack_end(hbox)
-    vbox_main.pack_end(hline)
+    vbox_main.pack_end(hline2)
     vbox_main.pack_end(label_press_q)
 
     # Create the main Window
@@ -62,7 +80,8 @@ if __name__ == '__main__':
     win_main.add(vbox_main)
 
     # Create a Status Bar
-    statusbar = GLXCurses.Statusbar()
+    statusbar = GLXCurses.StatusBar()
+    context_id = statusbar.get_context_id("example")
 
     def handle_keys(self, event_signal, *event_args):
         logging.debug('HANDLE KEY: '+str(event_args[0]))
@@ -76,25 +95,25 @@ if __name__ == '__main__':
         # Keyboard temporary thing
         if event_args[0] == ord('q'):
             # Everything have a end, the main loop too ...
-            app.stop()
+            GLXCurses.mainloop.quit()
 
     def on_click(self, event_signal, event_args=None):
         if event_args is None:
             event_args = dict()
-        statusbar.push('')
+        statusbar.push(context_id, '')
         if event_args['id'] == Button1.get_widget_id():
-            statusbar.push(event_args['label'] + ' ' + event_signal)
+            statusbar.push(context_id, event_args['label'] + ' ' + event_signal)
         if event_args['id'] == RadioButton1.get_widget_id():
             if RadioButton1.get_active():
-                statusbar.push(RadioButton1.get_text() + ' ' + 'is active')
+                statusbar.push(context_id, RadioButton1.get_text() + ' ' + 'is active')
             else:
-                statusbar.push(RadioButton1.get_text() + ' ' + 'is not active')
+                statusbar.push(context_id, RadioButton1.get_text() + ' ' + 'is not active')
 
         if event_args['id'] == CheckButton1.get_widget_id():
             if CheckButton1.get_active():
-                statusbar.push(CheckButton1.get_text() + ' ' + 'is active')
+                statusbar.push(context_id, CheckButton1.get_text() + ' ' + 'is active')
             else:
-                statusbar.push(CheckButton1.get_text() + ' ' + 'is not active')
+                statusbar.push(context_id, CheckButton1.get_text() + ' ' + 'is not active')
 
     # Add Everything inside the Application
     app.add_menubar(menu)
@@ -104,8 +123,9 @@ if __name__ == '__main__':
     app.connect('BUTTON1_CLICKED', on_click)
     app.connect('BUTTON1_RELEASED', on_click)
     app.connect('CURSES', handle_keys)
+
     # Main loop
-    app.start()
+    GLXCurses.mainloop.run()
 
     # THE END
     sys.exit(0)

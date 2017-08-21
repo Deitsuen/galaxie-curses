@@ -1,7 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
+import os
 import sys
+# Require when you haven't GLXCurses as default Package
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(current_dir))
+import GLXCurses
+
 import curses
 import logging
 
@@ -21,7 +26,7 @@ if __name__ == '__main__':
     app.set_name('GLXCurses Entry Demo')
 
     # Create a Menu
-    menu = GLXCurses.MenuModel()
+    menu = GLXCurses.MenuBar()
     menu.app_info_label = app.get_name()
 
     # Create a EntryBuffer thing
@@ -60,45 +65,55 @@ if __name__ == '__main__':
     win_main.add(vbox_main)
 
     # Create a Status Bar
-    statusbar = GLXCurses.Statusbar()
+    statusbar = GLXCurses.StatusBar()
+    context_id = statusbar.get_context_id("example")
+    signal_context_id = statusbar.get_context_id("SIGNAL")
+    button1_context_id = statusbar.get_context_id("BUTTON1")
+    arrow_pressed_context_id = statusbar.get_context_id("ARROW_PRESSED")
 
     def handle_keys(self, event_signal, *event_args):
-        logging.debug('HANDLE KEY: '+str(event_args[0]))
+        statusbar.remove_all(arrow_pressed_context_id)
+        statusbar.push(arrow_pressed_context_id, 'HANDLE KEY: ' + str(event_args[0]))
 
         if event_args[0] == curses.KEY_F5:
-            GLXCurses.application.set_is_focus(Button1)
+            if app.get_is_focus() == Button1.id:
+                app.set_is_focus(None)
+            else:
+                app.set_is_focus(Button1)
 
         if event_args[0] == curses.KEY_F6:
             Button1.set_sensitive(not Button1.get_sensitive())
 
         if event_args[0] == curses.KEY_UP:
             x, y = label_press_q.get_alignment()
-            y -= 0.1
+            y -= 0.033
             label_press_q.set_alignment(x, y)
+
         if event_args[0] == curses.KEY_DOWN:
             x, y = label_press_q.get_alignment()
-            y += 0.1
+            y += 0.033
             label_press_q.set_alignment(x, y)
         if event_args[0] == curses.KEY_RIGHT:
             x, y = label_press_q.get_alignment()
-            x += 0.1
+            x += 0.033
             label_press_q.set_alignment(x, y)
         if event_args[0] == curses.KEY_LEFT:
             x, y = label_press_q.get_alignment()
-            x -= 0.1
+            x -= 0.033
             label_press_q.set_alignment(x, y)
 
         # Keyboard temporary thing
         if event_args[0] == ord('q'):
             # Everything have a end, the main loop too ...
-            app.stop()
+            GLXCurses.mainloop.quit()
+
 
     def on_click(self, event_signal, event_args=None):
         if event_args is None:
             event_args = dict()
-        statusbar.push('')
         if event_args['id'] == Button1.get_widget_id():
-            statusbar.push(event_args['label'] + ' ' + event_signal)
+            statusbar.remove_all(button1_context_id)
+            statusbar.push(button1_context_id, event_args['label'] + ' ' + event_signal)
             EntryBuffer1.delete_text(0, 1)
             Button1.set_text(EntryBuffer1.get_text())
 
@@ -106,22 +121,28 @@ if __name__ == '__main__':
     def signal_event(self, event_signal, event_args=None):
         if event_args is None:
             event_args = dict()
-        statusbar.push('')
-        statusbar.push(event_args['label'] + ' ' + event_signal)
+
+        # Crash AUTO
+        #statusbar.push(
+        #    signal_context_id, "{0}: {1}".format(event_signal, event_args)
+        #)
+
 
     # Add Everything inside the Application
     app.add_menubar(menu)
     app.add_window(win_main)
+    #app.remove_window(win_main)
     app.add_statusbar(statusbar)
 
+
     # Event's and Signals
-    app.connect('BUTTON1_CLICKED', on_click)   # Mouse Button
+    app.connect('BUTTON1_CLICKED', on_click)  # Mouse Button
     app.connect('BUTTON1_RELEASED', on_click)  # Mouse Button
-    app.connect('CURSES', handle_keys)         # Keyboard
-    app.connect('SIGNALS', signal_event)       # Something it emit a signal
+    app.connect('CURSES', handle_keys)  # Keyboard
+    app.connect('SIGNALS', signal_event)  # Something it emit a signal
 
     # Main loop
-    app.start()
+    GLXCurses.mainloop.run()
 
     # THE END
     sys.exit(0)

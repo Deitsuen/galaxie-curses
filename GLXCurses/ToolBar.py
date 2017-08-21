@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import GLXCurses
-import curses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -9,37 +8,35 @@ import curses
 __author__ = 'Tuux'
 
 
-def resize_text(text, max_width, separator='~'):
-    if max_width < len(text):
-        text_to_return = text[:(max_width / 2) - 1] + separator + text[-max_width / 2:]
-        if len(text_to_return) == 1:
-            text_to_return = text[:1]
-        elif len(text_to_return) == 2:
-            text_to_return = str(text[:1] + text[-1:])
-        elif len(text_to_return) == 3:
-            text_to_return = str(text[:1] + separator + text[-1:])
-        return text_to_return
-    else:
-        return text
-
-
-class Toolbar(GLXCurses.Widget):
+class ToolBar(GLXCurses.Widget):
     def __init__(self):
         GLXCurses.Widget.__init__(self)
-        self.set_name('Toolbar')
+        self.glxc_type = 'GLXCurses.ToolBar'
+        self.set_name('ToolBar')
 
         # Widget setting
-        if self.style.attribute:
-            self.text_fg = self.style.attribute['dark']['STATE_NORMAL']
-            self.text_bg = self.style.attribute['light']['STATE_NORMAL']
-            self.text_prefix_fg = self.style.attribute['text']['STATE_NORMAL']
-            self.text_prefix_bg = self.style.attribute['dark']['STATE_NORMAL']
-            self.widget_fg = self.style.attribute['dark']['STATE_NORMAL']
-            self.widget_bg = self.style.attribute['dark']['STATE_NORMAL']
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
-            self.color_text_normal = self.style.get_curses_pairs(fg=self.text_fg, bg=self.text_bg)
-            self.color_text_prefix = self.style.get_curses_pairs(fg=self.text_prefix_fg, bg=self.text_prefix_bg)
-            self.color_normal = self.style.get_curses_pairs(fg=self.widget_fg, bg=self.widget_bg)
+            self.text_fg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
+            self.text_bg = self.get_style().get_attribute_states()['light']['STATE_NORMAL']
+            self.text_prefix_fg = self.get_style().get_attribute_states()['text']['STATE_PRELIGHT']
+            self.text_prefix_bg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
+            self.widget_fg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
+            self.widget_bg = self.get_style().get_attribute_states()['dark']['STATE_NORMAL']
+
+            self.color_text_normal = self.get_style().get_color_pair(
+                foreground=self.text_fg,
+                background=self.text_bg
+            )
+            self.color_text_prefix = self.get_style().get_color_pair(
+                foreground=self.text_prefix_fg,
+                background=self.text_prefix_bg
+            )
+            self.color_normal = self.get_style().get_color_pair(
+                foreground=self.widget_fg,
+                background=self.widget_bg
+            )
         else:
             self.color_text_normal = 0
             self.color_text_prefix = 0
@@ -67,7 +64,7 @@ class Toolbar(GLXCurses.Widget):
         drawing_area = self.get_screen().subwin(
             0,
             0,
-            screen_height - 1,
+            int(screen_height - 1),
             0
         )
 
@@ -88,7 +85,7 @@ class Toolbar(GLXCurses.Widget):
             dv = widget_width / req_button_number + 1
             md = widget_width % req_button_number + 1
             i = 0
-            for i in range(0, req_button_number / 2):
+            for i in range(0, int(req_button_number / 2)):
                 pos += dv
                 if req_button_number / 2 - 1 - i < md / 2:
                     pos += 1
@@ -113,57 +110,57 @@ class Toolbar(GLXCurses.Widget):
                     0,
                     0,
                     str(" " * int(widget_width)),
-                    curses.color_pair(self.color_text_normal)
+                    self.color_text_normal
                 )
                 self.curses_subwin.insstr(
                     0,
-                    widget_width - 1,
-                    " ",
-                    curses.color_pair(self.color_text_normal)
+                    int(widget_width - 1),
+                    str(' '),
+                    self.color_text_normal
                 )
                 self.curses_subwin.addstr(
                     0,
                     0,
                     "",
-                    curses.color_pair(self.color_text_normal)
+                    self.color_text_normal
                 )
         count = 0
         for num in range(0, max_can_be_display - 1):
             if count == 0:
                 self.curses_subwin.addstr(
                     str('{0: >2}'.format(count + 1)),
-                    curses.color_pair(self.color_text_prefix)
+                    self.color_text_prefix
                 )
                 self.curses_subwin.addstr(
                     str(item_list[count]),
-                    curses.color_pair(self.color_text_normal)
+                    self.color_text_normal
                 )
             elif 0 <= count < max_can_be_display - 1:
                 if screen_width - (labels_end_coord[count - 1] + 0) >= len(item_list[count]) + 3:
                     self.curses_subwin.addstr(
                         0,
-                        (labels_end_coord[count - 1] + 0),
-                        "",
-                        curses.color_pair(self.color_text_normal)
+                        int((labels_end_coord[count - 1] + 0)),
+                        str(''),
+                        self.color_text_normal
                     )
                     self.curses_subwin.addstr(
                         str('{0: >2}'.format(count + 1)),
-                        curses.color_pair(self.color_text_prefix)
+                        self.color_text_prefix
                     )
                     self.curses_subwin.addstr(
                         str(item_list[count]),
-                        curses.color_pair(self.color_text_normal)
+                        self.color_text_normal
                     )
             elif count >= max_can_be_display - 1:
                 if screen_width - (labels_end_coord[count - 1] + 1) >= len(item_list[count]) + 3:
                     self.curses_subwin.addstr(
                         0,
-                        (labels_end_coord[count - 1] + 1),
+                        int(labels_end_coord[count - 1] + 1),
                         str('{0: >2}'.format(count + 1)),
-                        curses.color_pair(self.color_text_prefix)
+                        self.color_text_prefix
                     )
                     self.curses_subwin.addstr(
-                        item_list[count],
-                        curses.color_pair(self.color_text_normal)
+                        str(item_list[count]),
+                        self.color_text_normal
                     )
             count += 1

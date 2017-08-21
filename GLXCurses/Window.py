@@ -1,29 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import GLXCurses
 import curses
-
+from GLXCurses import Bin
+from GLXCurses import Application
+from GLXCurses.Utils import resize_text
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
 __author__ = 'Tuux'
 
 
-def resize_text(text, max_width, separator='~'):
-    if max_width < len(text):
-        return text[:(max_width / 2) - 1] + separator + text[-max_width / 2:]
-    else:
-        return text
-
-
-class Window(GLXCurses.Bin):
+class Window(Bin):
     def __init__(self):
-        GLXCurses.Bin.__init__(self)
+        Bin.__init__(self)
+        self.glxc_type = 'GLXCurses.Window'
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('Window')
 
         # Make a Style heritage attribute
-        if self.style.attribute:
-            self.attribute = self.style.attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
         self.preferred_height = 2
         self.preferred_width = 2
@@ -31,6 +27,9 @@ class Window(GLXCurses.Bin):
         #####################
         # Window Properties #
         #####################
+
+        # Set the Application
+        self.application = Application()
 
         # If True, the window should receive the input focus. Default value: True.
         self.accept_focus = True
@@ -139,25 +138,35 @@ class Window(GLXCurses.Bin):
         ###########################
 
     # GLXC Window Functions
+    def new(self):
+        """
+        Creates a new :func:`GLXCurses.Window <GLXCurses.Window.Window>` instance ready to use.
+
+        :return: the new Window
+        :rtype: GLXCurses.Window
+        """
+        self.__init__()
+        return self
+
     def draw_widget_in_area(self):
 
         # Apply the Background color
         self.get_curses_subwin().bkgdset(
             ord(' '),
-            curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_attr('text', 'STATE_NORMAL'),
-                bg=self.get_attr('bg', 'STATE_NORMAL'))
+            self.get_style().get_color_pair(
+                foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
+                background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
             )
         )
         self.get_curses_subwin().bkgd(
             ord(' '),
-            curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_attr('text', 'STATE_NORMAL'),
-                bg=self.get_attr('bg', 'STATE_NORMAL'))
+            self.get_style().get_color_pair(
+                foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
+                background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
             )
         )
 
-        # Check widgets to display
+        # Check widgets to display in side the GLXCuses.Bin
         if bool(self.get_child()):
             self.get_child().set_style(self.get_style())
             self.get_child().draw()
@@ -182,6 +191,7 @@ class Window(GLXCurses.Bin):
     # The set_title() method sets the "title" property of the Window to the value specified by title.
     # The title of a window will be displayed in its title bar
     def set_title(self, title):
+
         self.title = title
 
     # The get_title() method returns the value of the "title" property of the window. See the set_title() method.
@@ -227,9 +237,15 @@ class Window(GLXCurses.Bin):
         else:
             return False
 
-    # The get_focus() method returns the current focused widget within the window.
-    # The focus widget is the widget that would have the focus if the toplevel window is focused.
     def get_focus(self):
+        """
+        The get_focus() method returns the current focused widget within the window.
+
+        The focus widget is the widget that would have the focus if the toplevel window is focused.
+
+        :return: The current focused widget
+        :rtype: GLXCurses.Widget or None
+        """
         if self.get_child().get_has_focus() and self.get_is_focus():
             return self.get_child()
         else:
@@ -260,5 +276,40 @@ class Window(GLXCurses.Bin):
         else:
             return 'sa maman'
 
-    def get_attr(self, elem, state):
-        return self.attribute[elem][state]
+    def set_application(self, application=None):
+        """
+        Set the :class:`Application <GLXCurses.Application.Application>` manager \
+        of the :class:`Window <GLXCurses.Window.Window>` widget.
+
+        The :class:`Application <GLXCurses.Application.Application>`, is reponsable of the init \
+        of the mainloop, states, and many other thing.
+
+        :class:`Application <GLXCurses.Application.Application>` is a Singleton instance, then normally you'll never \
+        have multiple instances of :class:`Application <GLXCurses.Application.Application>`, it \
+        method is here for assist :func:`Application.add_window() <GLXCurses.Application.Application.add_window()>` \
+        and :func:`Application.remove_window() <GLXCurses.Application.Application.remove_window()>`
+
+        Note if application is None the application will be remove.
+
+        :param application: a Galaxie Curses :class:`Application <GLXCurses.Application.Application>` , as application \
+        manager.
+        :type   application: GLXCurses.Application or None
+        :raise TypeError: if ``application`` parameter is not a \
+        :class:`Application <GLXCurses.Application.Application>` type
+        """
+        if (hasattr(application, 'glxc_type') and application.glxc_type == 'GLXCurses.Application')\
+                or (application is None):
+            if application != self.get_application():
+                self.application = application
+        else:
+            raise TypeError(u'>application< is not a GLXCurses.Application type')
+
+    def get_application(self):
+        """
+        Gets the :class:`Application <GLXCurses.Application.Application>` associated with the \
+        :class:`Window <GLXCurses.Window.Window>` (if any).
+
+        :return: a Singleton :class:`Application <GLXCurses.Application.Application>` instance, or None
+        :rtype: GLXCurses.Application or None
+        """
+        return self.application

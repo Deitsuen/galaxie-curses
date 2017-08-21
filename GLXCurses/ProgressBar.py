@@ -27,12 +27,18 @@ def resize_text(text, max_width, separator='~'):
 
 class ProgressBar(GLXCurses.Widget):
     def __init__(self):
+        # Load heritage
         GLXCurses.Widget.__init__(self)
+
+        # It's a GLXCurse Type
+        self.glxc_type = 'GLXCurses.ProgressBar'
+
+        # Widgets can be named, which allows you to refer to them from a GLXCStyle
         self.set_name('ProgressBar')
 
-        # Make a Style heritage attribute
-        if self.get_style().attribute:
-            self.attribute = self.get_style().attribute
+        # Make a Widget Style heritage attribute as local attribute
+        if self.get_style().get_attribute_states():
+            self.set_attribute_states(self.get_style().get_attribute_states())
 
         # The Percent value
         self.value = 0
@@ -62,7 +68,6 @@ class ProgressBar(GLXCurses.Widget):
             # WIDTH
             self.preferred_width = 0
             self.preferred_width += len(self.progressbar_border)
-            self.preferred_width += self.get_spacing() * 2
             # HEIGHT
             self.preferred_height = 1
         elif self.orientation == 'VERTICAL':
@@ -71,12 +76,8 @@ class ProgressBar(GLXCurses.Widget):
             # HEIGHT
             self.preferred_height = 0
             self.preferred_height += len(self.progressbar_border)
-            self.preferred_height += self.get_spacing() * 2
 
         self.char = ' '
-
-    def get_attr(self, elem, state):
-        return self.attribute[elem][state]
 
     def draw_widget_in_area(self):
         # Orientation: HORIZONTAL, VERTICAL
@@ -87,7 +88,7 @@ class ProgressBar(GLXCurses.Widget):
             self.draw_vertical()
 
     def draw_vertical(self):
-        y_progress = self.get_spacing()
+        y_progress = 0
 
         # Check Justification
         x_progress = self.check_vertical_justification()
@@ -101,9 +102,9 @@ class ProgressBar(GLXCurses.Widget):
             y_progress,
             x_progress,
             curses.ACS_HLINE,
-            curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_attr('base', 'STATE_NORMAL'),
-                bg=self.get_attr('bg', 'STATE_NORMAL'))
+            self.get_style().get_color_pair(
+                foreground=self.get_style().get_color_text('base', 'STATE_NORMAL'),
+                background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
             )
         )
         # Draw the Vertical ProgressBar with Justification and PositionType
@@ -114,12 +115,12 @@ class ProgressBar(GLXCurses.Widget):
                 increment = 0
                 for CHAR in progress_text:
                     self.get_curses_subwin().addch(
-                        self.get_height() - self.get_spacing() - 2 - increment,
+                        self.get_height() - 2 - increment,
                         x_progress,
                         CHAR,
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('base', 'STATE_NORMAL'),
-                            bg=self.get_attr('bg', 'STATE_NORMAL'))
+                        self.get_style().get_color_pair(
+                            foreground=self.get_style().get_color_text('base', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                         )
                     )
                     increment += 1
@@ -127,24 +128,24 @@ class ProgressBar(GLXCurses.Widget):
                 count = 0
                 for CHAR in progress_text[:int((self.get_height() - self.get_preferred_height()) * self.value / 100)]:
                     self.get_curses_subwin().addch(
-                        self.get_height() - self.get_spacing() - 2 - count,
+                        self.get_height() - 2 - count,
                         x_progress,
                         CHAR,
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('bg', 'STATE_NORMAL'),
-                            bg=self.get_attr('base', 'STATE_NORMAL'))
+                        self.get_style().get_color_pair(
+                            foreground=self.get_style().get_color_text('bg', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_text('base', 'STATE_NORMAL')
                         )
                     )
                     count += 1
 
                 # Draw last interface_unactive Character
                 self.get_curses_subwin().insch(
-                    self.get_height() - self.get_spacing() - 1,
+                    self.get_height() - 1,
                     x_progress,
                     curses.ACS_HLINE,
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('base', 'STATE_NORMAL'),
-                        bg=self.get_attr('bg', 'STATE_NORMAL'))
+                    self.get_style().get_color_pair(
+                        foreground=self.get_style().get_color_text('base', 'STATE_NORMAL'),
+                        background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                     )
                 )
             except curses.error:
@@ -158,9 +159,9 @@ class ProgressBar(GLXCurses.Widget):
                         y_progress + count,
                         x_progress,
                         CHAR,
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('base', 'STATE_NORMAL'),
-                            bg=self.get_attr('bg', 'STATE_NORMAL'))
+                        self.get_style().get_color_pair(
+                            foreground=self.get_style().get_color_text('base', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                         )
                     )
                     count += 1
@@ -172,21 +173,21 @@ class ProgressBar(GLXCurses.Widget):
                         y_progress + count,
                         x_progress,
                         CHAR,
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('bg', 'STATE_NORMAL'),
-                            bg=self.get_attr('base', 'STATE_NORMAL'))
+                        self.get_style().get_color_pair(
+                            foreground=self.get_style().get_color_text('bg', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_text('base', 'STATE_NORMAL')
                         )
                     )
                     count += 1
 
                 # Draw last interface_unactive Character
                 self.get_curses_subwin().insch(
-                    self.get_height() - self.get_spacing() - 1,
+                    self.get_height()  - 1,
                     x_progress,
                     curses.ACS_HLINE,
-                    curses.color_pair(self.get_style().get_curses_pairs(
-                        fg=self.get_attr('base', 'STATE_NORMAL'),
-                        bg=self.get_attr('bg', 'STATE_NORMAL'))
+                    self.get_style().get_color_pair(
+                        foreground=self.get_style().get_color_text('base', 'STATE_NORMAL'),
+                        background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                     )
                 )
             except curses.error:
@@ -197,15 +198,14 @@ class ProgressBar(GLXCurses.Widget):
         if self.get_justify() == 'CENTER':
             x_progress = self.get_width() / 2
         elif self.get_justify() == 'LEFT':
-            x_progress = self.get_spacing()
+            x_progress = 0
         elif self.get_justify() == 'RIGHT':
-            x_progress = self.get_width() - self.get_spacing() - (len(self.progressbar_border) / 2)
+            x_progress = self.get_width() - (len(self.progressbar_border) / 2)
 
         return x_progress
 
     def check_vertical_position_type(self):
         progress_height = self.get_height()
-        progress_height -= self.get_spacing() * 2
         progress_height -= len(self.progressbar_border)
         progress_text = str(self.char * progress_height)
         tmp_string = ''
@@ -244,7 +244,7 @@ class ProgressBar(GLXCurses.Widget):
 
     def draw_horizontal(self):
 
-        x_progress = len(self.progressbar_border) / 2 + self.get_spacing()
+        x_progress = len(self.progressbar_border) / 2
 
         progress_text = self.check_horizontal_justification()
 
@@ -260,9 +260,9 @@ class ProgressBar(GLXCurses.Widget):
                 y_text,
                 x_progress - 1,
                 self.progressbar_border[:len(self.progressbar_border) / 2],
-                curses.color_pair(self.get_style().get_curses_pairs(
-                    fg=self.get_attr('base', 'STATE_NORMAL'),
-                    bg=self.get_attr('bg', 'STATE_NORMAL'))
+                self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('base', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                 )
             )
             # Draw the progressbar1 background
@@ -273,11 +273,11 @@ class ProgressBar(GLXCurses.Widget):
                 for CHAR in progress_text:
                     self.get_curses_subwin().addstr(
                         y_progress,
-                        self.get_width() - self.get_spacing() - 2 - increment,
+                        self.get_width() - 2 - increment,
                         CHAR,
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('base', 'STATE_NORMAL'),
-                            bg=self.get_attr('bg', 'STATE_NORMAL'))
+                        self.get_style().get_color_pair(
+                            foreground=self.get_style().get_color_text('base', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                         )
                     )
                     increment += 1
@@ -285,11 +285,11 @@ class ProgressBar(GLXCurses.Widget):
                 for CHAR in progress_text[:int((self.get_width() - self.get_preferred_width()) * self.get_value() / 100)]:
                     self.get_curses_subwin().addstr(
                         y_progress,
-                        self.get_width() - self.get_spacing() - 2 - increment,
+                        self.get_width() - 2 - increment,
                         CHAR,
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('bg', 'STATE_NORMAL'),
-                            bg=self.get_attr('base', 'STATE_NORMAL'))
+                        self.get_style().get_color_pair(
+                            foreground=self.get_style().get_color_text('bg', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_text('base', 'STATE_NORMAL')
                         )
                     )
                     increment += 1
@@ -304,9 +304,9 @@ class ProgressBar(GLXCurses.Widget):
                         y_progress,
                         x_progress + increment,
                         CHAR,
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('base', 'STATE_NORMAL'),
-                            bg=self.get_attr('bg', 'STATE_NORMAL'))
+                        self.get_style().get_color_pair(
+                            foreground=self.get_style().get_color_text('base', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
                         )
                     )
                     increment += 1
@@ -316,9 +316,9 @@ class ProgressBar(GLXCurses.Widget):
                         y_progress,
                         x_progress + increment,
                         CHAR,
-                        curses.color_pair(self.get_style().get_curses_pairs(
-                            fg=self.get_attr('bg', 'STATE_NORMAL'),
-                            bg=self.get_attr('base', 'STATE_NORMAL'))
+                        self.get_style().get_color_pair(
+                            foreground=self.get_style().get_color_text('bg', 'STATE_NORMAL'),
+                            background=self.get_style().get_color_text('base', 'STATE_NORMAL')
                         )
                     )
                     increment += 1
@@ -328,17 +328,16 @@ class ProgressBar(GLXCurses.Widget):
         # Interface management
         self.get_curses_subwin().insstr(
             y_progress,
-            self.get_width() - self.get_spacing() - 1,
+            self.get_width() - 1,
             self.progressbar_border[-len(self.progressbar_border) / 2:],
-            curses.color_pair(self.get_style().get_curses_pairs(
-                fg=self.get_attr('base', 'STATE_NORMAL'),
-                bg=self.get_attr('bg', 'STATE_NORMAL'))
+            self.get_style().get_color_pair(
+                foreground=self.get_style().get_color_text('base', 'STATE_NORMAL'),
+                background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
             )
         )
 
     def check_horizontal_justification(self):
         progress_width = self.get_width()
-        progress_width -= self.get_spacing() * 2
         progress_width -= len(self.progressbar_border)
         progress_text = str(self.char * progress_width)
         # Justification:
@@ -371,20 +370,18 @@ class ProgressBar(GLXCurses.Widget):
                 y_text = (self.get_height() / 2) - self.get_preferred_height()
                 y_progress = (self.get_height() / 2) - self.get_preferred_height()
             else:
-                y_text = 0 + self.get_spacing()
-                y_progress = 0 + self.get_spacing()
+                y_text = 0
+                y_progress = 0
 
         elif position_type == 'TOP':
-            y_text = 0 + self.get_spacing()
-            y_progress = 0 + self.get_spacing()
+            y_text = 0
+            y_progress = 0
 
         elif position_type == 'BOTTOM':
-            y_text = self.get_height() - self.get_preferred_height() - self.get_spacing()
-            y_progress = self.get_height() - self.get_preferred_height() - self.get_spacing()
+            y_text = self.get_height() - self.get_preferred_height()
+            y_progress = self.get_height() - self.get_preferred_height()
 
         return y_progress, y_text
-
-
 
     # Internal curses_subwin functions
     def set_text(self, text):
@@ -457,7 +454,6 @@ class ProgressBar(GLXCurses.Widget):
             self.preferred_width = 0
             self.preferred_width += len(self.progressbar_border)
             self.preferred_width += len(self.get_text())
-            self.preferred_width += self.get_spacing() * 2
             # HEIGHT
             self.preferred_height = 1
         elif self.get_orientation() == 'VERTICAL':
@@ -467,4 +463,4 @@ class ProgressBar(GLXCurses.Widget):
             self.preferred_height = 0
             self.preferred_height += len(self.progressbar_border)
             self.preferred_height += len(self.get_text())
-            self.preferred_height += self.get_spacing() * 2
+
