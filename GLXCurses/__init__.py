@@ -25,7 +25,7 @@ from GLXCurses.HSeparator import HSeparator
 from GLXCurses.VSeparator import VSeparator
 from GLXCurses.EntryBuffer import EntryBuffer
 from GLXCurses.Adjustment import Adjustment
-from TextTag import TextTag
+from GLXCurses.TextTag import TextTag
 
 application = Application()
 mainloop = MainLoop()
