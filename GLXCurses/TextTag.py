@@ -3,7 +3,7 @@
 # -*- coding: utf-8 -*-
 
 
-class Tag(object):
+class TextTag(object):
 
     def __init__(self):
         self.color = {
@@ -32,7 +32,7 @@ class Tag(object):
         print self.text_tag(self.buffer, 0, 4, 'underline')
 
 if __name__ == '__main__':
-    tag = Tag()
+    tag = TextTag()
 
     print tag.text_tag(tag.buffer, 0, 1, 'bold')
     print tag.tag_bold()
