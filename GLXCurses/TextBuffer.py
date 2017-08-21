@@ -3,7 +3,7 @@
 import sys
 import uuid
 from copy import deepcopy
-
+from TextTag import *
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -216,16 +216,17 @@ class TextBuffer(object):
         :return:
         """
         lenght_of_byte = len(text)
+
         if lenght_of_byte == -1:
             self.text = None
             self.buffer.insert(iter, text)
             self.emit_insert_text()
 
         elif tags == 'bold':
-            text_tag_apply = "*{}*".format(text)
+            text_tag_apply = Tag().text_tag(text, 0, 9, 'bold')
             self.buffer.insert(iter, text_tag_apply)
             self.emit_insert_text()
-            print self.buffer
+            print text_tag_apply
 
         else:
             self.buffer.insert(iter, text)
