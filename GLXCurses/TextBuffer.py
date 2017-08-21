@@ -223,7 +223,7 @@ class TextBuffer(object):
             self.emit_insert_text()
 
         elif tags == 'bold':
-            text_tag_apply = Tag().text_tag(text, 0, 9, 'bold')
+            text_tag_apply = TextTag().text_tag(text, 0, 9, 'bold')
             self.buffer.insert(iter, text_tag_apply)
             self.emit_insert_text()
             print text_tag_apply
