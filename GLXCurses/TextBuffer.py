@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import sys
 import uuid
 from copy import deepcopy
@@ -16,10 +17,12 @@ class TextBuffer(object):
         """
             Create the new textBuffer object
         """
+        # It's a GLXCurse Type
+        self.glxc_type = 'GLXCurses.TextBuffer'
 
         self.text = 'toto'
         self.text2 = "tatitatatoto"
-        self.buffer = ["Noedit", "Edit1", "Edit2", "Edit3", "Edit4", "Edit5"]
+        self.buffer = ["01234", "56"]
         self.slice = ""
 
         self.tag_no_edit = [0, 1, 2, 3]
@@ -41,7 +44,6 @@ class TextBuffer(object):
         :param self.buffer
         :return number of line in the buffer
         """
-
         return len(str(self.buffer).split(' '))
 
     def get_char_count(self):
@@ -56,7 +58,7 @@ class TextBuffer(object):
         :return  number of characters in the buffer
         """
         
-        return len(str(self.buffer))
+        return len(''.join(self.buffer))
 
     def text_buffer_get_tag_table(self):
         """
@@ -71,7 +73,7 @@ class TextBuffer(object):
         iter is invalidated when insertion occurs (because the buffer contents change),
         but the default signal handler revalidates it to point to the end of the inserted text.
 
-        :param self.text: UTF-8 format text to insert
+        :param text: UTF-8 format text to insert
         :param iter: a position in the buffer
         """
         
@@ -86,8 +88,7 @@ class TextBuffer(object):
         else:
             self.buffer.insert(iter, text)
             self.emit_insert_text()
-
-        return str(self.buffer)
+        return (self.buffer)
 
     def insert_at_cursor(self, text):
         """
@@ -244,4 +245,7 @@ if __name__ == '__main__':
     # print textbuffer.insert_interactive(1, "toto")
     # print textbuffer.insert_range_interactive(textbuffer.buffer, 4, 1, 0)
     # print textbuffer.view_edit()
-    print textbuffer.insert_with_tags(4, "lala", "bold")
+   # print textbuffer.insert_with_tags(4, "lala", "bold")
+    print textbuffer.get_line_count()
+    print textbuffer.get_char_count()
+    print textbuffer.insert(0, "test")
