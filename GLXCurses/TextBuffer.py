@@ -22,7 +22,7 @@ class TextBuffer(object):
 
         self.text = 'toto'
         self.text2 = "tatitatatoto"
-        self.buffer = ["01234", "56"]
+        self.buffer = ["Noedit", "Edit1", "Edit2", "Edit3", "Edit4", "Edit5", "Edit6"]
         self.slice = ""
 
         self.tag_no_edit = [0, 1, 2, 3]
@@ -57,7 +57,7 @@ class TextBuffer(object):
 
         :return  number of characters in the buffer
         """
-        
+
         return len(''.join(self.buffer))
 
     def text_buffer_get_tag_table(self):
@@ -76,7 +76,7 @@ class TextBuffer(object):
         :param text: UTF-8 format text to insert
         :param iter: a position in the buffer
         """
-        
+
         self.iter = iter
 
         lenght_of_byte = len(text)
@@ -88,17 +88,17 @@ class TextBuffer(object):
         else:
             self.buffer.insert(iter, text)
             self.emit_insert_text()
-        return (self.buffer)
+        return self.buffer
 
     def insert_at_cursor(self, text):
         """
         The insert_at_cursor() method is a convenience method that calls the insert() method,
         using the current cursor position as the insertion point.
-       
+
        :param text: UTF-8 format text to insert
         """
-        
-        print self.insert(self.iter, text)
+
+        return self.insert(self.iter, text)
 
     def emit_insert_text(self):
         # Create a Dict with everything
@@ -132,22 +132,23 @@ class TextBuffer(object):
         if the insertion results from a user action (is interactive).
         view_edit indicates the editability of text that doesn't have a tag affecting editability applied to it.
         Typically the result of view_get_editable() method is appropriate here.
-       
+
        :param text: some UTF-8 text
         """
-        
         self.iter_insert_interactive = iter
         self.insert(int(iter), text)
 
         if int(iter) >= self.noposition:
-            print "This insertion on the position {} is a success".format(iter)
-            print self.buffer
+
+            print "This insertion on the position {0} is a success \n{1}".format(iter, self.buffer)
+            return True
 
         elif int(iter) < self.noposition:
             self.buffer.remove(text)
-            print "This insertion on the position {} is not available " \
-                  "retry with a another position available".format(iter)
-            print self.buffer
+
+            print 'This insertion on the position {0} is not available ' \
+                  'retry with a another position available \n {1}'.format(iter, self.buffer)
+            return False
 
     def insert_interactive_at_cursor(self, text):
         print textbuffer.insert_interactive(self.iter_insert_interactive, text)
@@ -163,7 +164,7 @@ class TextBuffer(object):
         :param start: a position in a TextBuffer
         :param end: another position in the same buffer as start
         """
-        
+
         text = deepcopy(self.table[start])
         tag = deepcopy(self.table[end])
         if tag not in self.tag_table:
@@ -178,7 +179,7 @@ class TextBuffer(object):
         but does nothing if the insertion point isn’t editable.
         The view_edit() method indicates whether the text is editable at iter if no tags enclosing iter affect editability.
         Typically the result of gtk_text_view_get_editable() is appropriate here.
-       
+
         :param start: a position in a TextBuffer
         :param end: another position in the same buffer as start
         :param iter: a position in a textbuffer
@@ -238,14 +239,12 @@ if __name__ == '__main__':
     textbuffer = TextBuffer()
     # print ("Text:      :" + str(textbuffer.get_char_count()))
     # print ("Text:      :" + str(textbuffer.get_line_count(textbuffer.buffer)))
-    # print textbuffer.insert('Ceci est un texte', 0)
+    # print textbuffer.insert(0, 'Ceci est un texte')
     # print textbuffer.insert_at_cursor("blabla")
     # print textbuffer.insert_range_interactive(textbuffer.buffer, 1, 0)
     # print textbuffer.insert_range(textbuffer.buffer, 1, 0)
-    # print textbuffer.insert_interactive(1, "toto")
     # print textbuffer.insert_range_interactive(textbuffer.buffer, 4, 1, 0)
     # print textbuffer.view_edit()
-   # print textbuffer.insert_with_tags(4, "lala", "bold")
-    print textbuffer.get_line_count()
-    print textbuffer.get_char_count()
-    print textbuffer.insert(0, "test")
+    # print textbuffer.insert_with_tags(4, "lala", "bold")
+    print textbuffer.view_edit()
+    print textbuffer.insert_interactive(4, 'toto')
