@@ -4,6 +4,7 @@
 import sys
 import uuid
 from copy import deepcopy
+from GLXCurses import TextTag
 from TextTag import *
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -24,11 +25,10 @@ class TextBuffer(object):
         self.text2 = "tatitatatoto"
         self.buffer = ["Noedit", "Edit1", "Edit2", "Edit3", "Edit4", "Edit5", "Edit6"]
         self.slice = ""
-
         self.tag_no_edit = [0, 1, 2, 3]
         self.tag = "bold"
         self.tag_table = [self.tag_no_edit]
-        self.table = [self.tag_no_edit, self.text]
+        self.table = [self.text, self.tag_no_edit]
         self.table2 = [self.tag, self.text2]
         # internal
         # Unique ID it permit to individually identify a widget by example for get_focus get_default
@@ -140,18 +140,18 @@ class TextBuffer(object):
 
         if int(iter) >= self.noposition:
 
-            print "This insertion on the position {0} is a success \n{1}".format(iter, self.buffer)
-            return True
+            print "This insertion on the position {0} is a success".format(iter)
+            return self.buffer
 
         elif int(iter) < self.noposition:
             self.buffer.remove(text)
 
             print 'This insertion on the position {0} is not available ' \
                   'retry with a another position available \n {1}'.format(iter, self.buffer)
-            return False
+            return []
 
     def insert_interactive_at_cursor(self, text):
-        print textbuffer.insert_interactive(self.iter_insert_interactive, text)
+        return self.insert_interactive(self.iter_insert_interactive, text)
 
     def insert_range(self, iter, start, end):
         """
@@ -170,8 +170,9 @@ class TextBuffer(object):
         if tag not in self.tag_table:
             raise Exception("this tag not in tag_table please choose a another tag in tag_table")
 
-        iter.insert(0, text)
         iter.insert(0, tag)
+        iter.insert(0, text)
+        return iter
 
     def insert_range_interactive(self, iter, position, start, end):
         """
@@ -185,7 +186,6 @@ class TextBuffer(object):
         :param iter: a position in a textbuffer
         :param position: a position in iter
         """
-
         text = deepcopy(self.table[start])
         tag = deepcopy(self.table[end])
         if tag not in self.tag_table:
@@ -195,17 +195,17 @@ class TextBuffer(object):
         iter.insert(position, tag)
 
         if int(position) >= self.noposition:
-            print "This insertion on the position {} is a success".format(position)
-            print self.buffer
+            print " \n \n This insertion on the position {0} is a success".format(position)
+            return self.buffer
 
         elif int(position) < self.noposition:
-            self.buffer.remove(text)
-            self.buffer.remove(tag)
-            print "This insertion on the position {} is not available " \
-                  "retry with a another position available".format(position)
-            print self.buffer
+            iter.remove(text)
+            iter.remove(tag)
+            print 'This insertion on the position {0} is not available ' \
+                  'retry with a another position available \n {1}'.format(position, self.buffer)
+            return []
 
-    def insert_with_tags(self, iter, text, tags):
+    def insert_with_tags(self, iter, text, tags, tags2='off', tags3= 'off'):
         """
         The insert_with_tags() method inserts the specified text into the textbuffer at the location specified by iter,
         applying any optional tags following the first two parameters to the newly-inserted text.
@@ -215,6 +215,8 @@ class TextBuffer(object):
         :param iter: a position in the buffer
         :param text: UTF-8 text
         :param tags: one or more optional Tag objects to apply to text
+        :param tags2: more optional Tag objects to apply to text
+        :param tags3: more optional Tag objects to apply to text
         :return:
         """
         lenght_of_byte = len(text)
@@ -224,8 +226,8 @@ class TextBuffer(object):
             self.buffer.insert(iter, text)
             self.emit_insert_text()
 
-        elif tags == 'bold':
-            text_tag_apply = TextTag().text_tag(text, 0, 9, 'bold')
+        elif tags is not None:
+            text_tag_apply = TextTag().text_tag(text, 0, 9, tags, tags2, tags3)
             self.buffer.insert(iter, text_tag_apply)
             self.emit_insert_text()
             print text_tag_apply
@@ -241,10 +243,8 @@ if __name__ == '__main__':
     # print ("Text:      :" + str(textbuffer.get_line_count(textbuffer.buffer)))
     # print textbuffer.insert(0, 'Ceci est un texte')
     # print textbuffer.insert_at_cursor("blabla")
-    # print textbuffer.insert_range_interactive(textbuffer.buffer, 1, 0)
     # print textbuffer.insert_range(textbuffer.buffer, 1, 0)
-    # print textbuffer.insert_range_interactive(textbuffer.buffer, 4, 1, 0)
+    # print textbuffer.insert_interactive(4, 'toto')
+    # print textbuffer.insert_range_interactive(textbuffer.buffer, 0, 0, 1)
     # print textbuffer.view_edit()
-    # print textbuffer.insert_with_tags(4, "lala", "bold")
-    print textbuffer.view_edit()
-    print textbuffer.insert_interactive(4, 'toto')
+    print textbuffer.insert_with_tags(4, "lala", "red", "bold", "underline")
