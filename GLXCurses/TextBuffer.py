@@ -4,7 +4,6 @@
 import sys
 import uuid
 from copy import deepcopy
-from GLXCurses import TextTag
 from TextTag import *
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
@@ -205,7 +204,7 @@ class TextBuffer(object):
                   'retry with a another position available \n {1}'.format(position, self.buffer)
             return []
 
-    def insert_with_tags(self, iter, text, tags, tags2='off', tags3= 'off'):
+    def insert_with_tags(self, iter, text, tags='off', tags2='off', tags3='off'):
         """
         The insert_with_tags() method inserts the specified text into the textbuffer at the location specified by iter,
         applying any optional tags following the first two parameters to the newly-inserted text.
@@ -214,7 +213,7 @@ class TextBuffer(object):
 
         :param iter: a position in the buffer
         :param text: UTF-8 text
-        :param tags: one or more optional Tag objects to apply to text
+        :param tags: more optional Tag objects to apply to text
         :param tags2: more optional Tag objects to apply to text
         :param tags3: more optional Tag objects to apply to text
         :return:
@@ -226,16 +225,16 @@ class TextBuffer(object):
             self.buffer.insert(iter, text)
             self.emit_insert_text()
 
-        elif tags is not None:
-            text_tag_apply = TextTag().text_tag(text, 0, 9, tags, tags2, tags3)
+        elif tags != 'off':
+            text_tag_apply = TextTag().text_tag(text, 0, 42, tags, tags2, tags3)
             self.buffer.insert(iter, text_tag_apply)
             self.emit_insert_text()
-            print text_tag_apply
+            return text_tag_apply
 
-        else:
+        elif tags == 'off':
             self.buffer.insert(iter, text)
             self.emit_insert_text()
-            print self.buffer
+            return self.buffer
 
 if __name__ == '__main__':
     textbuffer = TextBuffer()
@@ -247,4 +246,5 @@ if __name__ == '__main__':
     # print textbuffer.insert_interactive(4, 'toto')
     # print textbuffer.insert_range_interactive(textbuffer.buffer, 0, 0, 1)
     # print textbuffer.view_edit()
-    print textbuffer.insert_with_tags(4, "lala", "red", "bold", "underline")
+    print textbuffer.insert_with_tags(4, 'test', 'blue', 'bold', 'underline')
+
