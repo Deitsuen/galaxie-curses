@@ -1,5 +1,6 @@
 import unittest
 from GLXCurses import TextBuffer
+from GLXCurses import TextTag
 from GLXCurses.Utils import glxc_type
 
 # Unitest
@@ -87,6 +88,15 @@ class TestTextBuffer(unittest.TestCase):
         self.assertTrue(textbuffer.insert_range_interactive(buffer_test, 4, 0, 1))
         self.assertTrue(textbuffer.insert_range_interactive(buffer_test, 5, 0, 1))
         self.assertTrue(textbuffer.insert_range_interactive(buffer_test, 6, 0, 1))
+
+    def test_insert_with_tags(self):
+        self.assertEqual(textbuffer.insert_with_tags(position, 'test').index('test'), position)
+        self.assertEqual(textbuffer.insert_with_tags(position, 'test')[position], 'test')
+        self.assertIn(textbuffer.insert_with_tags(position, 'test')[position], textbuffer.buffer)
+
+        textbuffer.buffer.insert(4, 'test')
+        self.assertEqual(textbuffer.insert_with_tags(4, 'test'), textbuffer.buffer)
+        self.assertEqual(textbuffer.insert_with_tags(4, 'test', 'blue'), TextTag().color['blue'] + str('test'))
 
 
 if __name__ == '__main__':
