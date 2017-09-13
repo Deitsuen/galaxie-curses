@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import curses
+from GLXCurses import Button
+from GLXCurses import Widget
 from GLXCurses import Application
-from GLXCurses.Utils import new_id
+from GLXCurses.Utils import *
 
 import sys
 
@@ -14,11 +17,13 @@ __author__ = 'Tuux'
 __docformat__ = 'reStructuredText'
 
 
-class EntryBuffer(object):
+class EntryBuffer(Widget):
     """
     EntryBuffer — Text buffer for GLXCurses.Entry
     """
+
     def __init__(self, initial_chars=None, n_initial_chars=-1):
+
         """
         Create a new EntryBuffer object.
 
@@ -34,6 +39,8 @@ class EntryBuffer(object):
         :return: A new EntryBuffer object.
         :rtype: EntryBuffer object
         """
+        Widget.__init__(self)
+
         # Properties
         self.length = 0
         self.max_length = 0
@@ -240,6 +247,73 @@ class EntryBuffer(object):
         Application().emit('SIGNALS', instance)
 
     # INTERNAL
+
+    def _draw_button(self):
+        Button()._check_selected()
+        Button()._update_preferred_sizes()
+        Button()._check_justify()
+        Button()._check_position_type()
+
+        if not self.get_sensitive():
+            self._draw_the_good_button(
+                color=self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('bg', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
+                )
+            )
+        elif self.state['PRELIGHT']:
+            self._draw_the_good_button(
+                color=self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('dark', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_PRELIGHT')
+                )
+            )
+        elif self.state['NORMAL']:
+            self._draw_the_good_button(
+                color=self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
+                )
+            )
+
+    def _draw_the_good_button(self, color):
+        try:
+            # Interface management
+            self.get_curses_subwin().addstr(
+                Button._y_offset,
+                self._x_offset,
+                self.button_border[:len(self.button_border) / 2],
+                color
+            )
+        except curses.error:
+            pass
+        try:
+
+            # Draw the Horizontal Button with Justification and PositionType
+            message_to_display = resize_text(self.get_text(), self.get_width() - len(self.button_border), '~')
+            self.get_curses_subwin().addstr(
+                self._y_offset,
+                self._x_offset + len(self.button_border) / 2,
+                message_to_display,
+                color
+            )
+        except curses.error:
+            pass
+        try:
+            # Interface management
+            message_to_display = resize_text(self.get_text(), self.get_width() - len(self.button_border), '~')
+            self.get_curses_subwin().insstr(
+                self._y_offset,
+                self._x_offset + (len(self.button_border) / 2) + len(message_to_display),
+                self.button_border[-len(self.button_border) / 2:],
+                color
+            )
+        except curses.error:
+            pass
+
+
+
+
     def _clamp_to_the_range(self, checked_value):
         if checked_value < self._get_min_length_hard_limit():
             checked_value = self._get_min_length_hard_limit()
