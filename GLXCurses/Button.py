@@ -193,7 +193,7 @@ class Button(Widget):
         self._check_justify()
         self._check_position_type()
 
-        if not self.get_sensitive():
+        if self.get_sensitive() is False:
             self._draw_the_good_button(
                 color=self.get_style().get_color_pair(
                     foreground=self.get_style().get_color_text('bg', 'STATE_NORMAL'),
@@ -259,9 +259,10 @@ class Button(Widget):
             if self._get_y_offset() >= y > self._get_y_offset() - self.get_preferred_height():
                 if (self._get_x_offset() - 1) + len(self.button_border) + len(self.get_text()) >= x > (self._get_x_offset() - 1):
                     # We are sure about the button have been clicked
-                    self.states_list = '; '.join(state_string for state, state_string
-                                                 in self.curses_mouse_states.viewitems()
+                    self.states_list = '; '.join(state_string for state,
+                                                 state_string in self.curses_mouse_states.viewitems()
                                                  if event & state)
+
                     # INTERNAL METHOD
                     # BUTTON1
                     if event == curses.BUTTON1_PRESSED:
