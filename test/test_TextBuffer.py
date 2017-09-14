@@ -1,4 +1,5 @@
 import unittest
+import GLXCurses
 from GLXCurses import TextBuffer
 from GLXCurses import TextTag
 from GLXCurses.Utils import glxc_type
