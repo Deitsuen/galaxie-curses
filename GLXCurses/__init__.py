@@ -33,6 +33,7 @@ from GLXCurses.HSeparator import HSeparator
 from GLXCurses.VSeparator import VSeparator
 from GLXCurses.EntryBuffer import EntryBuffer
 from GLXCurses.Adjustment import Adjustment
+from GLXCurses.TextBuffer import TextBuffer
 from GLXCurses.TextTag import TextTag
 
 __author__ = u"Jérôme Ornech"
