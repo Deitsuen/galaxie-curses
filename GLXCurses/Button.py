@@ -36,8 +36,8 @@ class Button(Widget):
         self._y_offset = 0
 
         # Interface
-        self.interface = '[  ]'
-        self.interface_selected = '[<  >]'
+        self.interface = 'U+25ae'
+        self.interface_selected = '[<>]'
         self.button_border = self.interface
 
         # Size management
@@ -193,17 +193,18 @@ class Button(Widget):
         self._check_justify()
         self._check_position_type()
 
-        if self.get_sensitive() is False:
+        if self.state['UNSELECTED']:
             self._draw_the_good_button(
                 color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_text('bg', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
+                    foreground=self.get_style().get_color_text('dark', 'STATE_INSENSITIVE'),
+                    background=self.get_style().get_color_text('bg', 'STATE_PRELIGHT')
                 )
             )
+
         elif self.state['PRELIGHT']:
             self._draw_the_good_button(
                 color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_text('dark', 'STATE_NORMAL'),
+                    foreground=self.get_style().get_color_text('dark', 'STATE_INSENSITIVE'),
                     background=self.get_style().get_color_text('bg', 'STATE_PRELIGHT')
                 )
             )
@@ -211,9 +212,10 @@ class Button(Widget):
             self._draw_the_good_button(
                 color=self.get_style().get_color_pair(
                     foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
+                    background=self.get_style().get_color_text('bg', 'STATE_PRELIGHT')
                 )
             )
+
 
     def _draw_the_good_button(self, color):
         try:
@@ -287,6 +289,9 @@ class Button(Widget):
                         self._set_state_prelight(True)
                     elif event == curses.BUTTON2_RELEASED:
                         self._set_state_prelight(False)
+
+
+
                         Application().set_is_focus(self)
                     if event == curses.BUTTON2_CLICKED:
                         Application().set_is_focus(self)
@@ -354,7 +359,9 @@ class Button(Widget):
                 self.set_is_focus(True)
                 self.button_border = self.interface_selected
                 self._update_preferred_sizes()
+                self.state['UNSELECTED'] = False
             else:
+                self.state['UNSELECTED'] = True
                 self.set_is_focus(False)
                 self.button_border = self.interface
                 self._update_preferred_sizes()
