@@ -23,6 +23,7 @@ if __name__ == '__main__':
 
     # Create the main Application
     app = GLXCurses.Application()
+    app = GLXCurses.Application()
     app.set_name('GLXCurses Entry Demo')
 
     # Create a Menu
@@ -102,11 +103,14 @@ if __name__ == '__main__':
             x -= 0.033
             label_press_q.set_alignment(x, y)
 
-        # Keyboard temporary thing
-        if event_args[0] == ord('q'):
-            # Everything have a end, the main loop too ...
-            GLXCurses.mainloop.quit()
+        for t in ['a', 'b', 'c']:
+            if event_args[0] == ord('q'):
+                # Everything have a end, the main loop too ...
+                GLXCurses.mainloop.quit()
 
+            if event_args[0] == ord(t):
+                # Everything have a end, the main loop too ...
+                EntryBuffer1.add_text(t)
 
     def on_click(self, event_signal, event_args=None):
         if event_args is None:
@@ -115,8 +119,7 @@ if __name__ == '__main__':
             statusbar.remove_all(button1_context_id)
             statusbar.push(button1_context_id, event_args['label'] + ' ' + event_signal)
             EntryBuffer1.delete_text(0, 1)
-            Button1.set_text(EntryBuffer1.get_text())
-
+            Button1.set_text((EntryBuffer1.get_text()))
 
     def signal_event(self, event_signal, event_args=None):
         if event_args is None:
