@@ -226,6 +226,24 @@ class EntryBuffer(Widget):
         # Because we are like that we return something
         return number_of_characters_actually_deleted
 
+    def add_text(self, chars):
+        # Convert the string to a list like a master ...
+        hash_list = list(self.get_text())
+
+        hash_list.insert(-1, chars)
+        # Re assign the buffer text , it will re apply implicitly the max size contain inside self.set_text()
+
+        # Check impossible case of number of deleted thing
+
+        # Emit a signal
+        self.emit_deleted_text()
+
+        # Because we are like that we return something
+        return self.set_text(''.join(hash_list))
+
+
+
+
     def emit_deleted_text(self):
         # Create a Dict with everything
         instance = {
@@ -247,72 +265,6 @@ class EntryBuffer(Widget):
         Application().emit('SIGNALS', instance)
 
     # INTERNAL
-
-    def _draw_button(self):
-        Button()._check_selected()
-        Button()._update_preferred_sizes()
-        Button()._check_justify()
-        Button()._check_position_type()
-
-        if not self.get_sensitive():
-            self._draw_the_good_button(
-                color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_text('bg', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
-                )
-            )
-        elif self.state['PRELIGHT']:
-            self._draw_the_good_button(
-                color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_text('dark', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_text('bg', 'STATE_PRELIGHT')
-                )
-            )
-        elif self.state['NORMAL']:
-            self._draw_the_good_button(
-                color=self.get_style().get_color_pair(
-                    foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
-                    background=self.get_style().get_color_text('bg', 'STATE_NORMAL')
-                )
-            )
-
-    def _draw_the_good_button(self, color):
-        try:
-            # Interface management
-            self.get_curses_subwin().addstr(
-                Button._y_offset,
-                self._x_offset,
-                self.button_border[:len(self.button_border) / 2],
-                color
-            )
-        except curses.error:
-            pass
-        try:
-
-            # Draw the Horizontal Button with Justification and PositionType
-            message_to_display = resize_text(self.get_text(), self.get_width() - len(self.button_border), '~')
-            self.get_curses_subwin().addstr(
-                self._y_offset,
-                self._x_offset + len(self.button_border) / 2,
-                message_to_display,
-                color
-            )
-        except curses.error:
-            pass
-        try:
-            # Interface management
-            message_to_display = resize_text(self.get_text(), self.get_width() - len(self.button_border), '~')
-            self.get_curses_subwin().insstr(
-                self._y_offset,
-                self._x_offset + (len(self.button_border) / 2) + len(message_to_display),
-                self.button_border[-len(self.button_border) / 2:],
-                color
-            )
-        except curses.error:
-            pass
-
-
-
 
     def _clamp_to_the_range(self, checked_value):
         if checked_value < self._get_min_length_hard_limit():
