@@ -227,13 +227,21 @@ class EntryBuffer(Widget):
         return number_of_characters_actually_deleted
 
     def add_text(self, chars):
+        hash_list = str(self.get_text())
+
+        # Emit a signal
+
+        self.emit_add_text()
+
+        # Because we are like that we return something
+        return self.set_text((hash_list + chars))
+
+    def remove_text(self):
+
         # Convert the string to a list like a master ...
-        hash_list = list(self.get_text())
+        hash_list = list((self.get_text()))
 
-        hash_list.insert(-1, chars)
-        # Re assign the buffer text , it will re apply implicitly the max size contain inside self.set_text()
-
-        # Check impossible case of number of deleted thing
+        del hash_list[-1]
 
         # Emit a signal
         self.emit_deleted_text()
@@ -241,8 +249,15 @@ class EntryBuffer(Widget):
         # Because we are like that we return something
         return self.set_text(''.join(hash_list))
 
-
-
+    def emit_add_text(self):
+        # Create a Dict with everything
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'add-text',
+            'id': self.id
+        }
+        # EVENT EMIT
+        Application().emit('SIGNALS', instance)
 
     def emit_deleted_text(self):
         # Create a Dict with everything
