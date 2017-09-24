@@ -36,7 +36,7 @@ class Button(Widget):
         self._y_offset = 0
 
         # Interface
-        self.interface = 'U+25ae'
+        self.interface = '[]'
         self.interface_selected = '[<>]'
         self.button_border = self.interface
 
@@ -226,6 +226,7 @@ class Button(Widget):
                 self.button_border[:len(self.button_border) / 2],
                 color
             )
+
         except curses.error:
             pass
         try:
