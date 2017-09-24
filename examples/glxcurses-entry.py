@@ -107,24 +107,30 @@ if __name__ == '__main__':
 
         for alphabet in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
                          't', 'u', 'v', 'w', 'x', 'y', 'z']:
+
             if event_args[0] == ord('q'):
                 # Everything have a end, the main loop too ...
                 GLXCurses.mainloop.quit()
 
             if event_args[0] == ord(alphabet):
                 # Everything have a end, the main loop too ...
-                EntryBuffer1.add_text(alphabet)
+                if app.get_is_focus():
+                    EntryBuffer1.add_text(alphabet)
+                    Button1.set_text((EntryBuffer1.get_text()))
 
-            if event_args[0] == curses.KEY_BACKSPACE:
-                if app.get_is_focus() == Button1.id:
-                    EntryBuffer1.remove_text()
-                    app.set_is_focus(None)
+        if event_args[0] == curses.KEY_BACKSPACE:
+            if app.get_is_focus():
+                EntryBuffer1.remove_text()
+                Button1.set_text((EntryBuffer1.get_text()))
 
+        if event_args[0] == ord(' '):
+            EntryBuffer1.add_text(' ')
+            Button1.set_text((EntryBuffer1.get_text()))
 
     def on_click(self, event_signal, event_args=None):
         if event_args is None:
             event_args = dict()
-        if event_args['id'] == Button1.get_widget_id():
+        if event_args['id'] == app.get_is_focus():
             statusbar.remove_all(button1_context_id)
             statusbar.push(button1_context_id, event_args['label'] + ' ' + event_signal)
             Button1.set_text((EntryBuffer1.get_text()))
