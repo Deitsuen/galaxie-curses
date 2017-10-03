@@ -4,6 +4,11 @@ from GLXCurses import Application
 from GLXCurses import Widget
 from GLXCurses import EntryBuffer
 from GLXCurses import glxc
+from GLXCurses.Utils import clamp_to_zero
+from GLXCurses.Utils import resize_text
+import curses
+import logging
+import GLXCurses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
@@ -18,6 +23,8 @@ class Entry(Widget):
         ##############
         # Property's #
         ##############
+
+        self.glxc_type = 'GLXCurses.Entry'
 
         # Whether to activate the default widget (such as the default button in a dialog) when Enter is pressed.
         # Default value: False
@@ -151,7 +158,7 @@ class Entry(Widget):
         # Default Value: 0
         self.xalign = 0
 
-        # Subscibtions
+        # Subscribtions
         self.connect('active', Entry._emit_activate_signal(self))
         self.connect('backspace', Entry._emit_backspace_signal(self))
         self.connect('copy-clipboard', Entry._emit_copy_clipboard_signal(self))
@@ -166,21 +173,567 @@ class Entry(Widget):
         self.connect('preedit-changed', Entry._emit_preedit_changed_signal(self))
         self.connect('toggle-overwrite', Entry._emit_toggle_overwrite_signal(self))
 
+        # Internal Widget Setting
+        self.text = None
+        self._x_offset = 0
+        self._y_offset = 0
+
+        # Interface
+        self.interface = '[]'
+        self.interface_selected = '[<>]'
+        self.button_border = self.interface
+
+        # Size management
+        self._update_preferred_sizes()
+
+        # Justification: LEFT, RIGHT, CENTER
+        self._justify = glxc.JUSTIFY_CENTER
+
+        # PositionType: CENTER, TOP, BOTTOM
+        self._position_type = glxc.POS_CENTER
 
         ############
         # Internal #
         ############
         # Widget
         # Make a Style heritage attribute
-        if self.style.attribute:
-            self.attribute = self.style.attribute
 
         # Size management
         self.set_preferred_height(1)
 
+        # Sensitive
+        self.set_can_focus(1)
+        self.set_can_default(1)
+        self.set_sensitive(1)
+        self.states_list = None
+
+        # Subscription
+        self.connect('MOUSE_EVENT', Entry._handle_mouse_event)
+
+        # States
+        self.curses_mouse_states = {
+            curses.BUTTON1_PRESSED: 'BUTTON1_PRESS',
+            curses.BUTTON1_RELEASED: 'BUTTON1_RELEASED',
+            curses.BUTTON1_CLICKED: 'BUTTON1_CLICKED',
+            curses.BUTTON1_DOUBLE_CLICKED: 'BUTTON1_DOUBLE_CLICKED',
+            curses.BUTTON1_TRIPLE_CLICKED: 'BUTTON1_TRIPLE_CLICKED',
+
+            curses.BUTTON2_PRESSED: 'BUTTON2_PRESSED',
+            curses.BUTTON2_RELEASED: 'BUTTON2_RELEASED',
+            curses.BUTTON2_CLICKED: 'BUTTON2_CLICKED',
+            curses.BUTTON2_DOUBLE_CLICKED: 'BUTTON2_DOUBLE_CLICKED',
+            curses.BUTTON2_TRIPLE_CLICKED: 'BUTTON2_TRIPLE_CLICKED',
+
+            curses.BUTTON3_PRESSED: 'BUTTON3_PRESSED',
+            curses.BUTTON3_RELEASED: 'BUTTON3_RELEASED',
+            curses.BUTTON3_CLICKED: 'BUTTON3_CLICKED',
+            curses.BUTTON3_DOUBLE_CLICKED: 'BUTTON3_DOUBLE_CLICKED',
+            curses.BUTTON3_TRIPLE_CLICKED: 'BUTTON3_TRIPLE_CLICKED',
+
+            curses.BUTTON4_PRESSED: 'BUTTON4_PRESSED',
+            curses.BUTTON4_RELEASED: 'BUTTON4_RELEASED',
+            curses.BUTTON4_CLICKED: 'BUTTON4_CLICKED',
+            curses.BUTTON4_DOUBLE_CLICKED: 'BUTTON4_DOUBLE_CLICKED',
+            curses.BUTTON4_TRIPLE_CLICKED: 'BUTTON4_TRIPLE_CLICKED',
+
+            curses.BUTTON_SHIFT: 'BUTTON_SHIFT',
+            curses.BUTTON_CTRL: 'BUTTON_CTRL',
+            curses.BUTTON_ALT: 'BUTTON_ALT'
+        }
+
+        self.EntryBuffer = EntryBuffer()
+
+
         ############
         # Internal #
         ############
+
+    def draw_widget_in_area(self):
+
+        # Many Thing's
+        # Check if the text can be display
+        text_have_necessary_width = (self.get_preferred_width() >= 1)
+        text_have_necessary_height = (self.get_preferred_height() >= 1)
+        if not text_have_necessary_height or not text_have_necessary_width:
+            return
+
+        if self.get_text():
+
+            # Check if the text can be display
+            text_have_necessary_width = (self.get_preferred_width() >= 1)
+            text_have_necessary_height = (self.get_preferred_height() >= 1)
+            if text_have_necessary_width and text_have_necessary_height:
+                self._draw_button()
+
+    def _draw_button(self):
+        self._check_selected()
+        self._update_preferred_sizes()
+        self._check_justify()
+        self._check_position_type()
+
+        if self.state['UNSELECTED']:
+            self._draw_the_good_button(
+                color=self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('dark', 'STATE_INSENSITIVE'),
+                    background=self.get_style().get_color_text('bg', 'STATE_PRELIGHT')
+                )
+            )
+
+        elif self.state['PRELIGHT']:
+            self._draw_the_good_button(
+                color=self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('dark', 'STATE_INSENSITIVE'),
+                    background=self.get_style().get_color_text('bg', 'STATE_PRELIGHT')
+                )
+            )
+        elif self.state['NORMAL']:
+            self._draw_the_good_button(
+                color=self.get_style().get_color_pair(
+                    foreground=self.get_style().get_color_text('text', 'STATE_NORMAL'),
+                    background=self.get_style().get_color_text('bg', 'STATE_PRELIGHT')
+                )
+            )
+
+    def _draw_the_good_button(self, color):
+        try:
+            # Interface management
+            self.get_curses_subwin().addstr(
+                self._y_offset,
+                self._x_offset,
+                self.button_border[:len(self.button_border) / 2],
+                color
+            )
+
+        except curses.error:
+            pass
+        try:
+
+            # Draw the Horizontal Button with Justification and PositionType
+            message_to_display = resize_text(self.get_text(), self.get_width() - len(self.button_border), '~')
+            self.get_curses_subwin().addstr(
+                self._y_offset,
+                self._x_offset + len(self.button_border) / 2,
+                message_to_display,
+                color
+            )
+        except curses.error:
+            pass
+        try:
+            # Interface management
+            message_to_display = resize_text(self.get_text(), self.get_width() - len(self.button_border), '~')
+            self.get_curses_subwin().insstr(
+                self._y_offset,
+                self._x_offset + (len(self.button_border) / 2) + len(message_to_display),
+                self.button_border[-len(self.button_border) / 2:],
+                color
+            )
+        except curses.error:
+            pass
+
+    def _check_selected(self):
+        if self.get_can_focus():
+            if Application().get_is_focus() == self.get_widget_id():
+                self.set_is_focus(True)
+                self.button_border = self.interface_selected
+                self._update_preferred_sizes()
+                self.state['UNSELECTED'] = False
+            else:
+                self.state['UNSELECTED'] = True
+                self.set_is_focus(False)
+                self.button_border = self.interface
+                self._update_preferred_sizes()
+        else:
+            pass
+
+    def _update_preferred_sizes(self):
+        self.set_preferred_width(self._get_estimated_preferred_width())
+        self.set_preferred_height(self._get_estimated_preferred_height())
+
+    def _get_estimated_preferred_width(self):
+        """
+        Estimate a preferred width, by consider X Location, allowed width
+
+        :return: a estimated preferred width
+        :rtype: int
+        """
+        if self.get_text():
+            estimated_preferred_width = 0
+            estimated_preferred_width += len(self.get_text())
+            estimated_preferred_width += len(self.button_border)
+        else:
+            estimated_preferred_width = 0
+            estimated_preferred_width += len(self.button_border)
+
+        return estimated_preferred_width
+
+    def _get_estimated_preferred_height(self):
+        """
+        Estimate a preferred height, by consider Y Location
+
+        :return: a estimated preferred height
+        :rtype: int
+        """
+        estimated_preferred_height = 1
+        return estimated_preferred_height
+
+    def _check_justify(self):
+        """Check the justification of the X axe"""
+        width = self.get_width()
+        preferred_width = self.get_preferred_width()
+
+        self._set_x_offset(0)
+        if self.get_justify() == glxc.JUSTIFY_CENTER:
+            # Clamp value and impose the center
+            if width is None:
+                estimated_width = 0
+            elif width <= 0:
+                estimated_width = 0
+            elif width == 1:
+                estimated_width = 0
+            else:
+                estimated_width = int(width / 2)
+
+            # Clamp value and impose the center
+            if preferred_width is None:
+                estimated_preferred_width = 0
+            elif preferred_width <= 0:
+                estimated_preferred_width = 0
+            elif preferred_width == 1:
+                estimated_preferred_width = 0
+            else:
+                estimated_preferred_width = int(preferred_width / 2)
+
+            # Make the compute
+            final_value = int(estimated_width - estimated_preferred_width)
+
+            # clamp the result
+            if final_value <= 0:
+                final_value = 0
+
+            # Finally set the value
+            self._set_x_offset(final_value)
+
+        elif self.get_justify() == glxc.JUSTIFY_LEFT:
+
+            # Finally set the value
+            self._set_x_offset(0)
+
+        elif self.get_justify() == glxc.JUSTIFY_RIGHT:
+            # Clamp estimated_width
+            estimated_width = clamp_to_zero(width)
+
+            # Clamp preferred_width
+            estimated_preferred_width = clamp_to_zero(preferred_width)
+
+            # Make the compute
+            final_value = int(estimated_width - estimated_preferred_width)
+
+            # clamp the result
+            if final_value <= 0:
+                final_value = 0
+
+            # Finally set the value
+            self._x_offset = final_value
+
+    def _check_position_type(self):
+        # PositionType: CENTER, TOP, BOTTOM
+        height = self.get_height()
+        preferred_height = self.get_preferred_height()
+
+        if self.get_position_type() == glxc.POS_CENTER:
+            # Clamp height
+            if height is None:
+                estimated_height = 0
+            elif height <= 0:
+                estimated_height = 0
+            elif height == 1:
+                # prevent a 1/2 = float(0.5) case
+                estimated_height = 0
+            else:
+                estimated_height = int(height / 2)
+
+            # Clamp preferred_height
+            if preferred_height is None:
+                estimated_preferred_height = 0
+            elif preferred_height <= 0:
+                estimated_preferred_height = 0
+            elif preferred_height == 1:
+                # prevent a 1/2 = float(0.5) case
+                estimated_preferred_height = 0
+            else:
+                estimated_preferred_height = int(preferred_height / 2)
+
+            # Make teh compute
+            final_value = int(estimated_height - estimated_preferred_height)
+
+            # Clamp the result to a positive
+            if final_value <= 0:
+                final_value = 0
+
+            self._set_y_offset(final_value)
+
+        elif self.get_position_type() == glxc.POS_TOP:
+            self._set_y_offset(0)
+
+        elif self.get_position_type() == glxc.POS_BOTTOM:
+            # Clamp height
+            estimated_height = clamp_to_zero(height)
+
+            # Clamp preferred_height
+            estimated_preferred_height = clamp_to_zero(preferred_height)
+
+            # Make the compute
+            final_value = int(estimated_height - estimated_preferred_height)
+
+            # Clamp the result to a positive
+            if final_value <= 0:
+                final_value = 0
+
+            # Clamp height
+            estimated_height = clamp_to_zero(height)
+
+            # Clamp preferred_height
+            estimated_preferred_height = clamp_to_zero(preferred_height)
+
+            # Make the compute
+            final_value = int(estimated_height - estimated_preferred_height)
+
+            # Clamp the result to a positive
+            if final_value <= 0:
+                final_value = 0
+
+            self._set_y_offset(final_value)
+
+    def _set_x_offset(self, value=None):
+        """
+        Set _x
+
+        :param value: A value to set to _x attribute
+        :type value: int or None
+        :raise TypeError: when value is not int or None
+        """
+        if type(value) is None or type(value) == int:
+            self._x_offset = value
+        else:
+            raise TypeError(u'>value< must be a int or None type')
+
+    def get_justify(self):
+        """
+        Return the Justify of the CheckButton
+
+         Justify:
+          - LEFT
+          - CENTER
+          - RIGHT
+
+        :return: str
+        """
+        return self._justify
+
+    def get_position_type(self):
+        """
+        Return the Position Type
+
+        PositionType:
+         .glxc.POS_TOP
+         .glxc.POS_CENTER
+         .glxc.POS_BOTTOM
+
+        :return: str
+        """
+        return self._position_type
+
+    def _set_y_offset(self, value=None):
+        """
+        Set _y
+
+        :param value: A value to set to _y attribute
+        :type value: int or None
+        :raise TypeError: when value is not int or None
+        """
+        if type(value) is None or type(value) == int:
+            self._y_offset = value
+        else:
+            raise TypeError(u'>y< must be a int or None type')
+
+    def _set_state_prelight(self, value):
+        if bool(value):
+            self.state['PRELIGHT'] = True
+        else:
+            self.state['PRELIGHT'] = False
+
+    def _get_y_offset(self):
+        """
+        Return the _y space add to text for position computation
+
+        :return: y attribute
+        """
+        return self._y_offset
+
+    def _get_x_offset(self):
+        """
+        Return the x space add to text for justify computation
+
+        :return: _label_x attribute
+        """
+        return self._x_offset
+
+    def _handle_mouse_event(self, event_signal, event_args):
+        if self.get_sensitive():
+            (mouse_event_id, x, y, z, event) = event_args
+            # Be sure we select really the Button
+            y -= self.y
+            x -= self.x
+            if self._get_y_offset() >= y > self._get_y_offset() - self.get_preferred_height():
+                if (self._get_x_offset() - 1) + len(self.button_border) + len(self.get_text()) >= x > (
+                    self._get_x_offset() - 1):
+                    # We are sure about the button have been clicked
+                    self.states_list = '; '.join(state_string for state,
+                                                                  state_string in
+                                                 self.curses_mouse_states.viewitems()
+                                                 if event & state)
+                    # INTERNAL METHOD
+                    # BUTTON1
+                    if event == curses.BUTTON1_PRESSED:
+                        Application().set_is_focus(self)
+                        self._check_selected()
+                        self._set_state_prelight(True)
+                    elif event == curses.BUTTON1_RELEASED:
+                        Application().set_is_focus(self)
+                        self._check_selected()
+                        self._set_state_prelight(False)
+                    if event == curses.BUTTON1_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON1_DOUBLE_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON1_TRIPLE_CLICKED:
+                        Application().set_is_focus(self)
+
+                    # BUTTON2
+                    if event == curses.BUTTON2_PRESSED:
+                        Application().set_is_focus(self)
+                        self._check_selected()
+                        self._set_state_prelight(True)
+                    elif event == curses.BUTTON2_RELEASED:
+                        self._set_state_prelight(False)
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON2_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON2_DOUBLE_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON2_TRIPLE_CLICKED:
+                        Application().set_is_focus(self)
+
+                    # BUTTON3
+                    if event == curses.BUTTON3_PRESSED:
+                        Application().set_is_focus(self)
+                        self._check_selected()
+                        self._set_state_prelight(True)
+                    elif event == curses.BUTTON3_RELEASED:
+                        self._set_state_prelight(False)
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON3_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON3_DOUBLE_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON3_TRIPLE_CLICKED:
+                        Application().set_is_focus(self)
+
+                    # BUTTON4
+                    if event == curses.BUTTON4_PRESSED:
+                        Application().set_is_focus(self)
+                        self._check_selected()
+                        self._set_state_prelight(True)
+                    elif event == curses.BUTTON4_RELEASED:
+                        self._set_state_prelight(False)
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON4_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON4_DOUBLE_CLICKED:
+                        Application().set_is_focus(self)
+                    if event == curses.BUTTON4_TRIPLE_CLICKED:
+                        Application().set_is_focus(self)
+
+                    if event == curses.BUTTON_SHIFT:
+                        pass
+                    if event == curses.BUTTON_CTRL:
+                        pass
+                    if event == curses.BUTTON_ALT:
+                        pass
+
+                    # Create a Dict with everything
+                    instance = {
+                        'class': self.__class__.__name__,
+                        'label': self.get_text(),
+                        'id': self.get_widget_id()
+                    }
+                    # EVENT EMIT
+                    # Application().emit(self.curses_mouse_states[event], instance)
+                    self.emit(self.curses_mouse_states[event], instance)
+            else:
+                # Nothing the better is to clean the prelight
+                self._set_state_prelight(False)
+        else:
+            logging.debug(
+                self.__class__.__name__ + ': ' + self.get_text() + ' ' + self.get_widget_id() + 'is not sensitive.')
+
+    def set_statusbar(self, context_id, signal_context_id, button_context_id, arrow_pressed_context_id, select_id):
+        statusbar = GLXCurses.StatusBar()
+
+        statusbar_context_id = {"context_id": statusbar.get_context_id(context_id),
+                                "signal_context_id": statusbar.get_context_id(signal_context_id),
+
+                                "button_context_id": statusbar.get_context_id(button_context_id),
+                                "arrow_pressed_context_id": statusbar.get_context_id(arrow_pressed_context_id)
+                                }
+        return statusbar_context_id[select_id]
+
+    def get_statusbar(self, choice_id):
+        status = self.set_statusbar('exemple', 'SIGNAL', 'BUTTON', 'ARROW_PRESSED', choice_id)
+        return status
+
+    def add_text(self, chars):
+        hash_list = str(self.get_text())
+
+        # Emit a signal
+
+        self.emit_add_text()
+
+        # Because we are like that we return something
+        return self.set_text((hash_list + chars))
+
+    def emit_add_text(self):
+        # Create a Dict with everything
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'add-text',
+            'id': self.id
+        }
+        # EVENT EMIT
+        Application().emit('SIGNALS', instance)
+
+    def remove_text(self):
+
+        # Convert the string to a list like a master ...
+        hash_list = list((self.get_text()))
+
+        del hash_list[-1]
+
+        # Emit a signal
+        self.emit_deleted_text()
+
+        # Because we are like that we return something
+        return self.set_text(''.join(hash_list))
+
+    def emit_deleted_text(self):
+        # Create a Dict with everything
+        instance = {
+            'class': self.__class__.__name__,
+            'type': 'deleted-text',
+            'id': self.id
+        }
+        # EVENT EMIT
+        Application().emit('SIGNALS', instance)
 
     def destroy(self):
         raise NotImplementedError
@@ -224,7 +777,7 @@ class Entry(Widget):
         """
         self.buffer = buffer
 
-    def set_text(self, text):
+    def set_text(self, text=None):
         """
         Sets the text in the widget to the given value, replacing the current contents.
 
@@ -233,6 +786,7 @@ class Entry(Widget):
 
         .. seealso:: GLXCurses.EntryBuffer().set_text()
         """
+
         self.get_buffer().set_text(text)
 
     def get_text(self):
@@ -315,7 +869,7 @@ class Entry(Widget):
         .. note:: If you set the invisible char to 0, then the user will get no feedback at all; \
         there will be no text on the screen as they type
 
-        :param ch: a Unicode chracter
+        :param ch: a Unicode character
         """
         self.invisible_char = unicode(ch)
 
@@ -548,7 +1102,18 @@ class Entry(Widget):
         pass
 
     def get_max_length(self):
-        pass
+        """
+        Retrieves the maximum allowed length of the text in buffer .
+
+        .. seealso:: EntryBuffer.set_max_length().
+
+        :return: the maximum allowed number of characters in EntryBuffer, or 0 if there is no maximum.
+        :rtype: standard C int type
+        """
+        if 0 >= self.max_length:
+            return 0
+        else:
+            return int(self.max_length)
 
     def get_visibility(self):
         pass
@@ -562,7 +1127,7 @@ class Entry(Widget):
     def set_cursor_hadjustment(self):
         pass
 
-    def get_cursor_hadjustment(self):
+    def get_cursor_hadjustment(scelf):
         pass
 
     def set_progress_fraction(self):
@@ -671,6 +1236,7 @@ class Entry(Widget):
         pass
 
     # Signals
+
     def _emit_activate_signal(self, user_data=None):
         """
         The ::activate signal is emitted when the user hits the Enter key.
