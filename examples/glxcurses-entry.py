@@ -23,89 +23,98 @@ if __name__ == '__main__':
 
     # Create the main Application
     app = GLXCurses.Application()
-    app = GLXCurses.Application()
     app.set_name('GLXCurses Entry Demo')
 
     # Create a Menu
     menu = GLXCurses.MenuBar()
     menu.app_info_label = app.get_name()
 
-    # Create a EntryBuffer thing
-    EntryBuffer1 = GLXCurses.EntryBuffer()
-    EntryBuffer1.set_text('Button')
-
     # Create Buttons
-    Button1 = GLXCurses.Button()
-    Button1.set_text(EntryBuffer1.get_text())
+    Entry = GLXCurses.Entry()
+    Entry.set_text('Entry')
 
     # Create a new Horizontal Box contener
     hbox = GLXCurses.HBox()
     hbox.set_spacing(1)
-
-    hbox.pack_end(Button1)
+    hbox.pack_end(Entry)
 
     # Create a Horizontal Separator and a Label
     hline = GLXCurses.HSeparator()
 
-    label_press_q = GLXCurses.Label()
-    label_press_q.set_text('Press "q" key to exit ... What about you arrows\'s key\'s')
-    label_press_q.set_single_line_mode(True)
-    label_press_q.set_justify('center')
-    label_press_q.set_alignment(0.5, 0.3)
-    label_press_q.override_color('yellow')
+    label = GLXCurses.Label()
+    label.set_text('Press "q" key to exit ... What about you arrows\'s key\'s')
+    label.set_single_line_mode(True)
+    label.set_justify('center')
+    label.set_alignment(0.5, 0.3)
+    label.override_color('yellow')
 
     # Create a main Vertical Box
     vbox_main = GLXCurses.VBox()
     vbox_main.pack_end(hline)
     vbox_main.pack_end(hbox)
     vbox_main.pack_end(hline)
-    vbox_main.pack_end(label_press_q)
+    vbox_main.pack_end(label)
 
     # Create the main Window
     win_main = GLXCurses.Window()
     win_main.add(vbox_main)
 
     # Create a Status Bar
+
     statusbar = GLXCurses.StatusBar()
-    context_id = statusbar.get_context_id("example")
-    signal_context_id = statusbar.get_context_id("SIGNAL")
-    button1_context_id = statusbar.get_context_id("BUTTON1")
-    arrow_pressed_context_id = statusbar.get_context_id("ARROW_PRESSED")
+
+
+    def set_statusbar(context_id, signal_context_id, button_context_id, arrow_pressed_context_id, select_id):
+        statusbar = GLXCurses.StatusBar()
+
+        statusbar_context_id = {"context_id": statusbar.get_context_id(context_id),
+                                "signal_context_id": statusbar.get_context_id(signal_context_id),
+                                "button_context_id": statusbar.get_context_id(button_context_id),
+                                "arrow_pressed_context_id": statusbar.get_context_id(arrow_pressed_context_id)
+                                }
+        return statusbar_context_id[select_id]
+
+
+    def get_statusbar(choice_id):
+        status = set_statusbar('exemple', 'SIGNAL', 'BUTTON', 'ARROW_PRESSED', choice_id)
+        return status
 
 
     def handle_keys(self, event_signal, *event_args):
-        statusbar.remove_all(arrow_pressed_context_id)
-        statusbar.push(arrow_pressed_context_id, 'HANDLE KEY: ' + str(event_args[0]))
+        statusbar = GLXCurses.StatusBar()
+        statusbar.remove_all(get_statusbar('arrow_pressed_context_id'))
+        statusbar.push(get_statusbar('arrow_pressed_context_id'), 'HANDLE KEY: ' + str(event_args[0]))
 
         if event_args[0] == curses.KEY_F5:
-            if app.get_is_focus() == Button1.id:
+            if app.get_is_focus() == Entry.id:
                 app.set_is_focus(None)
 
             else:
-                app.set_is_focus(Button1)
+                app.set_is_focus(Entry)
 
         if event_args[0] == curses.KEY_F6:
-            Button1.set_sensitive(not Button1.get_sensitive())
+            Entry.set_sensitive(not Entry.get_sensitive())
 
         if event_args[0] == curses.KEY_UP:
-            x, y = label_press_q.get_alignment()
+            x, y = label.get_alignment()
             y -= 0.033
-            label_press_q.set_alignment(x, y)
+            label.set_alignment(x, y)
 
         if event_args[0] == curses.KEY_DOWN:
-            x, y = label_press_q.get_alignment()
+            x, y = label.get_alignment()
             y += 0.033
-            label_press_q.set_alignment(x, y)
+            label.set_alignment(x, y)
         if event_args[0] == curses.KEY_RIGHT:
-            x, y = label_press_q.get_alignment()
+            x, y = label.get_alignment()
             x += 0.033
-            label_press_q.set_alignment(x, y)
+            label.set_alignment(x, y)
         if event_args[0] == curses.KEY_LEFT:
-            x, y = label_press_q.get_alignment()
+            x, y = label.get_alignment()
             x -= 0.033
-            label_press_q.set_alignment(x, y)
+            label.set_alignment(x, y)
 
-        for alphabet in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+        for alphabet in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
+                         's',
                          't', 'u', 'v', 'w', 'x', 'y', 'z']:
 
             if event_args[0] == ord('q'):
@@ -115,25 +124,25 @@ if __name__ == '__main__':
             if event_args[0] == ord(alphabet):
                 # Everything have a end, the main loop too ...
                 if app.get_is_focus():
-                    EntryBuffer1.add_text(alphabet)
-                    Button1.set_text((EntryBuffer1.get_text()))
+                    Entry.add_text(alphabet)
+                    Entry.set_text((Entry.get_text()))
 
         if event_args[0] == curses.KEY_BACKSPACE:
             if app.get_is_focus():
-                EntryBuffer1.remove_text()
-                Button1.set_text((EntryBuffer1.get_text()))
+                Entry.remove_text()
+                Entry.set_text((Entry.get_text()))
 
         if event_args[0] == ord(' '):
-            EntryBuffer1.add_text(' ')
-            Button1.set_text((EntryBuffer1.get_text()))
+            Entry.add_text(' ')
+            Entry.set_text((Entry.get_text()))
 
     def on_click(self, event_signal, event_args=None):
         if event_args is None:
             event_args = dict()
         if event_args['id'] == app.get_is_focus():
-            statusbar.remove_all(button1_context_id)
-            statusbar.push(button1_context_id, event_args['label'] + ' ' + event_signal)
-            Button1.set_text((EntryBuffer1.get_text()))
+            statusbar.remove_all(get_statusbar('button_context_id'))
+            statusbar.push(get_statusbar('button_context_id'), event_args['label'] + ' ' + event_signal)
+            Entry.set_text((Entry.get_text()))
 
 
     def signal_event(self, event_signal, event_args=None):
