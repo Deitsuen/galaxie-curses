@@ -17,7 +17,6 @@ __author__ = 'Tuux'
 
 
 class Entry(Widget):
-
     def __init__(self):
         Widget.__init__(self)
         ##############
@@ -586,7 +585,7 @@ class Entry(Widget):
             x -= self.x
             if self._get_y_offset() >= y > self._get_y_offset() - self.get_preferred_height():
                 if (self._get_x_offset() - 1) + len(self.button_border) + len(self.get_text()) >= x > (
-                    self._get_x_offset() - 1):
+                            self._get_x_offset() - 1):
                     # We are sure about the button have been clicked
                     self.states_list = '; '.join(state_string for state,
                                                                   state_string in
@@ -1389,4 +1388,3 @@ class Entry(Widget):
         }
         # EVENT EMIT
         Application().emit('SIGNALS', instance)
-
