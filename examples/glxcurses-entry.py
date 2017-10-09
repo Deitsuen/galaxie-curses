@@ -60,30 +60,16 @@ if __name__ == '__main__':
     win_main.add(vbox_main)
 
     # Create a Status Bar
-
     statusbar = GLXCurses.StatusBar()
-
-
-    def set_statusbar(context_id, signal_context_id, button_context_id, arrow_pressed_context_id, select_id):
-        statusbar = GLXCurses.StatusBar()
-
-        statusbar_context_id = {"context_id": statusbar.get_context_id(context_id),
-                                "signal_context_id": statusbar.get_context_id(signal_context_id),
-                                "button_context_id": statusbar.get_context_id(button_context_id),
-                                "arrow_pressed_context_id": statusbar.get_context_id(arrow_pressed_context_id)
-                                }
-        return statusbar_context_id[select_id]
-
-
-    def get_statusbar(choice_id):
-        status = set_statusbar('exemple', 'SIGNAL', 'BUTTON', 'ARROW_PRESSED', choice_id)
-        return status
+    context_id = statusbar.get_context_id("example")
+    signal_context_id = statusbar.get_context_id("SIGNAL")
+    entry_context_id = statusbar.get_context_id("ENTRY")
+    arrow_pressed_context_id = statusbar.get_context_id("ARROW_PRESSED")
 
 
     def handle_keys(self, event_signal, *event_args):
-        statusbar = GLXCurses.StatusBar()
-        statusbar.remove_all(get_statusbar('arrow_pressed_context_id'))
-        statusbar.push(get_statusbar('arrow_pressed_context_id'), 'HANDLE KEY: ' + str(event_args[0]))
+        statusbar.remove_all(arrow_pressed_context_id)
+        statusbar.push(arrow_pressed_context_id, 'HANDLE KEY: ' + str(event_args[0]))
 
         if event_args[0] == curses.KEY_F5:
             if app.get_is_focus() == Entry.id:
@@ -114,35 +100,26 @@ if __name__ == '__main__':
             label.set_alignment(x, y)
 
         for alphabet in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
-                         's',
-                         't', 'u', 'v', 'w', 'x', 'y', 'z']:
+                         's', 't', 'u', 'v', 'w', 'x', 'y', 'z']:
 
             if event_args[0] == ord('q'):
                 # Everything have a end, the main loop too ...
                 GLXCurses.mainloop.quit()
 
             if event_args[0] == ord(alphabet):
-                # Everything have a end, the main loop too ...
                 if app.get_is_focus():
                     Entry.add_text(alphabet)
-                    Entry.set_text((Entry.get_text()))
-
-        if event_args[0] == curses.KEY_BACKSPACE:
-            if app.get_is_focus():
-                Entry.remove_text()
-                Entry.set_text((Entry.get_text()))
 
         if event_args[0] == ord(' '):
             Entry.add_text(' ')
-            Entry.set_text((Entry.get_text()))
+
 
     def on_click(self, event_signal, event_args=None):
         if event_args is None:
             event_args = dict()
         if event_args['id'] == app.get_is_focus():
-            statusbar.remove_all(get_statusbar('button_context_id'))
-            statusbar.push(get_statusbar('button_context_id'), event_args['label'] + ' ' + event_signal)
-            Entry.set_text((Entry.get_text()))
+            statusbar.remove_all(entry_context_id)
+            statusbar.push(entry_context_id, event_args['label'] + ' ' + event_signal)
 
 
     def signal_event(self, event_signal, event_args=None):
