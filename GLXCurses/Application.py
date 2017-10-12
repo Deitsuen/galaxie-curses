@@ -5,25 +5,26 @@
 # http://www.gnu.org/licenses/gpl-3.0.en.html
 # Author: the Galaxie Curses Team, all rights reserved
 
-import curses
-import locale
-import os
-import sys
-
 import GLXCurses
 from GLXCurses.EventBusClient import EventBusClient
-from GLXCurses.Utils import glxc_type
 from GLXCurses.Utils import new_id
+from GLXCurses.Utils import glxc_type
+import curses
+import sys
+import os
+import locale
 
 # Locales Setting
 locale.setlocale(locale.LC_ALL, '')
 code = locale.getpreferredencoding()
+
 
 __author__ = 'Tuux'
 
 
 class Singleton(type):
     def __init__(cls, name, bases, dict):
+
         super(Singleton, cls).__init__(name, bases, dict)
         cls.instance = None
 
@@ -214,12 +215,18 @@ class Application(EventBus):
 
             # Turn off echoing of keys, and enter cbreak mode,
             # where no buffering is performed on keyboard input
+
             curses.noecho()
+            curses.cbreak()
 
             # In keypad mode, escape sequences for special keys
-            # (like the cursor keys) will be interpreted and
+            # (like the cursor key  s) will be interpreted and
             # a special value like curses.KEY_LEFT will be returned
             self.screen.keypad(1)
+            if self.screen.getch() == curses.KEY_F8:
+                curses.echo()
+                curses.nocbreak()
+
 
         except ValueError:
             sys.stdout.write("Curses library not installed defaulting to standard console output\n")
@@ -866,36 +873,32 @@ class Application(EventBus):
 
     def remove_toolbar(self):
         """
-                Unset the toolbar of application
-                """
+        Unset the toolbar of application
+        """
         if self._get_toolbar() is not None:
             self._get_toolbar().set_parent(None)
         self._set_toolbar(None)
 
-    def refresh(self, *event_args):
+    def refresh(self):
         """
-                        Refresh the NCurses Screen, and redraw each contain widget's
+        Refresh the NCurses Screen, and redraw each contain widget's
 
-                        It's a central refresh point for the entire application.
-                        """
+        It's a central refresh point for the entire application.
+        """
         # Clean the screen
         self.get_screen().clear()
 
         # Calculate the Main Window size
-
         try:
             self.draw()
 
             if glxc_type(self._get_menubar()):
                 self._get_menubar().draw()
+
             # Check main curses_subwin to display
-
             if self.curses_subwin is not None:
-
                 if glxc_type(self.get_active_window()):
                     self.get_active_window().draw()
-
-            # After have redraw everything it's time to refresh the screen
 
             if glxc_type(self._get_messagebar()):
                 self._get_messagebar().draw()
@@ -909,12 +912,13 @@ class Application(EventBus):
         except AttributeError:
             pass
 
+        # After have redraw everything it's time to refresh the screen
         self.get_screen().refresh()
 
     def draw(self):
         """
-                        Special code for rendering to the screen
-                        """
+        Special code for rendering to the screen
+        """
         parent_height, parent_width = self.get_screen().getmaxyx()
 
         menu_bar_height = 0
@@ -947,12 +951,15 @@ class Application(EventBus):
         self.set_preferred_height(self.get_height())
         self.set_preferred_width(self.get_width())
 
-        self.curses_subwin = self.get_screen().subwin(
-            int(self.get_height()),
-            int(self.get_width()),
-            int(self.get_y()),
-            int(self.get_x())
-        )
+        try:
+            self.curses_subwin = self.get_screen().subwin(
+                int(self.get_height()),
+                int(self.get_width()),
+                int(self.get_y()),
+                int(self.get_x())
+            )
+        except curses.error:
+            pass
 
     def getch(self):
         """
@@ -968,7 +975,7 @@ class Application(EventBus):
         to manage.
 
         .. code-block:: python
-
+Fgetc
            ch = Application.getch()
 
         getch() will wait for the user to press a key, (unless you specified a timeout) and when user presses a key,
@@ -1003,7 +1010,7 @@ class Application(EventBus):
     def get_default(self):
         """
         Return the unique id of the widget it have been set by \
-        :func:`Application.set_default() <GLXCurses.Application.Application.set_default()>`
+        :func:`Application.set_default() <GLXCurses.Applcbreakication.Application.set_default()>`
 
         .. seealso:: \
          :func:`Application.set_default() <GLXCurses.Application.Application.set_default()>`
@@ -1048,7 +1055,7 @@ class Application(EventBus):
         (This does not mean that the “has-focus” property is necessarily set; “has-focus” will only be set \
         if the toplevel widget additionally has the global input focus.)
 
-        .. see also:: \
+        .. seealso:: \
         :func:`Application.get_is_focus() <GLXCurses.Application.Application.get_is_focus()>`
 
         :param widget: a Widget
@@ -1273,7 +1280,3 @@ class Application(EventBus):
         :rtype: GLXCurses.ToolBar or None
         """
         return self.toolbar
-
-
-if __name__ == '__main__':
-    print Application().get_active_window()
