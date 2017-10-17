@@ -204,7 +204,7 @@ class Application(EventBus):
 
 
         """
-        EventBus.__init__(self)
+        EventBus.__init__(self, )
         self.glxc_type = 'GLXCurses.Application'
         try:
             # Initialize curses
@@ -213,19 +213,32 @@ class Application(EventBus):
             # Initialize curses
             self.screen = curses.initscr()
 
+            ch = -1
+
+
             # Turn off echoing of keys, and enter cbreak mode,
             # where no buffering is performed on keyboard input
-
             curses.noecho()
             curses.cbreak()
 
+            def handle_keys(self, event_signal, *event_args):
+                statusbar = GLXCurses.StatusBar()
+                arrow_pressed_context_id = statusbar.get_context_id("ARROW_PRESSED")
+                statusbar.remove_all(arrow_pressed_context_id)
+                statusbar.push(arrow_pressed_context_id, 'HANDLE KEY: ' + str(event_args[0]))
+                if event_args[0] == curses.KEY_F8:
+                    curses.echo()
+                    curses.nocbreak()
+                    return
+
+
             # In keypad mode, escape sequences for special keys
-            # (like the cursor key  s) will be interpreted and
+            # (like the cursor keys) will be interpreted and
             # a special value like curses.KEY_LEFT will be returned
             self.screen.keypad(1)
-            if self.screen.getch() == curses.KEY_F8:
-                curses.echo()
-                curses.nocbreak()
+
+
+
 
 
         except ValueError:
@@ -975,7 +988,7 @@ class Application(EventBus):
         to manage.
 
         .. code-block:: python
-Fgetc
+
            ch = Application.getch()
 
         getch() will wait for the user to press a key, (unless you specified a timeout) and when user presses a key,
@@ -1010,7 +1023,7 @@ Fgetc
     def get_default(self):
         """
         Return the unique id of the widget it have been set by \
-        :func:`Application.set_default() <GLXCurses.Applcbreakication.Application.set_default()>`
+        :func:`Application.set_default() <GLXCurses.Application.Application.set_default()>`
 
         .. seealso:: \
          :func:`Application.set_default() <GLXCurses.Application.Application.set_default()>`
