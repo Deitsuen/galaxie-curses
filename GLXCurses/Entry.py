@@ -157,6 +157,9 @@ class Entry(Widget):
         # Default Value: 0
         self.xalign = 0
 
+        # Number of the cursor position in the buffer
+        self.position = 0
+
         # Subscribtions
         self.connect('active', Entry._emit_activate_signal(self))
         self.connect('backspace', Entry._emit_backspace_signal(self))
@@ -178,8 +181,8 @@ class Entry(Widget):
         self._y_offset = 0
 
         # Interface
-        self.interface = '[]'
-        self.interface_selected = '[<>]'
+        self.interface = '|'
+        self.interface_selected = '|>'
         self.button_border = self.interface
 
         # Size management
@@ -205,6 +208,9 @@ class Entry(Widget):
         self.set_can_default(1)
         self.set_sensitive(1)
         self.states_list = None
+        self.position = 0
+
+
 
         # Subscription
         self.connect('MOUSE_EVENT', Entry._handle_mouse_event)
@@ -299,7 +305,7 @@ class Entry(Widget):
             self.get_curses_subwin().addstr(
                 self._y_offset,
                 self._x_offset,
-                self.button_border[:len(self.button_border) / 2],
+                self.button_border,
                 color
             )
 
@@ -311,7 +317,7 @@ class Entry(Widget):
             message_to_display = resize_text(self.get_text(), self.get_width() - len(self.button_border), '~')
             self.get_curses_subwin().addstr(
                 self._y_offset,
-                self._x_offset + len(self.button_border) / 2,
+                self._x_offset,
                 message_to_display,
                 color
             )
@@ -322,10 +328,11 @@ class Entry(Widget):
             message_to_display = resize_text(self.get_text(), self.get_width() - len(self.button_border), '~')
             self.get_curses_subwin().insstr(
                 self._y_offset,
-                self._x_offset + (len(self.button_border) / 2) + len(message_to_display),
-                self.button_border[-len(self.button_border) / 2:],
+                self._x_offset,
+                self.button_border,
                 color
             )
+
         except curses.error:
             pass
 
@@ -714,7 +721,7 @@ class Entry(Widget):
     def remove_text(self):
 
         # Convert the string to a list like a master ...
-        hash_list = list((self.get_text()))
+        hash_list = list(self.get_text())
 
         del hash_list[-1]
 
@@ -733,6 +740,24 @@ class Entry(Widget):
         }
         # EVENT EMIT
         Application().emit('SIGNALS', instance)
+
+    # W.I.P
+    # This function "move_cursor_forward()"
+    # pops a cursor and moves the cursor only to the right of the buffer
+
+    def move_cursor_forward(self):
+
+        hash_list = list(self.get_text())
+        cursor = '|'
+        if cursor in hash_list:
+            self.position += 1
+            hash_list.insert(self.position, cursor)
+            if cursor in hash_list:
+                hash_list.remove(cursor)
+        else:
+            hash_list.insert(self.position, cursor)
+
+        return self.set_text(''.join(hash_list))
 
     def destroy(self):
         raise NotImplementedError
