@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
     # Create Buttons
     Entry = GLXCurses.Entry()
-    Entry.set_text('Entry')
+    Entry.set_text('TEST')
 
     # Create a new Horizontal Box contener
     hbox = GLXCurses.HBox()
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     def handle_keys(self, event_signal, *event_args):
         statusbar.remove_all(arrow_pressed_context_id)
         statusbar.push(arrow_pressed_context_id, 'HANDLE KEY: ' + str(event_args[0]))
-
+        position = 0
         if event_args[0] == curses.KEY_F5:
             if app.get_is_focus() == Entry.id:
                 app.set_is_focus(None)
@@ -90,14 +90,14 @@ if __name__ == '__main__':
             x, y = label.get_alignment()
             y += 0.033
             label.set_alignment(x, y)
-        if event_args[0] == curses.KEY_RIGHT:
-            x, y = label.get_alignment()
-            x += 0.033
-            label.set_alignment(x, y)
-        if event_args[0] == curses.KEY_LEFT:
-            x, y = label.get_alignment()
-            x -= 0.033
-            label.set_alignment(x, y)
+        # if event_args[0] == curses.KEY_RIGHT:
+        #     x, y = label.get_alignment()
+        #     x += 0.033
+        #     label.set_alignment(x, y)
+        # if event_args[0] == curses.KEY_LEFT:
+        #     x, y = label.get_alignment()
+        #     x -= 0.033
+        #     label.set_alignment(x, y)
 
         for alphabet in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
                          's', 't', 'u', 'v', 'w', 'x', 'y', 'z']:
@@ -110,8 +110,16 @@ if __name__ == '__main__':
                 if app.get_is_focus():
                     Entry.add_text(alphabet)
 
+        if event_args[0] == curses.KEY_BACKSPACE:
+            Entry.remove_text()
+
         if event_args[0] == ord(' '):
             Entry.add_text(' ')
+        if event_args[0] == curses.KEY_RIGHT:
+            Entry.move_cursor('forward')
+
+        if event_args[0] == curses.KEY_LEFT:
+            Entry.move_cursor('backward')
 
 
     def on_click(self, event_signal, event_args=None):
