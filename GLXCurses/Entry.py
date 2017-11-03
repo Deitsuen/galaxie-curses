@@ -87,7 +87,7 @@ class Entry(Widget):
         self.max_length = 0
 
         # The desired maximum width of the entry, in characters.
-        # If this property is set to -1, the width will be calculated automatically.
+        # If this property is set to -1, the width will be calculated aumovtomatically.
         # Allowed values: >= -1
         # Default value: -1
         self.max_width_chars = -1
@@ -209,8 +209,6 @@ class Entry(Widget):
         self.set_sensitive(1)
         self.states_list = None
         self.position = 0
-
-
 
         # Subscription
         self.connect('MOUSE_EVENT', Entry._handle_mouse_event)
@@ -741,23 +739,38 @@ class Entry(Widget):
         # EVENT EMIT
         Application().emit('SIGNALS', instance)
 
-    # W.I.P
-    # This function "move_cursor_forward()"
-    # pops a cursor and moves the cursor only to the right of the buffer
+    # This function "move_cursor()"
+    # pops a cursor and moves the cursor left and right of the buffer
 
-    def move_cursor_forward(self):
+    def move_cursor(self, pos):
 
         hash_list = list(self.get_text())
         cursor = '|'
-        if cursor in hash_list:
-            self.position += 1
-            hash_list.insert(self.position, cursor)
+
+        if pos == 'forward':  # pops a cursor and moves the cursor only to the right of the buffer
+
+            if cursor in hash_list:
+                self.position += 1
+                hash_list.insert(self.position, cursor)
+                if cursor in hash_list:
+                    hash_list.remove(cursor)
+            else:
+                hash_list.insert(self.position, cursor)
+
+            return self.set_text(''.join(hash_list))
+
+        if pos == 'backward':  # pops a cursor and move the cursor only the left of the buffer
+
             if cursor in hash_list:
                 hash_list.remove(cursor)
-        else:
-            hash_list.insert(self.position, cursor)
+                if not cursor in hash_list:
+                    self.position -= 1
+                    hash_list.insert(self.position, cursor)
 
-        return self.set_text(''.join(hash_list))
+            else:
+                hash_list.insert(self.position, cursor)
+
+            return self.set_text(''.join(hash_list))
 
     def destroy(self):
         raise NotImplementedError
