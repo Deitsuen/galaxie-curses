@@ -7,6 +7,7 @@ import sys
 current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(current_dir))
 import GLXCurses
+from GLXCurses import glxc
 import curses
 import logging
 
@@ -116,10 +117,10 @@ if __name__ == '__main__':
         if event_args[0] == ord(' '):
             Entry.add_text(' ')
         if event_args[0] == curses.KEY_RIGHT:
-            Entry.move_cursor('forward')
+            Entry.move_cursor(glxc.PROGRESS_LEFT_TO_RIGHT)
 
         if event_args[0] == curses.KEY_LEFT:
-            Entry.move_cursor('backward')
+            Entry.move_cursor(glxc.PROGRESS_RIGHT_TO_LEFT)
 
 
     def on_click(self, event_signal, event_args=None):
