@@ -12,8 +12,13 @@ import GLXCurses
 
 # It script it publish under GNU GENERAL PUBLIC LICENSE
 # http://www.gnu.org/licenses/gpl-3.0.en.html
-# Author: Jérôme ORNECH alias "Tuux" <tuxa@rtnp.org> all rights reserved
-__author__ = 'Tuux'
+# Author:the Galaxie Curses Team, all rights reserved
+__author__ = u'the Galaxie Curses Project'
+
+
+def _put(item):
+    entries = list(item)
+    return entries
 
 
 class Entry(Widget):
@@ -246,10 +251,11 @@ class Entry(Widget):
 
         self.EntryBuffer = EntryBuffer()
 
-
         ############
         # Internal #
         ############
+
+        self.cursor = '|'
 
     def draw_widget_in_area(self):
 
@@ -739,38 +745,47 @@ class Entry(Widget):
         # EVENT EMIT
         Application().emit('SIGNALS', instance)
 
-    # This function "move_cursor()"
-    # pops a cursor and moves the cursor left and right of the buffer
-
     def move_cursor(self, pos):
+        """
+        This function "move_cursor()"
+        pops a cursor and moves the cursor left and right of the buffer
 
-        hash_list = list(self.get_text())
-        cursor = '|'
+        :param pos: determines the direction of the cursor in the buffer
+        """
 
-        if pos == 'forward':  # pops a cursor and moves the cursor only to the right of the buffer
+        hash_list = _put(self.get_text())
 
-            if cursor in hash_list:
+        if pos == glxc.PROGRESS_LEFT_TO_RIGHT:  # pops a cursor and moves the cursor only to the right of the buffer
+
+            if self.cursor in hash_list:
                 self.position += 1
-                hash_list.insert(self.position, cursor)
-                if cursor in hash_list:
-                    hash_list.remove(cursor)
+                hash_list.insert(self.position, self.cursor)
+                if self.cursor in hash_list:
+                    hash_list.remove(self.cursor)
             else:
-                hash_list.insert(self.position, cursor)
+                self.get_text()
+                hash_list.insert(self.position, self.cursor)
 
             return self.set_text(''.join(hash_list))
 
-        if pos == 'backward':  # pops a cursor and move the cursor only the left of the buffer
+        else:
+            pass
 
-            if cursor in hash_list:
-                hash_list.remove(cursor)
-                if not cursor in hash_list:
+        if pos == glxc.PROGRESS_RIGHT_TO_LEFT:  # pops a cursor and move the cursor only the left of the buffer
+
+            if self.cursor in hash_list:
+                hash_list.remove(self.cursor)
+                if not self.cursor in hash_list:
                     self.position -= 1
-                    hash_list.insert(self.position, cursor)
+                    hash_list.insert(self.position, self.cursor)
 
             else:
-                hash_list.insert(self.position, cursor)
+                hash_list.insert(self.position, self.cursor)
 
             return self.set_text(''.join(hash_list))
+
+        else:
+            pass
 
     def destroy(self):
         raise NotImplementedError
